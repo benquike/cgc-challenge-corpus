@@ -18,5 +18,5 @@ challenges = [x for x in os.listdir(root_dir) if
 print challenges
 
 for cb in challenges:
-    subprocess.call(['make', '-C', os.path.join(root_dir, cb)])
+    subprocess.call(['make', '-C' , os.path.join(root_dir, cb), 'build'])
 
