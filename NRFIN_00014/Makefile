@@ -6,4 +6,4 @@ POLLS_RELEASE_MAX_DEPTH = 750
 
 CFLAGS = -Wno-overlength-strings -Wno-packed -Wno-trigraphs -Wno-switch -g
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

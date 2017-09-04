@@ -5,4 +5,4 @@ CFLAGS = -g -Ofast -Werror -Wall -Wno-unused-function -Wno-unused -Wno-compare-d
 POLLS_RELEASE_SEED = -868333550
 POLLS_RELEASE_COUNT = 0
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

@@ -4,4 +4,4 @@ AUTHOR_ID  = NRFIN
 SERVICE_ID = 00027
 CFLAGS     = -O0 -g -Wall -Wextra -Wno-missing-field-initializers -Wno-sign-compare -mno-sse
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

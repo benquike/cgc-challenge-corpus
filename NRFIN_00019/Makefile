@@ -4,4 +4,4 @@ AUTHOR_ID  = NRFIN
 SERVICE_ID = 00019
 CFLAGS     = -g -O0 -Werror -Wno-overlength-strings -Wno-packed -Wno-int-to-void-pointer-cast
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

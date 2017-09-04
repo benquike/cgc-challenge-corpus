@@ -4,4 +4,4 @@ CFLAGS     = -g -Werror -std=c99
 
 VULN_COUNT = 2
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

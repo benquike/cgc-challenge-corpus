@@ -3,4 +3,4 @@ POLLS_TESTING_SEED= 2001352444
 AUTHOR_ID  = YAN01
 SERVICE_ID = 00012
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

@@ -7,4 +7,4 @@ POLLS_TESTING_SEED = -399189653
 POLLS_RELEASE_COUNT = 1
 POLLS_RELEASE_SEED = 90
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

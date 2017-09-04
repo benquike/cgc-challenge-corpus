@@ -8,4 +8,4 @@ NO_STRIP=1
 CXXFLAGS    = -fno-exceptions -fno-rtti
 CFLAGS      = -O0 -g -fno-exceptions -fno-rtti
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

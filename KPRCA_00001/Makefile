@@ -5,4 +5,4 @@ CFLAGS     = -Os -g -Werror -Wno-overlength-strings -Wno-packed
 
 POLLS_TESTING_SEED = 1763254697
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

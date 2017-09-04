@@ -7,4 +7,4 @@ NO_STRIP   = 1
 POLLS_RELEASE_MAX_DEPTH=20
 POLLS_RELEASE_SEED=40
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

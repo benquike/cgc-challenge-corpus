@@ -5,4 +5,4 @@ SERVICE_ID = 00016
 CFLAGS     = -mno-sse -O0 -g -fcommon -Werror -Wno-overlength-strings -Wno-packed
 POLLS_RELEASE_COUNT = 1000
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

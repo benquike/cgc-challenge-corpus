@@ -4,4 +4,4 @@ CFLAGS     = -O3 -g -Werror -Wno-overlength-strings -Wno-packed -Wall
 VULN_COUNT = 1
 
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

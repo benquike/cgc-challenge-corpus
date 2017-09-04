@@ -7,4 +7,4 @@ POLLS_TESTING_COUNT = 1000
 POLLS_TESTING_MAX_DEPTH = 20
 POLLS_RELEASE_COUNT = 0
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

@@ -4,4 +4,4 @@ SERVICE_ID = 00010
 CFLAGS     = -O0 -g -Wall
 POLLS_RELEASE_SEED = 947695443
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

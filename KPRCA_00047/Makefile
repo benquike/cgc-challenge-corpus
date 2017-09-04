@@ -4,4 +4,4 @@ SERVICE_ID = 00047
 CFLAGS = -g -O2 -Werror -Wall
 POLLS_RELEASE_SEED = 1820982
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

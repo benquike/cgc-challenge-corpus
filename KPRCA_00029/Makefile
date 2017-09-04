@@ -6,4 +6,4 @@ POLLS_TESTING_COUNT = 1000
 POLLS_TESTING_SEED = -21028589
 POLLS_TESTING_MAX_DEPTH = 50
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

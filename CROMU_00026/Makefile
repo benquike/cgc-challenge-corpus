@@ -7,4 +7,4 @@ POLLS_TESTING_COUNT = 1000
 CXXFLAGS    = -g -fno-exceptions -fno-rtti
 CFLAGS      = -g -fno-exceptions -fno-rtti
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

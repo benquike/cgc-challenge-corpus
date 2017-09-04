@@ -6,4 +6,4 @@ NO_STRIP = 1
 POLLS_RELEASE_SEED=0
 POLLS_TESTING_SEED=0
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

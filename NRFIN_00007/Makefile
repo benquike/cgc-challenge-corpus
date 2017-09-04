@@ -6,5 +6,5 @@ POLLS_RELEASE_COUNT = 1000
 
 CFLAGS = -Wno-overlength-strings -Wno-packed -Wno-trigraphs -g
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk
 

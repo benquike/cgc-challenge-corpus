@@ -6,4 +6,4 @@ CFLAGS     = -O0 -g -Werror -Wno-overlength-strings -Wno-packed
 POLLS_TESTING_COUNT = 900
 POLLS_RELEASE_COUNT = 100
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

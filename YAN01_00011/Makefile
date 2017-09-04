@@ -4,4 +4,4 @@ AUTHOR_ID  = YAN01
 SERVICE_ID = 00011
 CFLAGS = -g
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

@@ -5,4 +5,4 @@ TCP_PORT   = 10010
 CFLAGS     = -O0 -g -Wall
 POLLS_RELEASE_SEED = 1900525947
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

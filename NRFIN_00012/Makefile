@@ -7,4 +7,4 @@ NO_STRIP = 1
 POLLS_TESTING_COUNT = 1000
 POLLS_RELEASE_COUNT = 100
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk

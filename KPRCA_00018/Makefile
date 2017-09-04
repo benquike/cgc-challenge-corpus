@@ -6,4 +6,4 @@ POLLS_RELEASE_SEED = 259379680
 NO_CB_DPKG=1
 NO_CB_EXTENDED_APP=1
 
-include /usr/share/cb-testing/cgc-cb.mk
+include ../cgc-cb.mk
