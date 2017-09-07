@@ -34,6 +34,8 @@ ifndef VULN_COUNT
 VULN_COUNT=0
 endif
 
+ifneq ("$(findstring,cgc,$(UNAME_R))","")
+# CGC OS
 LIBS       = -L/usr/lib -lcgc
 LDFLAGS    = -nostdlib -static
 POV_LIBS   = -lpov
@@ -44,10 +46,6 @@ CXX			= /usr/i386-linux-cgc/bin/clang++
 OBJCOPY			= /usr/i386-linux-cgc/bin/objcopy
 LD_ELF                  = /usr/bin/ld
 
-SHELL		:= $(SHELL) -e
-BIN_DIR		= bin
-POV_DIR		= pov
-BUILD_DIR	= build
 ifeq ("/usr/i386-linux-cgc/bin/clang", "$(CC)")
 CGC_CFLAGS	= -nostdlib -fno-builtin -nostdinc -Iinclude -Ilib -I/usr/include $(CFLAGS) -DCGC_BIN_COUNT=$(BIN_COUNT)
 else
@@ -56,9 +54,34 @@ endif
 
 POV_CFLAGS	= -nostdlib -fno-builtin -nostdinc -Iinclude -Ilib -I/usr/include $(CFLAGS)
 
+PATH		:= /usr/i386-linux-cgc/bin:$(PATH)
+
+else
+# HOST OS
+
+LIBS       = -L../../libcgc -lcgc
+POV_LIBS   = -L../../libpov -lpov
+
+CC			= clang
+CXX			= clang++
+LD			= clang
+OBJCOPY			= objcopy
+LD_ELF                  = ld
+
+CGC_CFLAGS = -I../../libcgc -Iinclude -Ilib $(CFLAGS) -DCGC_BIN_COUNT=$(BIN_COUNT) -m32 -D_CGC_EMU -fsanitize=address
+POV_CFLAGS = -Iinclude -Ilib $(CFLAGS) -m32 -D_CGC_EMU -fsanitize=address
+
+LDFLAGS = -fsanitize=address -m32
+
+endif
+
+SHELL		:= $(SHELL) -e
+BIN_DIR		= bin
+POV_DIR		= pov
+BUILD_DIR	= build
+
 EXE		= $(AUTHOR_ID)_$(SERVICE_ID)
 CB_INSTALL_DIR	= $(DESTDIR)/usr/share/cgc-challenges/$(EXE)
-PATH		:= /usr/i386-linux-cgc/bin:$(PATH)
 BINS		= $(wildcard cb_*)
 POV_BINS	= $(wildcard pov_*)
 POV_SRCS    = $(wildcard pov_*/*.c)
@@ -90,7 +113,12 @@ get_cb_bins   		= $(sort $(filter-out %_partial, $(filter-out %_patched, $(notdi
 get_cb_patched_bins = $(sort $(filter-out %_partial, $(filter %_patched, $(notdir $(wildcard $(BIN_DIR)/$(EXE)*)))))
 
 OBJS_		= $(SRCS:.c=.o)
-OBJS		= $(OBJS_:.cc=.o) $(CB_ADDITIONS)
+OBJS		= $(OBJS_:.cc=.o)
+
+ifneq ("$(findstring,cgc,$(UNAME_R))","")
+OBJS += $(CB_ADDITIONS)
+endif
+
 ELF_OBJS	= $(OBJS:.o=.elf)
 
 POV_OBJS	= $(POV_SRCS:.c=.o)
@@ -223,7 +251,7 @@ endif
 release: prep $(RELEASE_PATH)
 
 $(RELEASE_PATH): $(RELEASE_OBJS)
-	$(LD) $(LDFLAGS) -s -o $(RELEASE_PATH) -I$(BUILD_DIR)/$(RELEASE_DIR)/lib $^ $(LIBS)
+	$(LD) $(LDFLAGS) -o $(RELEASE_PATH) -I$(BUILD_DIR)/$(RELEASE_DIR)/lib $^ $(LIBS)
 	$(LD) $(LDFLAGS) -o $(RELEASE_DEBUG_PATH) -I$(BUILD_DIR)/$(RELEASE_DIR)/lib $^ $(LIBS)
 
 $(BUILD_DIR)/$(RELEASE_DIR)/%.o: %.c
@@ -320,10 +348,18 @@ clean: clean-test clean-binaries
 	-rm -f $(POV_DIR)/*.pov
 	-if [ -d $(POV_DIR) ]; then rmdir --ignore-fail-on-non-empty $(POV_DIR); fi
 
+ifneq ("$(findstring,cgc,$(UNAME_R))","")
+
 ifeq ($(strip $(BINS)),)
 build: prep release patched pov build-partial
 else
 build: prep build-binaries pov
+endif
+
+else
+
+build:release
+
 endif
 
 install: 
