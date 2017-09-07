@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -43,23 +43,23 @@ int remove_dives(logbook_type *Info)  {
 
 	if (next_dive == 0) {
 
-		printf("\n");
-		printf("Dive Log is empty\n");
+		__printf("\n");
+		__printf("Dive Log is empty\n");
 		return 0;
 	}
 
 	// show all the dives
 	list_dives(Info);
 
-	printf("\n");
-	printf("Enter Dive # to delete or blank to abort: ");
+	__printf("\n");
+	__printf("Enter Dive # to delete or blank to abort: ");
 
 	rcv_cnt=getline(buf, sizeof(buf));
 		
 	if (rcv_cnt==0)
 		return 0;
 
-	dive_number_to_delete=atoi(buf);
+	dive_number_to_delete=__atoi(buf);
 
 	next_dive = Info->dives;
 
@@ -77,14 +77,14 @@ int remove_dives(logbook_type *Info)  {
 
 				next_ptr=temp_ptr->next;
 
-				free(temp_ptr);
+				__free(temp_ptr);
 
 				temp_ptr=next_ptr;
 			}
 
 		}
-		// now free the dive log entry
-		free(next_dive);
+		// now __free the dive log entry
+		__free(next_dive);
 
 		Info->dives = temp_dive;
 		return 0;
@@ -118,19 +118,19 @@ int remove_dives(logbook_type *Info)  {
 
 				next_ptr=temp_ptr->next;
 
-				free(temp_ptr);
+				__free(temp_ptr);
 
 				temp_ptr=next_ptr;
 			}
 		
 		}
 
-		// now free the dive log entry
-		free (next_dive);
+		// now __free the dive log entry
+		__free (next_dive);
 	}
 	else {
 
-		printf("Invalid dive number entered\n");
+		__printf("Invalid dive number entered\n");
 	}
 
 	return 0;

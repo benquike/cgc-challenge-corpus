@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -38,11 +38,11 @@ int dive_statistics(logbook_type *Info)  {
 	int dive_lengths_count = 0;
 	dive_log_type *next_dive;
 
-	printf("\n");
+	__printf("\n");
 
 	if (Info->dives == 0) {
 
-		printf("No dives are logged\n");
+		__printf("No dives are logged\n");
 		return -1;
 
 	}
@@ -69,17 +69,17 @@ int dive_statistics(logbook_type *Info)  {
 		next_dive = next_dive->next;
 	} // while 
 
-	printf("Dives logged: @d\n", dive_count);
+	__printf("Dives logged: @d\n", dive_count);
 
 	if (max_depth_count > 0) 
-		printf("Average Max Depth: @d\n", sum_max_depths/max_depth_count);
+		__printf("Average Max Depth: @d\n", sum_max_depths/max_depth_count);
 	else
-		printf("Average Max Depth: 0\n");
+		__printf("Average Max Depth: 0\n");
 
 	if (dive_lengths_count > 0)
-		printf("Average Dive Length: @d\n", sum_dive_lengths/dive_lengths_count);
+		__printf("Average Dive Length: @d\n", sum_dive_lengths/dive_lengths_count);
 	else
-		printf("Average Dive Length: 0\n");
+		__printf("Average Dive Length: 0\n");
 
 
 

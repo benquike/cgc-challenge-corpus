@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -28,10 +28,10 @@ THE SOFTWARE.
 #include "stdlib.h"
 
 
-time_t datetime2time_t(datetime_struct_type *tm)  {
+__time_t__ datetime2time_t(datetime_struct_type *tm)  {
 
 int i;
-time_t result=0;
+__time_t__ result=0;
 
     // the epoch starts at 1/1/1970
     if (tm->year < 1970)
@@ -60,7 +60,7 @@ time_t result=0;
 }
 
 
-int time_t2datetime(time_t epoch, datetime_struct_type *tm)  {
+int time_t2datetime(__time_t__ epoch, datetime_struct_type *tm)  {
 
 unsigned int day_seconds;
 unsigned int num_days_since_epoch;
@@ -121,7 +121,7 @@ int cumulative_days_by_month[]= { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 3
 }
 
 
-time_t str2datetime(char *buff, datetime_struct_type *tm) {
+__time_t__ str2datetime(char *buff, datetime_struct_type *tm) {
 
 
 unsigned mon, mday, year;
@@ -133,12 +133,12 @@ char *tmp;
 
 //parse string in the from of "MM/DD/YYYY HH:MM:SS" into the structure elements
 
-    while (isspace(*buff))
+    while (__isspace(*buff))
         ++buff;
 
     tmp=buff;
     
-    mon=atoi(tmp);
+    mon=__atoi(tmp);
     
     if (mon < 1 || mon > 12)
         return(-2);
@@ -148,7 +148,7 @@ char *tmp;
         
     ++tmp;
     
-    mday=atoi(tmp);
+    mday=__atoi(tmp);
     
     if (mday < 1)
         return (-2);
@@ -164,7 +164,7 @@ char *tmp;
         
     ++tmp;
     
-    year=atoi(tmp);
+    year=__atoi(tmp);
     
     // constrain the year so that other calculations are valid
     if (year < 1970 || year > 2050)
@@ -178,13 +178,13 @@ char *tmp;
     tm->day = mday;
     tm->month = mon;
 
-    while (!isspace(*tmp))
+    while (!__isspace(*tmp))
         ++tmp;
 
-    while (isspace(*tmp))
+    while (__isspace(*tmp))
         ++tmp;
 
-    hours = atoi(tmp);
+    hours = __atoi(tmp);
 
 
     while (*tmp!=':' && *tmp!=0)
@@ -192,7 +192,7 @@ char *tmp;
 
     ++tmp;
 
-    mins = atoi(tmp);
+    mins = __atoi(tmp);
 
 
     while (*tmp!=':' && *tmp!=0)
@@ -200,7 +200,7 @@ char *tmp;
 
     ++tmp;
     
-    secs = atoi(tmp);
+    secs = __atoi(tmp);
 
     tm->hour = hours;
     tm->min = mins;
@@ -213,20 +213,20 @@ char *tmp;
 }
 
 
-void print_time_t (time_t date) {
+void print_time_t (__time_t__ date) {
     
     datetime_struct_type tm;
 
     time_t2datetime(date, &tm);
 
-    printf("@d/@d/@d @02d:@02d:@02d", tm.month, tm.day, tm.year,
+    __printf("@d/@d/@d @02d:@02d:@02d", tm.month, tm.day, tm.year,
                 tm.hour, tm.min, tm.sec);
     
 }
 
 void print_datetime(datetime_struct_type *tm)  {
 
-    printf("@d/@d/@d @02d:@02d:@02d", tm->month, tm->day, tm->year,
+    __printf("@d/@d/@d @02d:@02d:@02d", tm->month, tm->day, tm->year,
                 tm->hour, tm->min, tm->sec);
 
 }
@@ -246,7 +246,7 @@ int to_time_str(datetime_struct_type *tm, char *buffer) {
 }
 
 
-int diff_between_dates(time_t start, time_t end) {
+int diff_between_dates(__time_t__ start, __time_t__ end) {
 
 // unimplemented right now
 return 0;

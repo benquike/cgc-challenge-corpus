@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -27,7 +27,7 @@ THE SOFTWARE.
 #ifndef DATES_H
 #define DATES_H
 
-typedef unsigned long time_t;
+typedef unsigned long __time_t__;
 
 typedef struct {
 
@@ -42,18 +42,18 @@ typedef struct {
 }  datetime_struct_type;
 
 
-// from a string formatted MM/DD/YYYY HH:MM:SS in buff, fill out the datetime_struct and return a time_t value
-time_t str2datetime(char *buff, datetime_struct_type *);
+// from a string formatted MM/DD/YYYY HH:MM:SS in buff, fill out the datetime_struct and return a __time_t__ value
+__time_t__ str2datetime(char *buff, datetime_struct_type *);
 
-time_t datetime2time_t(datetime_struct_type *);
+__time_t__ datetime2time_t(datetime_struct_type *);
 
-int time_t2datetime(time_t, datetime_struct_type *);
+int time_t2datetime(__time_t__, datetime_struct_type *);
 
-void print_time_t (time_t);
+void print_time_t (__time_t__);
 
 void print_datetime(datetime_struct_type *tm);
 
-int diff_between_dates(time_t start, time_t end);
+int diff_between_dates(__time_t__ start, __time_t__ end);
 
 int to_date_str(datetime_struct_type *tm, char *buffer);
 int to_time_str(datetime_struct_type *tm, char *buffer);
@@ -64,7 +64,7 @@ unsigned int leap_year(unsigned int year);
 // returns the day of the year.  1-366 ( 365 for non leap years)
 unsigned int doy(unsigned year, unsigned month, unsigned day);
 
-int print_date (time_t);
+int print_date (__time_t__);
 
 
 

@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -40,23 +40,23 @@ int process_menu(menu_item *menu, int num_items)  {
     // start the main menu loop
      while (1) {
 
-		printf("\n");
+		__printf("\n");
 		
 		// print the menu items
 		for (i=0;i< num_items;++i)  {
 
-			printf("@c - @s\n", menu[i].command[0], menu[i].prompt);
+			__printf("@c - @s\n", menu[i].command[0], menu[i].prompt);
 
 		}
 
-		printf(":");
+		__printf(":");
 		
 	    rcv_cnt=getline(buf, sizeof(buf));
 		
 		if (rcv_cnt==0)
 		    continue;
 
-	    printf("\n");
+	    __printf("\n");
 
 	    // find entry associated with the ccommand char entered and execute it
 		for (i=0;i< num_items;++i) {
@@ -85,7 +85,7 @@ int find_char(char c, char *string)  {
 
 	int i;
 
-	for (i=0; i< strlen(string); ++i) {
+	for (i=0; i< __strlen(string); ++i) {
 
 		if (string[i]== c)
 			return 1;

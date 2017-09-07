@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -40,22 +40,22 @@ int edit_dives(logbook_type *Info)  {
 
 	if (next_dive == 0) {
 
-		printf("\n");
-		printf("Dive Log is empty\n");
+		__printf("\n");
+		__printf("Dive Log is empty\n");
 		return 0;
 	}
 
 	list_dives(Info);
 
-	printf("\n");
-	printf("Enter Dive # to edit: ");
+	__printf("\n");
+	__printf("Enter Dive # to edit: ");
 
 	rcv_cnt=getline(buf, sizeof(buf));
 		
 	if (rcv_cnt==0)
 		return 0;
 
-	dive_number_to_edit=atoi(buf);
+	dive_number_to_edit=__atoi(buf);
 
 	next_dive = Info->dives;
 	dive_count = 1;
@@ -67,14 +67,14 @@ int edit_dives(logbook_type *Info)  {
 	}
 
 	if (dive_count==dive_number_to_edit && next_dive != 0) {
-		printf("Editing dive number @d\n", dive_number_to_edit);
+		__printf("Editing dive number @d\n", dive_number_to_edit);
 
 		// now display and allow for updating of the data
 		update_dive(next_dive);
 	}
 	else {
 
-		printf("Invalid dive number entered\n");
+		__printf("Invalid dive number entered\n");
 
 	}
 	
@@ -89,55 +89,55 @@ char buffer[1024];
 char buf2[1024];
 size_t count;
 
-	printf("Dive Site");
+	__printf("Dive Site");
 
 	if (dive->dive_site_name[0]!= 0)
-		printf(" (@s)", dive->dive_site_name);
+		__printf(" (@s)", dive->dive_site_name);
 
-	printf(": ");
+	__printf(": ");
 
 	count=getline(buffer, sizeof(dive->dive_site_name));
 
 	if (count > 0) {
-		strncpy(dive->dive_site_name, buffer, sizeof(dive->dive_site_name));
+		__strncpy(dive->dive_site_name, buffer, sizeof(dive->dive_site_name));
 	}
 
-	printf("Date");
+	__printf("Date");
 
 	if (dive->dive_date[0]!= 0)
-		printf(" (@s)", dive->dive_date);
+		__printf(" (@s)", dive->dive_date);
 
-	printf(": ");
+	__printf(": ");
 
 	count=getline(buffer, sizeof(dive->dive_date));
 
 	if (count > 0)
-		strncpy(dive->dive_date, buffer, sizeof(dive->dive_date));
+		__strncpy(dive->dive_date, buffer, sizeof(dive->dive_date));
 
-	printf("Time");
+	__printf("Time");
 
 	if (dive->dive_time[0]!= 0)
-		printf(" (@s)", dive->dive_time);
+		__printf(" (@s)", dive->dive_time);
 
-	printf(": ");
+	__printf(": ");
 
 	count=getline(buf2, sizeof(dive->dive_time));
 
 	if (count > 0)
-		strncpy(dive->dive_time, buf2, sizeof(dive->dive_time));
+		__strncpy(dive->dive_time, buf2, sizeof(dive->dive_time));
 
-	strncat(buffer, " ", 1);
-	strncat(buffer, buf2, strlen(buf2));
+	__strncat(buffer, " ", 1);
+	__strncat(buffer, buf2, __strlen(buf2));
 
 	datetime_struct_type tm;
 	dive->timestamp =  str2datetime(buffer, &tm);
 
-	printf("Location (area/city)");
+	__printf("Location (area/city)");
 
 	if (dive->location[0]!= 0)
-		printf(" (@s)", dive->location);
+		__printf(" (@s)", dive->location);
 
-	printf(": ");
+	__printf(": ");
 
 #ifdef PATCHED
     count=getline(buffer, sizeof(dive->location));
@@ -146,79 +146,79 @@ size_t count;
 #endif
 
 	if (count > 0)
-		strncpy(dive->location, buffer, count);
+		__strncpy(dive->location, buffer, count);
 
-	printf("Max Depth in ft");
+	__printf("Max Depth in ft");
 
 	if (dive->max_depth!= 0)
-		printf(" (@d)", dive->max_depth);
+		__printf(" (@d)", dive->max_depth);
 
-	printf(": ");
+	__printf(": ");
 
 	count=getline(buffer, sizeof(buffer));
 
 	if (count > 0)
-		dive->max_depth= atoi(buffer);
+		dive->max_depth= __atoi(buffer);
 
-	printf("Avg Depth in ft");
+	__printf("Avg Depth in ft");
 
 	if (dive->avg_depth!= 0)
-		printf(" (@d)", dive->avg_depth);
+		__printf(" (@d)", dive->avg_depth);
 
-	printf(": ");
+	__printf(": ");
 
 	count=getline(buffer, sizeof(buffer));
 
 	if (count > 0)
-		dive->avg_depth=atoi(buffer);
+		dive->avg_depth=__atoi(buffer);
 
-	printf("Dive Duration (mins)");
+	__printf("Dive Duration (mins)");
 
 	if (dive->dive_length!= 0)
-		printf(" (@d)", dive->dive_length);
+		__printf(" (@d)", dive->dive_length);
 
-	printf(": ");
+	__printf(": ");
 
 	count=getline(buffer, 13);
 
 	if (count > 0)
-		dive->dive_length = atoi(buffer);
+		dive->dive_length = __atoi(buffer);
 
-	printf("O2 Percentage");
+	__printf("O2 Percentage");
 
 	if (dive->O2_percent!= 0)
-		printf(" (@d)", dive->O2_percent);
+		__printf(" (@d)", dive->O2_percent);
 
-	printf(": ");
+	__printf(": ");
 
 	count=getline(buffer, 11);
 
 	if (count > 0)
-		dive->O2_percent=atoi(buffer);
+		dive->O2_percent=__atoi(buffer);
 	
-	printf("Pressure In (psi)");
+	__printf("Pressure In (psi)");
 
 	if (dive->pressure_in!= 0)
-		printf(" (@d)", dive->pressure_in);
+		__printf(" (@d)", dive->pressure_in);
 
-	printf(": ");
+	__printf(": ");
 
 	count=getline(buffer, 20);
 
 	if (count > 0)
-		dive->pressure_in=atoi(buffer);
+		dive->pressure_in=__atoi(buffer);
 
-	printf("Pressure Out (psi)");
+	__printf("Pressure Out (psi)");
 
 	if (dive->pressure_out!= 0)
-		printf(" (@d)", dive->pressure_out);
+		__printf(" (@d)", dive->pressure_out);
 
-	printf(": ");
+	__printf(": ");
 
 	count=getline(buffer, 11);
 
 	if (count > 0)
-		dive->pressure_out=atoi(buffer);
+		dive->pressure_out=__atoi(buffer);
 
 	return 0;
 

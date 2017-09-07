@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -47,7 +47,7 @@ int main(void) {
    };
 
 
-  	bzero((void *)&logbook, sizeof(logbook));
+  	__bzero((void *)&logbook, sizeof(logbook));
 
   	process_menu(menu, sizeof(menu)/ sizeof(menu_item));
 

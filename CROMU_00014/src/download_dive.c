@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,15 +37,15 @@ int download_dive(logbook_type *Info)  {
 	char buffer2[1024];
 	size_t count;
 	int ret_code;
-	time_t sample_time;
-	time_t first_sample;
+	__time_t__ sample_time;
+	__time_t__ first_sample;
 	int sample_depth;
 	struct dive_data *temp_ptr;
 	datetime_struct_type tm;
 	int max_depth=0;
 	int sum_depth=0;
 	int count_samples=0;
-	time_t delta_time;
+	__time_t__ delta_time;
 	int *bins;
 	int bin_number;
 	int i; 
@@ -55,7 +55,7 @@ int download_dive(logbook_type *Info)  {
 
 	if (ret_code < 0 ) {
 
-		printf("received error code \n");
+		__printf("received error code \n");
 		return -1;
 	}
 
@@ -63,7 +63,7 @@ int download_dive(logbook_type *Info)  {
 	ret_code=receive_bytes((unsigned char *)&sample_depth, sizeof(sample_depth));
 
 	if (ret_code < 0) {
-		printf("received error code or zero sample \n");
+		__printf("received error code or zero sample \n");
 		return -1;
 	}
 
@@ -72,7 +72,7 @@ int download_dive(logbook_type *Info)  {
 
 	// if its the first dive in the log
 	if (Info->dives == 0)  {
-		Info->dives=calloc(1, sizeof(dive_log_type));
+		Info->dives=__calloc(1, sizeof(dive_log_type));
 
 		if (Info->dives==0)
 			_terminate(-1);
@@ -86,7 +86,7 @@ int download_dive(logbook_type *Info)  {
 		while (next_dive->next != 0)
 			next_dive = next_dive->next;
 
-		next_dive->next = calloc(1, sizeof(dive_log_type));
+		next_dive->next = __calloc(1, sizeof(dive_log_type));
 
 		if (next_dive->next==0)
 			_terminate(-1);
@@ -95,7 +95,7 @@ int download_dive(logbook_type *Info)  {
 	}
 
 	// now allocate memory for the first data point in the dive
-	next_dive->data=calloc(1, sizeof(struct dive_data));
+	next_dive->data=__calloc(1, sizeof(struct dive_data));
 
 	if (next_dive->data==0)
 		_terminate(-1);
@@ -122,7 +122,7 @@ int download_dive(logbook_type *Info)  {
 		ret_code=receive_bytes((unsigned char *)&sample_time, sizeof(sample_time));
 
 		if (ret_code < 0) {
-			printf("received error code or zero timestamp \n");
+			__printf("received error code or zero timestamp \n");
 			return -1;
 		}
 
@@ -135,11 +135,11 @@ int download_dive(logbook_type *Info)  {
 		ret_code=receive_bytes((unsigned char *)&sample_depth, sizeof(sample_depth));
 
 		if (ret_code < 0) {
-			printf("received error code or zero sample \n");
+			__printf("received error code or zero sample \n");
 			return -1;
 		}
 
-		temp_ptr->next=calloc(1, sizeof(dive_data_type));
+		temp_ptr->next=__calloc(1, sizeof(dive_data_type));
 
 		if (temp_ptr->next == 0)
 			_terminate(-1);
@@ -165,7 +165,7 @@ int download_dive(logbook_type *Info)  {
 	next_dive->dive_length = delta_time/60;
 
 	//setup bins per minute of the dive
-	bins=calloc(next_dive->dive_length+1, sizeof(int));
+	bins=__calloc(next_dive->dive_length+1, sizeof(int));
 
 	 if (bins==0)
 	 	_terminate(-1);
@@ -203,7 +203,7 @@ int download_dive(logbook_type *Info)  {
 		next_dive->bincount+=bins[i];
 
 
-	free(bins);
+	__free(bins);
 
 	next_dive->max_depth= max_depth;
 
@@ -213,128 +213,128 @@ int download_dive(logbook_type *Info)  {
 		next_dive->avg_depth=0;
 
 	// now prompt for the remaining entries, but also allow editing of stuff from the data
-	printf("Dive Site");
+	__printf("Dive Site");
 
 	if (next_dive->dive_site_name[0]!= 0)
-		printf(" (@s)", next_dive->dive_site_name);
+		__printf(" (@s)", next_dive->dive_site_name);
 
-	printf(": ");
+	__printf(": ");
 
 	count=getline(buffer, sizeof(next_dive->dive_site_name));
 
 	if (count > 0)
-		strncpy(next_dive->dive_site_name, buffer, sizeof(next_dive->dive_site_name));
+		__strncpy(next_dive->dive_site_name, buffer, sizeof(next_dive->dive_site_name));
 
 
-	printf("Date");
+	__printf("Date");
 
 	if (next_dive->dive_date[0]!= 0)
-		printf(" (@s)", next_dive->dive_date);
+		__printf(" (@s)", next_dive->dive_date);
 
-	printf(": ");
+	__printf(": ");
 
 	count=getline(buffer, sizeof(next_dive->dive_date));
 
 	if (count > 0)
-		strncpy(next_dive->dive_date, buffer, count);
+		__strncpy(next_dive->dive_date, buffer, count);
 
 
-	printf("Time");
+	__printf("Time");
 
 	if (next_dive->dive_time[0]!= 0)
-		printf(" (@s)", next_dive->dive_time);
+		__printf(" (@s)", next_dive->dive_time);
 
-	printf(": ");
+	__printf(": ");
 
 	count=getline(buffer2, sizeof(next_dive->dive_time));
 
 	if (count > 0)
-		strncpy(next_dive->dive_time, buffer2, count);
+		__strncpy(next_dive->dive_time, buffer2, count);
 
-	printf("Location (area/city)");
+	__printf("Location (area/city)");
 
 	if (next_dive->location[0]!= 0)
-		printf(" (@s)", next_dive->location);
+		__printf(" (@s)", next_dive->location);
 
-	printf(": ");
+	__printf(": ");
 
 	count=getline(buffer, sizeof(next_dive->location));
 
 	if (count > 0)
-		strncpy(next_dive->location, buffer, count);
+		__strncpy(next_dive->location, buffer, count);
 
-		printf("Max Depth in ft");
+		__printf("Max Depth in ft");
 
 	if (next_dive->max_depth!= 0)
-		printf(" (@d)", next_dive->max_depth);
+		__printf(" (@d)", next_dive->max_depth);
 
-	printf(": ");
+	__printf(": ");
 
 	count=getline(buffer, sizeof(buffer));
 
 	if (count > 0)
-		next_dive->max_depth= atoi(buffer);
+		next_dive->max_depth= __atoi(buffer);
 
-		printf("Avg Depth in ft");
+		__printf("Avg Depth in ft");
 
 	if (next_dive->avg_depth!= 0)
-		printf(" (@d)", next_dive->avg_depth);
+		__printf(" (@d)", next_dive->avg_depth);
 
-	printf(": ");
+	__printf(": ");
 
 	count=getline(buffer, sizeof(buffer));
 
 	if (count > 0)
-		next_dive->avg_depth=atoi(buffer);
+		next_dive->avg_depth=__atoi(buffer);
 
-	printf("Dive Duration (mins)");
+	__printf("Dive Duration (mins)");
 
 	if (next_dive->dive_length!= 0)
-		printf(" (@d)", next_dive->dive_length);
+		__printf(" (@d)", next_dive->dive_length);
 
-	printf(": ");
+	__printf(": ");
 
 	count=getline(buffer, 13);
 
 	if (count > 0)
-		next_dive->dive_length = atoi(buffer);
+		next_dive->dive_length = __atoi(buffer);
 
-	printf("O2 Percentage");
+	__printf("O2 Percentage");
 
 	if (next_dive->O2_percent!= 0)
-		printf(" (@d)", next_dive->O2_percent);
+		__printf(" (@d)", next_dive->O2_percent);
 
-	printf(": ");
+	__printf(": ");
 
 	count=getline(buffer, 11);
 
 	if (count > 0)
-		next_dive->O2_percent=atoi(buffer);
+		next_dive->O2_percent=__atoi(buffer);
 
 	
-	printf("Pressure In (psi)");
+	__printf("Pressure In (psi)");
 
 	if (next_dive->pressure_in!= 0)
-		printf(" (@d)", next_dive->pressure_in);
+		__printf(" (@d)", next_dive->pressure_in);
 
-	printf(": ");
+	__printf(": ");
 
 	count=getline(buffer, 20);
 
 	if (count > 0)
-		next_dive->pressure_in=atoi(buffer);
+		next_dive->pressure_in=__atoi(buffer);
 
-	printf("Pressure Out (psi)");
+	__printf("Pressure Out (psi)");
 
 	if (next_dive->pressure_out!= 0)
-		printf(" (@d)", next_dive->pressure_out);
+		__printf(" (@d)", next_dive->pressure_out);
 
-	printf(": ");
+	__printf(": ");
 
 	count=getline(buffer, 11);
 
 	if (count > 0)
-		next_dive->pressure_out=atoi(buffer);
+		next_dive->pressure_out=__atoi(buffer);
 
 	next_dive->next=0;
 
