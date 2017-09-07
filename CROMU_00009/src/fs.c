@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -42,42 +42,42 @@ int InitFS(uint32_t fs_size) {
 
 	// make sure the fs_size is within limits
 	if (fs_size > MAX_FS_SIZE) {
-		puts("Requested filesystem size is too large\n");
+		__puts("Requested filesystem size is too large\n");
 		return(-1);
 	}
 
 	// make sure the fs_size is an even number of blocks
 	if ((fs_size % DATA_BLOCK_SIZE) != 0) {
-		puts("Requested filesystem size is not an even number of blocks\n");
+		__puts("Requested filesystem size is not an even number of blocks\n");
 		return(-1);
 	}
 
 	// populate the superblock
-	bzero(&fs, sizeof(superblock));
+	__bzero(&fs, sizeof(superblock));
 	fs.magic = CRFS;
 	fs.blocksize = DATA_BLOCK_SIZE;
 	fs.fs_size = fs_size;
 
 	// allocate space for the first inode page
 	if (allocate(PAGE_SIZE, 0, (void **)&(fs.inode_pages[0]))) {
-		puts("Failed to allocate inode page\n");
+		__puts("Failed to allocate inode page\n");
 		return(-1);
 	}
-	bzero(fs.inode_pages[0], PAGE_SIZE);
+	__bzero(fs.inode_pages[0], PAGE_SIZE);
 
 	// zero space for the free_list
-	bzero(free_list, sizeof(free_t)*MAX_FREE_PAGES);
+	__bzero(free_list, sizeof(free_t)*MAX_FREE_PAGES);
 
 	// allocate space for the first data page
 	if (allocate(PAGE_SIZE, 0, (void *)&(free_list[0].page))) {
-		puts("Failed to allocate data blocks\n");
+		__puts("Failed to allocate data blocks\n");
 		return(-1);
 	}
-	bzero(free_list[0].page, PAGE_SIZE);
+	__bzero(free_list[0].page, PAGE_SIZE);
 
 	// populate the top-level root directory inode
 	n = fs.inode_pages[0];
-	strcpy(n[0].fname, "/");
+	__strcpy(n[0].fname, "/");
 	n[0].type = INODE_DIRECTORY;
 	n[0].fsize = 0;
 	n[0].num_blocks = 1;
@@ -133,7 +133,7 @@ inode *FindInode(char *fname) {
 		t = fs.inode_pages[i];
 		for (j = 0; j < INODES_PER_PAGE; j++) {
 			if ((t[j].type == INODE_FILE || t[j].type == INODE_DIRECTORY) 
-				&& !strcmp(t[j].fname, fname)) {
+				&& !__strcmp(t[j].fname, fname)) {
 				return(&(t[j]));
 			}
 		}
@@ -176,7 +176,7 @@ inode *FindDirEntry(inode *dir, char *fname) {
 			if (!file) {
 				continue;
 			}
-			if (!strcmp(file->fname, fname)) {
+			if (!__strcmp(file->fname, fname)) {
 				return(file);
 			}
 		}
@@ -205,27 +205,27 @@ int CheckFileExists(char *fname, inode **file_inode) {
 
 	// should include full path
 	if (fname[0] != '/') {
-		puts("invalid filename");
+		__puts("invalid filename");
 		return(-1);	
 	}
 
 	// find the root inode
 	if ((i = FindInode("/")) == NULL) {
-		puts("failed to root find inode");
+		__puts("failed to root find inode");
 		return(-1);
 	}
 
 	// handle special case of the root directory
-	if (!strcmp(fname, "/")) {
+	if (!__strcmp(fname, "/")) {
 		*file_inode = i;
 		return(2);
 	}
 
-	while ((tok = strtok(f, "/"))) {
+	while ((tok = __strtok(f, "/"))) {
 		f = NULL;
 		retval = 0;
 
-		// read the directory contents to see 
+		// __read the directory contents to see 
 		// if our current token is in there
 		if ((i2 = FindDirEntry(i, tok))) {
 			// found this token
@@ -264,10 +264,10 @@ inode *FindFreeInode() {
 		if (!ipage) {
 			// allocate a new page
 			if (allocate(PAGE_SIZE, 0, (void **)&(fs.inode_pages[i]))) {
-				puts("Failed to allocate inode page\n");
+				__puts("Failed to allocate inode page\n");
 				return(NULL);
 			}
-			bzero(fs.inode_pages[i], PAGE_SIZE);
+			__bzero(fs.inode_pages[i], PAGE_SIZE);
 			ipage = fs.inode_pages[i];
 		}
 		for (j = 0; j < INODES_PER_PAGE; j++) {
@@ -302,10 +302,10 @@ block *FindFreeDataBlock() {
 	
 			// allocate a new page
 			if (allocate(PAGE_SIZE, 0, (void *)&(free_list[i].page))) {
-				puts("Failed to allocate data blocks\n");
+				__puts("Failed to allocate data blocks\n");
 				return(NULL);
 			}
-			bzero(free_list[i].page, PAGE_SIZE);
+			__bzero(free_list[i].page, PAGE_SIZE);
 			p = free_list[i].page;
 		}
 		if (free_list[i].in_use == 0xff) {
@@ -343,11 +343,11 @@ int SplitPath(char *full_name, char *path, char *fname) {
 		return(0);
 	}
 
-	strcpy(path, full_name);
-	for (i = strlen(path); i > 0; i--) {
+	__strcpy(path, full_name);
+	for (i = __strlen(path); i > 0; i--) {
 		if (path[i] == '/') {
 			// grab the file name portion while we're here
-			strcpy(fname, path+i+1);
+			__strcpy(fname, path+i+1);
 
 			// null term the path and we're done
 			path[i] = '\0';
@@ -357,7 +357,7 @@ int SplitPath(char *full_name, char *path, char *fname) {
 	// path only has one / at the beginning
 	// so path is "/"
 	if (i == 0) {
-		strcpy(fname, full_name+1);
+		__strcpy(fname, full_name+1);
 		path[i+1] = '\0';
 	}
 
@@ -389,11 +389,11 @@ inode *CreateFile(char *full_name, char *contents) {
 		return(NULL);
 	}
 
-	bzero(path, MAX_CMD);
-	bzero(fname, MAX_CMD);
+	__bzero(path, MAX_CMD);
+	__bzero(fname, MAX_CMD);
 
-	if (strlen(fname) > MAX_FILE_NAME_LEN-1) {
-		puts("file name too large");
+	if (__strlen(fname) > MAX_FILE_NAME_LEN-1) {
+		__puts("file name too large");
 		return(NULL);
 	}
 
@@ -403,7 +403,7 @@ inode *CreateFile(char *full_name, char *contents) {
 		return(NULL);
 	} else if (i == 1) {
 		// yes, return an error
-		puts("file exists");
+		__puts("file exists");
 		return(NULL);
 	}
 
@@ -411,13 +411,13 @@ inode *CreateFile(char *full_name, char *contents) {
 	SplitPath(full_name, path, fname);
 	if (CheckFileExists(path, &dir_inode) != 2) {
 		// directory doesn't exist
-		puts("directory doesn't exist");
+		__puts("directory doesn't exist");
 		return(NULL);
 	}
 
 	// how many blocks will this content require
-	block_count = strlen(contents)/fs.blocksize;
-	if (strlen(contents) % fs.blocksize != 0) {
+	block_count = __strlen(contents)/fs.blocksize;
+	if (__strlen(contents) % fs.blocksize != 0) {
 		block_count++;
 	}
 	// in case someone is creating an empty file
@@ -434,7 +434,7 @@ inode *CreateFile(char *full_name, char *contents) {
 	// locate available inode(s)
 	for (i = 0; i < inode_count; i++) {
 		if ((in = FindFreeInode()) == NULL) { 
-			puts("out of inodes");
+			__puts("out of inodes");
 			return(NULL);
 		}
 		// grab a pointer to the first inode
@@ -442,13 +442,13 @@ inode *CreateFile(char *full_name, char *contents) {
 			inode_head = in;
 		}
 		in->type = INODE_FILE;
-		in->fsize = strlen(contents);
+		in->fsize = __strlen(contents);
 		in->num_blocks = block_count;
 		if (last_inode) {
 			last_inode->indirect_inode = in;
 		}
 		last_inode = in;
-		strncpy(in->fname, fname, MAX_FILE_NAME_LEN-1);
+		__strncpy(in->fname, fname, MAX_FILE_NAME_LEN-1);
 	}
 
 	// locate available data blocks
@@ -456,12 +456,12 @@ inode *CreateFile(char *full_name, char *contents) {
 	index = 0;
 	for (i = 0; i < block_count; i++, index++) {
 		if ((b = FindFreeDataBlock()) == NULL) {
-			puts("out of space");
-			// free allocated inodes
+			__puts("out of space");
+			// __free allocated inodes
 			while (in2) {
 				last_inode = in2;
 				in2 = in2->indirect_inode;
-				bzero(last_inode, sizeof(inode));
+				__bzero(last_inode, sizeof(inode));
 			}
 			return(NULL);
 		}
@@ -476,8 +476,8 @@ inode *CreateFile(char *full_name, char *contents) {
 		in2->blocks[index] = b;
 
 		// copy the data into each block
-		len = strlen(contents+(DATA_BLOCK_SIZE*i));
-		memcpy(b, contents+(DATA_BLOCK_SIZE*i), (len > DATA_BLOCK_SIZE) ? 512 : len);
+		len = __strlen(contents+(DATA_BLOCK_SIZE*i));
+		__memcpy(b, contents+(DATA_BLOCK_SIZE*i), (len > DATA_BLOCK_SIZE) ? 512 : len);
 
 	}
 
@@ -495,8 +495,8 @@ inode *CreateFile(char *full_name, char *contents) {
 	}
 	if (i == MAX_DIR_INODES) {
 		// failed to add entry, directory is full
-		// free allocated data blocks
-		// free allocated inodes
+		// __free allocated data blocks
+		// __free allocated inodes
 		in2 = inode_head;
 		while (in2) {
 			last_inode = in2;
@@ -504,13 +504,13 @@ inode *CreateFile(char *full_name, char *contents) {
 			for (index = 0; index < INODE_DATA_BLOCKS; index++) {
 				FreeDataBlock(last_inode->blocks[index]);
 			}
-			bzero(last_inode, sizeof(inode));
+			__bzero(last_inode, sizeof(inode));
 		}
-		puts("directory is full");
+		__puts("directory is full");
 		return(NULL);
 	}
 
-	puts("file created");
+	__puts("file created");
 	return(inode_head);
 
 }
@@ -533,11 +533,11 @@ int ReadFile(char *full_name) {
 		return(1);
 	} else if (i == 0) {
 		// yes, return an error
-		puts("file doesn't exist");
+		__puts("file doesn't exist");
 		return(1);
 	} else if (i == 2) {
 		// it's a directory
-		puts("file is a directory");
+		__puts("file is a directory");
 		return(1);
 	}
 
@@ -558,13 +558,13 @@ int ReadFile(char *full_name) {
 			return(0);
 		}
 		if (fsize >= DATA_BLOCK_SIZE) {
-			write(b, DATA_BLOCK_SIZE);
+			__write(b, DATA_BLOCK_SIZE);
 			fsize -= DATA_BLOCK_SIZE;
 		} else {
-			write(b, fsize);
+			__write(b, fsize);
 		}
 	}	
-	puts("");
+	__puts("");
 
 	return(0);
 }
@@ -572,7 +572,7 @@ int ReadFile(char *full_name) {
 /*
    Make a new directory
  */
-int mkdir(char *pathname) {
+int __mkdir(char *pathname) {
 	int i;
 	inode *file_inode;
 	inode *dir_inode;
@@ -588,8 +588,8 @@ int mkdir(char *pathname) {
 		return(-1);
 	}
 
-	bzero(path, MAX_CMD);
-	bzero(fname, MAX_CMD);
+	__bzero(path, MAX_CMD);
+	__bzero(fname, MAX_CMD);
 
 	// see if the file already exists
 	i = CheckFileExists(pathname, &file_inode);
@@ -597,36 +597,36 @@ int mkdir(char *pathname) {
 		return(-1);
 	} else if (i == 1) {
 		// yes, return an error
-		puts("file exists");
+		__puts("file exists");
 		return(-1);
 	} else if (i == 2) {
 		// yes, return an error
-		puts("directory exists");
+		__puts("directory exists");
 		return(-1);
 	}
 
 	// make sure the parent directory exists
 	SplitPath(pathname, path, fname);
-	if (strlen(fname) > MAX_FILE_NAME_LEN-1) {
-		puts("file name too large");
+	if (__strlen(fname) > MAX_FILE_NAME_LEN-1) {
+		__puts("file name too large");
 		return(-1);
 	}
 	if (CheckFileExists(path, &dir_inode) != 2) {
 		// directory doesn't exist
-		puts("parent directory doesn't exist");
+		__puts("parent directory doesn't exist");
 		return(-1);
 	}
 
 	// locate an available data block
 	if ((b = FindFreeDataBlock()) == NULL) {
-		puts("out of space");
-		// free allocated inodes
+		__puts("out of space");
+		// __free allocated inodes
 		return(-1);
 	}
 
 	// locate an available inode
 	if ((in = FindFreeInode()) == NULL) { 
-		puts("out of inodes");
+		__puts("out of inodes");
 		return(-1);
 	}
 
@@ -635,7 +635,7 @@ int mkdir(char *pathname) {
 	in->fsize = 0;
 	in->num_blocks = 1;
 	in->indirect_inode = NULL;
-	strncpy(in->fname, fname, MAX_FILE_NAME_LEN-1);
+	__strncpy(in->fname, fname, MAX_FILE_NAME_LEN-1);
 	in->blocks[0] = b;
 
 	// update the parent directory
@@ -659,27 +659,27 @@ int mkdir(char *pathname) {
 #else
 	if (i > MAX_DIR_INODES) {
 #endif
-		// free inodes and data blocks previously allocated
+		// __free inodes and data blocks previously allocated
 		while (in) {
 			last_inode = in;
 			in = in->indirect_inode;
 			for (index = 0; index < INODE_DATA_BLOCKS; index++) {
 				FreeDataBlock(last_inode->blocks[index]);
 			}
-			bzero(last_inode, sizeof(inode));
+			__bzero(last_inode, sizeof(inode));
 		}
-		puts("directory is full");
+		__puts("directory is full");
 		return(-1);
 	}
 
-	puts("directory created");
+	__puts("directory created");
 	return(0);
 }
 
 /* 
    Remove a directory
  */
-int rmdir(char *pathname) {
+int __rmdir(char *pathname) {
 	int i;
 	inode *file_inode;
 	inode *parent_inode;
@@ -694,25 +694,25 @@ int rmdir(char *pathname) {
 		return(-1);
 	}
 
-	bzero(path, MAX_CMD);
-	bzero(fname, MAX_CMD);
+	__bzero(path, MAX_CMD);
+	__bzero(fname, MAX_CMD);
 
 	// see if the file exists
 	i = CheckFileExists(pathname, &file_inode);
 	if (i == 0 || i == -1) {
-		puts("directory does not exist");
+		__puts("directory does not exist");
 		return(-1);
 	}
 
 	// make sure it's a directory
 	if (file_inode->type != INODE_DIRECTORY) {
-		puts("not a directory");
+		__puts("not a directory");
 		return(-1);
 	}
 
 	// make sure it isn't the top level dir
-	if (!strcmp(pathname, "/")) {
-		puts("unable to remove /");	
+	if (!__strcmp(pathname, "/")) {
+		__puts("unable to remove /");	
 		return(-1);
 	}
 
@@ -720,7 +720,7 @@ int rmdir(char *pathname) {
 	dir = (directory *)(file_inode->blocks[0]);
 	for (i = 0; i < MAX_DIR_INODES; i++) {
 		if (dir->inodes[i] != NULL) {
-			puts("directory not empty");
+			__puts("directory not empty");
 			return(-1);
 		}
 	}
@@ -728,7 +728,7 @@ int rmdir(char *pathname) {
 	// get the parent directory inode
 	SplitPath(pathname, path, fname);
 	if (CheckFileExists(path, &parent_inode) != 2) {
-		puts("parent directory doesn't exist...file system corruption detected");
+		__puts("parent directory doesn't exist...file system corruption detected");
 		return(1);
 	}
 
@@ -745,11 +745,11 @@ int rmdir(char *pathname) {
 		}
 	}
 	if (i == MAX_DIR_INODES) {
-		puts("parent directory doesn't have an entry for this directory...file system corruption detected");
+		__puts("parent directory doesn't have an entry for this directory...file system corruption detected");
 		return(1);
 	}
 	
-	// free the data blocks associated with the directory
+	// __free the data blocks associated with the directory
 	index = 0;
 	in2 = file_inode;
 	for (i = 0; i < in2->num_blocks; i++, index++) {
@@ -757,8 +757,8 @@ int rmdir(char *pathname) {
 			// get a pointer to the next inode (if there is one)
 			tmp_inode = in2->indirect_inode;
 
-			// zero/free the current inode
-			bzero(in2, sizeof(inode));
+			// zero/__free the current inode
+			__bzero(in2, sizeof(inode));
 
 			// move on to the next one
 			in2 = tmp_inode;
@@ -773,16 +773,16 @@ int rmdir(char *pathname) {
 		}
 	}
 
-	// free the now unused inode
-	bzero(file_inode, sizeof(inode));
+	// __free the now unused inode
+	__bzero(file_inode, sizeof(inode));
 
-	puts("directory removed");
+	__puts("directory removed");
 	return(0);
 
 }
 
 /*
-   Mark as free a given data block
+   Mark as __free a given data block
  */
 int FreeDataBlock(block *b) {
 	int i, j;
@@ -801,19 +801,19 @@ int FreeDataBlock(block *b) {
 				if (b == &(f->page[j])) {
 					// found it
 					f->in_use ^= (0x80 >> j);
-					bzero(f->page[j], DATA_BLOCK_SIZE);
+					__bzero(f->page[j], DATA_BLOCK_SIZE);
 					break;
 				}
 			}
 			if (j == BLOCKS_PER_PAGE) {
-				puts("unable to free block");
+				__puts("unable to __free block");
 				return(1);
 			}
 			break;
 		}
 	}
 	if (i == MAX_FREE_PAGES) {
-		puts("unable to free block");
+		__puts("unable to __free block");
 		return(1);
 	}
 
@@ -823,7 +823,7 @@ int FreeDataBlock(block *b) {
 /*
    Remove a file
  */
-int unlink(char *full_name) {
+int __unlink(char *full_name) {
 	int i;
 	int index;
 	inode *file_inode;
@@ -834,8 +834,8 @@ int unlink(char *full_name) {
 	char fname[MAX_CMD];
 	directory *dir;
 
-	bzero(path, MAX_CMD);
-	bzero(fname, MAX_CMD);
+	__bzero(path, MAX_CMD);
+	__bzero(fname, MAX_CMD);
 
 	// make sure the target file exists
 	i = CheckFileExists(full_name, &file_inode);
@@ -843,22 +843,22 @@ int unlink(char *full_name) {
 		return(1);
 	} else if (i == 0) {
 		// no, return an error
-		puts("file doesn't exist");
+		__puts("file doesn't exist");
 		return(1);
 	} else if (i == 2) {
 		// yes, but it's a directory, return an error
-		puts("file is a directory");
+		__puts("file is a directory");
 		return(1);
 	}
 
 	// grab a pointer to the parent directory
 	SplitPath(full_name, path, fname);
 	if (CheckFileExists(path, &dir_inode) != 2) {
-		puts("parent directory doesn't exist...file system corruption detected");
+		__puts("parent directory doesn't exist...file system corruption detected");
 		return(1);
 	}
 
-	// free the data block(s) pointed to by the inode
+	// __free the data block(s) pointed to by the inode
 	index = 0;
 	in2 = file_inode;
 	for (i = 0; i < in2->num_blocks; i++, index++) {
@@ -866,8 +866,8 @@ int unlink(char *full_name) {
 			// get a pointer to the next inode (if there is one)
 			tmp_inode = in2->indirect_inode;
 
-			// zero/free the current inode
-			bzero(in2, sizeof(inode));
+			// zero/__free the current inode
+			__bzero(in2, sizeof(inode));
 
 			// move on to the next one
 			in2 = tmp_inode;
@@ -895,20 +895,20 @@ int unlink(char *full_name) {
 		}
 	}
 
-	// free the now unused inode
-	bzero(file_inode, sizeof(inode));
+	// __free the now unused inode
+	__bzero(file_inode, sizeof(inode));
 
-	puts("file removed");
+	__puts("file removed");
 	return(0);
 }
 
 /*
    open a file for reading, writing or appending
  */
-FILE *fopen(char *path, const char *mode) {
+__FILE *__fopen(char *path, const char *mode) {
 	int i;
 	inode *file_inode = NULL;
-	FILE *f;
+	__FILE *f;
 	int mode_val;
 	uint32_t inode_depth;
 	inode *in2;
@@ -924,34 +924,34 @@ FILE *fopen(char *path, const char *mode) {
 		return(NULL);
 	} else if (i == 0) {
 		// file doesn't exist
-		if (!strcmp(mode, "w")) {
+		if (!__strcmp(mode, "w")) {
 			// but this is a 'w' call, so create the file
 			if (!(file_inode = CreateFile(path, ""))) {
-				puts("file creation failed\n");
+				__puts("file creation failed\n");
 				return(NULL);
 			}
 		} else {
-			puts("file doesn't exist");
+			__puts("file doesn't exist");
 			return(NULL);
 		}
 	} else if (i == 2) {
 		// yes, but it's a directory, return an error
-		puts("file is a directory");
+		__puts("file is a directory");
 		return(NULL);
 	}
 
-	// create and populate a FILE pointer
-	if (allocate(sizeof(FILE), 0, (void *)&(f))) {
-		puts("Failed to allocate FILE struct\n");
+	// create and populate a __FILE pointer
+	if (allocate(sizeof(__FILE), 0, (void *)&(f))) {
+		__puts("Failed to allocate __FILE struct\n");
 		return(NULL);
 	}
-	bzero(f, sizeof(FILE));
+	__bzero(f, sizeof(__FILE));
 	f->i = file_inode;
-	if (!strcmp(mode, "r")) {
+	if (!__strcmp(mode, "r")) {
 		f->pos = 0;
 		f->mode = READ;
 		f->curr_pos_inode = file_inode;
-	} else if (!strcmp(mode, "w"))  {
+	} else if (!__strcmp(mode, "w"))  {
 		// delete the current file contents
 		// all except block[0]
 		for (i = 1; i < INODE_DATA_BLOCKS; i++) {
@@ -960,25 +960,25 @@ FILE *fopen(char *path, const char *mode) {
 		}
 		in2 = file_inode->indirect_inode;
 		while (in2) {
-			// free the inode's data blocks
+			// __free the inode's data blocks
 			for (i = 0; i < INODE_DATA_BLOCKS; i++) {
 				FreeDataBlock(in2->blocks[i]);
 				in2->blocks[i] = NULL;
 			}
-			// free the inode itself
+			// __free the inode itself
 			tmp_inode = in2->indirect_inode;
-			bzero(in2, sizeof(inode));
+			__bzero(in2, sizeof(inode));
 			in2 = tmp_inode;
 		}
 
 		// zero block[0]
-		bzero(file_inode->blocks[0], DATA_BLOCK_SIZE);
+		__bzero(file_inode->blocks[0], DATA_BLOCK_SIZE);
 		file_inode->fsize = 0;
 
 		f->pos = 0;
 		f->mode = WRITE;
 		f->curr_pos_inode = file_inode;
-	} else if (!strcmp(mode, "a")) {
+	} else if (!__strcmp(mode, "a")) {
 		f->pos = file_inode->fsize;
 		f->mode = APPEND;
 		// calculate the inode, block, and offset in that block 
@@ -991,7 +991,7 @@ FILE *fopen(char *path, const char *mode) {
 			f->curr_pos_inode = f->curr_pos_inode->indirect_inode;
 		}
 	} else {
-		deallocate(f, sizeof(FILE));
+		deallocate(f, sizeof(__FILE));
 		return(NULL);
 	}
 
@@ -999,9 +999,9 @@ FILE *fopen(char *path, const char *mode) {
 }
 
 /*
-   read from the file specified by stream (previously opened with fopen)
+   __read from the file specified by stream (previously opened with __fopen)
 */
-size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream) {
+size_t __fread(void *ptr, size_t size, size_t nmemb, __FILE *stream) {
 	uint32_t i;
 	int index;
 	int b_index;
@@ -1022,7 +1022,7 @@ size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream) {
 	b = in2->blocks[index];
 	b_index = stream->b_index;
 
-	// try to read in the specified number of bytes
+	// try to __read in the specified number of bytes
 	for (i = 0; i < size*nmemb && stream->pos < stream->i->fsize; i++) {
 		if (b_index && (b_index % DATA_BLOCK_SIZE == 0)) {
 			// move on to the next block
@@ -1030,7 +1030,7 @@ size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream) {
 				// move on to the next inode
 				if (!(in2 = in2->indirect_inode)) {
 					// indirect_inode is null, that's bad
-					// return what has been read so far
+					// return what has been __read so far
 					stream->curr_pos_inode = in2;
 					stream->index = index;
 					stream->b_index = b_index;
@@ -1042,7 +1042,7 @@ size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream) {
 			b = in2->blocks[index];
 			if (!b) {
 				// block is empty, that's bad
-				// return what has been read so far
+				// return what has been __read so far
 				stream->curr_pos_inode = in2;
 				stream->index = index;
 				stream->b_index = b_index;
@@ -1060,9 +1060,9 @@ size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream) {
 }
 
 /*
-   write to the file specified by stream (previously opened with fopen)
+   __write to the file specified by stream (previously opened with __fopen)
 */
-size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream) {
+size_t __fwrite(const void *ptr, size_t size, size_t nmemb, __FILE *stream) {
 	int i;
 	unsigned char *p = (unsigned char *)ptr;
 	inode *in;
@@ -1082,7 +1082,7 @@ size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream) {
 		return(0);
 	}
 
-	// write size*nmemb bytes from ptr to the file
+	// __write size*nmemb bytes from ptr to the file
 	in2 = stream->curr_pos_inode;
 	index = stream->index;
 	b = in2->blocks[index];
@@ -1110,29 +1110,29 @@ size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream) {
 				}
 
 				if ((in = FindFreeInode()) == NULL) { 
-					puts("out of inodes");
+					__puts("out of inodes");
 					return(0);
 				}
 				in->type = stream->i->type;
 				in->fsize = stream->i->fsize;
 				in->num_blocks = stream->i->num_blocks;
 				in->indirect_inode = NULL;
-				strncpy(in->fname, stream->i->fname, MAX_FILE_NAME_LEN-1);
+				__strncpy(in->fname, stream->i->fname, MAX_FILE_NAME_LEN-1);
 
 				in2->indirect_inode = in;
 				index = 0;
 			}
 
 			if ((b = FindFreeDataBlock()) == NULL) {
-				puts("out of space");
+				__puts("out of space");
 				stream->curr_pos_inode = in2;
 				stream->index = index;
 				stream->b_index = b_index;
-				// free the just allocated inode
+				// __free the just allocated inode
 				while (in2) {
 					last_inode = in2;
 					in2 = in2->indirect_inode;
-					bzero(last_inode, sizeof(inode));
+					__bzero(last_inode, sizeof(inode));
 				}
 				return(i);
 			}
@@ -1157,20 +1157,20 @@ size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream) {
 /* 
    close the file identified by stream
  */
-int fclose(FILE *stream) {
+int __fclose(__FILE *stream) {
 
 	if (!stream) {
 		return(-1);
 	}
 
-	deallocate(stream, sizeof(FILE));
+	deallocate(stream, sizeof(__FILE));
 
 	return(0);
 
 }
 
 /*
-   Get a status of the file system including free inodes and blocks
+   Get a status of the file system including __free inodes and blocks
  */
 int StatusFS() {
 	int i,j;
@@ -1181,10 +1181,10 @@ int StatusFS() {
 	inode *t;
 
 	// print out superblock info
-	printf("Filesystem info:\n");
-	printf("  Blocksize: @d\n", fs.blocksize);
+	__printf("Filesystem info:\n");
+	__printf("  Blocksize: @d\n", fs.blocksize);
 
-	// print out free inodes
+	// print out __free inodes
 	for (i = 0; i < MAX_INODE_PAGES; i++) {
 		if (!fs.inode_pages[i]) {
 			break;
@@ -1197,9 +1197,9 @@ int StatusFS() {
 			}
 		}
 	}
-	printf("  Used Inodes: @d/@d\n", active_inode_count, MAX_INODE_PAGES*INODES_PER_PAGE);
+	__printf("  Used Inodes: @d/@d\n", active_inode_count, MAX_INODE_PAGES*INODES_PER_PAGE);
 
-	// print out free data blocks
+	// print out __free data blocks
 	for (i = 0; i < MAX_FREE_PAGES; i++) {
 		if (!free_list[i].page) {
 			break;
@@ -1211,7 +1211,7 @@ int StatusFS() {
 			}
 		}
 	}
-	printf("  Used Blocks: @d/@d\n", active_block_count, fs.fs_size/DATA_BLOCK_SIZE);
+	__printf("  Used Blocks: @d/@d\n", active_block_count, fs.fs_size/DATA_BLOCK_SIZE);
 
 	return(0);
 
@@ -1233,10 +1233,10 @@ int ls(char *pathname) {
 
 	i = CheckFileExists(pathname, &file_inode);
 	if (i == 0) {
-		puts("No such directory");
+		__puts("No such directory");
 		return(-1);
 	} else if (i == 1) {
-		puts("File is not a directory");
+		__puts("File is not a directory");
 		return(-1);
 	} else if (i == -1) {
 		return(-1);
@@ -1248,23 +1248,23 @@ int ls(char *pathname) {
 		return(-1);
 	}
 
-	printf("Directory listing of @s\n", pathname);
+	__printf("Directory listing of @s\n", pathname);
 
-	// read each directory entry
+	// __read each directory entry
 	for (i = 0; i < MAX_DIR_INODES && (in = dir->inodes[i]); i++) {
 		if (in->type == INODE_DIRECTORY) {
-			printf("d ");
+			__printf("d ");
 		} else {
-			printf("  ");
+			__printf("  ");
 		}
 
-		printf("@s", in->fname);
-		len = strlen(in->fname);
+		__printf("@s", in->fname);
+		len = __strlen(in->fname);
 		len = 50-len;
 		while (len-- > 0) {
-			printf(" ");
+			__printf(" ");
 		}
-		printf(" @d\n", in->fsize);
+		__printf(" @d\n", in->fsize);
 	}
 
 	return(0);

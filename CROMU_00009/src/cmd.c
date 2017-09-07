@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -48,7 +48,7 @@ extern uint32_t ARGC;
 extern char CWD[];
 
 /*
-   read input until the specified delim char is seen or 
+   __read input until the specified delim char is seen or 
    we reach the max length
  */
 int readUntil(char *buf, int max, char delim) {
@@ -78,7 +78,7 @@ int readUntil(char *buf, int max, char delim) {
  */
 int ExitHandler() {
 
-	puts("bye");
+	__puts("bye");
 	_terminate(0);
 
 }
@@ -90,23 +90,23 @@ int MkdirHandler() {
 	char pathname[MAX_CMD];
 
 	if (ARGC != 2) {
-		puts("usage: mkfolder <directory>");
+		__puts("usage: mkfolder <directory>");
 		return(0);
 	}
 
 	if (ARGV[1][0] == '/') {
 		// we have a full path
-		return(mkdir(ARGV[1]));
+		return(__mkdir(ARGV[1]));
 	} else {
 		// we need to prepend the CWD
-		bzero(pathname, MAX_CMD);
-		if ((strlen(CWD)+strlen(ARGV[1]) + 1) > MAX_CMD-1) {
-			puts("command too long");
+		__bzero(pathname, MAX_CMD);
+		if ((__strlen(CWD)+__strlen(ARGV[1]) + 1) > MAX_CMD-1) {
+			__puts("command too long");
 			return(0);
 		}
-		strcpy(pathname, CWD);
-		strcat(pathname, ARGV[1]);
-		return(mkdir(pathname));
+		__strcpy(pathname, CWD);
+		__strcat(pathname, ARGV[1]);
+		return(__mkdir(pathname));
 	}
 
 	return(0);
@@ -119,23 +119,23 @@ int RmdirHandler() {
 	char pathname[MAX_CMD];
 
 	if (ARGC != 2) {
-		puts("usage: delfolder <directory>");
+		__puts("usage: delfolder <directory>");
 		return(0);
 	}
 
 	if (ARGV[1][0] == '/') {
 		// we have a full path
-		return(rmdir(ARGV[1]));
+		return(__rmdir(ARGV[1]));
 	} else {
 		// we need to prepend the CWD
-		bzero(pathname, MAX_CMD);
-		if ((strlen(CWD)+strlen(ARGV[1]) + 1) > MAX_CMD-1) {
-			puts("command too long");
+		__bzero(pathname, MAX_CMD);
+		if ((__strlen(CWD)+__strlen(ARGV[1]) + 1) > MAX_CMD-1) {
+			__puts("command too long");
 			return(0);
 		}
-		strcpy(pathname, CWD);
-		strcat(pathname, ARGV[1]);
-		return(rmdir(pathname));
+		__strcpy(pathname, CWD);
+		__strcat(pathname, ARGV[1]);
+		return(__rmdir(pathname));
 	}
 
 	return(0);
@@ -152,7 +152,7 @@ int LsHandler() {
 		return(ls(CWD));
 	}
 	if (ARGC != 2) {
-		puts("usage: show <directory>");
+		__puts("usage: show <directory>");
 		return(0);
 	}
 
@@ -161,13 +161,13 @@ int LsHandler() {
 		return(ls(ARGV[1]));
 	} else {
 		// we need to prepend the CWD
-		bzero(pathname, MAX_CMD);
-		if ((strlen(CWD)+strlen(ARGV[1]) + 1) > MAX_CMD-1) {
-			puts("command too long");
+		__bzero(pathname, MAX_CMD);
+		if ((__strlen(CWD)+__strlen(ARGV[1]) + 1) > MAX_CMD-1) {
+			__puts("command too long");
 			return(0);
 		}
-		strcpy(pathname, CWD);
-		strcat(pathname, ARGV[1]);
+		__strcpy(pathname, CWD);
+		__strcat(pathname, ARGV[1]);
 		return(ls(pathname));
 	}
 
@@ -182,23 +182,23 @@ int RmHandler() {
 	char pathname[MAX_CMD];
 
 	if (ARGC != 2) {
-		puts("usage: delete <file>");
+		__puts("usage: delete <file>");
 		return(0);
 	}
 
 	if (ARGV[1][0] == '/') {
 		// no path given, assume CWD
-		return(unlink(ARGV[1]));
+		return(__unlink(ARGV[1]));
 	} else {
 		// we need to prepend the CWD
-		bzero(pathname, MAX_CMD);
-		if ((strlen(CWD)+strlen(ARGV[1]) + 1) > MAX_CMD-1) {
-			puts("command too long");
+		__bzero(pathname, MAX_CMD);
+		if ((__strlen(CWD)+__strlen(ARGV[1]) + 1) > MAX_CMD-1) {
+			__puts("command too long");
 			return(0);
 		}
-		strcpy(pathname, CWD);
-		strcat(pathname, ARGV[1]);
-		return(unlink(pathname));
+		__strcpy(pathname, CWD);
+		__strcat(pathname, ARGV[1]);
+		return(__unlink(pathname));
 	}
 
 	return(0);
@@ -211,76 +211,76 @@ int RmHandler() {
 int EchoHandler() {
 	char pathname[MAX_CMD];
 	char outstr[MAX_CMD];
-	FILE *out;
+	__FILE *out;
 	int len;
 
 	if (ARGC < 2 || ARGC == 3) {
-		puts("usage: echo <text> [>|>>] [file]");
+		__puts("usage: echo <text> [>|>>] [file]");
 		return(0);
 	}
 
 	if (ARGC == 2) {
 		// handle case of 'echo <text>'
-		bzero(outstr, MAX_CMD);
-		strncpy(outstr, ARGV[1], MAX_CMD-1);
+		__bzero(outstr, MAX_CMD);
+		__strncpy(outstr, ARGV[1], MAX_CMD-1);
 		if ((len = Unescape(outstr)) == -1) {
-			puts("unable to write to file");
+			__puts("unable to __write to file");
 			return(-1);
 		}
-		write(outstr, len);
+		__write(outstr, len);
 		return(0);
 	}
 
 	if (ARGC == 4) {
 		// redirecting to a file
-		bzero(pathname, MAX_CMD);
+		__bzero(pathname, MAX_CMD);
 		if (ARGV[3][0] == '/') {
-			if (strlen(ARGV[3]) > MAX_CMD-1) {
-				puts("invalid file name");
+			if (__strlen(ARGV[3]) > MAX_CMD-1) {
+				__puts("invalid file name");
 				return(-1);
 			}
-			strcpy(pathname, ARGV[3]);
+			__strcpy(pathname, ARGV[3]);
 		} else {
-			if ((strlen(CWD)+strlen(ARGV[3]) + 1) > MAX_CMD-1) {
-				puts("command too long");
+			if ((__strlen(CWD)+__strlen(ARGV[3]) + 1) > MAX_CMD-1) {
+				__puts("command too long");
 				return(0);
 			}
-			strcpy(pathname, CWD);
-			strcat(pathname, ARGV[3]);
+			__strcpy(pathname, CWD);
+			__strcat(pathname, ARGV[3]);
 		}
 			
-		if (!strcmp(ARGV[2], ">")) {
-			// write to file
-			if ((out = fopen(pathname, "w")) == NULL) {
-				puts("unable to write to file");
+		if (!__strcmp(ARGV[2], ">")) {
+			// __write to file
+			if ((out = __fopen(pathname, "w")) == NULL) {
+				__puts("unable to __write to file");
 				return(-1);
 			}
-			bzero(outstr, MAX_CMD);
-			strncpy(outstr, ARGV[1], MAX_CMD-1);
+			__bzero(outstr, MAX_CMD);
+			__strncpy(outstr, ARGV[1], MAX_CMD-1);
 			if ((len = Unescape(outstr)) == -1) {
-				puts("unable to write to file");
-				fclose(out);
+				__puts("unable to __write to file");
+				__fclose(out);
 				return(-1);
 			}
-			fwrite(outstr, len, 1, out);
-			fclose(out);
-		} else if (!strcmp(ARGV[2], ">>")) {
+			__fwrite(outstr, len, 1, out);
+			__fclose(out);
+		} else if (!__strcmp(ARGV[2], ">>")) {
 			// append to file
-			if ((out = fopen(pathname, "a")) == NULL) {
-				puts("unable to write to file");
+			if ((out = __fopen(pathname, "a")) == NULL) {
+				__puts("unable to __write to file");
 				return(-1);
 			}
-			bzero(outstr, MAX_CMD);
-			strncpy(outstr, ARGV[1], MAX_CMD-1);
+			__bzero(outstr, MAX_CMD);
+			__strncpy(outstr, ARGV[1], MAX_CMD-1);
 			if ((len = Unescape(outstr)) == -1) {
-				fclose(out);
-				puts("unable to write to file");
+				__fclose(out);
+				__puts("unable to __write to file");
 				return(-1);
 			}
-			fwrite(outstr, len, 1, out);
-			fclose(out);
+			__fwrite(outstr, len, 1, out);
+			__fclose(out);
 		} else {
-			puts("usage: echo <text> [>|>>] [file]");
+			__puts("usage: echo <text> [>|>>] [file]");
 			return(0);
 		}
 	}
@@ -296,7 +296,7 @@ int CatHandler() {
 	char pathname[MAX_CMD];
 
 	if (ARGC != 2) {
-		puts("usage: dump <file>");
+		__puts("usage: dump <file>");
 		return(0);
 	}
 
@@ -305,13 +305,13 @@ int CatHandler() {
 		return(ReadFile(ARGV[1]));
 	} else {
 		// we need to prepend the CWD
-		bzero(pathname, MAX_CMD);
-		if ((strlen(CWD)+strlen(ARGV[1]) + 1) > MAX_CMD-1) {
-			puts("command too long");
+		__bzero(pathname, MAX_CMD);
+		if ((__strlen(CWD)+__strlen(ARGV[1]) + 1) > MAX_CMD-1) {
+			__puts("command too long");
 			return(0);
 		}
-		strcpy(pathname, CWD);
-		strcat(pathname, ARGV[1]);
+		__strcpy(pathname, CWD);
+		__strcat(pathname, ARGV[1]);
 		return(ReadFile(pathname));
 	}
 
@@ -328,12 +328,12 @@ int HelpHandler() {
 
 	c = cmds;
 	while (c->command) {
-		printf("@s", c->command);
-		len = 20-strlen(c->command);
+		__printf("@s", c->command);
+		len = 20-__strlen(c->command);
 		while (len-- > 0) {
-			printf(" ");
+			__printf(" ");
 		}
-		printf("@s\n", c->help);
+		__printf("@s\n", c->help);
 		c++;
 	}
 
@@ -346,7 +346,7 @@ int HelpHandler() {
 int DfHandler() {
 
 	if (ARGC != 1) {
-		puts("usage: fsinfo");
+		__puts("usage: fsinfo");
 		return(0);
 	}
 

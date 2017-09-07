@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -125,7 +125,7 @@ typedef struct _superblock {
 // global pointer to our filesystem
 superblock fs;
 
-// free blocks
+// __free blocks
 #define MAX_FREE_PAGES 256
 #define MAX_FS_SIZE PAGE_SIZE*MAX_FREE_PAGES
 #define BLOCKS_PER_PAGE 8
@@ -141,7 +141,7 @@ typedef struct _directory {
 	inode *inodes[MAX_DIR_INODES];
 } directory;
 
-// FILE struct
+// __FILE struct
 #define READ 0
 #define WRITE 1
 #define APPEND 2
@@ -152,7 +152,7 @@ typedef struct _FILE {
 	inode *curr_pos_inode;
 	uint32_t index;
 	uint32_t b_index;
-} FILE;
+} __FILE;
 
 int InitFS(uint32_t);
 int DestroyFS();
@@ -162,12 +162,12 @@ int CheckFileExists(char *, inode **);
 int SplitPath(char *, char *, char *);
 int ReadFile(char *);
 int FreeDataBlock(block *);
-int mkdir(char *);
-int rmdir(char *);
-int unlink(char *);
-FILE *fopen(char *, const char *);
-size_t fread(void *, size_t, size_t, FILE *);
-size_t fwrite(const void *, size_t, size_t, FILE *);
-int fclose(FILE *);
+int __mkdir(char *);
+int __rmdir(char *);
+int __unlink(char *);
+__FILE *__fopen(char *, const char *);
+size_t __fread(void *, size_t, size_t, __FILE *);
+size_t __fwrite(const void *, size_t, size_t, __FILE *);
+int __fclose(__FILE *);
 int StatusFS();
 int ls(char *);

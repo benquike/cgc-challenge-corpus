@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,7 +37,7 @@ int FreeArgs() {
 	int i = 0;
 
 	while (ARGV[i]) {
-		deallocate(ARGV[i], strlen(ARGV[i]));
+		deallocate(ARGV[i], __strlen(ARGV[i]));
 		ARGV[i] = NULL;
 		i++;
 	}
@@ -52,66 +52,66 @@ int ParseArgs(char *cmd) {
 	int open_quote = 0;
 
 	// start with a clean slate
-	bzero(ARGV, MAX_ARGS*sizeof(char*));
+	__bzero(ARGV, MAX_ARGS*sizeof(char*));
 	ARGC = 0;
 
 	// look for spaces
-	if ((tok = strtok(cmd, " ")) == NULL) {
+	if ((tok = __strtok(cmd, " ")) == NULL) {
 		ARGC = 0;
 		return(0);
 	}
-	ARGV[ARGC++] = strdup(tok);
+	ARGV[ARGC++] = __strdup(tok);
 
-	while ((tok = strtok(NULL, " ")) != NULL && ARGC < MAX_ARGS-1) {
+	while ((tok = __strtok(NULL, " ")) != NULL && ARGC < MAX_ARGS-1) {
 		// handle closing quote made up of multiple " "-separated tokens
-		if (open_quote && tok[strlen(tok)-1] == '"') {
-			new_len = strlen(ARGV[ARGC]) + strlen(tok) + 1;
+		if (open_quote && tok[__strlen(tok)-1] == '"') {
+			new_len = __strlen(ARGV[ARGC]) + __strlen(tok) + 1;
 			if (allocate(new_len, 0, (void *)&t)) {
 				FreeArgs();
 				ARGC = 0;
 				return(0);
 			}
-			strcpy(t, ARGV[ARGC]+1);
-			strcat(t, " ");
-			tok[strlen(tok)-1] = '\0';
-			strcat(t, tok);
-			deallocate(ARGV[ARGC], strlen(ARGV[ARGC]));
+			__strcpy(t, ARGV[ARGC]+1);
+			__strcat(t, " ");
+			tok[__strlen(tok)-1] = '\0';
+			__strcat(t, tok);
+			deallocate(ARGV[ARGC], __strlen(ARGV[ARGC]));
 			ARGV[ARGC++] = t;
 			open_quote = 0;
 
 		// handle middle tokens for quoted string
 		} else if (open_quote) {
-			new_len = strlen(ARGV[ARGC]) + strlen(tok) + 2;
+			new_len = __strlen(ARGV[ARGC]) + __strlen(tok) + 2;
 			if (allocate(new_len, 0, (void *)&t)) {
 				FreeArgs();
 				ARGC = 0;
 				return(0);
 			}
-			strcpy(t, ARGV[ARGC]);
-			strcat(t, " ");
-			strcat(t, tok);
-			deallocate(ARGV[ARGC], strlen(ARGV[ARGC]));
+			__strcpy(t, ARGV[ARGC]);
+			__strcat(t, " ");
+			__strcat(t, tok);
+			deallocate(ARGV[ARGC], __strlen(ARGV[ARGC]));
 			ARGV[ARGC] = t;
 
 		// handle token delimited by quotes
-		} else if (tok[0] == '"' & tok[strlen(tok)-1] == '"') {
-			tok[strlen(tok)-1] = '\0';
-			ARGV[ARGC++] = strdup(tok+1);
+		} else if (tok[0] == '"' & tok[__strlen(tok)-1] == '"') {
+			tok[__strlen(tok)-1] = '\0';
+			ARGV[ARGC++] = __strdup(tok+1);
 
 		// handle starting quote 
 		} else if (tok[0] == '"') {
 			open_quote = 1;
-			ARGV[ARGC] = strdup(tok);
+			ARGV[ARGC] = __strdup(tok);
 
 		// not a quoted token
 		} else {
-			ARGV[ARGC++] = strdup(tok);
+			ARGV[ARGC++] = __strdup(tok);
 		}
 	}
 
 	// found a starting, but no ending quote, abort processing
 	if (open_quote) {
-		puts("missing quote");
+		__puts("missing quote");
 		FreeArgs();
 		ARGC = 0;
 		return(0);
@@ -119,7 +119,7 @@ int ParseArgs(char *cmd) {
 
 	// too many args, abort processing
 	if (ARGC == MAX_ARGS-1) {
-		puts("too many args");
+		__puts("too many args");
 		FreeArgs();
 		ARGC = 0;
 		return(0);
@@ -133,26 +133,26 @@ int main(void) {
 	char cmd[MAX_CMD];
 	ShellCmds *c;
 
-	bzero(CWD, MAX_CMD);
-	strcpy(CWD, "/");
+	__bzero(CWD, MAX_CMD);
+	__strcpy(CWD, "/");
 
 	if (InitFS(512*1024)) {
-		puts("Failed to initialize the RAM file system\n");
+		__puts("Failed to initialize the RAM file system\n");
 		return(-1);
 	}
 
-	puts("Welcome to the cgcfs shell!");
-	puts("Type help for a list of available commands.");
-	printf("% ");
-	bzero(cmd, MAX_CMD);
+	__puts("Welcome to the cgcfs shell!");
+	__puts("Type help for a list of available commands.");
+	__printf("% ");
+	__bzero(cmd, MAX_CMD);
 	while (readUntil(cmd, MAX_CMD-1, '\n') != -1) {
 		ParseArgs(cmd);
 
 		// parse failure
 		if (ARGC == 0) {
 			FreeArgs();
-			bzero(cmd, MAX_CMD);
-			printf("% ");
+			__bzero(cmd, MAX_CMD);
+			__printf("% ");
 			continue;
 		}
 
@@ -160,7 +160,7 @@ int main(void) {
 		if (ARGV[0] != NULL) {
 			c = cmds;
 			while (c->command != NULL) {
-				if (!strcmp(c->command, ARGV[0])) {
+				if (!__strcmp(c->command, ARGV[0])) {
 					// run the command
 					c->handler();
 
@@ -170,19 +170,19 @@ int main(void) {
 			}
 		}
 		if (c == NULL) {
-			puts("Invalid command");
+			__puts("Invalid command");
 		}
 		if (c->command == NULL) {
-			puts("Invalid command");
+			__puts("Invalid command");
 		}
 
 		FreeArgs();
-		bzero(cmd, MAX_CMD);
-		printf("% ");
+		__bzero(cmd, MAX_CMD);
+		__printf("% ");
 	}
 
 	if (DestroyFS()) {
-		puts("Failed to destroy the RAM file system\n");
+		__puts("Failed to destroy the RAM file system\n");
 		return(-1); 
 	}
 
