@@ -4,7 +4,7 @@ Author: James Connor (jymbo@cromulence.co)
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,13 +35,13 @@ THE SOFTWARE.
 
 pDiverInfo init_data(){
 	pDiverInfo workingData = NULL;
-	workingData = malloc( sizeof( sDiverInfo ) );
+	workingData = __malloc( sizeof( sDiverInfo ) );
 	if ( workingData == NULL ){ _terminate( -2 );}
 	return workingData;
 }
 
 void destroy_data( pDiverInfo workingData ){
-	free( workingData );
+	__free( workingData );
 }
 
 //dive is linked list
@@ -51,10 +51,10 @@ pDiveEntry AddDive( pDiverInfo DiverInfo ){
 	pDiveEntryListNode DiveEntryListCur = NULL ;
 	pDiveEntryListNode DiveEntryListTemp;
 	//linked list node
-	pDiveEntryListNode DiveEntryListNew = malloc( sizeof( sDiveEntryListNode ) );
+	pDiveEntryListNode DiveEntryListNew = __malloc( sizeof( sDiveEntryListNode ) );
 	//data element
-	pDiveEntry DiveEntryNew = malloc( sizeof( sDiveEntry ) );
-	//if malloc fails, exit
+	pDiveEntry DiveEntryNew = __malloc( sizeof( sDiveEntry ) );
+	//if __malloc fails, exit
 	if (  ( DiveEntryNew == NULL ) || ( DiveEntryListNew == NULL )  ) { _terminate( -2 );}
 
 	//add data element to linked list node
@@ -88,10 +88,10 @@ pDiveEntry AddDive( pDiverInfo DiverInfo ){
 //to delete all dives, delete last, and keep deleting until returns null
 //five cases: 
 //	pointer is invalid/not in list, 
-//	pointer is only node, free and set diveentrylist to null
-//	pointer is first but not only, free and set diveentrylist to next, next->prev to null
-//	pointer is middle, free and set prev->next to next, next->prev to prev
-//	pointer is last but not only. free set prev->next to next (which is null)
+//	pointer is only node, __free and set diveentrylist to null
+//	pointer is first but not only, __free and set diveentrylist to next, next->prev to null
+//	pointer is middle, __free and set prev->next to next, next->prev to prev
+//	pointer is last but not only. __free set prev->next to next (which is null)
 //reduces to if exists, only, not first, and not last (4 cases)
 pDiveEntryListNode DeleteDive( pDiverInfo DiverInfo, pDiveEntryListNode DiveEntryListNodeToDelete ){
 	pDiveEntryListNode DiveEntryListPrev = NULL;
@@ -117,8 +117,8 @@ pDiveEntryListNode DeleteDive( pDiverInfo DiverInfo, pDiveEntryListNode DiveEntr
 	if ( DiveEntryListNodeToDelete == DiverInfo->DiveEntryList ){
 		DiverInfo->DiveEntryList = DiverInfo->DiveEntryList->next;
 	}
-	free(DiveEntryListNodeToDelete->DiveEntry);
-	free(DiveEntryListNodeToDelete);	
+	__free(DiveEntryListNodeToDelete->DiveEntry);
+	__free(DiveEntryListNodeToDelete);	
 	return DiveEntryListPrev;
 }
 

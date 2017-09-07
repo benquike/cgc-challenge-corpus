@@ -18,9 +18,9 @@ and calculates metrics for a given dive as well as all dives.
 ## Vulnerability
 1.
 More than MAXDIVES can be entered via the DownloadDives function.
-This failure to limit the dive count enables the vulnerability, which is and an out-of-bounds write in SelectDive.
+This failure to limit the dive count enables the vulnerability, which is and an out-of-bounds __write in SelectDive.
 If the dive list contains greater then MAXDIVES, calling SelectDive will smash count. 
-This invalidates the bounds check on which dive is selected, allowing an arbitrary read (using print dive) or write (using edit dive) 
+This invalidates the bounds check on which dive is selected, allowing an arbitrary __read (using print dive) or __write (using edit dive) 
 This could be mitigated by preventing downloaddives from exceeding MAXDIVES, by properly bounds checking selectDive or by increasing the
 size of the buffer to accomodate 1 additional dive.
 2.
@@ -31,10 +31,10 @@ store the sanitized time value. This could be mitigated using a bounded snprintf
 ### Generic class of vulnerability
 1.
 Improper restriction of operations within the bounds of a memory buffer
-Out-of-bounds write
+Out-of-bounds __write
 2.
 Numeric range comparison without minimum check
-out-of-bounds write
+out-of-bounds __write
 ### CWE classification
 CWE-787 
 CWE-839
