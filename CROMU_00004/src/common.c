@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -33,7 +33,7 @@ int FindCode(char *s) {
     int i;
 
     for (i = 0; i < 91; i++) {
-      if (strcmp(l[i].code, s) == 0) {
+      if (__strcmp(l[i].code, s) == 0) {
         return(i);
       }
     }
@@ -50,18 +50,18 @@ void InitLang(struct language *lp, char *old_code) {
   }
 
   // recursively look up the next code in the sequence
-  bzero(new_code, MAX_CODE);
-  strncat(new_code, old_code, MAX_CODE);
-  strncat(new_code, ".", MAX_CODE);
+  __bzero(new_code, MAX_CODE);
+  __strncat(new_code, old_code, MAX_CODE);
+  __strncat(new_code, ".", MAX_CODE);
   if ((index = FindCode(new_code)) == -1) {
     return;
   }
   lp->dit = &l[index];
   InitLang(&l[index], new_code);
 
-  bzero(new_code, MAX_CODE);
-  strncat(new_code, old_code, MAX_CODE);
-  strncat(new_code, "-", MAX_CODE);
+  __bzero(new_code, MAX_CODE);
+  __strncat(new_code, old_code, MAX_CODE);
+  __strncat(new_code, "-", MAX_CODE);
   if ((index = FindCode(new_code)) == -1) {
     return;
   }

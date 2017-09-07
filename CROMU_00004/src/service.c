@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -63,7 +63,7 @@ void ParseCode(char *buf, char *output) {
 
   while (buf[i] != '\0') {
     if (o > MAX_SYMBOLS-1) {
-      puts("message too long\n");
+      __puts("message too long\n");
       _terminate(UNABLE_TO_PARSE_PCM);
     }
 
@@ -74,7 +74,7 @@ void ParseCode(char *buf, char *output) {
           output[o++] = lp->c;
           lp = &lh;
         } else {
-          puts("unknown character\n");
+          __puts("unknown character\n");
           _terminate(UNABLE_TO_PARSE_PCM);
         }
         break;
@@ -87,7 +87,7 @@ void ParseCode(char *buf, char *output) {
           lp = &lh;
           output[o++] = ' ';
         } else {
-          puts("unknown character\n");
+          __puts("unknown character\n");
           _terminate(UNABLE_TO_PARSE_PCM);
         }
         break;
@@ -96,7 +96,7 @@ void ParseCode(char *buf, char *output) {
         if (lp) {
           lp = lp->dit;
         } else {
-          puts("unknown character\n");
+          __puts("unknown character\n");
           _terminate(UNABLE_TO_PARSE_PCM);
         }
         break;
@@ -105,7 +105,7 @@ void ParseCode(char *buf, char *output) {
         if (lp) {
           lp = lp->dah;
         } else {
-          puts("unknown character\n");
+          __puts("unknown character\n");
           _terminate(UNABLE_TO_PARSE_PCM);
         }
         break;
@@ -114,7 +114,7 @@ void ParseCode(char *buf, char *output) {
         break;
 
       default:
-        puts("invalid symbol\n");
+        __puts("invalid symbol\n");
         _terminate(UNABLE_TO_PARSE_PCM);
     }
 
@@ -124,7 +124,7 @@ void ParseCode(char *buf, char *output) {
     output[o++] = lp->c;
     lp = &lh;
   } else {
-    puts("unknown character\n");
+    __puts("unknown character\n");
     _terminate(UNABLE_TO_PARSE_PCM);
   }
 }
@@ -160,31 +160,31 @@ unsigned char *ReadWav(unsigned char *pcm) {
   unsigned int total_size;
   struct pcm_header *p;
 
-  // read in the pcm header
+  // __read in the pcm header
   if (recv(STDIN, pcm, 12, &size) != 0) {
-    puts("Read error\n");
+    __puts("Read error\n");
     _terminate(READ_ERROR);
   }
 
   // use our pcm_header struct to check some input values
   p = (struct pcm_header *)pcm;
   if (p->ID != PCM) {
-      puts("Invalid PCM format\n");
+      __puts("Invalid PCM format\n");
       _terminate(INVALID_PCM_FMT);
   }
   if (p->NumSamples > MAX_SAMPLES) {
-      puts("Invalid PCM length\n");
+      __puts("Invalid PCM length\n");
     _terminate(INVALID_PCM_LEN);
   }
   if (p->NumSamples == 0) {
-      puts("Invalid PCM format\n");
+      __puts("Invalid PCM format\n");
     _terminate(INVALID_PCM_FMT);
   }
 
 #ifdef PATCHED
   // make sure the SampleSize value is valid
   if (p->DataSize*8.0 / p->NumSamples != 16.0) {
-    puts("Invalid PCM length\n");
+    __puts("Invalid PCM length\n");
     _terminate(INVALID_PCM_LEN);
   }
 #else
@@ -193,20 +193,20 @@ unsigned char *ReadWav(unsigned char *pcm) {
   // floating point which leads to an incorrectly
   // checked DataSize
   if (p->DataSize*8/p->NumSamples != 16) {
-    puts("Invalid PCM length\n");
+    __puts("Invalid PCM length\n");
     _terminate(INVALID_PCM_LEN);
   }
 #endif
 
-  // read in the data portion of the pcm
+  // __read in the data portion of the pcm
   total_size = 0;
   while (total_size != p->DataSize) {
     if (receive(STDIN, pcm+12+total_size, (p->DataSize-total_size), &size) != 0) {
-      puts("Read error\n");
+      __puts("Read error\n");
       _terminate(READ_ERROR);
       }
     if (size == 0) {
-      puts("Read error\n");
+      __puts("Read error\n");
       _terminate(READ_ERROR);
     }
     total_size +=  size;
@@ -244,7 +244,7 @@ int AssignToBucket(unsigned int symbol_time) {
       }
   }
 
-  puts("Couldn't find a bucket\n");
+  __puts("Couldn't find a bucket\n");
   _terminate(UNABLE_TO_PARSE_PCM);
 }
 
@@ -255,13 +255,13 @@ at the correct ratios
 void CheckLimits(int dit, int dah, int word) {
   if (Bucket[dah].time < Bucket[dit].time*3*MIN_VARIANCE || Bucket[dah].time > Bucket[dit].time*3*MAX_VARIANCE) {
     // Bucket dah is outside of our limits
-    puts("Too much variance in symbol times\n");
+    __puts("Too much variance in symbol times\n");
     _terminate(UNABLE_TO_PARSE_PCM);
   }
   if (word) {
     if (Bucket[word].time < Bucket[dit].time*7*MIN_VARIANCE || Bucket[word].time > Bucket[dit].time*7*MAX_VARIANCE) {
       // Bucket word is outside of our limits
-      puts("Too much variance in symbol times\n");
+      __puts("Too much variance in symbol times\n");
       _terminate(UNABLE_TO_PARSE_PCM);
     }
   }
@@ -323,7 +323,7 @@ void ValidateBuckets(void) {
       dit = 1;
     }
   } else {
-      puts("Insufficient symbol diversity\n");
+      __puts("Insufficient symbol diversity\n");
       _terminate(INVALID_PCM_FMT);
   }
 
@@ -359,8 +359,8 @@ void ParseWav(unsigned char *pcm) {
   int first = 1;
 
   // init some vars
-  bzero(Symbols, MAX_SYMBOLS);
-  bzero(output, MAX_SYMBOLS);
+  __bzero(Symbols, MAX_SYMBOLS);
+  __bzero(output, MAX_SYMBOLS);
   sp = 0;
   Bucket[1].valid = 0;
   Bucket[2].valid = 0;
@@ -492,8 +492,8 @@ void ParseWav(unsigned char *pcm) {
   ParseCode(output, output2);
 
   // output the resulting message
-  puts(output2);
-  puts("\n");
+  __puts(output2);
+  __puts("\n");
 
 }
 
@@ -501,12 +501,12 @@ int main(void) {
     unsigned char pcm[MAX_PCM_SIZE];
 
     // zero the pcm var
-    bzero(pcm, MAX_PCM_SIZE);
+    __bzero(pcm, MAX_PCM_SIZE);
 
     // init the language data structures
     InitLang(&lh, NULL);
 
-    // read in the pcm file
+    // __read in the pcm file
     ReadWav(pcm);
 
     // Read in each symbol
