@@ -62,16 +62,21 @@ else
 LIBS       = -L../../libcgc -lcgc
 POV_LIBS   = -L../../libpov -lpov
 
-CC			= clang
-CXX			= clang++
-LD			= clang
+# __PREFIX=/home/huip/src/compilers/llvm/build/bin/
+__PREFIX=
+
+CC			= $(__PREFIX)clang
+CXX			= $(__PREFIX)clang++
+LD			= $(CC)
 OBJCOPY			= objcopy
 LD_ELF                  = ld
 
-CGC_CFLAGS = -I../../libcgc -Iinclude -Ilib $(CFLAGS) -DCGC_BIN_COUNT=$(BIN_COUNT) -m32 -D_CGC_EMU -fsanitize=address
-POV_CFLAGS = -Iinclude -Ilib $(CFLAGS) -m32 -D_CGC_EMU -fsanitize=address
+CGC_CFLAGS = -fno-builtin -I../../libcgc -Iinclude -Ilib $(CFLAGS) -DCGC_BIN_COUNT=$(BIN_COUNT) -m32 -D_CGC_EMU -fsanitize=address
+POV_CFLAGS = -fno-builtin -Iinclude -Ilib $(CFLAGS) -m32 -D_CGC_EMU -fsanitize=address
 
-LDFLAGS = -fsanitize=address -m32
+CXXFLAGS = -std=c++11
+
+LDFLAGS = -m32 -fsanitize=address -lstdc++
 
 endif
 
@@ -334,14 +339,14 @@ clean-test:
 
 clean: clean-test clean-binaries
 	-rm -rf $(BUILD_DIR) $(BIN_DIR) $(PCAP_DIR)
-	-rm -f test.log 
+	-rm -f test.log
 	-rm -f poller/for-release/edges.png poller/for-release/nodes.png poller/for-release/counts.png
-	-rm -f poller/for-release/gen_*.xml 
-	-rm -f poller/for-release/GEN_*.xml 
+	-rm -f poller/for-release/gen_*.xml
+	-rm -f poller/for-release/GEN_*.xml
 	-rm -f poller/for-release/graph.dot
 	-rm -f poller/for-testing/edges.png poller/for-testing/nodes.png poller/for-testing/counts.png
-	-rm -f poller/for-testing/gen_*.xml 
-	-rm -f poller/for-testing/GEN_*.xml 
+	-rm -f poller/for-testing/gen_*.xml
+	-rm -f poller/for-testing/GEN_*.xml
 	-rm -f poller/for-testing/graph.dot
 	-rm -f poller/for-release/machine.pyc
 	-rm -f poller/for-testing/machine.pyc
