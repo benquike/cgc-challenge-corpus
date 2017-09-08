@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -30,7 +30,7 @@ node_t *root;
 static void fill_result(result *res, node_t *n)
 {
     res->rec.count = 1;
-    res->rec.data = malloc(sizeof(struct record));
+    res->rec.data = __malloc(sizeof(struct record));
     res->rec.data->k.data.count = n->key_length;
     res->rec.data->k.data.data = n->key;
     res->rec.data->data.count = n->data_length;
@@ -59,10 +59,10 @@ result DB_CURRENT_db_lookup(key k)
 
 result DB_CURRENT_db_insert(record rec)
 {
-    node_t *n = malloc(sizeof(*n));
+    node_t *n = __malloc(sizeof(*n));
     result res;
 
-    memset(n, 0, sizeof(*n));
+    __memset(n, 0, sizeof(*n));
     n->key = rec.k.data.data;
     n->key_length = rec.k.data.count;
     n->data = rec.data.data;

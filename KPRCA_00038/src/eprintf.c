@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014-2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -105,7 +105,7 @@ int eprintf(int fd, const char *fmt, var_t *args, unsigned int cnt)
                 case '7':
                 case '8':
                 case '9':
-                    min = strtol(fmt-1, (char**)&fmt, 10);
+                    min = __strtol(fmt-1, (char**)&fmt, 10);
                     continue;
                 }
                 break;
@@ -121,7 +121,7 @@ int eprintf(int fd, const char *fmt, var_t *args, unsigned int cnt)
                 if (args[narg-1].type == VAR_NUMBER)
                     return -1;
 #endif
-                for (i = 0; i < strlen(astring); i++)
+                for (i = 0; i < __strlen(astring); i++)
                     OUTPUT_BYTE(astring[i]);
                 break;
             case 'd':

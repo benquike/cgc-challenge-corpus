@@ -19,8 +19,8 @@ char * read_buf(int fd) {
 
     if (buf_size > 0) {
         buf_size = recv_size;
-        buf = malloc(recv_size);
-        memset(buf, 0, recv_size);
+        buf = __malloc(recv_size);
+        __memset(buf, 0, recv_size);
         if (!buf)
             _terminate(3);
 
@@ -58,7 +58,7 @@ void do_config(void) {
     ret = read_until(read_fd, pattern, sizeof(pattern) - 1, '\n');
 
 //    pattern = read_buf(read_fd);
-    size = strlen(pattern);
+    size = __strlen(pattern);
 
     if (size == 0)
         return;
@@ -81,7 +81,7 @@ void do_config(void) {
 int morris_pratt(char *buffer, int buffer_size) {
     int buffer_offset = 0;
     int pattern_offset = 0;
-    size_t pattern_len = strlen(pattern);
+    size_t pattern_len = __strlen(pattern);
 
     while (buffer_offset < buffer_size) {
         while (pattern_offset > -1 && pattern[pattern_offset] != buffer[buffer_offset])
@@ -95,7 +95,7 @@ int morris_pratt(char *buffer, int buffer_size) {
     return 0;
 }
 
-void exit(int i) {
+void __exit(int i) {
     transmit_all(write_fd, "\x00\n", 2);
     _terminate(i);
 }
@@ -106,25 +106,25 @@ int main(void) {
 
     do_config();
     setup();
-    sleep(2);
+    __sleep(2);
 
     while (1) {
-        memset(buf, 0, sizeof(buf));
+        __memset(buf, 0, sizeof(buf));
         ret = read_until(read_fd, buf, sizeof(buf) - 1, '\n');
         if (ret == -1)
-            exit(4);
+            __exit(4);
 
         if (ret > 0) {
 
             if (buf[0] == 0) {
-                exit(0);
+                __exit(0);
             }
 
-            ret = morris_pratt(buf, strlen(buf));
+            ret = morris_pratt(buf, __strlen(buf));
             if (ret == 1) {
-                printf(write_fd, "%s\n", buf);
+                __printf(write_fd, "%s\n", buf);
             }
         }
     }
-    exit(1);
+    __exit(1);
 }

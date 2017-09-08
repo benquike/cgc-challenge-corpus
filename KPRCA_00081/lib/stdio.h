@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -26,24 +26,24 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-typedef struct FILE FILE;
+typedef struct __FILE __FILE;
 
-extern FILE * const stdin;
-extern FILE * const stdout;
-extern FILE * const stderr;
+extern __FILE * const stdin;
+extern __FILE * const stdout;
+extern __FILE * const stderr;
 
-int printf(const char *fmt, ...);
-int fprintf(FILE *stream, const char *fmt, ...);
+int __printf(const char *fmt, ...);
+int fprintf(__FILE *stream, const char *fmt, ...);
 int sprintf(char *str, const char *fmt, ...);
 
 int vprintf(const char *fmt, va_list ap);
-int vfprintf(FILE *stream, const char *fmt, va_list ap);
+int vfprintf(__FILE *stream, const char *fmt, va_list ap);
 int vsprintf(char *str, const char *fmt, va_list ap);
 
-ssize_t fread(void *ptr, size_t size, FILE *stream);
-ssize_t freaduntil(char *str, size_t size, char term, FILE *stream);
-ssize_t fwrite(const void *ptr, size_t size, FILE *stream);
-int fflush(FILE *stream);
-void fbuffered(FILE *stream, int enable);
+ssize_t __fread(void *ptr, size_t size, __FILE *stream);
+ssize_t freaduntil(char *str, size_t size, char term, __FILE *stream);
+ssize_t __fwrite(const void *ptr, size_t size, __FILE *stream);
+int fflush(__FILE *stream);
+void fbuffered(__FILE *stream, int enable);
 
 #endif

@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -43,11 +43,11 @@ int InitInterface(void) {
 
 	// what speed is the interface
 	while (speed == 0 || speed > MAX_SPEED) {
-		printf("What's the interface speed (in bps up to @d bps): ", MAX_SPEED);
+		__printf("What's the interface speed (in bps up to @d bps): ", MAX_SPEED);
 		if ((len = readUntil(buf, 11, '\n')) == -1) {
 			return(-1);
 		}
-		speed = (unsigned int)atoi(buf);
+		speed = (unsigned int)__atoi(buf);
         }
 	iface.speed = speed;
 
@@ -73,7 +73,7 @@ int TransmitPktFromQueue(unsigned char queue) {
 
 	// make sure the queue number is valid
 	if (queue >= iface.num_queues) {
-		puts("Invalid queue number");
+		__puts("Invalid queue number");
 		return(-1);
 	}
 
@@ -163,9 +163,9 @@ void print_uint(char *buf, unsigned int val) {
 	struct local_vars l;
 	l.p = l.outbuf;
 
-	strncpy(l.outbuf, buf, 31);
-	uint_to_str(val, l.outbuf+strlen(l.outbuf));
-	printf("@s\n", l.p);
+	__strncpy(l.outbuf, buf, 31);
+	uint_to_str(val, l.outbuf+__strlen(l.outbuf));
+	__printf("@s\n", l.p);
 }
 
 // dump out queue stats
@@ -175,26 +175,26 @@ void PrintStats(void) {
 	unsigned int bytes;
 	pkt *p;
 
-	printf("wall_clock: @f (s)\n", wall_clock);
+	__printf("wall_clock: @f (s)\n", wall_clock);
 	for (i = 0; i < iface.num_queues; i++) {
-		printf("Queue @d\n", i);
-		printf("  Pkts Transmitted:       @d\n", iface.ifqueue[i]->total_pkts);
-		printf("  Pkts Dropped:           @d\n", iface.ifqueue[i]->dropped_pkts);
+		__printf("Queue @d\n", i);
+		__printf("  Pkts Transmitted:       @d\n", iface.ifqueue[i]->total_pkts);
+		__printf("  Pkts Dropped:           @d\n", iface.ifqueue[i]->dropped_pkts);
 		if (iface.ifqueue[i]->total_pkts == 0) {
-			printf("  Average Latency (s):    @f\n", 0.0);
+			__printf("  Average Latency (s):    @f\n", 0.0);
 		} else {
-			printf("  Average Latency (s):    @f\n", iface.ifqueue[i]->cumulative_latency/iface.ifqueue[i]->total_pkts);
+			__printf("  Average Latency (s):    @f\n", iface.ifqueue[i]->cumulative_latency/iface.ifqueue[i]->total_pkts);
 		}
-		printf("  Enqueued Pkts:          @d\n", iface.ifqueue[i]->curr_depth);
+		__printf("  Enqueued Pkts:          @d\n", iface.ifqueue[i]->curr_depth);
 		bytes = 0;
 		p = iface.ifqueue[i]->head;
 		for (j = 0; j < iface.ifqueue[i]->curr_depth; j++) {
 			bytes += p->bytes;
 			p = p->next;
 		}
-		printf("  Queue Depth (bytes):    @d\n", bytes);
+		__printf("  Queue Depth (bytes):    @d\n", bytes);
 	}
-	printf("Interface Stats\n");
+	__printf("Interface Stats\n");
 	print_uint("  Pkts Transmitted:       ", iface.total_pkts);
 }
 
@@ -211,7 +211,7 @@ int TX(void) {
 		while (iface.ifqueue[0]->curr_depth) {
 			// transmit the packet at the head of the queue
 			if (TransmitPktFromQueue(0)) {
-				puts("Packet transmission failed");
+				__puts("Packet transmission failed");
 				return(-1);
 			}
 
@@ -237,7 +237,7 @@ int TX(void) {
 			if (q->head->bytes <= q->bucket) {
 				// transmit the packet
 				if (TransmitPktFromQueue(i)) {
-					puts("Packet transmission failed");
+					__puts("Packet transmission failed");
 					return(-1);
 				}
 

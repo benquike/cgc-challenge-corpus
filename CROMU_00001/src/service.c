@@ -7,7 +7,7 @@ Author: John Berry <john.n.berry@gmail.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -48,7 +48,7 @@ THE SOFTWARE.
 typedef struct message {
 	struct message *next;
 	unsigned int message_id;
-	unsigned int read;
+	unsigned int __read;
 	char message[MESSAGE_LENGTH];
 } message, *pmessage;
 
@@ -96,7 +96,7 @@ void list_users( puser_manager pum )
 	walker = pum->root;
 
 	while ( walker ) {
-		puts(walker->name);
+		__puts(walker->name);
 		walker = walker->next;
 	}
 end:
@@ -112,7 +112,7 @@ puser_manager init_users( void )
 	puser_manager pum = NULL;
 
 	if ( allocate( sizeof(user_manager), 0, (void**)&pum ) != 0) {
-		puts( "[-] Error Failed to allocate buffer\n" );
+		__puts( "[-] Error Failed to allocate buffer\n" );
 		goto end;
 	}
 
@@ -142,8 +142,8 @@ size_t create_user( puser_manager pum, char *username )
 		goto end;
 	}
 
-	if ( strlen(username) > USERNAME_LENGTH - 1 ) {
-		puts("[-] Error username too long\n");
+	if ( __strlen(username) > USERNAME_LENGTH - 1 ) {
+		__puts("[-] Error username too long\n");
 		goto end;
 	}
 
@@ -151,8 +151,8 @@ size_t create_user( puser_manager pum, char *username )
 	walker = pum->root;
 
 	while ( walker ) {
-		if ( strcmp( walker->name, username ) == 0) {
-			puts("[-] Error user exists\n");
+		if ( __strcmp( walker->name, username ) == 0) {
+			__puts("[-] Error user exists\n");
 			goto end;
 		}
 		walker = walker->next;
@@ -160,7 +160,7 @@ size_t create_user( puser_manager pum, char *username )
 
 	// Create user stucture
 	if ( allocate( sizeof(user), 0, (void**)&newuser) != 0 ) {
-		puts("[-] Error allocating user structure\n");
+		__puts("[-] Error allocating user structure\n");
 		goto end;
 	}
 	
@@ -168,7 +168,7 @@ size_t create_user( puser_manager pum, char *username )
 	newuser->name[0] = 0x00;
 	newuser->pmm = init_manager();
 
-	strncat( newuser->name, username, USERNAME_LENGTH );
+	__strncat( newuser->name, username, USERNAME_LENGTH );
 
 	// Check root user first
 	if ( pum->root == NULL ) {
@@ -198,7 +198,7 @@ pmessage_manager init_manager( void )
 	pmessage_manager pmm = NULL;
 
 	if ( allocate( sizeof(message_manager), 0, (void**)&pmm ) != 0) {
-		puts( "[-] Error Failed to allocate buffer\n" );
+		__puts( "[-] Error Failed to allocate buffer\n" );
 		goto end;
 	}
 
@@ -266,23 +266,23 @@ pmessage create_message( char * msg_string )
 		goto end;
 	}
 
-	if ( strlen( msg_string ) > MESSAGE_LENGTH - 1 ) {
-		puts("[-] Error Message too long\n");
+	if ( __strlen( msg_string ) > MESSAGE_LENGTH - 1 ) {
+		__puts("[-] Error Message too long\n");
 		goto end;
 	}
 
 	if ( allocate( sizeof(message), 0, (void**)&pmsg)  != 0 ) {
-		puts("[-] Error Failed to allocate message struct\n");
+		__puts("[-] Error Failed to allocate message struct\n");
 		goto end;
 	}
 
 	pmsg->next = NULL;
 	pmsg->message_id = 0;
-	pmsg->read = 0;
+	pmsg->__read = 0;
 
-	bzero( pmsg->message, MESSAGE_LENGTH );
+	__bzero( pmsg->message, MESSAGE_LENGTH );
 
-	for ( counter = 0; counter < strlen( msg_string ); counter++ ) {
+	for ( counter = 0; counter < __strlen( msg_string ); counter++ ) {
 		pmsg->message[counter] = msg_string[counter];
 	}
 
@@ -306,7 +306,7 @@ void delete_message( pmessage_manager pmm, size_t message_id )
 	}
 
 	if ( message_id > pmm->message_count ) {
-		puts( "[-] Message ID out of range\n");
+		__puts( "[-] Message ID out of range\n");
 		goto end;
 	}
 
@@ -331,7 +331,7 @@ void delete_message( pmessage_manager pmm, size_t message_id )
 	}
 
 	if ( walker == NULL ) {
-		puts("[-] Message ID not found\n");
+		__puts("[-] Message ID not found\n");
 	}
 end:
 	return;
@@ -353,24 +353,24 @@ void read_message( pmessage_manager pmm, size_t message_id )
 	}
 
 	if ( message_id > pmm->message_count ) {
-		puts( "[-] Message ID out of range\n");
+		__puts( "[-] Message ID out of range\n");
 		goto end;
 	}
 
-	bzero( buffer, 0x100 );
-	strncat( buffer, "***********************************\n", 0x100 );
+	__bzero( buffer, 0x100 );
+	__strncat( buffer, "***********************************\n", 0x100 );
 	
 	walker = pmm->root;
 
 	while ( walker ) {
 		if ( walker->message_id == message_id ) {
-			retval = strlen(buffer);
-			itoa( buffer + retval, message_id, 0x100-retval );
-			strncat(buffer, ":  ", 0x100 );
-			strncat(buffer, walker->message, 0x100 );
-			strncat( buffer, "\n***********************************\n", 0x100 );
-			puts( buffer );
-			walker->read = 1;
+			retval = __strlen(buffer);
+			__itoa( buffer + retval, message_id, 0x100-retval );
+			__strncat(buffer, ":  ", 0x100 );
+			__strncat(buffer, walker->message, 0x100 );
+			__strncat( buffer, "\n***********************************\n", 0x100 );
+			__puts( buffer );
+			walker->__read = 1;
 			goto end;
 		}
 
@@ -378,7 +378,7 @@ void read_message( pmessage_manager pmm, size_t message_id )
 	}
 
 	if ( walker == NULL ) {
-		puts("[-] Message ID not found\n");
+		__puts("[-] Message ID not found\n");
 	}
 
 end:
@@ -410,7 +410,7 @@ void list_unread_messages( pmessage_manager pmm )
 	walker = pmm->root;
 
 	while ( walker ) {
-		if ( walker->read == 0 ) {
+		if ( walker->__read == 0 ) {
 			count++;
 		}
 		walker= walker->next;
@@ -420,7 +420,7 @@ void list_unread_messages( pmessage_manager pmm )
 		return;
 	}
 
-	puts("Unread messages:\n");
+	__puts("Unread messages:\n");
 
 	// Calculate size
 	// Message Text
@@ -433,32 +433,32 @@ void list_unread_messages( pmessage_manager pmm )
 
 	char data[size];
 
-	bzero( data, size );
+	__bzero( data, size );
 
 	walker = pmm->root;
 
 	while ( walker ) {
-		if ( walker->read == 0 ) {
+		if ( walker->__read == 0 ) {
 
-			// Mark the message as read
-			walker->read = 1;
-			strcat( data, "***********************************\n");
-			itoa( data + strlen(data), walker->message_id, 4 );
-			strcat( data, ":  " );
-			strcat( data, walker->message );
-			strcat( data, "\n");
-			strcat( data, "***********************************\n");
+			// Mark the message as __read
+			walker->__read = 1;
+			__strcat( data, "***********************************\n");
+			__itoa( data + __strlen(data), walker->message_id, 4 );
+			__strcat( data, ":  " );
+			__strcat( data, walker->message );
+			__strcat( data, "\n");
+			__strcat( data, "***********************************\n");
 		}
 		walker = walker->next;
 	}
 
-	puts( data );
+	__puts( data );
 end:
 	return;
 }
 
 /**
- * List all existing messages of a user including those already read.
+ * List all existing messages of a user including those already __read.
  * @param pmm Pointer to the message management structure of a user.
  **/
 void list_messages( pmessage_manager pmm )
@@ -496,7 +496,7 @@ puser get_user( puser_manager pum, char *username )
 	pu = pum->root;
 
 	while ( pu ) {
-		if ( strcmp( pu->name, username ) == 0 ) {
+		if ( __strcmp( pu->name, username ) == 0 ) {
 			goto end;
 		}
 		pu = pu->next;
@@ -525,19 +525,19 @@ size_t send_user_message( puser_manager pum, char *username, char *msg )
 	pu = get_user( pum, username );
 
 	if ( pu == NULL ) {
-		puts("[-] Error invalid user\n");
+		__puts("[-] Error invalid user\n");
 		goto end;
 	}
 
 	pmsg = create_message( msg );
 
 	if ( pmsg == NULL ) {
-		puts("[-] Failed to create message\n");
+		__puts("[-] Failed to create message\n");
 		goto end;
 	}
 
 	if ( (id = add_message( pu->pmm, pmsg )) == 0 ) {
-		puts("[-] Failed to add message\n");
+		__puts("[-] Failed to add message\n");
 		goto end;
 	}	
 end:
@@ -562,56 +562,56 @@ void handle_loggedin( puser_manager pum, puser pu )
 	while ( 1 ) {
 		list_unread_messages( pu->pmm );
 
-		puts("1) Send Message\n");
-		puts("2) Read Message\n");
-		puts("3) List Messages\n");
-		puts("4) Delete Message\n");
-		puts("5) Logout\n");
-		puts("6) Exit\n");
-		puts(": ");
+		__puts("1) Send Message\n");
+		__puts("2) Read Message\n");
+		__puts("3) List Messages\n");
+		__puts("4) Delete Message\n");
+		__puts("5) Logout\n");
+		__puts("6) Exit\n");
+		__puts(": ");
 
 		choice = 0;
 
-		if ( receive_until( (char*)&choice, 0x0a, 2 ) == 0 ) {
-			puts("[-] Receive failed\n");
+		if ( __receive_until( (char*)&choice, 0x0a, 2 ) == 0 ) {
+			__puts("[-] Receive failed\n");
 			_terminate(0);
 		}
 
 		choice -= 0x30;
 
 		if ( choice > 6 || choice < 1 ) {
-			puts("[-] Invalid choice\n");
+			__puts("[-] Invalid choice\n");
 			continue;
 		}
 
 		if ( choice == 6 ) {
-			puts("Exiting...\n");
+			__puts("Exiting...\n");
 			_terminate(0);
 		} else if ( choice == 5 ) {
-			puts("Logging out...\n");
+			__puts("Logging out...\n");
 			goto end;
 		} else if ( choice == 4 ) {
-			puts("ID: ");
-			bzero( message, MESSAGE_LENGTH);
-			receive_until( message, '\n', 4 );
-			choice = atoi( message );
+			__puts("ID: ");
+			__bzero( message, MESSAGE_LENGTH);
+			__receive_until( message, '\n', 4 );
+			choice = __atoi( message );
 			delete_message( pu->pmm, choice );
 		} else if ( choice == 3 ) {
 			list_messages( pu->pmm );
 		} else if ( choice == 2 ) {
-			puts("ID: ");
-			bzero( message, MESSAGE_LENGTH );
-			receive_until( message, '\n', 4 );
-			choice = atoi( message );
+			__puts("ID: ");
+			__bzero( message, MESSAGE_LENGTH );
+			__receive_until( message, '\n', 4 );
+			choice = __atoi( message );
 			read_message( pu->pmm, choice );
 		} else if ( choice == 1 ) {
-			bzero( message, MESSAGE_LENGTH );
-			bzero( username, USERNAME_LENGTH );
+			__bzero( message, MESSAGE_LENGTH );
+			__bzero( username, USERNAME_LENGTH );
 
-			puts("To: ");
-			receive_until( username, '\n', USERNAME_LENGTH-1);
-			puts("Message: ");
-			receive_until( message, '\n', MESSAGE_LENGTH-1);
+			__puts("To: ");
+			__receive_until( username, '\n', USERNAME_LENGTH-1);
+			__puts("Message: ");
+			__receive_until( message, '\n', MESSAGE_LENGTH-1);
 			send_user_message( pum, username, message );
 		}
 	}
@@ -640,42 +640,42 @@ void handle_menu ( )
 	while ( 1 ) {
 		choice = 0;
 
-		puts("1) Create User\n");
-		puts("2) Login\n");
-		puts("3) Exit\n");
-		puts(": ");
+		__puts("1) Create User\n");
+		__puts("2) Login\n");
+		__puts("3) Exit\n");
+		__puts(": ");
 
-		if ( receive_until( (char*)&choice, '\n', 2 ) == 0 ) {
-			puts("[-] Receive Failed\n");
+		if ( __receive_until( (char*)&choice, '\n', 2 ) == 0 ) {
+			__puts("[-] Receive Failed\n");
 			_terminate(0);
 		}
 
 		choice -= 0x30;
 
 		if ( choice > 3 || choice < 1 ) {
-			puts("[-] Invalid choice\n");
+			__puts("[-] Invalid choice\n");
 			continue;
 		}
 
-		bzero( username, USERNAME_LENGTH );
+		__bzero( username, USERNAME_LENGTH );
 
 		if ( choice == 3 ) {
-			puts("Exiting...\n");
+			__puts("Exiting...\n");
 			_terminate( 0 );
 		} else if ( choice == 1 ) {
-			puts("username: ");
-			receive_until( username, '\n', USERNAME_LENGTH - 1);
+			__puts("username: ");
+			__receive_until( username, '\n', USERNAME_LENGTH - 1);
 			create_user( pum, username );
 		} else if ( choice == 2 ) {
-			puts("username: ");
-			receive_until( username, '\n', USERNAME_LENGTH - 1);
+			__puts("username: ");
+			__receive_until( username, '\n', USERNAME_LENGTH - 1);
 			current_user = get_user( pum, username );
 			if ( current_user != NULL ) {
-				puts("Login Success\n");
+				__puts("Login Success\n");
 				handle_loggedin( pum, current_user );
 				current_user = NULL;
 			} else {
-				puts("Login Failed\n");
+				__puts("Login Failed\n");
 			}
 		}
 	}

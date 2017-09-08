@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -26,31 +26,31 @@ THE SOFTWARE.
 #ifndef __STDLIB_H__
 #define __STDLIB_H__
 
-int isspace( int c );
-int isdigit( int c );
-int isnan( double val );
-int isinf( double val );
-int islower( int c );
-int isupper( int c );
-int isalpha( int c );
-int isalnum( int c );
+int __isspace( int c );
+int __isdigit( int c );
+int __isnan( double val );
+int __isinf( double val );
+int __islower( int c );
+int __isupper( int c );
+int __isalpha( int c );
+int __isalnum( int c );
 
-double atof(const char *str);
-int atoi(const char *str);
+double __atof(const char *str);
+int __atoi(const char *str);
 
-int memcpy( void *dest, void *src, size_t n);
+int __memcpy( void *dest, void *src, size_t n);
 int memcmp( void *dest, void *src, size_t n);
-void memset( void *dest, char c, size_t n);
-char *strcpy( char *dest, char *src );
-char *strncpy( char *dest, char *src, size_t n );
-int printf( const char *fmt, ... );
-void bzero( void *, size_t );
-int strcmp( const char *, const char * );
-char *strncat( char *dest, const char *src, size_t n );
-size_t receive_until( char *, char, size_t );
-size_t strcat( char *, char* );
-size_t strlen( char * );
-size_t itoa( char *, size_t, size_t );
-void puts( char *t );
+void __memset( void *dest, char c, size_t n);
+char *__strcpy( char *dest, char *src );
+char *__strncpy( char *dest, char *src, size_t n );
+int __printf( const char *fmt, ... );
+void __bzero( void *, size_t );
+int __strcmp( const char *, const char * );
+char *__strncat( char *dest, const char *src, size_t n );
+size_t __receive_until( char *, char, size_t );
+size_t __strcat( char *, char* );
+size_t __strlen( char * );
+size_t __itoa( char *, size_t, size_t );
+void __puts( char *t );
 
 #endif // __STDLIB_H__

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -58,13 +58,13 @@ Ticket *Support::CurrentTicket()
 
 void Support::Display(void)
 {
-  printf("%d" EOL, id());
+  __printf("%d" EOL, id());
   if (CurrentTicket())
-    printf("%d" EOL, CurrentTicket()->id());
+    __printf("%d" EOL, CurrentTicket()->id());
   else
-    printf("%s" EOL, "None");
-  printf("%d" EOL, contact_info());
-  printf("%d" EOL, max_priority());
+    __printf("%s" EOL, "None");
+  __printf("%d" EOL, contact_info());
+  __printf("%d" EOL, max_priority());
 }
 
 Ticket *Support::RemoveTicket()

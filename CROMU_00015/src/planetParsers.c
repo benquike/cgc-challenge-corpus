@@ -4,7 +4,7 @@ Author: John Berry <hj@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -43,85 +43,85 @@ int planetMenu( pPlanet pl )
 	}
 
 	while ( 1 ) {
-		bzero(selection, 30);
+		__bzero(selection, 30);
 
-		printf("\nPlanet: @s\n", pl->name);
-		printf("1) Display planet information\n");
-		printf("2) Set Period\n");
-		printf("3) Set Orbit Speed\n");
-		printf("4) Set Aphelion\n");
-		printf("5) Set Perihelion\n");
-		printf("6) Set Mean Radius\n");
-		printf("7) Set Equatorial Radius\n");
-		printf("8) Set Mass\n");
-		printf("9) Set Gravity\n");
-		printf("10) Set population\n");
-		printf("11) Add Country\n");
-		printf("12) Select country\n");
-		printf("13) Delete Planet and exit menu\n");
-		printf("14) Exit menu\n");
-		printf("Selection: ");
+		__printf("\nPlanet: @s\n", pl->name);
+		__printf("1) Display planet information\n");
+		__printf("2) Set Period\n");
+		__printf("3) Set Orbit Speed\n");
+		__printf("4) Set Aphelion\n");
+		__printf("5) Set Perihelion\n");
+		__printf("6) Set Mean Radius\n");
+		__printf("7) Set Equatorial Radius\n");
+		__printf("8) Set Mass\n");
+		__printf("9) Set Gravity\n");
+		__printf("10) Set population\n");
+		__printf("11) Add Country\n");
+		__printf("12) Select country\n");
+		__printf("13) Delete Planet and __exit menu\n");
+		__printf("14) Exit menu\n");
+		__printf("Selection: ");
 
-		receive_until(selection, '\n', 3);
-		choice = atoi( selection );
+		__receive_until(selection, '\n', 3);
+		choice = __atoi( selection );
 
 		switch ( choice ) {
 			case 1:
 				printPlanetInfo( pl );
 				break;
 			case 2:
-				printf("\n-> ");
-				receive_until( selection, '\n', 10);
-				pl->period = atof(selection);
+				__printf("\n-> ");
+				__receive_until( selection, '\n', 10);
+				pl->period = __atof(selection);
 				break;
 			case 3:
-				printf("\n-> ");
-				receive_until(selection, '\n', 10);
-				pl->orbitspeed = atof(selection);
+				__printf("\n-> ");
+				__receive_until(selection, '\n', 10);
+				pl->orbitspeed = __atof(selection);
 				break;
 			case 4:
-				printf("\n-> ");
-				receive_until( selection, '\n', 10);
-				pl->aphelion = atof(selection);
+				__printf("\n-> ");
+				__receive_until( selection, '\n', 10);
+				pl->aphelion = __atof(selection);
 				break;
 			case 5:
-				printf("\n-> ");
-				receive_until( selection, '\n', 10);
-				pl->perihelion = atof(selection);
+				__printf("\n-> ");
+				__receive_until( selection, '\n', 10);
+				pl->perihelion = __atof(selection);
 				break;
 			case 6:
-				printf("\n-> ");
-				receive_until( selection, '\n', 10);
-				pl->radius = atof(selection);
+				__printf("\n-> ");
+				__receive_until( selection, '\n', 10);
+				pl->radius = __atof(selection);
 				break;
 			case 7:
-				printf("\n-> ");
-				receive_until( selection, '\n', 10);
-				pl->eradius = atof(selection);
+				__printf("\n-> ");
+				__receive_until( selection, '\n', 10);
+				pl->eradius = __atof(selection);
 				break;
 			case 8:
-				printf("\n-> ");
-				receive_until( selection, '\n', 10);
-				pl->mass = atof(selection);
+				__printf("\n-> ");
+				__receive_until( selection, '\n', 10);
+				pl->mass = __atof(selection);
 				break;
 			case 9:
-				printf("\n-> ");
-				receive_until( selection, '\n', 10);
-				pl->gravity = atof(selection);
+				__printf("\n-> ");
+				__receive_until( selection, '\n', 10);
+				pl->gravity = __atof(selection);
 				break;
 			case 10:
-				printf("\n-> ");
-				receive_until( selection, '\n', 10);
-				pl->population = atoi(selection);
+				__printf("\n-> ");
+				__receive_until( selection, '\n', 10);
+				pl->population = __atoi(selection);
 				break;
 			case 11:
 				if ( pl->country_count >= COUNTRYMAX ) {
-					printf("Too many countries\n");
+					__printf("Too many countries\n");
 					continue;
 				}
 
-				printf("\nNew Name: ");
-				receive_until(selection, '\n', 19);
+				__printf("\nNew Name: ");
+				__receive_until(selection, '\n', 19);
 
 				choice = 0;
 				while ( choice < COUNTRYMAX ) {
@@ -132,12 +132,12 @@ int planetMenu( pPlanet pl )
 				}
 
 				if ( choice == COUNTRYMAX ) {
-					printf("!!No country slots\n");
+					__printf("!!No country slots\n");
 					continue;
 				}
 
 				if ( allocate( sizeof(Country), 0, (void**)(&pc) ) != 0 ) {
-					printf("!!Failed to allocate structure\n");
+					__printf("!!Failed to allocate structure\n");
 					continue;
 				}
 
@@ -147,7 +147,7 @@ int planetMenu( pPlanet pl )
 
 				length = 0;
 	
-				while ( isalnum( selection[length] ) ) {
+				while ( __isalnum( selection[length] ) ) {
 					pc->name[length] = selection[length];
 					length++;
 				}
@@ -156,24 +156,24 @@ int planetMenu( pPlanet pl )
 				pl->country_count++;
 				break;
 			case 12:
-				printf("\nCountries:\n");
+				__printf("\nCountries:\n");
 				for ( choice = 0; choice < pl->country_count; choice++ ) {
 					if ( pl->countries[choice] != NULL ) {
-						printf("@d) @s\n", choice + 1, pl->countries[choice]);
+						__printf("@d) @s\n", choice + 1, pl->countries[choice]);
 					}
 				}
 
-				bzero(selection, 30);
-				printf("\n-> ");
-				receive_until( selection, '\n', 3 );
+				__bzero(selection, 30);
+				__printf("\n-> ");
+				__receive_until( selection, '\n', 3 );
 
-				choice = atoi(selection);
+				choice = __atoi(selection);
 
 				if ( choice < 1 || choice > COUNTRYMAX) {
-					printf("Invalid choice...\n");
+					__printf("Invalid choice...\n");
 					continue;
 				} else if ( pl->countries[ choice-1] == NULL ) {
-					printf("Invalid choice...\n");
+					__printf("Invalid choice...\n");
 					continue;
 				}
 
@@ -190,7 +190,7 @@ int planetMenu( pPlanet pl )
 				return 1;
 				break;
 			default:
-				printf("Invalid...\n");
+				__printf("Invalid...\n");
 				break;
 		};
 	}
@@ -244,44 +244,44 @@ void printPlanetInfo( pPlanet pl )
         }
 
         if ( pl->name[0] == '\x00' ) {
-                printf("Name: Unknown\n");
+                __printf("Name: Unknown\n");
         } else {
-                printf("Name: @s\n", pl->name );
+                __printf("Name: @s\n", pl->name );
         }
 
         if ( pl->population >= 0 ) {
-                printf("\tPopulation: @d\n", pl->population);
+                __printf("\tPopulation: @d\n", pl->population);
         }
 
         if ( pl->period >= 0.0 ) {
-                printf("\tPeriod: @f\n", pl->period);
+                __printf("\tPeriod: @f\n", pl->period);
         }
 
         if ( pl->orbitspeed >= 0.0 ) {
-                printf("\tOrbit Speed: @f\n", pl->orbitspeed);
+                __printf("\tOrbit Speed: @f\n", pl->orbitspeed);
         }
 
         if ( pl->aphelion >= 0.0 ) {
-                printf("\tAphelion: @f\n", pl->aphelion);
+                __printf("\tAphelion: @f\n", pl->aphelion);
         }
 
         if ( pl->perihelion >= 0.0 ) {
-                printf("\tPerihelion: @f\n", pl->perihelion);
+                __printf("\tPerihelion: @f\n", pl->perihelion);
         }
 
         if ( pl->radius >= 0.0 ) {
-                printf("\tRadius: @f\n", pl->radius);
+                __printf("\tRadius: @f\n", pl->radius);
         }
 
         if ( pl->eradius >= 0.0 ) {
-                printf("\tERadius: @f\n", pl->eradius);
+                __printf("\tERadius: @f\n", pl->eradius);
         }
         if ( pl->mass >= 0.0 ) {
-                printf("\tMass: @f\n", pl->mass);
+                __printf("\tMass: @f\n", pl->mass);
         }
 	
 	if ( pl->gravity >= 0.0 ) {
-		printf("\tGravity: @f\n", pl->gravity);
+		__printf("\tGravity: @f\n", pl->gravity);
 	}
 
 	/// Print each country's information
@@ -309,7 +309,7 @@ void initPlanet( pPlanet pl )
                 return;
         }
 
-        bzero( pl->name, 20 );
+        __bzero( pl->name, 20 );
         pl->period = -1.0;
         pl->orbitspeed = -1.0;
         pl->aphelion = -1.0;
@@ -386,8 +386,8 @@ pPlanet planetTopLevel( pstring topLevel )
                 /// Convert the element name
                 el = elementNameToEnum( fl );
 
-                /// The name is no longer needed so free it
-                deallocate( fl, strlen(fl) + 1 );
+                /// The name is no longer needed so __free it
+                deallocate( fl, __strlen(fl) + 1 );
 
                 switch (el) {
                         case name:
@@ -397,10 +397,10 @@ pPlanet planetTopLevel( pstring topLevel )
                                         goto error;
                                 }
 
-				bzero( newPlanet->name, 20 );
-                                strncpy( newPlanet->name, fl, 19 );
+				__bzero( newPlanet->name, 20 );
+                                __strncpy( newPlanet->name, fl, 19 );
 
-                                deallocate(fl, strlen(fl) + 1 );
+                                deallocate(fl, __strlen(fl) + 1 );
                                 fl = NULL;
 
                                 break;
@@ -476,7 +476,7 @@ pPlanet planetTopLevel( pstring topLevel )
                                 break;
                         case country:
                                 if ( newPlanet->country_count >= COUNTRYMAX ) {
-                                        printf("!!Only @d countries allowed\n", COUNTRYMAX);
+                                        __printf("!!Only @d countries allowed\n", COUNTRYMAX);
                                         goto error;
                                 }
 
@@ -490,7 +490,7 @@ pPlanet planetTopLevel( pstring topLevel )
                                 break;
 
                         default:
-                                printf("Not allowed under Planet\n", fl);
+                                __printf("Not allowed under Planet\n", fl);
                                 goto error;
                                 break;
                 };
@@ -505,7 +505,7 @@ pPlanet planetTopLevel( pstring topLevel )
         skipWhiteSpace( topLevel );
 
         if ( !atChar( topLevel, '{' ) ) {
-                printf("!!Closing value failed for Planet\n");
+                __printf("!!Closing value failed for Planet\n");
                 goto error;
         }
 
@@ -517,7 +517,7 @@ pPlanet planetTopLevel( pstring topLevel )
         skipWhiteSpace( topLevel );
 
         if ( !atChar( topLevel, '#' ) ) {
-                printf("!!Malformed closing element\n");
+                __printf("!!Malformed closing element\n");
                 goto error;
         }
 
@@ -545,8 +545,8 @@ pPlanet planetTopLevel( pstring topLevel )
                 goto error;
         }
 
-        if ( strcmp( fl, "Planet") != 0 ) {
-                printf("!!Closing element malformed\n");
+        if ( __strcmp( fl, "Planet") != 0 ) {
+                __printf("!!Closing element malformed\n");
                 deallocate( fl, (endIndex-temp_index) + 1 );
                 goto error;
         }
@@ -556,7 +556,7 @@ pPlanet planetTopLevel( pstring topLevel )
         skipWhiteSpace( topLevel );
 
         if ( !atChar( topLevel, '}' ) ) {
-                printf("!!Failed to find final closing brace\n");
+                __printf("!!Failed to find final closing brace\n");
                 goto error;
         }
 
@@ -567,7 +567,7 @@ pPlanet planetTopLevel( pstring topLevel )
 error:
         topLevel->index = lastGood;
 
-        printf("!!Error at: @s\n", topLevel->buffer + topLevel->index);
+        __printf("!!Error at: @s\n", topLevel->buffer + topLevel->index);
 
 	if ( newPlanet != NULL ) {
 		freePlanet( newPlanet );
@@ -602,13 +602,13 @@ double extractPeriod( pstring str )
 	skipWhiteSpace(str);
 
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate opening brace\n");
+		__printf("!!Failed to locate opening brace\n");
 		return period;
 	}
 
 	/// Skip past the curly brace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip opening brace\n");
+		__printf("!!Failed to skip opening brace\n");
 		return period;
 	}
 
@@ -619,7 +619,7 @@ double extractPeriod( pstring str )
 	end = skipToNonAlphaNum( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the element id\n");
+		__printf("!!Failed to locate the end of the element id\n");
 		return period;
 	}
 
@@ -627,33 +627,33 @@ double extractPeriod( pstring str )
 	temp = copyData( str, start, end );
 
 	if ( temp == NULL ) {
-		printf("!!Copy from @d to @d failed\n", start, end);
+		__printf("!!Copy from @d to @d failed\n", start, end);
 		return -1.0;
 	}
 
 	/// If the element id is not "Period" then this is the wrong function
-	if ( strcmp( temp, "Period") != 0 ) {
-		printf("!!Element id is not \"Period\"\n");
-		deallocate( temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, "Period") != 0 ) {
+		__printf("!!Element id is not \"Period\"\n");
+		deallocate( temp, __strlen(temp) + 1 );
 		temp = NULL;
 		return period;
 	}
 
-	/// The buffer is no longer needed so free it
-	deallocate(temp, strlen(temp) + 1);
+	/// The buffer is no longer needed so __free it
+	deallocate(temp, __strlen(temp) + 1);
 
 	/// Skip to the end of the element id
 	skipWhiteSpace( str );
 
 	/// If it is not a closing brace then this is improperly formatted.
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate initial closing brace\n");
+		__printf("!!Failed to locate initial closing brace\n");
 		return -1.0;
 	}
 
 	/// Skip the closing brace as well as any whitespace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip initial closing brace\n");
+		__printf("!!Failed to skip initial closing brace\n");
 		return period;
 	}
 
@@ -666,7 +666,7 @@ double extractPeriod( pstring str )
 	pe = skipFloat( str );
 
 	if ( pe == -1 ) {
-		printf("!!Failed to locate the end of the period data\n");
+		__printf("!!Failed to locate the end of the period data\n");
 		return end;
 	}
 
@@ -675,13 +675,13 @@ double extractPeriod( pstring str )
 
 	/// If this is not an opening curly brace then fail
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate the final opening brace\n");
+		__printf("!!Failed to locate the final opening brace\n");
 		return -1.0;
 	}
 
 	/// Skip past the brace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip the final opening brace\n");
+		__printf("!!Failed to skip the final opening brace\n");
 		return period;
 	}
 	
@@ -689,7 +689,7 @@ double extractPeriod( pstring str )
 
 	/// If this is not a # indicating the closing brace then fail
 	if ( !atChar( str, '#' ) ) {
-		printf("!!Failed to locate the closing mark\n");		
+		__printf("!!Failed to locate the closing mark\n");		
 		return -1.0;
 	}
 
@@ -697,14 +697,14 @@ double extractPeriod( pstring str )
 	start = skipLength( str, 1 );
 
 	if ( start == -1 ) {
-		printf("!!Failed to skip closing mark\n");
+		__printf("!!Failed to skip closing mark\n");
 		return period;
 	}
 
 	end = skipToNonAlphaNum( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the closing element id\n");
+		__printf("!!Failed to locate the end of the closing element id\n");
 		return -1.0;
 	}
 	
@@ -715,19 +715,19 @@ double extractPeriod( pstring str )
 	}
 #endif
 
-	if ( strcmp( temp, "Period") != 0 ) {
-		printf("!!Invalid closing element id: @s\n", temp);
-		deallocate(temp, strlen(temp)+1);
+	if ( __strcmp( temp, "Period") != 0 ) {
+		__printf("!!Invalid closing element id: @s\n", temp);
+		deallocate(temp, __strlen(temp)+1);
 		return period;
 	}
 
-	deallocate(temp, strlen(temp)+1);
+	deallocate(temp, __strlen(temp)+1);
 
 	skipWhiteSpace( str );
 
 	/// Check the final curly brace
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate final closing brace\n");
+		__printf("!!Failed to locate final closing brace\n");
 		return -1.0;
 	}
 
@@ -738,13 +738,13 @@ double extractPeriod( pstring str )
 	temp = copyData( str, ps, pe );
 
 	if ( temp == NULL ) {
-		printf("!!Failed to copy period data\n");
+		__printf("!!Failed to copy period data\n");
 		return -1;
 	}
 
-	period = atof( temp );
+	period = __atof( temp );
 
-	deallocate( temp, strlen(temp) + 1 );
+	deallocate( temp, __strlen(temp) + 1 );
 
 	return period;
 }
@@ -770,13 +770,13 @@ double extractOrbitSpeed( pstring str )
 	start = skipWhiteSpace(str);
 
 	if ( !(atChar( str, '{' ) & 1) ) {
-		printf("!!Failed to locate opening brace\n");
+		__printf("!!Failed to locate opening brace\n");
 		goto reterrspeed;
 	}
 
 	/// Skip past the curly brace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip opening brace\n");
+		__printf("!!Failed to skip opening brace\n");
 		return speed;
 	}
 
@@ -787,7 +787,7 @@ double extractOrbitSpeed( pstring str )
 	end = skipToNonAlphaNum( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the element id\n");
+		__printf("!!Failed to locate the end of the element id\n");
 		goto reterrvalue;
 	}
 
@@ -795,35 +795,35 @@ double extractOrbitSpeed( pstring str )
 	temp = copyData( str, start, end );
 
 	if ( temp == NULL ) {
-		printf("!!Copy from @d to @d failed\n", start, end);
+		__printf("!!Copy from @d to @d failed\n", start, end);
 		return -1.0;
 	}
 
 	/// If the element id is not "OrbitSpeed" then this is the wrong function
-	if ( strcmp( temp, "OrbitSpeed") != 0 ) {
-		printf("!!Element id is not \"OrbitSpeed\"\n");
-		bzero( temp, strlen(temp) );
-		deallocate( temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, "OrbitSpeed") != 0 ) {
+		__printf("!!Element id is not \"OrbitSpeed\"\n");
+		__bzero( temp, __strlen(temp) );
+		deallocate( temp, __strlen(temp) + 1 );
 		temp = NULL;
 		goto reterrvalue;
 	}
 
-	/// The buffer is no longer needed so free it
-	bzero( temp, strlen(temp) + 1 );
-	deallocate(temp, strlen(temp) + 1);
+	/// The buffer is no longer needed so __free it
+	__bzero( temp, __strlen(temp) + 1 );
+	deallocate(temp, __strlen(temp) + 1);
 
 	/// Skip to the end of the element id
 	skipWhiteSpace( str );
 
 	/// If it is not a closing brace then this is improperly formatted.
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate initial closing brace\n");
+		__printf("!!Failed to locate initial closing brace\n");
 		goto reterrspeed;
 	}
 
 	/// Skip the closing brace as well as any whitespace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip initial closing brace\n");
+		__printf("!!Failed to skip initial closing brace\n");
 		goto retspeed;
 	}
 
@@ -836,7 +836,7 @@ double extractOrbitSpeed( pstring str )
 	se = skipFloat( str );
 
 	if (se == -1 ) {
-		printf("!!Failed to locate the end of the period data\n");
+		__printf("!!Failed to locate the end of the period data\n");
 		return -1.0;
 	}
 
@@ -845,13 +845,13 @@ double extractOrbitSpeed( pstring str )
 
 	/// If this is not an opening curly brace then fail
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate the final opening brace\n");
+		__printf("!!Failed to locate the final opening brace\n");
 		goto reterrvalue;
 	}
 
 	/// Skip past the brace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip the final opening brace\n");
+		__printf("!!Failed to skip the final opening brace\n");
 		goto reterrspeed;
 	}
 	
@@ -859,7 +859,7 @@ double extractOrbitSpeed( pstring str )
 
 	/// If this is not a # indicating the closing brace then fail
 	if ( !atChar( str, '#' ) ) {
-		printf("!!Failed to locate the closing mark\n");		
+		__printf("!!Failed to locate the closing mark\n");		
 		return -1.0;
 	}
 
@@ -867,14 +867,14 @@ double extractOrbitSpeed( pstring str )
 	start = skipLength( str, 1 );
 
 	if ( start == -1 ) {
-		printf("!!Failed to skip closing mark\n");
+		__printf("!!Failed to skip closing mark\n");
 		goto reterrvalue;
 	}
 
 	end = skipToNonAlphaNum( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the closing element id\n");
+		__printf("!!Failed to locate the end of the closing element id\n");
 		return -1.0;
 	}
 	
@@ -886,21 +886,21 @@ double extractOrbitSpeed( pstring str )
 	}
 #endif
 
-	if ( strcmp( temp, "OrbitSpeed") != 0 ) {
-		printf("!!Invalid closing element id: @s\n", temp);
-		bzero(temp, strlen(temp) + 1 );
-		deallocate(temp, strlen(temp)+1);
+	if ( __strcmp( temp, "OrbitSpeed") != 0 ) {
+		__printf("!!Invalid closing element id: @s\n", temp);
+		__bzero(temp, __strlen(temp) + 1 );
+		deallocate(temp, __strlen(temp)+1);
 		return -1.0;
 	}
 
-	bzero( temp, strlen(temp) + 1 );
-	deallocate(temp, strlen(temp)+1);
+	__bzero( temp, __strlen(temp) + 1 );
+	deallocate(temp, __strlen(temp)+1);
 
 	skipWhiteSpace( str );
 
 	/// Check the final curly brace
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate final closing brace\n");
+		__printf("!!Failed to locate final closing brace\n");
 		goto reterrspeed;
 	}
 
@@ -911,13 +911,13 @@ double extractOrbitSpeed( pstring str )
 	temp = copyData( str, ss, se );
 
 	if ( temp == NULL ) {
-		printf("!!Failed to copy period data\n");
+		__printf("!!Failed to copy period data\n");
 		goto retspeed;
 	}
 
-	speed = atof( temp );
+	speed = __atof( temp );
 
-	deallocate( temp, strlen(temp) + 1 );
+	deallocate( temp, __strlen(temp) + 1 );
 
 	goto retspeed;
 
@@ -955,13 +955,13 @@ double extractAphelion( pstring str )
 	start = skipWhiteSpace(str);
 
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate opening brace\n");
+		__printf("!!Failed to locate opening brace\n");
 		return aphelion;
 	}
 
 	/// Skip past the curly brace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip opening brace\n");
+		__printf("!!Failed to skip opening brace\n");
 		return aphelion;
 	}
 
@@ -972,7 +972,7 @@ double extractAphelion( pstring str )
 	end = skipToNonAlphaNum( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the element id\n");
+		__printf("!!Failed to locate the end of the element id\n");
 		return aphelion;
 	}
 
@@ -980,33 +980,33 @@ double extractAphelion( pstring str )
 	temp = copyData( str, start, end );
 
 	if ( temp == NULL ) {
-		printf("!!Copy from @d to @d failed\n", start, end);
+		__printf("!!Copy from @d to @d failed\n", start, end);
 		return -1.0;
 	}
 
 	/// If the element id is not "Aphelion" then this is the wrong function
-	if ( strcmp( temp, "Aphelion") != 0 ) {
-		printf("!!Element id is not \"Aphelion\"\n");
-		deallocate( temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, "Aphelion") != 0 ) {
+		__printf("!!Element id is not \"Aphelion\"\n");
+		deallocate( temp, __strlen(temp) + 1 );
 		temp = NULL;
 		return aphelion;
 	}
 
-	/// The buffer is no longer needed so free it
-	deallocate(temp, strlen(temp) + 1);
+	/// The buffer is no longer needed so __free it
+	deallocate(temp, __strlen(temp) + 1);
 
 	/// Skip to the end of the element id
 	skipWhiteSpace( str );
 
 	/// If it is not a closing brace then this is improperly formatted.
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate initial closing brace\n");
+		__printf("!!Failed to locate initial closing brace\n");
 		return -1.0;
 	}
 
 	/// Skip the closing brace as well as any whitespace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip initial closing brace\n");
+		__printf("!!Failed to skip initial closing brace\n");
 		return aphelion;
 	}
 
@@ -1019,7 +1019,7 @@ double extractAphelion( pstring str )
 	pe = skipFloat( str );
 
 	if ( pe == -1 ) {
-		printf("!!Failed to locate the end of the period data\n");
+		__printf("!!Failed to locate the end of the period data\n");
 		return aphelion;
 	}
 
@@ -1028,13 +1028,13 @@ double extractAphelion( pstring str )
 
 	/// If this is not an opening curly brace then fail
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate the final opening brace\n");
+		__printf("!!Failed to locate the final opening brace\n");
 		return -1.0;
 	}
 
 	/// Skip past the brace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip the final opening brace\n");
+		__printf("!!Failed to skip the final opening brace\n");
 		return aphelion;
 	}
 	
@@ -1042,7 +1042,7 @@ double extractAphelion( pstring str )
 
 	/// If this is not a # indicating the closing brace then fail
 	if ( !atChar( str, '#' ) ) {
-		printf("!!Failed to locate the closing mark\n");		
+		__printf("!!Failed to locate the closing mark\n");		
 		return -1.0;
 	}
 
@@ -1050,14 +1050,14 @@ double extractAphelion( pstring str )
 	start = skipLength( str, 1 );
 
 	if ( start == -1 ) {
-		printf("!!Failed to skip closing mark\n");
+		__printf("!!Failed to skip closing mark\n");
 		return aphelion;
 	}
 
 	end = skipToNonAlphaNum( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the closing element id\n");
+		__printf("!!Failed to locate the end of the closing element id\n");
 		return -1.0;
 	}
 	
@@ -1069,19 +1069,19 @@ double extractAphelion( pstring str )
 	}
 #endif
 
-	if ( strcmp( temp, "Aphelion") != 0 ) {
-		printf("!!Invalid closing element id: @s\n", temp);
-		deallocate(temp, strlen(temp)+1);
+	if ( __strcmp( temp, "Aphelion") != 0 ) {
+		__printf("!!Invalid closing element id: @s\n", temp);
+		deallocate(temp, __strlen(temp)+1);
 		return aphelion;
 	}
 
-	deallocate(temp, strlen(temp)+1);
+	deallocate(temp, __strlen(temp)+1);
 
 	skipWhiteSpace( str );
 
 	/// Check the final curly brace
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate final closing brace\n");
+		__printf("!!Failed to locate final closing brace\n");
 		return -1.0;
 	}
 
@@ -1092,13 +1092,13 @@ double extractAphelion( pstring str )
 	temp = copyData( str, ps, pe );
 
 	if ( temp == NULL ) {
-		printf("!!Failed to copy period data\n");
+		__printf("!!Failed to copy period data\n");
 		return -1;
 	}
 
-	aphelion = atof( temp );
+	aphelion = __atof( temp );
 
-	deallocate( temp, strlen(temp) + 1 );
+	deallocate( temp, __strlen(temp) + 1 );
 
 	return aphelion;
 }
@@ -1126,13 +1126,13 @@ double extractPerihelion( pstring str )
 	start = skipWhiteSpace(str);
 
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate opening brace\n");
+		__printf("!!Failed to locate opening brace\n");
 		return perihelion;
 	}
 
 	/// Skip past the curly brace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip opening brace\n");
+		__printf("!!Failed to skip opening brace\n");
 		return perihelion;
 	}
 
@@ -1143,7 +1143,7 @@ double extractPerihelion( pstring str )
 	end = skipToNonAlphaNum( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the element id\n");
+		__printf("!!Failed to locate the end of the element id\n");
 		return perihelion;
 	}
 
@@ -1151,33 +1151,33 @@ double extractPerihelion( pstring str )
 	temp = copyData( str, start, end );
 
 	if ( temp == NULL ) {
-		printf("!!Copy from @d to @d failed\n", start, end);
+		__printf("!!Copy from @d to @d failed\n", start, end);
 		return -1.0;
 	}
 
 	/// If the element id is not "Perihelion" then this is the wrong function
-	if ( strcmp( temp, "Perihelion") != 0 ) {
-		printf("!!Element id is not \"Perihelion\"\n");
-		deallocate( temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, "Perihelion") != 0 ) {
+		__printf("!!Element id is not \"Perihelion\"\n");
+		deallocate( temp, __strlen(temp) + 1 );
 		temp = NULL;
 		return perihelion;
 	}
 
-	/// The buffer is no longer needed so free it
-	deallocate(temp, strlen(temp) + 1);
+	/// The buffer is no longer needed so __free it
+	deallocate(temp, __strlen(temp) + 1);
 
 	/// Skip to the end of the element id
 	skipWhiteSpace( str );
 
 	/// If it is not a closing brace then this is improperly formatted.
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate initial closing brace\n");
+		__printf("!!Failed to locate initial closing brace\n");
 		return -1.0;
 	}
 
 	/// Skip the closing brace as well as any whitespace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip initial closing brace\n");
+		__printf("!!Failed to skip initial closing brace\n");
 		return perihelion;
 	}
 
@@ -1190,7 +1190,7 @@ double extractPerihelion( pstring str )
 	pe = skipFloat( str );
 
 	if ( pe == -1 ) {
-		printf("!!Failed to locate the end of the perihelion data\n");
+		__printf("!!Failed to locate the end of the perihelion data\n");
 		return perihelion;
 	}
 
@@ -1199,13 +1199,13 @@ double extractPerihelion( pstring str )
 
 	/// If this is not an opening curly brace then fail
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate the final opening brace\n");
+		__printf("!!Failed to locate the final opening brace\n");
 		return -1.0;
 	}
 
 	/// Skip past the brace
 	if ( incChar( str) == -1 ) {
-		printf("!!Failed to skip the final opening brace\n");
+		__printf("!!Failed to skip the final opening brace\n");
 		return perihelion;
 	}
 	
@@ -1213,7 +1213,7 @@ double extractPerihelion( pstring str )
 
 	/// If this is not a # indicating the closing brace then fail
 	if ( !atChar( str, '#' ) ) {
-		printf("!!Failed to locate the closing mark\n");		
+		__printf("!!Failed to locate the closing mark\n");		
 		return -1.0;
 	}
 
@@ -1221,32 +1221,32 @@ double extractPerihelion( pstring str )
 	start = skipLength( str, 1 );
 
 	if ( start == -1 ) {
-		printf("!!Failed to skip closing mark\n");
+		__printf("!!Failed to skip closing mark\n");
 		return perihelion;
 	}
 
 	end = skipToNonAlphaNum( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the closing element id\n");
+		__printf("!!Failed to locate the end of the closing element id\n");
 		return -1.0;
 	}
 	
 	temp = copyData( str, start, end );
 
-	if ( strcmp( temp, "Perihelion") != 0 ) {
-		printf("!!Invalid closing element id: @s\n", temp);
-		deallocate(temp, strlen(temp)+1);
+	if ( __strcmp( temp, "Perihelion") != 0 ) {
+		__printf("!!Invalid closing element id: @s\n", temp);
+		deallocate(temp, __strlen(temp)+1);
 		return perihelion;
 	}
 
-	deallocate(temp, strlen(temp)+1);
+	deallocate(temp, __strlen(temp)+1);
 
 	skipWhiteSpace( str );
 
 	/// Check the final curly brace
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate final closing brace\n");
+		__printf("!!Failed to locate final closing brace\n");
 		return -1.0;
 	}
 
@@ -1257,13 +1257,13 @@ double extractPerihelion( pstring str )
 	temp = copyData( str, ps, pe );
 
 	if ( temp == NULL ) {
-		printf("!!Failed to copy perihelion data\n");
+		__printf("!!Failed to copy perihelion data\n");
 		return -1;
 	}
 
-	perihelion = atof( temp );
+	perihelion = __atof( temp );
 
-	deallocate( temp, strlen(temp) + 1 );
+	deallocate( temp, __strlen(temp) + 1 );
 
 	return perihelion;
 }
@@ -1291,13 +1291,13 @@ double extractRadius( pstring str )
 	start = skipWhiteSpace(str);
 
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate opening brace\n");
+		__printf("!!Failed to locate opening brace\n");
 		return radius;
 	}
 
 	/// Skip past the curly brace
 	if ( incChar( str ) == -1 ) {
-		printf("!!Failed to skip opening brace\n");
+		__printf("!!Failed to skip opening brace\n");
 		return radius;
 	}
 
@@ -1308,7 +1308,7 @@ double extractRadius( pstring str )
 	end = skipToNonAlphaNum( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the element id\n");
+		__printf("!!Failed to locate the end of the element id\n");
 		return radius;
 	}
 
@@ -1316,33 +1316,33 @@ double extractRadius( pstring str )
 	temp = copyData( str, start, end );
 
 	if ( temp == NULL ) {
-		printf("!!Copy from @d to @d failed\n", start, end);
+		__printf("!!Copy from @d to @d failed\n", start, end);
 		return -1.0;
 	}
 
 	/// If the element id is not "Radius" then this is the wrong function
-	if ( strcmp( temp, "Radius") != 0 ) {
-		printf("!!Element id is not \"Radius\"\n");
-		deallocate( temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, "Radius") != 0 ) {
+		__printf("!!Element id is not \"Radius\"\n");
+		deallocate( temp, __strlen(temp) + 1 );
 		temp = NULL;
 		return radius;
 	}
 
-	/// The buffer is no longer needed so free it
-	deallocate(temp, strlen(temp) + 1);
+	/// The buffer is no longer needed so __free it
+	deallocate(temp, __strlen(temp) + 1);
 
 	/// Skip to the end of the element id
 	skipWhiteSpace( str );
 
 	/// If it is not a closing brace then this is improperly formatted.
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate initial closing brace\n");
+		__printf("!!Failed to locate initial closing brace\n");
 		return -1.0;
 	}
 
 	/// Skip the closing brace as well as any whitespace
 	if ( incChar( str) == -1 ) {
-		printf("!!Failed to skip initial closing brace\n");
+		__printf("!!Failed to skip initial closing brace\n");
 		return radius;
 	}
 
@@ -1355,7 +1355,7 @@ double extractRadius( pstring str )
 	re = skipFloat( str );
 
 	if ( re == -1 ) {
-		printf("!!Failed to locate the end of the radius data\n");
+		__printf("!!Failed to locate the end of the radius data\n");
 		return radius;
 	}
 
@@ -1364,13 +1364,13 @@ double extractRadius( pstring str )
 
 	/// If this is not an opening curly brace then fail
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate the final opening brace\n");
+		__printf("!!Failed to locate the final opening brace\n");
 		return -1.0;
 	}
 
 	/// Skip past the brace
 	if ( incChar( str) == -1 ) {
-		printf("!!Failed to skip the final opening brace\n");
+		__printf("!!Failed to skip the final opening brace\n");
 		return radius;
 	}
 	
@@ -1378,7 +1378,7 @@ double extractRadius( pstring str )
 
 	/// If this is not a # indicating the closing brace then fail
 	if ( !atChar( str, '#' ) ) {
-		printf("!!Failed to locate the closing mark\n");		
+		__printf("!!Failed to locate the closing mark\n");		
 		return -1.0;
 	}
 
@@ -1386,32 +1386,32 @@ double extractRadius( pstring str )
 	start = incChar( str );
 
 	if ( start == -1 ) {
-		printf("!!Failed to skip closing mark\n");
+		__printf("!!Failed to skip closing mark\n");
 		return radius;
 	}
 
 	end = skipToNonAlphaNum( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the closing element id\n");
+		__printf("!!Failed to locate the end of the closing element id\n");
 		return -1.0;
 	}
 	
 	temp = copyData( str, start, end );
 
-	if ( strcmp( temp, "Radius") != 0 ) {
-		printf("!!Invalid closing element id: @s\n", temp);
-		deallocate(temp, strlen(temp)+1);
+	if ( __strcmp( temp, "Radius") != 0 ) {
+		__printf("!!Invalid closing element id: @s\n", temp);
+		deallocate(temp, __strlen(temp)+1);
 		return radius;
 	}
 
-	deallocate(temp, strlen(temp)+1);
+	deallocate(temp, __strlen(temp)+1);
 
 	skipWhiteSpace( str );
 
 	/// Check the final curly brace
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate final closing brace\n");
+		__printf("!!Failed to locate final closing brace\n");
 		return -1.0;
 	}
 
@@ -1422,13 +1422,13 @@ double extractRadius( pstring str )
 	temp = copyData( str, rs, re );
 
 	if ( temp == NULL ) {
-		printf("!!Failed to copy radius data\n");
+		__printf("!!Failed to copy radius data\n");
 		return -1.0;
 	}
 
-	radius = atof( temp );
+	radius = __atof( temp );
 
-	deallocate( temp, strlen(temp) + 1 );
+	deallocate( temp, __strlen(temp) + 1 );
 
 	return radius;
 }
@@ -1456,13 +1456,13 @@ double extractERadius( pstring str )
 	start = skipWhiteSpace(str);
 
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate opening brace\n");
+		__printf("!!Failed to locate opening brace\n");
 		return eradius;
 	}
 
 	/// Skip past the curly brace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip opening brace\n");
+		__printf("!!Failed to skip opening brace\n");
 		return eradius;
 	}
 
@@ -1473,7 +1473,7 @@ double extractERadius( pstring str )
 	end = skipToNonAlphaNum( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the element id\n");
+		__printf("!!Failed to locate the end of the element id\n");
 		return eradius;
 	}
 
@@ -1481,33 +1481,33 @@ double extractERadius( pstring str )
 	temp = copyData( str, start, end );
 
 	if ( temp == NULL ) {
-		printf("!!Copy from @d to @d failed\n", start, end);
+		__printf("!!Copy from @d to @d failed\n", start, end);
 		return -1.0;
 	}
 
 	/// If the element id is not "ERadius" then this is the wrong function
-	if ( strcmp( temp, "ERadius") != 0 ) {
-		printf("!!Element id is not \"ERadius\"\n");
-		deallocate( temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, "ERadius") != 0 ) {
+		__printf("!!Element id is not \"ERadius\"\n");
+		deallocate( temp, __strlen(temp) + 1 );
 		temp = NULL;
 		return eradius;
 	}
 
-	/// The buffer is no longer needed so free it
-	deallocate(temp, strlen(temp) + 1);
+	/// The buffer is no longer needed so __free it
+	deallocate(temp, __strlen(temp) + 1);
 
 	/// Skip to the end of the element id
 	skipWhiteSpace( str );
 
 	/// If it is not a closing brace then this is improperly formatted.
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate initial closing brace\n");
+		__printf("!!Failed to locate initial closing brace\n");
 		return -1.0;
 	}
 
 	/// Skip the closing brace as well as any whitespace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip initial closing brace\n");
+		__printf("!!Failed to skip initial closing brace\n");
 		return eradius;
 	}
 
@@ -1520,7 +1520,7 @@ double extractERadius( pstring str )
 	ee = skipFloat( str );
 
 	if ( ee == -1 ) {
-		printf("!!Failed to locate the end of the eradius data\n");
+		__printf("!!Failed to locate the end of the eradius data\n");
 		return eradius;
 	}
 
@@ -1529,13 +1529,13 @@ double extractERadius( pstring str )
 
 	/// If this is not an opening curly brace then fail
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate the final opening brace\n");
+		__printf("!!Failed to locate the final opening brace\n");
 		return -1.0;
 	}
 
 	/// Skip past the brace
 	if ( incChar( str) == -1 ) {
-		printf("!!Failed to skip the final opening brace\n");
+		__printf("!!Failed to skip the final opening brace\n");
 		return eradius;
 	}
 	
@@ -1543,7 +1543,7 @@ double extractERadius( pstring str )
 
 	/// If this is not a # indicating the closing brace then fail
 	if ( !atChar( str, '#' ) ) {
-		printf("!!Failed to locate the closing mark\n");		
+		__printf("!!Failed to locate the closing mark\n");		
 		return -1.0;
 	}
 
@@ -1551,32 +1551,32 @@ double extractERadius( pstring str )
 	start = skipLength( str, 1 );
 
 	if ( start == -1 ) {
-		printf("!!Failed to skip closing mark\n");
+		__printf("!!Failed to skip closing mark\n");
 		return eradius;
 	}
 
 	end = skipToNonAlphaNum( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the closing element id\n");
+		__printf("!!Failed to locate the end of the closing element id\n");
 		return -1.0;
 	}
 	
 	temp = copyData( str, start, end );
 
-	if ( strcmp( temp, "ERadius") != 0 ) {
-		printf("!!Invalid closing element id: @s\n", temp);
-		deallocate(temp, strlen(temp)+1);
+	if ( __strcmp( temp, "ERadius") != 0 ) {
+		__printf("!!Invalid closing element id: @s\n", temp);
+		deallocate(temp, __strlen(temp)+1);
 		return eradius;
 	}
 
-	deallocate(temp, strlen(temp)+1);
+	deallocate(temp, __strlen(temp)+1);
 
 	skipWhiteSpace( str );
 
 	/// Check the final curly brace
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate final closing brace\n");
+		__printf("!!Failed to locate final closing brace\n");
 		return -1.0;
 	}
 
@@ -1587,13 +1587,13 @@ double extractERadius( pstring str )
 	temp = copyData( str, es, ee );
 
 	if ( temp == NULL ) {
-		printf("!!Failed to copy eradius data\n");
+		__printf("!!Failed to copy eradius data\n");
 		return -1;
 	}
 
-	eradius = atof( temp );
+	eradius = __atof( temp );
 
-	deallocate( temp, strlen(temp) + 1 );
+	deallocate( temp, __strlen(temp) + 1 );
 
 	return eradius;
 }
@@ -1621,13 +1621,13 @@ double extractMass( pstring str )
 	start = skipWhiteSpace(str);
 
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate opening brace\n");
+		__printf("!!Failed to locate opening brace\n");
 		return mass;
 	}
 
 	/// Skip past the curly brace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip opening brace\n");
+		__printf("!!Failed to skip opening brace\n");
 		return mass;
 	}
 
@@ -1638,7 +1638,7 @@ double extractMass( pstring str )
 	end = skipToNonAlphaNum( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the element id\n");
+		__printf("!!Failed to locate the end of the element id\n");
 		return mass;
 	}
 
@@ -1646,33 +1646,33 @@ double extractMass( pstring str )
 	temp = copyData( str, start, end );
 
 	if ( temp == NULL ) {
-		printf("!!Copy from @d to @d failed\n", start, end);
+		__printf("!!Copy from @d to @d failed\n", start, end);
 		return -1.0;
 	}
 
 	/// If the element id is not "Mass" then this is the wrong function
-	if ( strcmp( temp, "Mass") != 0 ) {
-		printf("!!Element id is not \"Mass\"\n");
-		deallocate( temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, "Mass") != 0 ) {
+		__printf("!!Element id is not \"Mass\"\n");
+		deallocate( temp, __strlen(temp) + 1 );
 		temp = NULL;
 		return mass;
 	}
 
-	/// The buffer is no longer needed so free it
-	deallocate(temp, strlen(temp) + 1);
+	/// The buffer is no longer needed so __free it
+	deallocate(temp, __strlen(temp) + 1);
 
 	/// Skip to the end of the element id
 	skipWhiteSpace( str );
 
 	/// If it is not a closing brace then this is improperly formatted.
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate initial closing brace\n");
+		__printf("!!Failed to locate initial closing brace\n");
 		return -1.0;
 	}
 
 	/// Skip the closing brace as well as any whitespace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip initial closing brace\n");
+		__printf("!!Failed to skip initial closing brace\n");
 		return mass;
 	}
 
@@ -1685,7 +1685,7 @@ double extractMass( pstring str )
 	ee = skipFloat( str );
 
 	if ( ee == -1 ) {
-		printf("!!Failed to locate the end of the mass data\n");
+		__printf("!!Failed to locate the end of the mass data\n");
 		return mass;
 	}
 
@@ -1694,13 +1694,13 @@ double extractMass( pstring str )
 
 	/// If this is not an opening curly brace then fail
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate the final opening brace\n");
+		__printf("!!Failed to locate the final opening brace\n");
 		return -1.0;
 	}
 
 	/// Skip past the brace
 	if ( incChar( str) == -1 ) {
-		printf("!!Failed to skip the final opening brace\n");
+		__printf("!!Failed to skip the final opening brace\n");
 		return mass;
 	}
 	
@@ -1708,7 +1708,7 @@ double extractMass( pstring str )
 
 	/// If this is not a # indicating the closing brace then fail
 	if ( !atChar( str, '#' ) ) {
-		printf("!!Failed to locate the closing mark\n");		
+		__printf("!!Failed to locate the closing mark\n");		
 		return -1.0;
 	}
 
@@ -1716,14 +1716,14 @@ double extractMass( pstring str )
 	start = skipLength( str, 1 );
 
 	if ( start == -1 ) {
-		printf("!!Failed to skip closing mark\n");
+		__printf("!!Failed to skip closing mark\n");
 		return mass;
 	}
 
 	end = skipToNonAlphaNum( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the closing element id\n");
+		__printf("!!Failed to locate the end of the closing element id\n");
 		return -1.0;
 	}
 	
@@ -1735,19 +1735,19 @@ double extractMass( pstring str )
 	}
 #endif
 
-	if ( strcmp( temp, "Mass") != 0 ) {
-		printf("!!Invalid closing element id: @s\n", temp);
-		deallocate(temp, strlen(temp)+1);
+	if ( __strcmp( temp, "Mass") != 0 ) {
+		__printf("!!Invalid closing element id: @s\n", temp);
+		deallocate(temp, __strlen(temp)+1);
 		return mass;
 	}
 
-	deallocate(temp, strlen(temp)+1);
+	deallocate(temp, __strlen(temp)+1);
 
 	skipWhiteSpace( str );
 
 	/// Check the final curly brace
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate final closing brace\n");
+		__printf("!!Failed to locate final closing brace\n");
 		return -1.0;
 	}
 
@@ -1758,13 +1758,13 @@ double extractMass( pstring str )
 	temp = copyData( str, es, ee );
 
 	if ( temp == NULL ) {
-		printf("!!Failed to copy mass data\n");
+		__printf("!!Failed to copy mass data\n");
 		return -1;
 	}
 
-	mass = atof( temp );
+	mass = __atof( temp );
 
-	deallocate( temp, strlen(temp) + 1 );
+	deallocate( temp, __strlen(temp) + 1 );
 
 	return mass;
 }
@@ -1792,13 +1792,13 @@ double extractGravity( pstring str )
 	start = skipWhiteSpace(str);
 
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate opening brace\n");
+		__printf("!!Failed to locate opening brace\n");
 		return gravity;
 	}
 
 	/// Skip past the curly brace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip opening brace\n");
+		__printf("!!Failed to skip opening brace\n");
 		return gravity;
 	}
 
@@ -1809,7 +1809,7 @@ double extractGravity( pstring str )
 	end = skipToNonAlphaNum( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the element id\n");
+		__printf("!!Failed to locate the end of the element id\n");
 		return gravity;
 	}
 
@@ -1817,33 +1817,33 @@ double extractGravity( pstring str )
 	temp = copyData( str, start, end );
 
 	if ( temp == NULL ) {
-		printf("!!Copy from @d to @d failed\n", start, end);
+		__printf("!!Copy from @d to @d failed\n", start, end);
 		return -1.0;
 	}
 
 	/// If the element id is not "Gravity" then this is the wrong function
-	if ( strcmp( temp, "Gravity") != 0 ) {
-		printf("!!Element id is not \"Gravity\"\n");
-		deallocate( temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, "Gravity") != 0 ) {
+		__printf("!!Element id is not \"Gravity\"\n");
+		deallocate( temp, __strlen(temp) + 1 );
 		temp = NULL;
 		return gravity;
 	}
 
-	/// The buffer is no longer needed so free it
-	deallocate(temp, strlen(temp) + 1);
+	/// The buffer is no longer needed so __free it
+	deallocate(temp, __strlen(temp) + 1);
 
 	/// Skip to the end of the element id
 	skipWhiteSpace( str );
 
 	/// If it is not a closing brace then this is improperly formatted.
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate initial closing brace\n");
+		__printf("!!Failed to locate initial closing brace\n");
 		return -1.0;
 	}
 
 	/// Skip the closing brace as well as any whitespace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip initial closing brace\n");
+		__printf("!!Failed to skip initial closing brace\n");
 		return gravity;
 	}
 
@@ -1856,7 +1856,7 @@ double extractGravity( pstring str )
 	ee = skipFloat( str );
 
 	if ( ee == -1 ) {
-		printf("!!Failed to locate the end of the gravity data\n");
+		__printf("!!Failed to locate the end of the gravity data\n");
 		return gravity;
 	}
 
@@ -1865,13 +1865,13 @@ double extractGravity( pstring str )
 
 	/// If this is not an opening curly brace then fail
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate the final opening brace\n");
+		__printf("!!Failed to locate the final opening brace\n");
 		return -1.0;
 	}
 
 	/// Skip past the brace
 	if ( incChar( str) == -1 ) {
-		printf("!!Failed to skip the final opening brace\n");
+		__printf("!!Failed to skip the final opening brace\n");
 		return gravity;
 	}
 	
@@ -1879,7 +1879,7 @@ double extractGravity( pstring str )
 
 	/// If this is not a # indicating the closing brace then fail
 	if ( !atChar( str, '#' ) ) {
-		printf("!!Failed to locate the closing mark\n");		
+		__printf("!!Failed to locate the closing mark\n");		
 		return -1.0;
 	}
 
@@ -1887,32 +1887,32 @@ double extractGravity( pstring str )
 	start = skipLength( str, 1 );
 
 	if ( start == -1 ) {
-		printf("!!Failed to skip closing mark\n");
+		__printf("!!Failed to skip closing mark\n");
 		return gravity;
 	}
 
 	end = skipToNonAlphaNum( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the closing element id\n");
+		__printf("!!Failed to locate the end of the closing element id\n");
 		return -1.0;
 	}
 	
 	temp = copyData( str, start, end );
 
-	if ( strcmp( temp, "Gravity") != 0 ) {
-		printf("!!Invalid closing element id: @s\n", temp);
-		deallocate(temp, strlen(temp)+1);
+	if ( __strcmp( temp, "Gravity") != 0 ) {
+		__printf("!!Invalid closing element id: @s\n", temp);
+		deallocate(temp, __strlen(temp)+1);
 		return gravity;
 	}
 
-	deallocate(temp, strlen(temp)+1);
+	deallocate(temp, __strlen(temp)+1);
 
 	skipWhiteSpace( str );
 
 	/// Check the final curly brace
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate final closing brace\n");
+		__printf("!!Failed to locate final closing brace\n");
 		return -1.0;
 	}
 
@@ -1923,13 +1923,13 @@ double extractGravity( pstring str )
 	temp = copyData( str, es, ee );
 
 	if ( temp == NULL ) {
-		printf("!!Failed to copy gravity data\n");
+		__printf("!!Failed to copy gravity data\n");
 		return -1;
 	}
 
-	gravity = atof( temp );
+	gravity = __atof( temp );
 
-	deallocate( temp, strlen(temp) + 1 );
+	deallocate( temp, __strlen(temp) + 1 );
 
 	return gravity;
 }

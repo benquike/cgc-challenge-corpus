@@ -4,7 +4,7 @@ Author: Jason Williams
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -166,7 +166,7 @@ void CPackageTracker::Run( void )
 	}
 
 	// Delete command buffer		
-	delete pCommandData;
+	delete [] pCommandData;
 }
 
 void CPackageTracker::SendResponse( uint8_t cmdNum, uint8_t cmdResponse, uint8_t *pResponseData, uint16_t responseLength )
@@ -304,7 +304,7 @@ void CPackageTracker::DoUpdateGeofence( uint8_t *pData, uint32_t dataLen )
 	}
 
 	uint32_t commandPos = 0;
-	memcpy( &oUpdateData, pData+commandPos, sizeof(oUpdateData) );
+	__memcpy( &oUpdateData, pData+commandPos, sizeof(oUpdateData) );
 	commandPos += sizeof(oUpdateData);
 
 	switch ( oUpdateData.updateAction )
@@ -328,7 +328,7 @@ void CPackageTracker::DoUpdateGeofence( uint8_t *pData, uint32_t dataLen )
 				return;
 			}
 
-			memcpy( &oPointData, pData+commandPos, sizeof(oPointData) );
+			__memcpy( &oPointData, pData+commandPos, sizeof(oPointData) );
 			commandPos += sizeof(oPointData);
 
 			m_geofencePoints[i].SetDistance( oPointData.distance );
@@ -370,7 +370,7 @@ void CPackageTracker::DoUpdateGeofence( uint8_t *pData, uint32_t dataLen )
 					return;
 				}
 
-				memcpy( &oPointData, pData+commandPos, sizeof(oPointData) );
+				__memcpy( &oPointData, pData+commandPos, sizeof(oPointData) );
 				commandPos += sizeof(oPointData);
 
 				m_geofencePoints[i].SetDistance( oPointData.distance );
@@ -426,7 +426,7 @@ void CPackageTracker::DoUpdateGeofence( uint8_t *pData, uint32_t dataLen )
 
 #ifdef PATCHED_2
 		// Prevent an uninitialized variable from leaking data back
-		memset( oResponse.coordData, 0, 6 );
+		__memset( oResponse.coordData, 0, 6 );
 #endif
 			
 		// Send response data	
@@ -460,7 +460,7 @@ void CPackageTracker::DoDebug( uint8_t *pData, uint32_t dataLen )
 	uint64_t expectedAuthToken = *((uint64_t*)m_pMagicPage) ^ 0xDEB4370331337A7F;
 	
 	uint32_t commandPos = 0;	
-	memcpy( &oDebugCommand, pData+commandPos, sizeof(oDebugCommand) );
+	__memcpy( &oDebugCommand, pData+commandPos, sizeof(oDebugCommand) );
 	commandPos += sizeof(oDebugCommand);
 
 	

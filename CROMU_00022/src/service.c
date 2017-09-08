@@ -54,7 +54,7 @@ pDiveEntry AddDive( pDiverInfo DiverInfo ){
 	pDiveEntryListNode DiveEntryListNew = __malloc( sizeof( sDiveEntryListNode ) );
 	//data element
 	pDiveEntry DiveEntryNew = __malloc( sizeof( sDiveEntry ) );
-	//if __malloc fails, exit
+	//if __malloc fails, __exit
 	if (  ( DiveEntryNew == NULL ) || ( DiveEntryListNew == NULL )  ) { _terminate( -2 );}
 
 	//add data element to linked list node

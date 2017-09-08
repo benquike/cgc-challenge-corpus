@@ -5,26 +5,26 @@
 #include <stdarg.h>
 #include <stddef.h>
 
-#define isinf(x) __builtin_isinf(x)
-#define isnan(x) __builtin_isnan(x)
+#define __isinf(x) __builtin_isinf(x)
+#define __isnan(x) __builtin_isnan(x)
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
 
 extern int fdprintf(int fd, const char *fmt, ...);
 extern int sprintf(char *s, const char *fmt, ...);
-#define printf(...) fdprintf(STDOUT, __VA_ARGS__)
+#define __printf(...) fdprintf(STDOUT, __VA_ARGS__)
 
-long strtol(const char *str, char **endptr, int base);
-unsigned long strtoul(const char *str, char **endptr, int base);
+long __strtol(const char *str, char **endptr, int base);
+unsigned long __strtoul(const char *str, char **endptr, int base);
 
-extern void *malloc(size_t size);
-extern void *calloc(size_t nmemb, size_t size);
-extern void *realloc(void *ptr, size_t size);
-extern void free(void *ptr);
+extern void *__malloc(size_t size);
+extern void *__calloc(size_t nmemb, size_t size);
+extern void *__realloc(void *ptr, size_t size);
+extern void __free(void *ptr);
 extern size_t malloc_size(void *ptr);
 
-static void exit(int ret)
+static void __exit(int ret)
 {
     _terminate(ret);
 }

@@ -2,7 +2,7 @@
  * Copyright (C) Narf Industries <info@narfindustries.com>
  * Copyright (C) Chris Eagle from the Naval Postgraduate School
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -118,7 +118,7 @@ node_t * get_last_node(list_t * lst) {
 }
 
 
-// write sz random bytes into buf
+// __write sz random bytes into buf
 // returns 0 on success, non-zero on failure.
 int rand(char *buf, size_t sz) {
     size_t bytes = 0;
@@ -183,7 +183,7 @@ unsigned int read_all(int fd, char *buf, unsigned int size) {
 // stdlib functions
 
 // overwrites the first n chars of dst with char c.
-void *memset(void *dst, int c, unsigned int n) {
+void *__memset(void *dst, int c, unsigned int n) {
    char *d = (char*)dst;
    while (n--) {*d++ = (char)c;}
    return dst;

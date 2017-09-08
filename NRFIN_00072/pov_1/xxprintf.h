@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -80,7 +80,7 @@
  * Note: 
  *	 If L is replaced by the term char, then there will be a 
  *	term char in the middle of the string. So uses of the resulting
- *	string will cause issues if strlen, etc are used.
+ *	string will cause issues if __strlen, etc are used.
  *   If I (itoan) contains term char, then the string will get 
  *	the decimal representation of the term char in it.
  *
@@ -118,7 +118,7 @@ int vsnprintf(char * buf, size_t buf_size, const char fsm, const char term, cons
  * Note: 
  *	 If L is replaced by the term char, then there will be a 
  *	term char in the middle of the string. So uses of the resulting
- *	string will cause issues if strlen, etc are used.
+ *	string will cause issues if __strlen, etc are used.
  *   If I (itoan) contains term char, then the string will get 
  *	the decimal representation of the term char in it.
  *
@@ -141,7 +141,7 @@ int vsnprintf(char * buf, size_t buf_size, const char fsm, const char term, cons
 int snprintf(char * buf, size_t buf_size, const char fsm, const char term, const char * fmt, ...);
 
 /**
- * A simple, non-standard vfdprintf.
+ * A simple, non-standard __vfdprintf.
  *
  * Supported format specifiers:
  *  'I' for signed ints
@@ -153,7 +153,7 @@ int snprintf(char * buf, size_t buf_size, const char fsm, const char term, const
  * Note: 
  *	 If L is replaced by the term char, then there will be a 
  *	term char in the middle of the string. So uses of the resulting
- *	string will cause issues if strlen, etc are used.
+ *	string will cause issues if __strlen, etc are used.
  *   If I (itoan) contains term char, then the string will get 
  *	the decimal representation of the term char in it.
  *
@@ -165,20 +165,20 @@ int snprintf(char * buf, size_t buf_size, const char fsm, const char term, const
  * For each format specifier, it will take a value from args
  *  and insert it at that location as that type.
  *
- * Note: vfdprintf does not call va_end, because it takes a va_list, 
+ * Note: __vfdprintf does not call va_end, because it takes a va_list, 
  *  caller does so.
  *
- * @param fd file descriptor to write to
+ * @param fd file descriptor to __write to
  * @param fsm Format string marker
  * @param term String termination char
  * @param fmt Null-terminated format string
  * @param args Ptr to va_list of arguments to insert into fmt
  * @return Number of bytes sent, not counting term
  */
-int vfdprintf(int fd, const char fsm, const char term, const char *fmt, va_list args);
+int __vfdprintf(int fd, const char fsm, const char term, const char *fmt, va_list args);
 
 /**
- * A simple, non-standard fdprintf.
+ * A simple, non-standard __fdprintf.
  *
  * Supported format specifiers:
  *  'I' for signed ints
@@ -190,7 +190,7 @@ int vfdprintf(int fd, const char fsm, const char term, const char *fmt, va_list 
  * Note: 
  *	 If L is replaced by the term char, then there will be a 
  *	term char in the middle of the string. So uses of the resulting
- *	string will cause issues if strlen, etc are used.
+ *	string will cause issues if __strlen, etc are used.
  *   If I (itoan) contains term char, then the string will get 
  *	the decimal representation of the term char in it.
  *
@@ -202,14 +202,14 @@ int vfdprintf(int fd, const char fsm, const char term, const char *fmt, va_list 
  * For each format specifier, it will take a value from args
  *  and insert it at that location as that type.
  *
- * @param fd file descriptor to write to
+ * @param fd file descriptor to __write to
  * @param fsm Format string marker
  * @param term String termination char
  * @param fmt Null-terminated format string
  * @param args Ptr to va_list of arguments to insert into fmt
  * @return Number of bytes sent, not counting term
  */
-int fdprintf(int fd, const char fsm, const char term, const char *fmt, ...);
+int __fdprintf(int fd, const char fsm, const char term, const char *fmt, ...);
 
 /**
  * A simple, non-standard fprintf.
@@ -224,7 +224,7 @@ int fdprintf(int fd, const char fsm, const char term, const char *fmt, ...);
  * Note: 
  *	 If L is replaced by the term char, then there will be a 
  *	term char in the middle of the string. So uses of the resulting
- *	string will cause issues if strlen, etc are used.
+ *	string will cause issues if __strlen, etc are used.
  *   If I (itoan) contains term char, then the string will get 
  *	the decimal representation of the term char in it.
  *

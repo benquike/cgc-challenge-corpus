@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -113,12 +113,12 @@ size_t count;
 
 void free_parking(void *node) {
     parkcmd_t *cmd = (parkcmd_t*)node;
-    free(cmd->cmdbuf);
-    free((char*)cmd-sizeof(instrtype)); //such hack, ow
+    __free(cmd->cmdbuf);
+    __free((char*)cmd-sizeof(instrtype)); //such hack, ow
 }
 
 void dontfree(void *node) {
-    //stub function to avoid free'ing data that's still in use
+    //stub function to avoid __free'ing data that's still in use
 }
 
 unsigned char compare_ticket(void *d1, void *d2) {
@@ -139,7 +139,7 @@ int send_resp(resptype type, char *txt) {
     parkresp_t resp = {0};
 
     resp.type = type;
-    strcpy(resp.resptext, txt);
+    __strcpy(resp.resptext, txt);
 
     if (!SENDDATA(resp))
         return 1;
@@ -223,7 +223,7 @@ void add_to_stats(void *d) {
 void do_stats(parkstats_t *stats) {
     parkresp_t resp = {0};
 
-    memset(stats, '\0', sizeof(*stats));
+    __memset(stats, '\0', sizeof(*stats));
     stats->do_stats = do_stats;
 
     list_init(&ticketl, dontfree);
@@ -231,7 +231,7 @@ void do_stats(parkstats_t *stats) {
     list_destroy(&ticketl);
 
     resp.type = RESULTS;
-    sprintf(resp.resptext, RESULTFMT, stats->payments, stats->tickets, stats->coupons,
+    __sprintf(resp.resptext, RESULTFMT, stats->payments, stats->tickets, stats->coupons,
             stats->paid_fees, stats->expenses, stats->paid_fees-stats->expenses);
 
     if (!SENDDATA(resp))
@@ -243,7 +243,7 @@ void print_cmd(void *d) {
     parkcmd_t *cmd = (parkcmd_t*)d;
 
     resp.type = LOGMSG;
-    sprintf(resp.resptext, LOGFMT, cmd->type, cmd->size);
+    __sprintf(resp.resptext, LOGFMT, cmd->type, cmd->size);
     if (!SENDDATA(resp))
         _terminate(34);
 }
@@ -251,26 +251,26 @@ void print_cmd(void *d) {
 
 parkinstr_t *read_instr() {
     size_t res;
-    parkinstr_t *instr = calloc(sizeof(parkinstr_t));
+    parkinstr_t *instr = __calloc(sizeof(parkinstr_t));
 
     if (!instr)
         return NULL;
 
-    res = fread(instr, sizeof(*instr) - sizeof(char*), stdin);
+    res = __fread(instr, sizeof(*instr) - sizeof(char*), stdin);
     if (res != sizeof(*instr)-sizeof(char*)) {
-        free(instr);
+        __free(instr);
         return NULL;
     }
 
-    if (instr->cmd.size == UINT_MAX || !(instr->cmd.cmdbuf = malloc(instr->cmd.size + 1))) {
-        free(instr);
+    if (instr->cmd.size == UINT_MAX || !(instr->cmd.cmdbuf = __malloc(instr->cmd.size + 1))) {
+        __free(instr);
         return NULL;
     }
 
     int ret = 0;
     if ((ret = fread_until(instr->cmd.cmdbuf, NEWLINE, instr->cmd.size + 1, stdin)) != instr->cmd.size) {
-        free(instr->cmd.cmdbuf);
-        free(instr);
+        __free(instr->cmd.cmdbuf);
+        __free(instr);
         return NULL;
     }
     return instr;
@@ -282,7 +282,7 @@ int main(void) {
     parkinstr_t *instr;
 
     list_init(&parkl, free_parking);
-    list_init(&couponl, free);
+    list_init(&couponl, __free);
 
     if (send_resp(INIT,STARTSTR))
         return 1;
@@ -300,22 +300,22 @@ int main(void) {
                     break;
                 *((char*)(instr->cmd.cmdbuf)+sizeof(coupon_t)-1) = '\0';
                 list_insert_at_end(&couponl, instr->cmd.cmdbuf);
-                free(instr);
+                __free(instr);
                 break;
             case STATS:
                 //this is silly, but intended to make proving somewhat less difficult
                 stats.do_stats(statsp);
-                free(instr->cmd.cmdbuf);
-                free(instr);
+                __free(instr->cmd.cmdbuf);
+                __free(instr);
                 break;
             case LOG:
                 list_foreach(&parkl, print_cmd);
-                free(instr->cmd.cmdbuf);
-                free(instr);
+                __free(instr->cmd.cmdbuf);
+                __free(instr);
                 break;
             case FINISH:
-                free(instr->cmd.cmdbuf);
-                free(instr);
+                __free(instr->cmd.cmdbuf);
+                __free(instr);
                 goto done;
         }
     }

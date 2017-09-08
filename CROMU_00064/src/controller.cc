@@ -4,7 +4,7 @@ Author: James Nuttall <james@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -113,12 +113,12 @@ uint16_t Controller::GetSensorCount()
 
 void Controller::PrintSensorList()
 {
-	printf( "sl:");
+	__printf( "sl:");
 	for ( Sensor *pCur = m_sensor_list.GetFirst(); pCur; pCur = m_sensor_list.GetNext( pCur ) )
 	{
-		printf( "$d ", pCur->GetType() );
+		__printf( "$d ", pCur->GetType() );
 	}
-	printf("\n");
+	__printf("\n");
 }
 
 //
@@ -210,6 +210,6 @@ void Controller::PrintPrograms()
 {
 	for ( int i = 0; i < 10; i++ )
 	{
-		printf("Program: $x $x $x $x\n", m_controllerProgram[i].getStepType(), m_controllerProgram[i].getSensorId(), m_controllerProgram[i].getSetTemp(), m_controllerProgram[i].getDuration() );
+		__printf("Program: $x $x $x $x\n", m_controllerProgram[i].getStepType(), m_controllerProgram[i].getSensorId(), m_controllerProgram[i].getSetTemp(), m_controllerProgram[i].getDuration() );
 	}
 }

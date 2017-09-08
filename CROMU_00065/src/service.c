@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -50,27 +50,27 @@ unsigned short card_ptr;
 
 
 		if (silentMenu == 0) {
-			printf("\n");
-			printf("1) Add Player\n");
-			printf("2) Delete Player\n");
-			printf("3) Play\n");
-			printf("4) Statistics\n");
+			__printf("\n");
+			__printf("1) Add Player\n");
+			__printf("2) Delete Player\n");
+			__printf("3) Play\n");
+			__printf("4) Statistics\n");
 
-			printf("0) Exit\n");
+			__printf("0) Exit\n");
 		}
 
 #ifdef PATCHED_1
 
-		if(receive_until( buffer, '\n', 4 ) == 0)
+		if(__receive_until( buffer, '\n', 4 ) == 0)
 			continue;
 
 #else
 
-		if(receive_until( buffer, '\n', 21 ) == 0)
+		if(__receive_until( buffer, '\n', 21 ) == 0)
 			continue;
 
 #endif
-		selection = atoi(buffer);
+		selection = __atoi(buffer);
 
 		switch (selection) {
 

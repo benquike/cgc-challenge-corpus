@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -50,10 +50,10 @@ SFILE *open_sfile()
     if (sfp->size == 0)
         goto error;
 
-    new_sfp = malloc(sizeof(SFILE) + sfp->size + 1);
+    new_sfp = __malloc(sizeof(SFILE) + sfp->size + 1);
     if (!new_sfp)
         goto error;
-    memcpy(new_sfp, sfp, sizeof(SFILE));
+    __memcpy(new_sfp, sfp, sizeof(SFILE));
 
 
     if (recvall(STDIN, &new_sfp->data[0], sfp->size) < 0)
@@ -64,7 +64,7 @@ SFILE *open_sfile()
 
 error:
     if (new_sfp)
-        free(new_sfp);
+        __free(new_sfp);
     return NULL;
 }
 
@@ -72,7 +72,7 @@ void close_sfile(SFILE **psfp)
 {
     SFILE *sfp = *psfp;
     if (sfp)
-        free(sfp);
+        __free(sfp);
 
     *psfp = NULL;
 }

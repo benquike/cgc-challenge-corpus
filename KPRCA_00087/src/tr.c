@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -47,19 +47,19 @@ tr_t tr_insert(tr_t root, char *key, T value)
 {
     if (root == NULL)
     {
-        root = (tr_node_t *) malloc(sizeof(tr_node_t));
-        root->key = strdup(key);
+        root = (tr_node_t *) __malloc(sizeof(tr_node_t));
+        root->key = __strdup(key);
         random(&(root->prio), sizeof(root->prio), NULL);
         root->value = value;
         root->left = root->right = NULL;
     }
-    else if (strcmp(key, root->key) < 0)
+    else if (__strcmp(key, root->key) < 0)
     {
         root->left = tr_insert(root->left, key, value);
         if (root->left->prio < root->prio)
             root = _tr_rot_left(root);
     }
-    else if (strcmp(key, root->key) > 0)
+    else if (__strcmp(key, root->key) > 0)
     {
         root->right = tr_insert(root->right, key, value);
         if (root->right->prio < root->prio)
@@ -77,8 +77,8 @@ tr_t tr_insert(tr_t root, char *key, T value)
 void _tr_destroy_node(tr_node_t *node)
 {
     //destroy_value_fn(node->value);
-    free(node->key);
-    free(node);
+    __free(node->key);
+    __free(node);
 }
 
 tr_t tr_delete(tr_t root, char *key)
@@ -86,9 +86,9 @@ tr_t tr_delete(tr_t root, char *key)
     tr_node_t *tmp;
     if (root == NULL)
         return NULL;
-    if (strcmp(key, root->key) < 0)
+    if (__strcmp(key, root->key) < 0)
         root->left = tr_delete(root->left, key);
-    else if (strcmp(key, root->key) > 0)
+    else if (__strcmp(key, root->key) > 0)
         root->right = tr_delete(root->right, key);
     else
     {
@@ -124,9 +124,9 @@ T tr_find(tr_t root, char *key)
 {
     if (root == NULL)
         return NULL;
-    if (strcmp(key, root->key) < 0)
+    if (__strcmp(key, root->key) < 0)
         return tr_find(root->left, key);
-    else if (strcmp(key, root->key) > 0)
+    else if (__strcmp(key, root->key) > 0)
         return tr_find(root->right, key);
     else
         return root->value;
@@ -157,7 +157,7 @@ void tr_print(tr_t root)
     if (root != NULL)
     {
         tr_print(root->left);
-        printf("&s (&d)" NL, root->key, (int) root->value);
+        __printf("&s (&d)" NL, root->key, (int) root->value);
         tr_print(root->right);
     }
 }

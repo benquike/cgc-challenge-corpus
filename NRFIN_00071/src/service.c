@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -33,7 +33,7 @@
 /**
  * Read in data from stdin with a timeout
  *
- * @param s struct to read into
+ * @param s struct to __read into
  * @return 1 on success, 0 on failure
  */
 #define READDATATIMEOUT(s) (sizeof(s) == readall_timeout(stdin,(char *)&s,sizeof(s)) ? 1 : 0)
@@ -41,7 +41,7 @@
 /**
  * Read in data from stdin and decrypt
  *
- * @param s struct to read into
+ * @param s struct to __read into
  * @return 1 on success, 0 on failure
  */
 #define EREADDATA(s) (sizeof(s) == ereadall(stdin,(char *)&s,sizeof(s)) ? 1 : 0)
@@ -49,7 +49,7 @@
 /**
  * Encrypt data and send to stdout
  *
- * @param s struct to write
+ * @param s struct to __write
  * @return 1 on success, 0 on failure
  */
 #define ESENDDATA(s) (sizeof(s) == esendall(stdout,(char *)&s,sizeof(s)) ? 1 : 0)
@@ -86,12 +86,12 @@ static config_t conf;
 static char *last;
 
 /**
- * Attempt to read a fixed number of bytes, timeout after 2 seconds
+ * Attempt to __read a fixed number of bytes, timeout after 2 seconds
  *
- * @param fd File descriptor to read from.
- * @param buf Buffer to write read bytes to.
- * @param s Maximum number of bytes to read
- * @return Number of bytes read 
+ * @param fd File descriptor to __read from.
+ * @param buf Buffer to __write __read bytes to.
+ * @param s Maximum number of bytes to __read
+ * @return Number of bytes __read 
  */
 static size_t readall_timeout(int fd, char *buf, size_t s) {
     fd_set readfds;
@@ -116,12 +116,12 @@ static size_t readall_timeout(int fd, char *buf, size_t s) {
 }
 
 /**
- * Attempt to read a fixed number of bytes and decrypt
+ * Attempt to __read a fixed number of bytes and decrypt
  *
- * @param fd File descriptor to read from.
- * @param buf Buffer to write read bytes to.
- * @param s Maximum number of bytes to read
- * @return Number of bytes read 
+ * @param fd File descriptor to __read from.
+ * @param buf Buffer to __write __read bytes to.
+ * @param s Maximum number of bytes to __read
+ * @return Number of bytes __read 
  */
 static size_t ereadall(int fd, char *buf, size_t s) {
     size_t i = 0;
@@ -148,8 +148,8 @@ static size_t ereadall(int fd, char *buf, size_t s) {
 /**
  * Attempt to encrypt then send a fixed number of bytes
  *
- * @param fd File descriptor to write to
- * @param buf Buffer to read bytes from
+ * @param fd File descriptor to __write to
+ * @param buf Buffer to __read bytes from
  * @param s Number of bytes to send
  * @return Number of bytes sent.
  */
@@ -175,13 +175,13 @@ static size_t esendall(int fd, char *buf, size_t s) {
 }
 
 /**
- * Handle a mkdir request
+ * Handle a __mkdir request
  *
  * @param msg client message data
  * @return Response data, NULL on allocation error
  */
 resp_t *do_mkdir(msg_t *msg) {
-    resp_t *resp = calloc(sizeof(resp_t));
+    resp_t *resp = __calloc(sizeof(resp_t));
 
     if (!resp) {
         debug("Failed to allocate response.\n");
@@ -190,7 +190,7 @@ resp_t *do_mkdir(msg_t *msg) {
 
     if (!add_dir(msg->buf)) {
         resp->type = MKDIR_OK;
-        memset(resp->buf, 0, sizeof(resp->buf));
+        __memset(resp->buf, 0, sizeof(resp->buf));
     } else {
         debug("Adding directory failed.\n");
         resp->type = MKDIR_FAIL;
@@ -207,7 +207,7 @@ resp_t *do_mkdir(msg_t *msg) {
  */
 resp_t *do_list(msg_t *msg) {
     char *dirlist;
-    resp_t *resp = calloc(sizeof(resp_t));
+    resp_t *resp = __calloc(sizeof(resp_t));
 
     debug("Attempting to list directory...\n");
 
@@ -225,13 +225,13 @@ resp_t *do_list(msg_t *msg) {
     }
 
     //truncate if too long
-    if (strlen(dirlist) > MAX_FILE_SIZE)
+    if (__strlen(dirlist) > MAX_FILE_SIZE)
         *(dirlist+MAX_FILE_SIZE) = '\0'; 
-    strcpy(resp->buf, dirlist);
+    __strcpy(resp->buf, dirlist);
 
     resp->type = LIST_OK;
 
-    free(dirlist);
+    __free(dirlist);
 
     return resp;
 }
@@ -249,14 +249,14 @@ resp_t *do_put(msg_t *msg) {
 
     debug("Attempting put...\n");
 
-    resp_t *resp = calloc(sizeof(resp_t));
+    resp_t *resp = __calloc(sizeof(resp_t));
 
     if (!resp) {
         debug("Failed to allocate response.\n");
         return NULL;
     }
 
-    fnlen = strlen(msg->buf);
+    fnlen = __strlen(msg->buf);
 
     if (fnlen > MAX_FILENAME_SIZE) {
         debug("Filename too large.\n");
@@ -264,20 +264,20 @@ resp_t *do_put(msg_t *msg) {
         return resp;
     }
 
-    fn = malloc(fnlen+1);
-    strcpy(fn, msg->buf);
+    fn = __malloc(fnlen+1);
+    __strcpy(fn, msg->buf);
 
-    datalen = strlen(msg->buf+fnlen+1);
+    datalen = __strlen(msg->buf+fnlen+1);
     
     if (datalen > MAX_FILE_SIZE) {
         debug("File data too large.\n");
         resp->type = PUT_FAIL;
-        free(fn);
+        __free(fn);
         return resp;
     }
 
-    data = malloc(datalen+1);
-    strcpy(data, msg->buf+fnlen+1);
+    data = __malloc(datalen+1);
+    __strcpy(data, msg->buf+fnlen+1);
 
     if (!add_file(fn, data)) {
         resp->type = PUT_OK;
@@ -286,8 +286,8 @@ resp_t *do_put(msg_t *msg) {
         resp->type = PUT_FAIL;
     }
 
-    free(fn);
-    free(data);
+    __free(fn);
+    __free(data);
 
     return resp;
 }
@@ -303,7 +303,7 @@ resp_t *do_get(msg_t *msg) {
 
     debug("Attempting to get file...\n");
 
-    resp_t *resp = calloc(sizeof(resp_t));
+    resp_t *resp = __calloc(sizeof(resp_t));
 
     if (!resp) {
         debug("Failed to allocate response.\n");
@@ -311,13 +311,13 @@ resp_t *do_get(msg_t *msg) {
     }
 
     if (!(data = readfile(msg->buf))) {
-        debug("Failed to read file.\n");
+        debug("Failed to __read file.\n");
         resp->type = GET_FAIL;
         return resp;
     }
 
     resp->type = GET_OK;
-    memcpy(resp->buf, data, sizeof(resp->buf));
+    __memcpy(resp->buf, data, sizeof(resp->buf));
     return resp;
 }
 
@@ -328,7 +328,7 @@ resp_t *do_get(msg_t *msg) {
  * @return Response data, NULL on allocation error
  */
 resp_t *do_rm(msg_t *msg) {
-    resp_t *resp = calloc(sizeof(resp_t));
+    resp_t *resp = __calloc(sizeof(resp_t));
 
     debug("Attempting to remove file...\n");
 
@@ -346,18 +346,18 @@ resp_t *do_rm(msg_t *msg) {
         return resp;
     }
 
-    memcpy(resp, msg, sizeof(resp_t));
+    __memcpy(resp, msg, sizeof(resp_t));
     return resp;
 }
 
 /**
- * Handle a rmdir request
+ * Handle a __rmdir request
  *
  * @param msg client message data
  * @return Response data, NULL on allocation error
  */
 resp_t *do_rmdir(msg_t *msg) {
-    resp_t *resp = calloc(sizeof(resp_t));
+    resp_t *resp = __calloc(sizeof(resp_t));
 
     debug("Attempting to remove dir...\n");
 
@@ -375,7 +375,7 @@ resp_t *do_rmdir(msg_t *msg) {
         return resp;
     }
 
-    memcpy(resp, msg, sizeof(resp_t));
+    __memcpy(resp, msg, sizeof(resp_t));
     return resp;
 }
 
@@ -385,7 +385,7 @@ resp_t *do_rmdir(msg_t *msg) {
  * @return status response
  */
 status_t process_req() {
-    msg_t *msg = malloc(sizeof(msg_t));
+    msg_t *msg = __malloc(sizeof(msg_t));
     resp_t *resp = NULL;
 
     if (!EREADDATA(*msg)) {
@@ -426,7 +426,7 @@ status_t process_req() {
     ESENDDATA(*resp);
 
     if (last)
-        free(last);
+        __free(last);
 
     last = (char *)resp;
 
@@ -472,15 +472,15 @@ int go(void) {
     //because of how it works, seeding with 0's == no encryption
     seed = (uint32_t*)(FLAG_PAGE + (8*sizeof(uint32_t)));
 
-    f = malloc(8*sizeof(uint32_t));
+    f = __malloc(8*sizeof(uint32_t));
 
     if (!f)
         return 1;
 
-    memcpy(f, seed, 8*sizeof(uint32_t));
+    __memcpy(f, seed, 8*sizeof(uint32_t));
 
     if (!conf.encrypt)
-        seed = calloc(8*sizeof(uint32_t));
+        seed = __calloc(8*sizeof(uint32_t));
 
     srand(seed);
 
@@ -492,11 +492,11 @@ int go(void) {
     }
 
     #ifdef PATCHED_1
-    memset(f, '\0', 8*sizeof(uint32_t));
+    __memset(f, '\0', 8*sizeof(uint32_t));
     #endif
     debug("flag data: @h\n",f);
 
-    free(f);
+    __free(f);
 
 
     while (1) {
@@ -515,9 +515,9 @@ int go(void) {
 
             debug("Allocating resend buffer of @h bytes.\n",conf.buf_size+sizeof(resp_t));
             #ifdef PATCHED_1
-            resend = calloc(conf.buf_size+sizeof(resp_t));
+            resend = __calloc(conf.buf_size+sizeof(resp_t));
             #else
-            resend = malloc(conf.buf_size+sizeof(resp_t));
+            resend = __malloc(conf.buf_size+sizeof(resp_t));
             #endif
             debug("resend data: @h\n",resend);
 
@@ -538,7 +538,7 @@ int go(void) {
                 return 1;
             } else {
                 debug("copying last out\n");
-                memcpy(resend, last+offset, sizeof(resp_t)-offset);
+                __memcpy(resend, last+offset, sizeof(resp_t)-offset);
             }
 
             #ifdef PATCHED_1
@@ -549,8 +549,8 @@ int go(void) {
                 return 4;
             debug("Resent all, should be back!\n");
 
-            free(resend);
-            free(last);
+            __free(resend);
+            __free(last);
             last = NULL;
         }
     }
@@ -598,7 +598,7 @@ bool verify_integrity() {
 
     //verify that this is correct
     //in practice, the poll just refuses to respond if wrong
-    printf("@h",res);
+    __printf("@h",res);
     if(!READDATA(res))
         return 0;
     return res;

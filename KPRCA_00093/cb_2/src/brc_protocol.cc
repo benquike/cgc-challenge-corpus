@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,7 +35,7 @@ BrcProtocol::BrcProtocol(char *data, unsigned short data_length) {
     set_token();
     length_ = data_length + TokenGenerator::GetTokenLength();
     raw_data_ = new char[length_];
-    memcpy(&raw_data_[TokenGenerator::GetTokenLength()], data, data_length);
+    __memcpy(&raw_data_[TokenGenerator::GetTokenLength()], data, data_length);
 }
 
 BrcProtocol::~BrcProtocol() {
@@ -45,20 +45,20 @@ BrcProtocol::~BrcProtocol() {
     raw_data_ = (char *)NULL;
 }
 
-bool BrcProtocol::Recv(FILE *fd_in) {
+bool BrcProtocol::Recv(__FILE *fd_in) {
     if (!fd_in)
         return false;
 
     if (raw_data_)
         delete[] raw_data_;
     raw_data_ = new char[length_];
-    return (fread(raw_data_, length_, fd_in) == length_);
+    return (__fread(raw_data_, length_, fd_in) == length_);
 }
 
-bool BrcProtocol::Send(FILE *fd_out) const {
+bool BrcProtocol::Send(__FILE *fd_out) const {
     if (!fd_out|| !raw_data_ || !length_)
         return false;
-    return (fwrite(raw_data_, length_, fd_out) == length_);
+    return (__fwrite(raw_data_, length_, fd_out) == length_);
 }
 
 const unsigned int BrcProtocol::token_length() const {
@@ -87,6 +87,6 @@ void BrcProtocol::DebugPrintProtocol() const {
 
 void BrcProtocol::set_token() {
     const char *token = TokenGenerator::GetToken();
-    memcpy(raw_data_, token, TokenGenerator::GetTokenLength());
+    __memcpy(raw_data_, token, TokenGenerator::GetTokenLength());
 }
 

@@ -4,7 +4,7 @@ Author: John Berry <hj@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -51,7 +51,7 @@ char *pullNextElementName( pstring str )
 
         /// The first character should be an open curly brace
         if (str->buffer[ str->index ] != '{' ) {
-                printf("!!Invalid opening element: @s\n", str->buffer );
+                __printf("!!Invalid opening element: @s\n", str->buffer );
                 goto end;
         }
 
@@ -72,12 +72,12 @@ char *pullNextElementName( pstring str )
                 /// If we hit a NULL then it is improperly formatted.
                 /// Just skip to the end
                 if ( str->buffer[index] == '\x00' ) {
-                        printf("!!Null character hit. Improperly formatted element\n");
+                        __printf("!!Null character hit. Improperly formatted element\n");
                         goto end;
                 }
 
                 /// If it is a closing brace or a white space then the name is passed
-                if ( str->buffer[ index ]  == '}' || isspace( str->buffer[index] ) ) {
+                if ( str->buffer[ index ]  == '}' || __isspace( str->buffer[index] ) ) {
                         length = index-str->index;
 
                         /// Copy the name for the return
@@ -86,9 +86,9 @@ char *pullNextElementName( pstring str )
                                 goto end;
                         }
 
-                        bzero( elementId, length + 1 );
+                        __bzero( elementId, length + 1 );
 
-                        strncpy( elementId, str->buffer + str->index, length );
+                        __strncpy( elementId, str->buffer + str->index, length );
 
                         /// Check for a properly formatted name. Start by updating
 			///	the string index to the end of the string
@@ -100,7 +100,7 @@ char *pullNextElementName( pstring str )
 			///	invalid since only whitespace is allowed between the
 			///	element id and the closing brace
                         if (str->buffer[ str->index ] != '}' ) {
-                                printf("!!Improperly formatted element name\n");
+                                __printf("!!Improperly formatted element name\n");
                                 deallocate( elementId, length + 1 );
                                 elementId = NULL;
                         }
@@ -110,7 +110,7 @@ char *pullNextElementName( pstring str )
                 }
 
                 /// Non alpha characters are not allowed as element names
-                if ( !isalpha( str->buffer[index] ) ) {
+                if ( !__isalpha( str->buffer[index] ) ) {
                         goto end;
                 }
 
@@ -138,92 +138,92 @@ element elementNameToEnum( char * elementId )
                 goto end;
         }
 
-        length = strlen(elementId);
+        length = __strlen(elementId);
 
         switch ( length ) {
 		case 3:
-			if ( strcmp( elementId, "Url") == 0 ) {
+			if ( __strcmp( elementId, "Url") == 0 ) {
 				retval = url;
 			}
 
 			break;
                 case 4:
-                        if ( strcmp( elementId, "Name") == 0 ) {
+                        if ( __strcmp( elementId, "Name") == 0 ) {
                                 retval = name;
-                        } else if ( strcmp( elementId, "Mass" ) == 0 ) {
+                        } else if ( __strcmp( elementId, "Mass" ) == 0 ) {
                                 retval = mass;
-                        } else if ( strcmp( elementId, "Area" ) == 0 ) {
+                        } else if ( __strcmp( elementId, "Area" ) == 0 ) {
 				retval = area;
-			} else if ( strcmp( elementId, "Seat" ) == 0 ) {
+			} else if ( __strcmp( elementId, "Seat" ) == 0 ) {
 				retval = seat;
-			} else if ( strcmp( elementId, "City" ) == 0 ) {
+			} else if ( __strcmp( elementId, "City" ) == 0 ) {
 				retval = city;
 			}
 
                         break;
 
 		case 5:
-			if ( strcmp( elementId, "Mayor" ) == 0 ) {
+			if ( __strcmp( elementId, "Mayor" ) == 0 ) {
 				retval = mayor;
 			}
 
 			break;
                 case 6:
-                        if ( strcmp( elementId, "Planet") == 0 ) {
+                        if ( __strcmp( elementId, "Planet") == 0 ) {
                                 retval = planet;
-                        } else if ( strcmp( elementId, "Period") == 0 ) {
+                        } else if ( __strcmp( elementId, "Period") == 0 ) {
                                 retval = period;
-                        } else if ( strcmp( elementId, "Radius" ) == 0 ) {
+                        } else if ( __strcmp( elementId, "Radius" ) == 0 ) {
                                 retval = radius;
-                        } else if ( strcmp( elementId, "Border" ) == 0 ) {
+                        } else if ( __strcmp( elementId, "Border" ) == 0 ) {
 				retval = border;
-			} else if ( strcmp( elementId, "County" ) == 0 ) {
+			} else if ( __strcmp( elementId, "County" ) == 0 ) {
 				retval = county;
 			}
 
                         break;
                 case 7:
-                        if ( strcmp( elementId, "ERadius" ) == 0 ) {
+                        if ( __strcmp( elementId, "ERadius" ) == 0 ) {
                                 retval = eradius;
-                        } else if ( strcmp( elementId, "Gravity" ) == 0 ) {
+                        } else if ( __strcmp( elementId, "Gravity" ) == 0 ) {
                                 retval = gravity;
-                        } else if ( strcmp( elementId, "Country" ) == 0 ) {
+                        } else if ( __strcmp( elementId, "Country" ) == 0 ) {
                                 retval = country;
-                        } else if ( strcmp( elementId, "Capitol" ) == 0 ) {
+                        } else if ( __strcmp( elementId, "Capitol" ) == 0 ) {
 				retval = capitol;
-			} else if ( strcmp( elementId, "Founder" ) == 0 ) {
+			} else if ( __strcmp( elementId, "Founder" ) == 0 ) {
 				retval = founder;
-			} else if ( strcmp( elementId, "Density" ) == 0 ) {
+			} else if ( __strcmp( elementId, "Density" ) == 0 ) {
 				retval = density;
 			}
 
                         break;
 
                 case 8:
-                        if ( strcmp( elementId, "Aphelion") == 0 ) {
+                        if ( __strcmp( elementId, "Aphelion") == 0 ) {
                                 retval = aphelion;
-                        } else if ( strcmp( elementId, "Language") == 0 ) {
+                        } else if ( __strcmp( elementId, "Language") == 0 ) {
 				retval = language;
 			}
 
                         break;
 		case 9:
-			if ( strcmp( elementId, "Territory") == 0 ) {
+			if ( __strcmp( elementId, "Territory") == 0 ) {
 				retval = territory;
 			}
 			break;
                 case 10:
-                        if ( strcmp( elementId, "OrbitSpeed") == 0 ) {
+                        if ( __strcmp( elementId, "OrbitSpeed") == 0 ) {
                                 retval = orbitspeed;
-                        } else if ( strcmp( elementId, "Perihelion") == 0 ) {
+                        } else if ( __strcmp( elementId, "Perihelion") == 0 ) {
                                 retval = perihelion;
-                        } else if ( strcmp( elementId, "Population") == 0 ) {
+                        } else if ( __strcmp( elementId, "Population") == 0 ) {
                                 retval = population;
                         }
 
                         break;
 		case 11:
-			if (strcmp( elementId, "Established") == 0 ) {
+			if (__strcmp( elementId, "Established") == 0 ) {
 				retval = established;
 			}
 
@@ -234,7 +234,7 @@ element elementNameToEnum( char * elementId )
         };
 
         if ( retval == error ) {
-                printf("!!Unknown element id: @s\n", elementId);
+                __printf("!!Unknown element id: @s\n", elementId);
         }
 
 end:

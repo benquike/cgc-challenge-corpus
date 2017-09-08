@@ -7,15 +7,15 @@
 
 unsigned int htonl(unsigned int hostlong);
 
-size_t strlen(const char *str);
-char *strcpy(char *dst, const char *src);
-int strcmp(const char *s1, const char *s2);
-char *strchr(const char *s, int c);
-long strtol(const char *str, char **endptr, int base);
+size_t __strlen(const char *str);
+char *__strcpy(char *dst, const char *src);
+int __strcmp(const char *s1, const char *s2);
+char *__strchr(const char *s, int c);
+long __strtol(const char *str, char **endptr, int base);
 char *strsep(char **stringp, const char *delim);
 
-void *memset(void *dst, int c, unsigned int n);
-int memcmp(const void *b1, const void *b2, size_t n);
+void *__memset(void *dst, int c, unsigned int n);
+int __memcmp(const void *b1, const void *b2, size_t n);
 
 int toupper(int c);
 int tolower(int c);
@@ -39,23 +39,23 @@ typedef struct _FILE {
    int fd;
    int state;
    int last;
-} FILE;
+} __FILE;
 
-extern FILE *stdin;
-extern FILE *stdout;
-extern FILE *stderr;
+extern __FILE *stdin;
+extern __FILE *stdout;
+extern __FILE *stderr;
 
-int  fgetc(FILE *);
-int  getc(FILE *);
+int  fgetc(__FILE *);
+int  getc(__FILE *);
 int  getchar(void);
 
-char *fgets(char *, int, FILE *);
+char *fgets(char *, int, __FILE *);
 
-int ferror(FILE *stream);
-int feof(FILE *stream);
+int ferror(__FILE *stream);
+int feof(__FILE *stream);
 
-int printf(const char *format, ...);
-int fprintf(FILE * stream, const char *format, ...);
+int __printf(const char *format, ...);
+int fprintf(__FILE * stream, const char *format, ...);
 int snprintf(char *str, size_t size, const char *format, ...);
 
 #endif

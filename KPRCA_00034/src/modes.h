@@ -10,7 +10,7 @@ typedef struct {
         unsigned char xm[MAX_BSIZE / 8];
         uint64_t cm;
     } state;
-} mode_t;
+} ___mode_t;
 
 enum {
     MODE_NULL,
@@ -20,10 +20,10 @@ enum {
     MODE_END
 };
 
-int modes_init(mode_t *mode, unsigned int mode_id, code_t *code);
-int modes_encode(mode_t *mode, const unsigned char *inb, unsigned int inlen, 
+int modes_init(___mode_t *mode, unsigned int mode_id, code_t *code);
+int modes_encode(___mode_t *mode, const unsigned char *inb, unsigned int inlen, 
     unsigned char **outb, unsigned int *outlen);
-int modes_decode(mode_t *mode, const unsigned char *inb, unsigned int inlen, 
+int modes_decode(___mode_t *mode, const unsigned char *inb, unsigned int inlen, 
     unsigned char **outb, unsigned int *outlen);
 
 int modes_self_test();

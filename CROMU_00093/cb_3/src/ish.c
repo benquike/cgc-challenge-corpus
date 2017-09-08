@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -59,7 +59,7 @@ host hostlist[MAX_HOSTS] = {
 int hostlookup(char *hostname, char *username) {
   // Check host
   for (int i=0; i< MAX_HOSTS; i++) {
-    if (!strcmp(hostname, hostlist[i].hostname) && !strcmp(username, hostlist[i].username)) {
+    if (!__strcmp(hostname, hostlist[i].hostname) && !__strcmp(username, hostlist[i].username)) {
       return 1;
     }
   }
@@ -69,7 +69,7 @@ int hostlookup(char *hostname, char *username) {
 int userlookup(char *username, char *password) {
   // Check host
   for (int i=0; i< MAX_USERS; i++) {
-    if (!strcmp(username, userlist[i].username) && !strcmp(password, userlist[i].password)) {
+    if (!__strcmp(username, userlist[i].username) && !__strcmp(password, userlist[i].password)) {
       return 1;
     }
   }
@@ -85,26 +85,26 @@ int ish(char *input)
   char *user = 0;
   // Process arguments
   host = arg;
-  while (!isspace(*arg)) arg++;
+  while (!__isspace(*arg)) arg++;
   *arg++ = '\0';
   while (*arg) {
-    while (isspace(*arg)) arg++;
+    while (__isspace(*arg)) arg++;
   	if (!strncmp(arg, "+l", 2)) {
 		  arg+= 2;
-      if (!isspace(*arg)) goto usage;
+      if (!__isspace(*arg)) goto usage;
       arg++;
       user = arg;
-      while(!isspace(*arg) && *arg) arg++;
-      if (isspace(*arg)) {
+      while(!__isspace(*arg) && *arg) arg++;
+      if (__isspace(*arg)) {
         *arg++ = '\0';
       }
     } else if (!strncmp(arg, "+p", 2)) {
       arg+=2;
-      if (!isspace(*arg)) goto usage;
+      if (!__isspace(*arg)) goto usage;
       arg++;
       password = arg;
-      while(!isspace(*arg) && *arg) arg++;
-      if (isspace(*arg)) {
+      while(!__isspace(*arg) && *arg) arg++;
+      if (__isspace(*arg)) {
         *arg++ = '\0';
       }
     } else if (!strncmp(arg, "+n", 2)) {
@@ -142,19 +142,19 @@ int ish(char *input)
     *arg = '\0';
     runshellcommand(cmd);
   } else {
-    printf("Access Denied\n");
+    __printf("Access Denied\n");
   }
 
 	return(0);
 usage:
-	printf("usage: ish host [options] [+p password] [+l username] command\n");
+	__printf("usage: ish host [options] [+p password] [+l username] command\n");
 	return(1);
 }
 
 
 char *gen_random_string(int min, int max) {
     int length = random_in_range(min, max);
-    char *s = calloc(length);
+    char *s = __calloc(length);
     for(int i=0; i<length - 2; i++) {
         s[i] = random_in_range(0x30, 0x7e);
     }
@@ -174,7 +174,7 @@ int main(void) {
     int ret;
 
     //Setup my flag page
-    int *myflagpage = calloc(PAGE_SIZE);
+    int *myflagpage = __calloc(PAGE_SIZE);
     for (int i=0; i< PAGE_SIZE/4; i++) {
       myflagpage[i] = ((int *)FLAG_PAGE)[i] & 0xff000000;
     }
@@ -192,7 +192,7 @@ int main(void) {
       hostlist[i].username = userlist[user].username;
     }
 
-    // read input
+    // __read input
     while (1) {
         FD_ZERO(&fds);
         FD_SET(FD_FROM_MAIN, &fds);
@@ -213,7 +213,7 @@ int main(void) {
     } 
 
     EXIT:
-    // exit
+    // __exit
     return 0;
 }
 

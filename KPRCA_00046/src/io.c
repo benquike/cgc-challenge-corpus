@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -59,7 +59,7 @@ static void move_to_str(move_t move, char *buf)
 void init_states()
 {
     int i,j;
-    memset(input_states, STATE_ERROR, sizeof(input_states));
+    __memset(input_states, STATE_ERROR, sizeof(input_states));
 #define ADD_STATE(c1, c2, s) input_states[((c1) << 7) + (c2)] = STATE_##s##_START
     for (i = 'm'; i <= 't'; i++)
         for (j = '1'; j <= '8'; j++)
@@ -86,7 +86,7 @@ int read_all(char *buf, size_t n)
     {
         size_t bytes;
         if (receive(STDIN, buf, n, &bytes) != 0 || bytes == 0)
-//        bytes = read(0, buf, n);
+//        bytes = __read(0, buf, n);
         if (bytes == 0)
             return 0;
         n -= bytes;
@@ -97,23 +97,23 @@ int read_all(char *buf, size_t n)
 void write_string(const char *str)
 {
     size_t bytes;
-    transmit(STDOUT, str, strlen(str), &bytes);
-//    write(1, str, strlen(str));
+    transmit(STDOUT, str, __strlen(str), &bytes);
+//    __write(1, str, __strlen(str));
 }
 
 void send_move(move_t m)
 {
-    char *buf = malloc(32);
+    char *buf = __malloc(32);
     if (buf == NULL)
         return;
 
-    strcpy(buf, "move ");
+    __strcpy(buf, "move ");
     move_to_str(m, buf + 5);
-    strcat(buf, "\n");
+    __strcat(buf, "\n");
 
     write_string(buf);
 
-    free(buf);
+    __free(buf);
 }
 
 void send_result(int result)
@@ -161,7 +161,7 @@ void send_error(const char *error, const char *command)
 int sink_error(const char *buf)
 {
     char tmp[2];
-    size_t n = strlen(buf);
+    size_t n = __strlen(buf);
 
     write_string("Error (invalid command): ");
     write_string(buf);
@@ -182,7 +182,7 @@ int sink_error(const char *buf)
 int read_keyword(char *input, size_t n)
 {
     int i, state;
-    memset(input, 0, n);
+    __memset(input, 0, n);
 
     if (!read_all(input, 2))
         return 0;
@@ -296,13 +296,13 @@ int read_keyword(char *input, size_t n)
 #ifdef PATCHED
             if (c < '1' || c > '8') {  state = STATE_ERROR; break;; }
 #endif
-            if (isdigit(c)) { state++; continue; }
+            if (__isdigit(c)) { state++; continue; }
             else { state = STATE_ERROR; break;; }
         }
         else if (state == STATE_MOVE_START+2)
         {
             if (c == '\n') { state = STATE_MOVE; break; }
-            else if (islower(c)) { state = STATE_MOVE; continue; }
+            else if (__islower(c)) { state = STATE_MOVE; continue; }
             else { state = STATE_ERROR; break; }
         }
         else if (state == STATE_MOVE)

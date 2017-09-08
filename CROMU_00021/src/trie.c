@@ -4,7 +4,7 @@ Author: Dustin Fraze <df@cromulence.co>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -31,7 +31,7 @@ THE SOFTWARE.
 
 trie * initTrie() {
 	trie *ret;
-	ret = calloc(sizeof(trie), 1);
+	ret = __calloc(sizeof(trie), 1);
 	return ret;
 }
 
@@ -41,13 +41,13 @@ void insertInTrie(trie *root, char *key,  void* value) {
 
 	ptr = root;
 	if(ptr->children == NULL) {
-		ptr->children = calloc(sizeof(trie), 1);
+		ptr->children = __calloc(sizeof(trie), 1);
 		ptr->children->tag = key[0];
 	}
 
 	ptr = ptr->children;
 
-	for(i=0;i<=strlen(key);i++) {
+	for(i=0;i<=__strlen(key);i++) {
 		while(ptr->next != NULL) {
 			if(ptr->tag == key[i]) {
 				break;
@@ -60,16 +60,16 @@ void insertInTrie(trie *root, char *key,  void* value) {
 			if (key[i] == 0)
   				break;
 			if(ptr->children == NULL) {
-				ptr->children = calloc(sizeof(trie), 1);
+				ptr->children = __calloc(sizeof(trie), 1);
 				ptr->children->tag = key[i+1];
 			}
 			ptr = ptr->children;
 		} else {
-			ptr->next = calloc(sizeof(trie), 1);
+			ptr->next = __calloc(sizeof(trie), 1);
 			ptr->next->tag = key[i];
 			ptr = ptr->next;
-			while(i<strlen(key)) {
-				ptr->children = calloc(sizeof(trie), 1);
+			while(i<__strlen(key)) {
+				ptr->children = __calloc(sizeof(trie), 1);
 				ptr->children->tag = key[++i];
 				ptr = ptr->children;
 			}

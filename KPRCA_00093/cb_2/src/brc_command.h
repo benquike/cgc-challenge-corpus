@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -31,7 +31,7 @@ class BrcCommand: public BrcProtocol {
       BrcCommand(const char *username, const char *cmd, unsigned short username_len, unsigned short cmd_len);
       virtual ~BrcCommand();
 
-      virtual bool Recv(FILE *fd_in);
+      virtual bool Recv(__FILE *fd_in);
 
       virtual const unsigned int protocol_id() const;
       const unsigned short username_length() const;

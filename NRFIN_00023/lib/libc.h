@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -51,8 +51,8 @@
  *
  * @param fd A file descriptor
  * @param buf The destination buffer
- * @param n The number of bytes to read
- * @return The number of bytes read, or negative on failure
+ * @param n The number of bytes to __read
+ * @return The number of bytes __read, or negative on failure
  */
 ssize_t read_all(int fd, void *buf, size_t n);
 
@@ -61,7 +61,7 @@ ssize_t read_all(int fd, void *buf, size_t n);
  *
  * @param fd A file descriptor
  * @param buf The source buffer
- * @param n The number of bytes to write
+ * @param n The number of bytes to __write
  * @return The number of bytes written, or negative on failure
  */
 ssize_t write_all(int fd, void *buf, size_t n);
@@ -74,7 +74,7 @@ ssize_t write_all(int fd, void *buf, size_t n);
  * @param n The number of bytes to set
  * @return ptr
  */
-void *memset(void *ptr, int val, size_t n);
+void *__memset(void *ptr, int val, size_t n);
 
 /**
  * Copy a null-terminated string from src to dst.
@@ -83,7 +83,7 @@ void *memset(void *ptr, int val, size_t n);
  * @param src The source buffer
  * @return dst
  */
-char *strcpy(char *dst, const char *src);
+char *__strcpy(char *dst, const char *src);
 
 /**
  * Copy at most the first n characters of a null-terminated string from src to
@@ -94,7 +94,7 @@ char *strcpy(char *dst, const char *src);
  * @param n The maximum number of bytes to copy
  * @return dst
  */
-char *strncpy(char *dst, const char *src, size_t n);
+char *__strncpy(char *dst, const char *src, size_t n);
 
 /**
  * Append the bytes of a null-terminated string to another.
@@ -103,7 +103,7 @@ char *strncpy(char *dst, const char *src, size_t n);
  * @param src The source buffer
  * @return dst
  */
-char *strcat(char *dst, const char *src);
+char *__strcat(char *dst, const char *src);
 
 /**
  * Append at most the first n bytes of a null-terminated string to another.
@@ -113,7 +113,7 @@ char *strcat(char *dst, const char *src);
  * @param n The maximum number of bytes to copy
  * @return dst
  */
-char *strncat(char *dst, const char *src, size_t n);
+char *__strncat(char *dst, const char *src, size_t n);
 
 /**
  * Return the length of a null-terminated string.
@@ -121,7 +121,7 @@ char *strncat(char *dst, const char *src, size_t n);
  * @param s The string
  * @return The length of s
  */
-size_t strlen(const char *s);
+size_t __strlen(const char *s);
 
 /**
  * Return the length of a null-terminated string, checking at most n bytes.
@@ -144,7 +144,7 @@ int strncmp(const char *a, const char *b, size_t n);
 /**
  * Convert an integer value to its decimal string representation.
  *
- * This functionality differs from itoa, primarily in only dealing with decimal
+ * This functionality differs from __itoa, primarily in only dealing with decimal
  * representations.
  *
  * @param val The value to convert
@@ -152,7 +152,7 @@ int strncmp(const char *a, const char *b, size_t n);
  *      hold all digits
  * @return s
  */
-char *itoa(int val, char *s);
+char *__itoa(int val, char *s);
 
 #ifdef DEBUG
 /* The following is verbatim from EAGLE_00004, but isn't included in the 
@@ -168,20 +168,20 @@ typedef struct _FILE {
    int fd;
    int state;
    int last;
-} FILE;
+} __FILE;
 
-extern FILE *stdin;
-extern FILE *stdout;
-extern FILE *stderr;
+extern __FILE *stdin;
+extern __FILE *stdout;
+extern __FILE *stderr;
 
 /**
  * Formatted output to a stream.
  *
- * @param stream The stream to write to
+ * @param stream The stream to __write to
  * @param format The format specifier
  * @return number of bytes written
  */
-int fprintf(FILE * stream, const char *format, ...);
+int fprintf(__FILE * stream, const char *format, ...);
 
 #endif /* DEBUG */
 

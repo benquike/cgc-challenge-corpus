@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -41,7 +41,7 @@ void link_send(unsigned channel, unsigned length, const unsigned char *payload)
     if (length > LINK_PAYLOAD_SIZE)
         length = LINK_PAYLOAD_SIZE;
 
-    memcpy(pkt.hdr.payload, payload, length);
+    __memcpy(pkt.hdr.payload, payload, length);
     transmit(STDOUT, pkt.rawdata, length + sizeof(link_hdr_t), &bytes);
 }
 

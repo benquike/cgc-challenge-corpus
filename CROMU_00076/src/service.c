@@ -79,7 +79,7 @@ void check_egg( pplayer pp, char c ) {
 	}
 
 	if ( easteregg[eggindex] == 0 ) {
-		printf("YOU FOUND THE EGG!!!! Have a prize.\n");
+		__printf("YOU FOUND THE EGG!!!! Have a prize.\n");
 		pp->mons[0]->hitpoints = 99;
 		pp->mons[0]->health = 99;
 		pp->mons[0]->power = 99;
@@ -97,19 +97,19 @@ size_t read_line( char *outbuf, size_t length )
 	size_t rx_bytes = 0;
 
 	if ( outbuf == NULL ) {
-		printf("[ERROR] invalid arg\n");
+		__printf("[ERROR] invalid arg\n");
 		_terminate(-1);
 		return 0;
 	}
 
 	while ( index < length && c != '\n') {
 		if ( receive( STDIN, &c, 1, &rx_bytes) != 0 ) {
-			printf("[ERROR] Failed to read byte\n");
+			__printf("[ERROR] Failed to __read byte\n");
 			_terminate(-3);
 		}
 
 		if ( rx_bytes == 0 ) {
-			printf("[ERROR] Error in receive\n");
+			__printf("[ERROR] Error in receive\n");
 			_terminate(-4);
 		}
 
@@ -136,12 +136,12 @@ size_t read_line_u( char *outbuf )
 
 	while ( c != '\n' ) {
 		if ( receive( STDIN, &c, 1, &rx_bytes) != 0 ) {
-			printf("[ERROR] Failed to read byte\n");
+			__printf("[ERROR] Failed to __read byte\n");
 			_terminate(0);
 		}
 
 		if ( rx_bytes == 0 ) {
-			printf("[ERROR] Error in receive\n");
+			__printf("[ERROR] Error in receive\n");
 			_terminate(0);
 		}
 
@@ -167,14 +167,14 @@ void add_queue( size_t x, size_t y, size_t max_x, size_t max_y )
 		return;
 	}
 
-	pq = malloc( sizeof(queue) );
+	pq = __malloc( sizeof(queue) );
 
 	if ( pq == NULL ) {
-		printf("[ERROR] malloc() queue structure failed.\n");
+		__printf("[ERROR] __malloc() queue structure failed.\n");
 		_terminate(-1);
 	}
 
-	bzero( pq, sizeof( queue ) );
+	__bzero( pq, sizeof( queue ) );
 
 	pq->x = x;
 	pq->y = y;
@@ -236,14 +236,14 @@ void print_map( pmap pm )
 	max = pm->height * pm->width;
 
 	/// 1 byte for each block, height bytes for the new lines 1 byte for the NULL
-	data = malloc( max + pm->height + 1 );
+	data = __malloc( max + pm->height + 1 );
 
 	if ( data == NULL ) {
-		printf("[ERROR] Failed to allocate map.\n");
+		__printf("[ERROR] Failed to allocate map.\n");
 		_terminate(-5);
 	}
 
-	bzero( data, max + pm->height + 1);
+	__bzero( data, max + pm->height + 1);
 
 	while ( index < max ) {
 		if ( 0 < index && (index % pm->width)==0 ) {
@@ -262,9 +262,9 @@ void print_map( pmap pm )
 
 	data[map_index] = '\n';
 	
-	printf("$s", data);
+	__printf("$s", data);
 
-	free(data);
+	__free(data);
 
 }
 
@@ -313,10 +313,10 @@ size_t find_path( size_t sx, size_t sy, pmap pm)
 		retval = find_path( pq->x, pq->y, pm);
 
 		if ( retval == 1 ) {
-			free(pq);
+			__free(pq);
 			return 1;
 		} else {
-			free(pq);
+			__free(pq);
 			pq = dequeue();
 		}
 	}
@@ -369,7 +369,7 @@ void place_marker( pmap pm )
 		}
 
 		if ( index == max ) {
-			printf("FAILED\n");
+			__printf("FAILED\n");
 			print_map( pm );
 			_terminate(0);
 		}
@@ -395,18 +395,18 @@ void set_marker( size_t x, size_t y, pmap pm, char c )
 void initialize_map( pmap pm )
 {
 	if ( pm == NULL ) {
-		printf("[ERROR] initialize_map() invalid argumenet.\n");
+		__printf("[ERROR] initialize_map() invalid argumenet.\n");
 		_terminate(0);
 	}
 
-	pm->data = malloc( pm->width * pm->height );
+	pm->data = __malloc( pm->width * pm->height );
 
 	if ( pm->data == NULL ) {
-		printf("[ERROR] Failed to allocate map.\n");
+		__printf("[ERROR] Failed to allocate map.\n");
 		_terminate(0);
 	}
 
-	bzero( pm->data, pm->width * pm->height);
+	__bzero( pm->data, pm->width * pm->height);
 
 	pm->start_x = 0;
 	pm->start_y = 0;
@@ -445,17 +445,17 @@ void initialize_queue_matrix( pmap pm )
 	size_t index;
 
 	if (queue_matrix != NULL ) {
-		free( queue_matrix);
+		__free( queue_matrix);
 	}
 
-	queue_matrix = malloc( pm->width * pm->height );
+	queue_matrix = __malloc( pm->width * pm->height );
 
 	if ( queue_matrix == NULL ) {
-		printf("[ERROR] Failed to allocate queue matrix\n");
+		__printf("[ERROR] Failed to allocate queue matrix\n");
 		_terminate(0);
 	}
 
-	bzero( queue_matrix, pm->width * pm->height );
+	__bzero( queue_matrix, pm->width * pm->height );
 
 	/// If the map contains an obstruction then mirror that in the matrix
 	for ( index = 0; index < pm->width * pm->height; index ++ ) {
@@ -478,21 +478,21 @@ pmap generate_map( size_t width, size_t height )
 	size_t end_y = 0;
 	size_t success = 1;
 
-	pm = malloc( sizeof(map) );
+	pm = __malloc( sizeof(map) );
 
 	if ( pm == NULL ) {
-		printf("[ERROR] Failed to allocate map strucure\n");
+		__printf("[ERROR] Failed to allocate map strucure\n");
 		_terminate(0);
 	}
 
-	bzero( pm, sizeof(map) );
+	__bzero( pm, sizeof(map) );
 
 	pm->height = height;
 	pm->width = width;
 
 	initialize_map ( pm );
 
-	printf("Width: $d Height: $d\nStartX: $d StartY: $d\nEndX: $d EndY: $d\n\n", width, height, pm->start_x, pm->start_y, pm->end_x, pm->end_y);
+	__printf("Width: $d Height: $d\nStartX: $d StartY: $d\nEndX: $d EndY: $d\n\n", width, height, pm->start_x, pm->start_y, pm->end_x, pm->end_y);
 
 	while ( success) {
 
@@ -514,7 +514,7 @@ pmap generate_map( size_t width, size_t height )
 			t = root;
 			root = root->next;
 
-			free ( t );
+			__free ( t );
 		}
 
 		root = NULL;
@@ -522,7 +522,7 @@ pmap generate_map( size_t width, size_t height )
 	}
 
 	/// Free the matrix
-	free( queue_matrix );
+	__free( queue_matrix );
 
 	print_map( pm );
 	
@@ -554,29 +554,29 @@ pmonster select_monster( pplayer pp )
 
 	success = 0;
 
-	printf("Monsters: \n");
+	__printf("Monsters: \n");
 	for ( index = 0; index < pp->mcnt; index++ ) {
-		printf("\t$d} \n", index+1);
-		printf("\tType: $s\n", pp->mons[index]->type);
-		printf("\tLevel: $d\n", pp->mons[index]->level);
-		printf("\tHealth: $d\n", pp->mons[index]->health);
-		printf("\tPower: $d\n\n", pp->mons[index]->power);
+		__printf("\t$d} \n", index+1);
+		__printf("\tType: $s\n", pp->mons[index]->type);
+		__printf("\tLevel: $d\n", pp->mons[index]->level);
+		__printf("\tHealth: $d\n", pp->mons[index]->health);
+		__printf("\tPower: $d\n\n", pp->mons[index]->power);
 	}
 
 	while ( !success ) {
-		printf("Selection: ");
+		__printf("Selection: ");
 
 		choice = 0;
 		read_line( (char*)&choice, 2);
 
-		ac = atoi( (char*)&choice );
+		ac = __atoi( (char*)&choice );
 
 		if ( ac <= 0 || ac > pp->mcnt ) {
-			printf("bad choice: $x\n", choice);
+			__printf("bad choice: $x\n", choice);
 		} else if ( pp->mons[ac-1] == NULL ) {
-			printf("bad choice: $x\n", choice);
+			__printf("bad choice: $x\n", choice);
 		} else if ( pp->mons[ac-1]->health <= 0 ) {
-			printf("he dead\n");
+			__printf("he dead\n");
 		} else {
 			success = 1;
 		}
@@ -608,11 +608,11 @@ void print_monster( pmonster pm )
 		return;
 	}
 
-	printf("\tType: $s\n", pm->type);
-	printf("\tLevel: $d\n", pm->level);
-	printf("\tHealth: $d\n", pm->health);
-	printf("\tHit Points: $d\n", pm->hitpoints);
-	printf("\tPower: $d\n\n", pm->power);
+	__printf("\tType: $s\n", pm->type);
+	__printf("\tLevel: $d\n", pm->level);
+	__printf("\tHealth: $d\n", pm->health);
+	__printf("\tHit Points: $d\n", pm->hitpoints);
+	__printf("\tPower: $d\n\n", pm->power);
 
 	return;
 }
@@ -626,7 +626,7 @@ int oneup_monster( pmonster pm )
 	pm->experience += 1;
 
 	if ( (pm->experience % 15) == 0 ) {
-		printf("$s gained a level\n", pm->type);
+		__printf("$s gained a level\n", pm->type);
 		pm->hitpoints += 1;
 		pm->power += 1;
 		pm->health = pm->hitpoints;
@@ -642,14 +642,14 @@ pmonster generate_boss( )
 {
 	pmonster pm = NULL;
 
-	pm = malloc( sizeof(monster) );
+	pm = __malloc( sizeof(monster) );
 
 	if ( pm == NULL ) {
-		printf("[ERROR] Failed to allocate boss monster structure\n");
+		__printf("[ERROR] Failed to allocate boss monster structure\n");
 		_terminate(0);
 	}
 
-	bzero( pm, sizeof( monster ) );
+	__bzero( pm, sizeof( monster ) );
 
 	pm->type = select_name();
 
@@ -673,24 +673,24 @@ int change_monster_name( pmonster pm )
 	size_t index = 0;
 	char *final = NULL;
 
-	bzero( new_name, 32);
+	__bzero( new_name, 32);
 
-	printf("New name: ");
+	__printf("New name: ");
 #ifdef PATCHED_1
 	index = read_line( new_name, 31 );
 #else
 	index = read_line_u( new_name );
 #endif
 
-	final = malloc( index + 1 );
+	final = __malloc( index + 1 );
 
 	if ( final == NULL ) {
-		printf("[ERROR] Failed to malloc name buffer\n");
+		__printf("[ERROR] Failed to __malloc name buffer\n");
 		_terminate(0);
 	}
 
-	bzero( final, index+1);
-	memcpy( final, new_name, index );
+	__bzero( final, index+1);
+	__memcpy( final, new_name, index );
 
 	pm->type = final;
 
@@ -706,19 +706,19 @@ int capture_boss( pmonster pm, pplayer pp )
 		return 0;
 	}
 
-	printf("capture monster? (y\\n): ");
+	__printf("capture monster? (y\\n): ");
 
-	bzero( sel, 3 );
+	__bzero( sel, 3 );
 
 	read_line( sel, 2);
 
 	if ( sel[0] != 'y' ) {
-		free(pm);
+		__free(pm);
 		return 0;
 	}
 
-	printf("update boss name? (y\\n): ");
-	bzero( sel, 3 );
+	__printf("update boss name? (y\\n): ");
+	__bzero( sel, 3 );
 	read_line( sel, 2 );
 
 	if ( sel[0] == 'y') {
@@ -730,40 +730,40 @@ int capture_boss( pmonster pm, pplayer pp )
 		return 1;
 	}
 
-	printf("your cart is full.\n");
+	__printf("your cart is full.\n");
 	for ( choice = 0; choice < MAX_CAPTURE; choice++ ) {
-		printf("$d} \n", choice+1);
+		__printf("$d} \n", choice+1);
 		print_monster(pp->mons[choice]);
 	}
 
-	printf("*********************************\n");
+	__printf("*********************************\n");
 	/// Reset the health before printing.
 	pm->health = pm->hitpoints;
 	print_monster( pm);
-	printf("*********************************\n");
+	__printf("*********************************\n");
 
-	printf("replace one of yours? (y\\n): ");
-	bzero(sel, 3);
+	__printf("replace one of yours? (y\\n): ");
+	__bzero(sel, 3);
 	read_line( sel, 2 );
 
 	if ( sel[0] != 'y') {
-		free(pm);
+		__free(pm);
 		return 0;
 	}
 
-	bzero(sel, 3 );
-	printf("which one: ");
+	__bzero(sel, 3 );
+	__printf("which one: ");
 	read_line( sel, 3);
 
-	choice = atoi( sel );
+	choice = __atoi( sel );
 
 	if ( choice <= 0 || choice > MAX_CAPTURE ) {
-		printf("invalid\n");
-		free( pm );
+		__printf("invalid\n");
+		__free( pm );
 		return 0;
 	}
 
-	free( pp->mons[choice-1]);
+	__free( pp->mons[choice-1]);
 	pp->mons[choice-1] = pm;
 
 	return 1;
@@ -783,15 +783,15 @@ int daboss( pplayer pp )
 	boss = generate_boss( );
 	reset_monsters( pp );
 
-	printf("\nDUN DUN DUUUUUUUUUUUUUUN\n");
-	printf("You have reached the boss!!!!!\n\n");
+	__printf("\nDUN DUN DUUUUUUUUUUUUUUN\n");
+	__printf("You have reached the boss!!!!!\n\n");
 	print_monster( boss );
 
 	while ( boss->health > 0 ) {
 		player_current = select_monster(pp);
 
 		if ( player_current == NULL ) {
-			printf("You have no living monsters. You lose.\n");
+			__printf("You have no living monsters. You lose.\n");
 			return 0;
 		}
 
@@ -799,12 +799,12 @@ int daboss( pplayer pp )
 		update_page_index();
 
 		boss->health -= player_hit;
-		printf("You hit for $d. $d left\n", player_hit, boss->health);
+		__printf("You hit for $d. $d left\n", player_hit, boss->health);
 
 		oneup_monster( player_current );
 
 		if ( boss->health <= 0 ) {
-			printf("You destroyed the boss!!!!\n");
+			__printf("You destroyed the boss!!!!\n");
 			reset_monsters(pp);
 			capture_boss( boss, pp);
 			return 1;
@@ -813,12 +813,12 @@ int daboss( pplayer pp )
 		target_hit = secret_page[page_index] % boss->power;
 		update_page_index();
 
-		printf("$s hits $s for $d\n", boss->type, player_current->type, target_hit);
+		__printf("$s hits $s for $d\n", boss->type, player_current->type, target_hit);
 
 		player_current->health -= target_hit;
 
 		if ( player_current->health <= 0 ) {
-			printf("$s was knocked out\n", player_current->type);
+			__printf("$s was knocked out\n", player_current->type);
 		}
 
 	}
@@ -834,14 +834,14 @@ int capture_monster( pmonster pm, pplayer pp )
 		return 0;
 	}
 
-	printf("capture monster? (y\\n): ");
+	__printf("capture monster? (y\\n): ");
 
-	bzero( sel, 3 );
+	__bzero( sel, 3 );
 
 	read_line( sel, 2);
 
 	if ( sel[0] != 'y' ) {
-		free(pm);
+		__free(pm);
 		return 0;
 	}
 
@@ -850,39 +850,39 @@ int capture_monster( pmonster pm, pplayer pp )
 		return 1;
 	}
 
-	printf("your cart is full.\n");
+	__printf("your cart is full.\n");
 	for ( choice = 0; choice < MAX_CAPTURE; choice++ ) {
-		printf("$d} \n", choice+1);
+		__printf("$d} \n", choice+1);
 		print_monster(pp->mons[choice]);
 	}
 
-	printf("*********************************\n");
+	__printf("*********************************\n");
 	/// Reset the health before printing.
 	print_monster( pm);
-	printf("*********************************\n");
+	__printf("*********************************\n");
 
-	printf("replace one of yours? (y\\n): ");
-	bzero(sel, 3);
+	__printf("replace one of yours? (y\\n): ");
+	__bzero(sel, 3);
 	read_line( sel, 2 );
 
 	if ( sel[0] != 'y') {
-		free(pm);
+		__free(pm);
 		return 0;
 	}
 
-	bzero(sel, 3 );
-	printf("which one: ");
+	__bzero(sel, 3 );
+	__printf("which one: ");
 	read_line( sel, 3);
 
-	choice = atoi( sel );
+	choice = __atoi( sel );
 
 	if ( choice <= 0 || choice > MAX_CAPTURE ) {
-		printf("invalid\n");
-		free( pm );
+		__printf("invalid\n");
+		__free( pm );
 		return 0;
 	}
 
-	free( pp->mons[choice-1]);
+	__free( pp->mons[choice-1]);
 	pp->mons[choice-1] = pm;
 
 	return 1;
@@ -903,7 +903,7 @@ int fight ( pplayer pp )
 
 	pm = generate_monster();
 
-	printf("You are being attacked!!!\n");
+	__printf("You are being attacked!!!\n");
 	print_monster( pm );
 
 
@@ -911,7 +911,7 @@ int fight ( pplayer pp )
 		player_current = select_monster(pp);
 
 		if ( player_current == NULL ) {
-			printf("You have no living monsters. You lose.\n");
+			__printf("You have no living monsters. You lose.\n");
 			return 0;
 		}
 
@@ -919,12 +919,12 @@ int fight ( pplayer pp )
 		update_page_index();
 
 		pm->health -= player_hit;
-		printf("You hit for $d. $d left\n", player_hit, pm->health);
+		__printf("You hit for $d. $d left\n", player_hit, pm->health);
 
 		oneup_monster( player_current );
 
 		if ( pm->health <= 0 ) {
-			printf("You knocked out $s\n", pm->type);
+			__printf("You knocked out $s\n", pm->type);
 			reset_monsters(pp);
 			capture_monster( pm, pp);
 			return 1;
@@ -933,12 +933,12 @@ int fight ( pplayer pp )
 		target_hit = secret_page[page_index] % pm->power;
 		update_page_index();
 
-		printf("$s hits $s for $d\n", pm->type, player_current->type, target_hit);
+		__printf("$s hits $s for $d\n", pm->type, player_current->type, target_hit);
 
 		player_current->health -= target_hit;
 
 		if ( player_current->health <= 0 ) {
-			printf("$s was knocked out\n", player_current->type);
+			__printf("$s was knocked out\n", player_current->type);
 		}
 
 	}
@@ -957,13 +957,13 @@ int movement_loop( pmap pm, pplayer pp )
 	}
 
 	while ( success == 0 ) {
-		bzero( movement, 2 );
+		__bzero( movement, 2 );
 
-		printf(": ");
+		__printf(": ");
 		rx_bytes = read_line( movement, 2 );
 
 		if ( rx_bytes == 0 ) {
-			printf("[ERROR] Failed to receive movement byte\n");
+			__printf("[ERROR] Failed to receive movement byte\n");
 			_terminate(-2);
 		}
 
@@ -973,9 +973,9 @@ int movement_loop( pmap pm, pplayer pp )
 			case 'u':
 				/// Check for the edge of the board
 				if ( pm->current_y == 0 ) {
-					printf("off map\n");
+					__printf("off map\n");
 				} else if ( pm->data[ (pm->width * (pm->current_y-1)) + pm->current_x] == '#') {
-					printf("blocked\n");
+					__printf("blocked\n");
 				} else {
 					set_marker( pm->current_x, pm->current_y, pm, '\0');
 					pm->current_y -= 1;
@@ -984,9 +984,9 @@ int movement_loop( pmap pm, pplayer pp )
 				break;
 			case 'd':
 				if ( pm->current_y == pm->height-1 ) {
-					printf("off map\n");
+					__printf("off map\n");
 				} else if ( pm->data[ (pm->width * (pm->current_y+1)) + pm->current_x] == '#') {
-					printf("blocked\n");
+					__printf("blocked\n");
 				} else {
 					set_marker( pm->current_x, pm->current_y, pm, '\0');
 					pm->current_y += 1;
@@ -995,9 +995,9 @@ int movement_loop( pmap pm, pplayer pp )
 				break;
 			case 'l':
 				if ( pm->current_x == 0 ) {
-					printf("off map\n");
+					__printf("off map\n");
 				} else if ( pm->data[ (pm->width * (pm->current_y)) + pm->current_x-1] == '#') {
-					printf("blocked\n");
+					__printf("blocked\n");
 				} else {
 					set_marker( pm->current_x, pm->current_y, pm, '\0');
 					pm->current_x -= 1;
@@ -1006,9 +1006,9 @@ int movement_loop( pmap pm, pplayer pp )
 				break;
 			case 'r':
 				if ( pm->current_x == pm->width-1 ) {
-					printf("off map\n");
+					__printf("off map\n");
 				} else if ( pm->data[ (pm->width * (pm->current_y)) + pm->current_x+1] == '#') {
-					printf("blocked\n");
+					__printf("blocked\n");
 				} else {
 					set_marker( pm->current_x, pm->current_y, pm, '\0');
 					pm->current_x += 1;
@@ -1016,7 +1016,7 @@ int movement_loop( pmap pm, pplayer pp )
 				}
 				break;
 			default:
-				printf("[ERROR] Invalid direction: $x\n", movement[0]);
+				__printf("[ERROR] Invalid direction: $x\n", movement[0]);
 				continue;
 		};
 
@@ -1024,12 +1024,12 @@ int movement_loop( pmap pm, pplayer pp )
 
 		if ( pm->current_y == pm->end_y && pm->current_x == pm->end_x ) {
 			//// Fight main boss
-			printf("reached the end\n");
+			__printf("reached the end\n");
 			
 			if ( daboss( pp ) == 1 ) {
-				printf("You won!!!\n");
+				__printf("You won!!!\n");
 			} else {
-				printf("You failed!!!\n");
+				__printf("You failed!!!\n");
 			}
 			
 
@@ -1041,7 +1041,7 @@ int movement_loop( pmap pm, pplayer pp )
 				
 				if ( fight( pp ) == 1 ) {
 					pp->level += 1;
-					printf("player gains a level. now $d\n", pp->level);
+					__printf("player gains a level. now $d\n", pp->level);
 				}
 				print_map( pm );
 				
@@ -1078,14 +1078,14 @@ pmonster generate_monster( )
 {
 	pmonster pm = NULL;
 
-	pm = malloc( sizeof(monster) );
+	pm = __malloc( sizeof(monster) );
 
 	if ( pm == NULL ) {
-		printf("[ERROR] Failed to allocate monster structure\n");
+		__printf("[ERROR] Failed to allocate monster structure\n");
 		_terminate(0);
 	}
 
-	bzero( pm, sizeof( monster ) );
+	__bzero( pm, sizeof( monster ) );
 
 	pm->type = select_name();
 
@@ -1109,27 +1109,27 @@ pplayer generate_player( )
 	char player_one[16];
 	size_t result = 0;
 
-	printf("Enter your name|| ");
+	__printf("Enter your name|| ");
 
-	bzero( player_one, 16);
+	__bzero( player_one, 16);
 
 	result = read_line( player_one, 15);
 
 	/// If they just hit enter then they get a default
 	if ( result == 0 ) {
-		memcpy( player_one, "Player One", 10 );
+		__memcpy( player_one, "Player One", 10 );
 	}
 
-	np = malloc( sizeof( player ) );
+	np = __malloc( sizeof( player ) );
 
 	if ( np == NULL ) {
-		printf("[ERROR] Failed to malloc player structure\n");
+		__printf("[ERROR] Failed to __malloc player structure\n");
 		_terminate(0);
 	}
 
-	bzero( np, sizeof(player) );
+	__bzero( np, sizeof(player) );
 
-	memcpy( np->name, player_one, 16 );
+	__memcpy( np->name, player_one, 16 );
 
 	/// Generate 3 monsters for the player to fight with
 	for ( result = 0; result < 3; result++ ) {
@@ -1149,14 +1149,14 @@ void print_player( pplayer pp )
 		return;
 	}
 
-	printf("Name: $s\n", pp->name);
-	printf("Level: $d\n", pp->level);
-	printf("Monsters: \n");
+	__printf("Name: $s\n", pp->name);
+	__printf("Level: $d\n", pp->level);
+	__printf("Monsters: \n");
 
 	for ( index = 0; index < pp->mcnt; index++ ) {
-		printf("\tType: $s\n", pp->mons[index]->type);
-		printf("\tHealth: $d\n", pp->mons[index]->health);
-		printf("\tPower: $d\n\n", pp->mons[index]->power);
+		__printf("\tType: $s\n", pp->mons[index]->type);
+		__printf("\tHealth: $d\n", pp->mons[index]->health);
+		__printf("\tPower: $d\n\n", pp->mons[index]->power);
 	}
 
 	return;

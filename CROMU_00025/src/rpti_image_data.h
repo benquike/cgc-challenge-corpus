@@ -1,7 +1,7 @@
 /*
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -29,7 +29,7 @@ THE SOFTWARE.
 #define RPTI_MAGIC 0xc35109d3
 /**
  * Structure to hold the rpti image data.
- * It points to the current byte/bit to be read
+ * It points to the current byte/bit to be __read
  **/
 typedef struct rpti_image_data {
 	char *buffer;

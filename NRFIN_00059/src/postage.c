@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -49,22 +49,22 @@ static unsigned char stamp_cmp(const void *s1, void *s2) {
 	stamp_t *stamp1 = (stamp_t *)s1;
 	stamp_t *stamp2 = (stamp_t *)s2;
 
-	return (0 == memcmp(stamp1->serial, stamp2->serial, STAMP_SIZE));
+	return (0 == __memcmp(stamp1->serial, stamp2->serial, STAMP_SIZE));
 }
 
 void init_stamp_roll(void) {
-	list_init(&stamp_roll, free);
+	list_init(&stamp_roll, __free);
 }
 
 stamp_t *get_new_stamp(void) {
 	// create a stamp
-	stamp_t *s = malloc(sizeof(stamp_t));
+	stamp_t *s = __malloc(sizeof(stamp_t));
 	MALLOC_OK(s);
 
 	// make sure no valid stamp has the serial of BAD_STAMP
 	do {
 #ifndef PATCHED_1
-		if (sizeof(stamp_t) != memcpy(s->serial, &seed[seed_idx], sizeof(stamp_t)))
+		if (sizeof(stamp_t) != __memcpy(s->serial, &seed[seed_idx], sizeof(stamp_t)))
 			return NULL;
 		seed_idx = (seed_idx + 3) % SEED_MAX;
 #else
@@ -73,7 +73,7 @@ stamp_t *get_new_stamp(void) {
 			s->serial[i] = seed[seed_idx % SEED_MAX];
 		}
 #endif
-	} while (0 == memcmp(s->serial, (void *)BAD_STAMP, sizeof(BAD_STAMP)));
+	} while (0 == __memcmp(s->serial, (void *)BAD_STAMP, sizeof(BAD_STAMP)));
 
 	// add to stamp roll
 	list_insert_at_end(&stamp_roll, s);

@@ -10,7 +10,7 @@ char cl_buff[BUF_SIZE];
 int cb_len = 0;
 int cl_len = 0;
 
-void write(void) {
+void __write(void) {
     struct timeval tv;
     fd_set ready_set;
     int ret;
@@ -50,7 +50,7 @@ void write(void) {
     }
 }
 
-void read(void) {
+void __read(void) {
     struct timeval tv;
     fd_set ready_set;
     int fd;
@@ -93,7 +93,7 @@ void read(void) {
 
 int main(void) {
     while (1) {
-        write();
-        read();
+        __write();
+        __read();
     }
 }

@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -40,16 +40,16 @@ response *DestroyResponse(response *pResponse)
 
   if (pResponse->data != NULL) 
   {
-    free(pResponse->data);
+    __free(pResponse->data);
   }
-  free(pResponse);
+  __free(pResponse);
   return NULL;
 }
 
 response *GenerateBlankResponse() 
 {
   response *pResponse;
-  pResponse = calloc(sizeof(response));
+  pResponse = __calloc(sizeof(response));
   return pResponse;
 }
 
@@ -59,21 +59,21 @@ int AddToResponse(response *pResponse, char *pString)
   {
     return -1;
   }
-  int newLength = strlen(pString);
+  int newLength = __strlen(pString);
   if (pResponse->data != NULL) 
   {
     newLength += pResponse->size;
   }
-  char *newData = calloc(newLength + 1);
+  char *newData = __calloc(newLength + 1);
   char *newDataPtr = newData;
 
   if (pResponse->data != NULL) 
   {
-    strncpy(newData, (char *)pResponse->data, pResponse->size);
+    __strncpy(newData, (char *)pResponse->data, pResponse->size);
     newDataPtr += pResponse->size;
   }
-  strcpy(newDataPtr, pString);
-  free(pResponse->data);
+  __strcpy(newDataPtr, pString);
+  __free(pResponse->data);
   pResponse->data = (uint8_t *)newData;
   pResponse->size = newLength;
   return 1;
@@ -85,8 +85,8 @@ int DumpResponse(response *pResponse)
   {
     return -1;
   }
-  printf("Response Length: $d\n", pResponse->size);
-  printf("Response Data: $s\n", pResponse->data);
+  __printf("Response Length: $d\n", pResponse->size);
+  __printf("Response Data: $s\n", pResponse->data);
   return 0;
 }
 

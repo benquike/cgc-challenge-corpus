@@ -65,7 +65,7 @@ void printLargeInt(ulargeint_t* plint)
 
   for (i = 0; i < LARGE_INT_ARR_LEN; i++)
   {
-    //printf("%08x", plint->bytes[i]);
+    //__printf("%08x", plint->bytes[i]);
   }
 }
 

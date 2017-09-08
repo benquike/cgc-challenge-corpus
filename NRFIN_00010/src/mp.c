@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -150,7 +150,7 @@ int card_recharge(uint32_t card_id, list_t * card_list, uint32_t amount) {
 	return SUCCESS;
 }
 
-// look up the balance of the card with card_id and write it into balance.
+// look up the balance of the card with card_id and __write it into balance.
 // success: SUCCESS
 // failure: ERRNO_MP_NOT_FOUND
 int card_get_balance(uint32_t card_id, list_t * card_list, uint32_t * balance) {
@@ -507,7 +507,7 @@ int transaction_recv_issue(packet_data_issue_t ** pdi) {
 int transaction_recv_purchase(packet_data_purchase_t ** pdp) {
     // create memory for purchase data + vendor
     ALLOC(sizeof(packet_data_purchase_t), 0, (void **)pdp);
-    // read purchase data and vendor data (except vendor_location)
+    // __read purchase data and vendor data (except vendor_location)
     if(14 != recv_all((char *)*pdp, 14)) {return ERRNO_MP_RECV;}
 
     uint32_t vls = (*pdp)->v.vendor_location_sz;
@@ -515,7 +515,7 @@ int transaction_recv_purchase(packet_data_purchase_t ** pdp) {
 
     // create memory for vendor_location char array
     ALLOC(vls, 0, (void **)&((*pdp)->v.vendor_location));
-    // read vendor_location (size is in previous read)
+    // __read vendor_location (size is in previous __read)
     if(vls != recv_all((char *)(*pdp)->v.vendor_location, vls)) {return ERRNO_MP_RECV;}
 
     return SUCCESS;
@@ -527,7 +527,7 @@ int transaction_recv_purchase(packet_data_purchase_t ** pdp) {
 int transaction_recv_recharge(packet_data_recharge_t ** pdr) {
     // create memory for recharge data + vendor
     ALLOC(sizeof(packet_data_recharge_t), 0, (void **)pdr);
-    // read recharge data and vendor data (except vendor_location)
+    // __read recharge data and vendor data (except vendor_location)
     if(10 != recv_all((char *)*pdr, 10)) {return ERRNO_MP_RECV;}
 
     uint32_t vls = (*pdr)->v.vendor_location_sz;
@@ -535,7 +535,7 @@ int transaction_recv_recharge(packet_data_recharge_t ** pdr) {
 
     // create memory for vendor_location char array
     ALLOC(vls, 0, (void **)&((*pdr)->v.vendor_location));
-    // read vendor_location (size is in previous read)
+    // __read vendor_location (size is in previous __read)
     if(vls != recv_all((char *)(*pdr)->v.vendor_location, vls)) {return ERRNO_MP_RECV;}
 
     return SUCCESS;
@@ -638,7 +638,7 @@ int packet_from_transaction_and_send(transaction_t * tr, uint32_t auth_code) {
     // send packet_header to client
     send((char *)new_pkt_header, sizeof(packet_head_t));
 
-    // free memory for new_pkt_header.
+    // __free memory for new_pkt_header.
     if(SUCCESS != deallocate((void *)new_pkt_header, sizeof(packet_head_t))) {return ERRNO_MP_ALLOC;}
 
     return SUCCESS;

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -32,15 +32,15 @@ namespace {
 void PrintFile(const fs_file *file_metadata, unsigned char num_tabs)
 {
     for (int i = 0; i < num_tabs; i++)
-        printf("    ");
-    printf("File Name: ");
+        __printf("    ");
+    __printf("File Name: ");
     PRINT_ARR_CHARS(file_metadata->name, sizeof(file_metadata->name));
 }
 void PrintSubdirectory(const fs_file *file_metadata, unsigned char num_tabs)
 {
     for (int i = 0; i < num_tabs; i++)
-        printf("    ");
-    printf("Subdirectory Name: ");
+        __printf("    ");
+    __printf("Subdirectory Name: ");
     PRINT_ARR_CHARS(file_metadata->name, sizeof(file_metadata->name));
 }
 void PrintDirectory(const fs_file *file_metadata, char *dirname, int *namelen, bool skip_path_update)
@@ -62,7 +62,7 @@ void PrintDirectory(const fs_file *file_metadata, char *dirname, int *namelen, b
         ++*namelen;
     }
 
-    printf("Directory Name: ");
+    __printf("Directory Name: ");
     PRINT_ARR_CHARS(dirname, *namelen);
 }
 
@@ -94,7 +94,7 @@ fs_file *DirectoryTree::FindFile(const char *path)
 {
     if (!path)
         return (fs_file *)NULL;
-    if (strcmp("/", path) == 0)
+    if (__strcmp("/", path) == 0)
         return directory_entry_;
 
     DirectoryTree *dir_tree;
@@ -115,7 +115,7 @@ DirectoryTree *DirectoryTree::FindDirectory(const char *path)
 {
     if (!path)
         return (DirectoryTree *)NULL;
-    if (strcmp("/", path) == 0)
+    if (__strcmp("/", path) == 0)
         return this;
 
     DirectoryTree *dir_tree;
@@ -134,16 +134,16 @@ void DirectoryTree::ListFiles(const char *path, bool recursive)
 {
     DirectoryTree *dir_tree;
     fs_file *file_meta;
-    if (!path || strcmp("/", path) == 0)
+    if (!path || __strcmp("/", path) == 0)
     {
         char rootdir[] = "";
-        ListFileHelper(this, (fs_file *)NULL, recursive, rootdir, strlen(rootdir), false);
+        ListFileHelper(this, (fs_file *)NULL, recursive, rootdir, __strlen(rootdir), false);
         return;
     }
     else
     {
         if (FindFileHelper(this, path, &dir_tree, &file_meta))
-            ListFileHelper(dir_tree, file_meta, recursive, path, strlen(path), true);
+            ListFileHelper(dir_tree, file_meta, recursive, path, __strlen(path), true);
     }
 }
 
@@ -241,12 +241,12 @@ void DirectoryTree::ListFileHelper(DirectoryTree *dirnode, const fs_file *file_i
     {
         cur_dir = new char[namelen + sizeof(((fs_file *)0)->name) + 1];
         cur_namelen = namelen;
-        memcpy(cur_dir, dirname, namelen);
+        __memcpy(cur_dir, dirname, namelen);
 
         PrintDirectory(dirnode->directory_entry_, cur_dir, &cur_namelen, skip_path_update);
         if (!dirnode->subdirectories_.length() && !dirnode->file_list_.length())
         {
-            printf("    --Empty Directory--" NL NL);
+            __printf("    --Empty Directory--" NL NL);
             return;
         }
 
@@ -254,7 +254,7 @@ void DirectoryTree::ListFileHelper(DirectoryTree *dirnode, const fs_file *file_i
             PrintSubdirectory(dirnode->subdirectories_[i].directory_entry(), 1);
         for (int i = 0; i < dirnode->file_list_.length(); i++)
             PrintFile(dirnode->file_list_[i], 1);
-        printf(NL);
+        __printf(NL);
 
         if (recursive)
         {

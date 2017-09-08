@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -30,7 +30,7 @@ THE SOFTWARE.
 
 
 linkedList *NewList(int type) {
-  linkedList *list = calloc(sizeof(linkedList));
+  linkedList *list = __calloc(sizeof(linkedList));
   list->type = type;
   return list;
 }
@@ -46,14 +46,14 @@ int AddToList(linkedList *list, void *object, int type) {
   if (type != list->type) {
     return -1;
   }
-  link *newLink = calloc(sizeof(link));
+  __link *newLink = __calloc(sizeof(__link));
   newLink->type = type;
   newLink->object = object;
   if (list->root == NULL) {
     list->root = newLink;
     return 1;
   }
-  link *next = list->root;
+  __link *next = list->root;
   while (next->next != NULL) {
     next = next->next;
   }
@@ -75,14 +75,14 @@ int RemoveFromList(linkedList *list, void *object)
   }
   if (list->root->object == object) 
   {
-    link *toDelete = list->root ;
+    __link *toDelete = list->root ;
     list->root = list->root->next;
     list->root->prev = NULL;
-    free(toDelete);
+    __free(toDelete);
     return 1;
   }
-  link *prev= list->root;
-  link *this = list->root->next;
+  __link *prev= list->root;
+  __link *this = list->root->next;
   while (this != NULL && this->object != object) 
   {
     prev = this;
@@ -90,7 +90,7 @@ int RemoveFromList(linkedList *list, void *object)
   }
   if (this != NULL) 
   {
-    link *toDelete = this;
+    __link *toDelete = this;
     prev->next = this->next;
     if (prev->next != NULL) 
     {
@@ -104,14 +104,14 @@ int RemoveFromList(linkedList *list, void *object)
 void DumpList(linkedList *list) {
   if (list == NULL)
   {
-    printf("Empty List\n");
+    __printf("Empty List\n");
     return;
   }
-  printf("List Type: $x\n", list->type);
+  __printf("List Type: $x\n", list->type);
   int i = 0;
-  link *this = list->root;
+  __link *this = list->root;
   while (this != NULL) {
-    printf("$d) $s\n", i++, (char *)this->object);
+    __printf("$d) $s\n", i++, (char *)this->object);
     this = this->next;
   }
 }

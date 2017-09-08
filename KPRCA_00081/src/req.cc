@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -36,39 +36,39 @@ CRequirement::~CRequirement()
 
 char* CRequirement::ReqTypeToString(CRequirement::Type type)
 {
-    char *typeString = static_cast<char *>(malloc(512));
+    char *typeString = static_cast<char *>(__malloc(512));
     char *p = typeString;
-    memset(typeString, 0, 512);
+    __memset(typeString, 0, 512);
     if ((type & CRequirement::Type::GROUND_OP) == CRequirement::Type::GROUND_OP)
     {
-        strcpy(p, "GROUND,");
-        p += strlen("GROUND,");
+        __strcpy(p, "GROUND,");
+        p += __strlen("GROUND,");
     }
     if ((type & CRequirement::Type::AERIAL_OP) == CRequirement::Type::AERIAL_OP)
     {
-        strcpy(p, "AERIAL,");
-        p += strlen("AERIAL,");
+        __strcpy(p, "AERIAL,");
+        p += __strlen("AERIAL,");
     }
     if ((type & CRequirement::Type::NAVAL_OP) == CRequirement::Type::NAVAL_OP)
     {
-        strcpy(p, "NAVAL,");
-        p += strlen("NAVAL,");
+        __strcpy(p, "NAVAL,");
+        p += __strlen("NAVAL,");
     }
     if ((type & CRequirement::Type::INTEL_OP) == CRequirement::Type::INTEL_OP)
     {
-        strcpy(p, "INTEL,");
-        p += strlen("INTEL,");
+        __strcpy(p, "INTEL,");
+        p += __strlen("INTEL,");
     }
     if ((type & CRequirement::Type::SPECIAL_OP) == CRequirement::Type::SPECIAL_OP)
     {
-        strcpy(p, "SPECIAL,");
-        p += strlen("SPECIAL,");
+        __strcpy(p, "SPECIAL,");
+        p += __strlen("SPECIAL,");
     }
     if ((type & CRequirement::Type::RESCUE_OP) == CRequirement::Type::RESCUE_OP)
     {
-        strcpy(p, "RESCUE,");
-        p += strlen("RESCUE,");
+        __strcpy(p, "RESCUE,");
+        p += __strlen("RESCUE,");
     }
-    typeString[strlen(typeString) - 1] = '\0';
+    typeString[__strlen(typeString) - 1] = '\0';
     return typeString;
 }

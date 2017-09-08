@@ -1,7 +1,7 @@
 /*
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -34,7 +34,7 @@ void service_loop( void )
     root = init_file();
     
     if ( root == NULL ) {
-        printf("[ERROR] Failed to create the root node\n");
+        __printf("[ERROR] Failed to create the root node\n");
         return;
     }
     
@@ -44,7 +44,7 @@ void service_loop( void )
 	while (1) {
 		if ( recv( (char*)&command, 4 ) != 4 ) {
 			// Failed to receive send error
-			printf("[ERROR] Receive failed\n");
+			__printf("[ERROR] Receive failed\n");
             return;
 		}
 
@@ -72,12 +72,12 @@ void service_loop( void )
 				break;
             /// STOP
             case 0x504f5453:
-                printf("[INFO] Terminating\n");
+                __printf("[INFO] Terminating\n");
                 _terminate(0);
                 break;
             /// PRNT
 			case 0x544e5250:
-                printf("[INFO] Listing files\n");
+                __printf("[INFO] Listing files\n");
                 
                 handle_prnt( root, "" );
                 
@@ -87,7 +87,7 @@ void service_loop( void )
                 handle_repo( );
                 break;
 			default:
-				printf("[ERROR] Invalid command: $x\n", command);
+				__printf("[ERROR] Invalid command: $x\n", command);
 				break;
 		};
 	}

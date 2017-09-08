@@ -4,7 +4,7 @@ Copyright (c) 2016 Cromulence LLC
 
 Authors: Bryce Kerley <bk@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include "protocol.h"
 #include "eval.h"
 
-#define FUNC(name, func) if (0 == strcmp(name, func_name)) return func(stk);
+#define FUNC(name, func) if (0 == __strcmp(name, func_name)) return func(stk);
 
 void ord(stack_elem* stk) {
   sint32 offset = stack_pop_sint32(stk);
@@ -40,7 +40,7 @@ void ord(stack_elem* stk) {
 
 #ifdef PATCHED_1
   if (offset < 1) _terminate(-1);
-  if (offset > strlen(body)) _terminate(-1);
+  if (offset > __strlen(body)) _terminate(-1);
 #endif
   
   sint32 char_value = ((unsigned char*)body)[offset - 1];
@@ -50,8 +50,8 @@ void ord(stack_elem* stk) {
 
 void upcase(stack_elem* stk) {
   char* body = stack_pop_str(stk);
-  uint32 len = strlen(body);
-  char* new = calloc(len + 1);
+  uint32 len = __strlen(body);
+  char* new = __calloc(len + 1);
   for (uint32 i = 0; i <= len; i++) {
     char cur = body[i];
     new[i] = char_is_lower(cur) ? (cur - 0x20) : cur;
@@ -62,8 +62,8 @@ void upcase(stack_elem* stk) {
 
 void downcase(stack_elem* stk) {
   char* body = stack_pop_str(stk);
-  uint32 len = strlen(body);
-  char* new = calloc(len + 1);
+  uint32 len = __strlen(body);
+  char* new = __calloc(len + 1);
   for (uint32 i = 0; i <= len; i++) {
     char cur = body[i];
     new[i] = char_is_upper(cur) ? (cur + 0x20) : cur;
@@ -73,14 +73,14 @@ void downcase(stack_elem* stk) {
 
 void len(stack_elem* stk) {
   char* body = stack_pop_str(stk);
-  uint32 len = strlen(body);
+  uint32 len = __strlen(body);
   stack_push_sint32(stk, len);
 }
 
 void idx(stack_elem* stk) {
   char needle = stack_pop_str(stk)[0];
   char* haystack = stack_pop_str(stk);
-  uint32 len = strlen(haystack);
+  uint32 len = __strlen(haystack);
   for (uint32 i = 0; i <= len; i++) {
     char cur = haystack[i];
     if (cur == needle) {
@@ -93,7 +93,7 @@ void idx(stack_elem* stk) {
 void ridx(stack_elem* stk) {
   char needle = stack_pop_str(stk)[0];
   char* haystack = stack_pop_str(stk);
-  uint32 len = strlen(haystack);
+  uint32 len = __strlen(haystack);
   for (sint32 i = len; i >= 0; i--) {
     char cur = haystack[i];
     if (cur == needle) {
@@ -105,8 +105,8 @@ void ridx(stack_elem* stk) {
 
 void chomp(stack_elem* stk) {
   char* body = stack_pop_str(stk);
-  uint32 len = strlen(body);
-  char* new = calloc(len + 1);
+  uint32 len = __strlen(body);
+  char* new = __calloc(len + 1);
 
   uint32 idx = 0;
   uint32 jdx = 0;

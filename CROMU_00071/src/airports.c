@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -45,14 +45,14 @@ int results;
 
 	apCode[0] = 0;
 
-	for (i=0; i < strlen(command); ++i) {
+	for (i=0; i < __strlen(command); ++i) {
 
 		if (command[i] == '/') {
 
-			if (strlen(command+i+1) != 3)
+			if (__strlen(command+i+1) != 3)
 				return BAD_COMMAND;	
 
-			strcpy(apCode, command+i+1);
+			__strcpy(apCode, command+i+1);
 
 			break;
 		}
@@ -62,7 +62,7 @@ int results;
 
 		if (apCode[0] != 0) {
 
-			if (strcmp(apCode, airports->code) != 0) {
+			if (__strcmp(apCode, airports->code) != 0) {
 
 				airports = airports->next;
 				continue;
@@ -71,30 +71,30 @@ int results;
 		}
 
 		results = 1;
-		printf("Airport: @s\n", airports->code);
+		__printf("Airport: @s\n", airports->code);
 
-		printf("Connections: ");
+		__printf("Connections: ");
 
 		connection = airports->connections;
 
 		if (connection == 0) {
-			printf("\n\n");
+			__printf("\n\n");
 			airports = airports->next;
 			continue;
 		}
 
-		printf("@s (@d, @d)", connection->destCode, connection->cost, connection->time);
+		__printf("@s (@d, @d)", connection->destCode, connection->cost, connection->time);
 
 		connection = connection->next;
 
 		while (connection!= 0) {
 
-			printf(", @s (@d, @d)", connection->destCode, connection->cost, connection->time);
+			__printf(", @s (@d, @d)", connection->destCode, connection->cost, connection->time);
 
 			connection = connection->next;
 		}
 
-		printf("\n\n");
+		__printf("\n\n");
 
 		airports = airports->next;
 
@@ -125,7 +125,7 @@ connectionListType connections2add[MAX_CONNECTIONS];
 
 	delimiter_count = 0;
 
-	for (i=0; i < strlen(command); ++i) {
+	for (i=0; i < __strlen(command); ++i) {
 
 		if (command[i] == '/')
 			++delimiter_count;
@@ -148,7 +148,7 @@ connectionListType connections2add[MAX_CONNECTIONS];
 
 		++i;
 
-		strncpy(newCode, command+i, 3);
+		__strncpy(newCode, command+i, 3);
 		newCode[3] = 0;
 
 		i+=3;
@@ -176,7 +176,7 @@ connectionListType connections2add[MAX_CONNECTIONS];
 
 			++i;
 
-			strncpy(connections2add[ccount].destCode, command+i, 3);
+			__strncpy(connections2add[ccount].destCode, command+i, 3);
 
 			connections2add[ccount].destCode[3] = 0;
 
@@ -188,7 +188,7 @@ connectionListType connections2add[MAX_CONNECTIONS];
 
 			for (x=0; x < ccount; ++x) {
 
-				if (strcmp(connections2add[ccount].destCode, connections2add[x].destCode)== 0)
+				if (__strcmp(connections2add[ccount].destCode, connections2add[x].destCode)== 0)
 					return DUPLICATE_CODE;
 			}
 
@@ -199,7 +199,7 @@ connectionListType connections2add[MAX_CONNECTIONS];
 
 			++i;
 
-			connections2add[ccount].cost = atoi(command+i);
+			connections2add[ccount].cost = __atoi(command+i);
 
 
 			while(command[i] != '/')
@@ -207,7 +207,7 @@ connectionListType connections2add[MAX_CONNECTIONS];
 
 			++i;
 
-			connections2add[ccount].time = atoi(command+i);
+			connections2add[ccount].time = __atoi(command+i);
 
 			while (command[i] != '/' && command[i] != 0)
 				++i;
@@ -229,7 +229,7 @@ connectionListType connections2add[MAX_CONNECTIONS];
 		// validate that it does not already exist
 		if (check4Code(*airports, newCode) != 0) {
 
-			printf("Duplicate code detected\n");
+			__printf("Duplicate code detected\n");
 			return DUPLICATE_CODE;
 		}
 
@@ -240,31 +240,31 @@ connectionListType connections2add[MAX_CONNECTIONS];
 		while (1) {
 
 			// get airport code for connection
-			printf("Enter airport code for connection:\n");
+			__printf("Enter airport code for connection:\n");
 			getline(newConn, sizeof(newConn));
 
 			// if its blank then terminate adding new connections
 			if (newConn[0] == 0)
 				break;
 			
-			if (strcmp(newCode, newConn) == 0) {
+			if (__strcmp(newCode, newConn) == 0) {
 
-				printf("Illegal connection value\n");
+				__printf("Illegal connection value\n");
 				continue;
 			}
 			// validate connections exist and are not duplicates of existing connections
 			if (check4Code(*airports, newConn) == 0) {
 
-				printf("Connecting airport not found\n");
+				__printf("Connecting airport not found\n");
 				continue;
 			}
 
 			duplicateCode = 0;
 			for (x=0; x < ccount; ++x) {
 
-				if (strcmp(newConn, connections2add[x].destCode)== 0) {
+				if (__strcmp(newConn, connections2add[x].destCode)== 0) {
 					duplicateCode = 1;
-					printf("Duplicate connection\n");
+					__printf("Duplicate connection\n");
 					break;
 				}
 			}
@@ -274,17 +274,17 @@ connectionListType connections2add[MAX_CONNECTIONS];
 				continue;
 
 			// now tmpConnection points to the newly allocated memory
-			strncpy(connections2add[ccount].destCode, newConn, 4);
+			__strncpy(connections2add[ccount].destCode, newConn, 4);
 
-			printf("Connection cost:\n");
+			__printf("Connection cost:\n");
 			getline(buffer, sizeof(buffer));
 
-			connections2add[ccount].cost = atoi(buffer);
+			connections2add[ccount].cost = __atoi(buffer);
 
-			printf("Connection duration:\n");
+			__printf("Connection duration:\n");
 			getline(buffer, sizeof(buffer));
 
-			connections2add[ccount].time = atoi(buffer);
+			connections2add[ccount].time = __atoi(buffer);
 
 			++ccount;
 
@@ -294,13 +294,13 @@ connectionListType connections2add[MAX_CONNECTIONS];
 
 
 	// create the entry at the end
-	tmpAirport = malloc(sizeof(airportInfoType));
+	tmpAirport = __malloc(sizeof(airportInfoType));
 
 	// memory allocation failed
 	if (tmpAirport == 0) 
 		return UNRECOVERABLE_ERROR;
 
-	strcpy(tmpAirport->code, newCode);
+	__strcpy(tmpAirport->code, newCode);
 	tmpAirport->next = 0;
 	tmpAirport->connections = 0;
 
@@ -323,7 +323,7 @@ connectionListType connections2add[MAX_CONNECTIONS];
 
 		if (tmpAirport->connections == 0) {
 
-			tmpAirport->connections = malloc(sizeof(connectionListType));
+			tmpAirport->connections = __malloc(sizeof(connectionListType));
 
 			if (tmpAirport->connections == 0)
 				return UNRECOVERABLE_ERROR;
@@ -334,7 +334,7 @@ connectionListType connections2add[MAX_CONNECTIONS];
 		}
 		else {
 
-			tmpConnection->next = malloc(sizeof(connectionListType));
+			tmpConnection->next = __malloc(sizeof(connectionListType));
 
 			if (tmpConnection->next == 0)
 				return UNRECOVERABLE_ERROR;
@@ -344,7 +344,7 @@ connectionListType connections2add[MAX_CONNECTIONS];
 			tmpConnection->next = 0;
 		}
 
-		strncpy(tmpConnection->destCode, connections2add[i].destCode, 4);
+		__strncpy(tmpConnection->destCode, connections2add[i].destCode, 4);
 		tmpConnection->cost = connections2add[i].cost;
 		tmpConnection->time = connections2add[i].time;
 
@@ -373,17 +373,17 @@ int i;
 
 	apCode[0] = 0;
 
-	for (i=0; i < strlen(command); ++i) {
+	for (i=0; i < __strlen(command); ++i) {
 
 		if (command[i] == '/') {
 
 #ifdef PATCHED_2
-			strncpy(apCode, command+i+1, 3);
+			__strncpy(apCode, command+i+1, 3);
 			apCode[3] = 0;
 #else
-			strcpy(apCode, command+i+1);
+			__strcpy(apCode, command+i+1);
 #endif
-			if (strlen(apCode) != 3)
+			if (__strlen(apCode) != 3)
 				return BAD_COMMAND;
 
 			break;
@@ -392,7 +392,7 @@ int i;
 
 	if (apCode[0] == 0) {
 		// get airport code for connection
-		printf("Enter airport code for deletion:\n");
+		__printf("Enter airport code for deletion:\n");
 		getline(apCode, sizeof(apCode));
 
 		// if its blank then terminate adding new connections
@@ -401,7 +401,7 @@ int i;
 	}
 
 	// see if the matching airport is in the head node
-	if (strcmp((*airports)->code, apCode) == 0) {
+	if (__strcmp((*airports)->code, apCode) == 0) {
 
 		tmpAirport = *airports;
 
@@ -411,14 +411,14 @@ int i;
 
 			tmpAirport->connections = tmpConnection->next;
 
-			free(tmpConnection);
+			__free(tmpConnection);
 
 			tmpConnection = tmpAirport->connections;
 		}
 
 		*airports = (*airports)->next;
 
-		free(tmpAirport);
+		__free(tmpAirport);
 
 	}
 	else {
@@ -429,7 +429,7 @@ int i;
 
 		while(tmpAirport != 0) {
 
-			if (strcmp(tmpAirport->code, apCode) == 0) {
+			if (__strcmp(tmpAirport->code, apCode) == 0) {
 
 				found = 1;
 				break;
@@ -444,7 +444,7 @@ int i;
 		if (found) {
 
 			apPtr->next = tmpAirport->next;
-			free(tmpAirport);
+			__free(tmpAirport);
 
 		}
 		else
@@ -465,13 +465,13 @@ int i;
 			continue;
 		}
 
-		if (strcmp(apPtr->connections->destCode, apCode)== 0) {
+		if (__strcmp(apPtr->connections->destCode, apCode)== 0) {
 
 			tmpConnection = apPtr->connections;
 
 			apPtr->connections = apPtr->connections->next;
 
-			free(tmpConnection);
+			__free(tmpConnection);
 			
 			apPtr = apPtr->next;
 			continue;
@@ -484,12 +484,12 @@ int i;
 		while(tmpConnection!= 0) {
 
 
-			if (strcmp(tmpConnection->destCode, apCode) == 0) {
+			if (__strcmp(tmpConnection->destCode, apCode) == 0) {
 
 
 				prevConnection->next = tmpConnection->next;
 
-				free(tmpConnection);
+				__free(tmpConnection);
 				break;
 			}
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -58,10 +58,10 @@ void image_destroy(struct image *img);
 /**
  * Write a pixel to the image at a specific coordinate
  *
- * @param img The image to write to
- * @param x The x coordinate to write to
- * @param y The y coordinate to write to
- * @param pixel The color to write
+ * @param img The image to __write to
+ * @param x The x coordinate to __write to
+ * @param y The y coordinate to __write to
+ * @param pixel The color to __write
  * @return EXIT_SUCCESS on success, EXIT_FAILURE on failure
  */
 int image_write_pixel(struct image *img, unsigned x, unsigned y, struct pixel pixel);
@@ -69,9 +69,9 @@ int image_write_pixel(struct image *img, unsigned x, unsigned y, struct pixel pi
 /**
  * Get a pixel from the image at a specific coordinate
  *
- * @param img The image to read from
- * @param x The x coordinate to read from
- * @param y The y coordinate to read from
+ * @param img The image to __read from
+ * @param x The x coordinate to __read from
+ * @param y The y coordinate to __read from
  * @param pixel Out parameter for the color
  * @return EXIT_SUCCESS on success, EXIT_FAILURE on failure
  */

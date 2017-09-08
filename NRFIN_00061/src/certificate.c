@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -38,16 +38,16 @@
 */
 int isCertCommand(char* command) {
 
-	if(!strncmp(command, ENROLL_CMD, strlen(ENROLL_CMD)))
+	if(!strncmp(command, ENROLL_CMD, __strlen(ENROLL_CMD)))
 		return 1;
 
-	if(!strncmp(command, REENROLL_CMD, strlen(REENROLL_CMD)))
+	if(!strncmp(command, REENROLL_CMD, __strlen(REENROLL_CMD)))
 		return 1;
 
-	if(!strncmp(command, CERTS_CMD, strlen(CERTS_CMD)))
+	if(!strncmp(command, CERTS_CMD, __strlen(CERTS_CMD)))
 		return 1;
 
-	if(!strncmp(command, REVOKE_CERT_CMD, strlen(REVOKE_CERT_CMD)))
+	if(!strncmp(command, REVOKE_CERT_CMD, __strlen(REVOKE_CERT_CMD)))
 		return 1;
 
 	return 0;
@@ -59,10 +59,10 @@ int isCertCommand(char* command) {
 * @return None
 */
 void initIssuer() {
-	if(!(issuer = malloc(64)))
+	if(!(issuer = __malloc(64)))
 		_terminate(1);
-	bzero(issuer, 64);
-	memcpy(issuer, ISSUER_STR, strlen(ISSUER_STR));		
+	__bzero(issuer, 64);
+	__memcpy(issuer, ISSUER_STR, __strlen(ISSUER_STR));		
 }
 
 /**
@@ -79,26 +79,26 @@ void signCert(Certificate** cert) {
 	int i;
 
 	signedCert = *cert;
-	size = strlen(signedCert->issuer);
+	size = __strlen(signedCert->issuer);
 	for(i=0; i<size; i++)
 		signature += signedCert->issuer[i];
 
-	size = strlen(signedCert->subject);
+	size = __strlen(signedCert->subject);
 	for(i=0; i<size; i++)
 		signature += signedCert->subject[i];
 
-	size = strlen(signedCert->key);
+	size = __strlen(signedCert->key);
 	for(i=0; i<size; i++)
 		signature += signedCert->key[i];
 
 	signature += signedCert->expiration;
 
-	size = strlen(private_key);
+	size = __strlen(private_key);
 	for(i=0; i<size; i++)
 		signature += private_key[i];	
 
 	if(signedCert->revoked) {
-		size = strlen(signedCert->revoked);
+		size = __strlen(signedCert->revoked);
 		for(i=0; i<size; i++)
 			signature += signedCert->revoked[i];
 	}
@@ -117,21 +117,21 @@ void signCert(Certificate** cert) {
 size_t calculateCertSize(Certificate *cert) {
 	size_t size;
 
-	size = strlen(CERT_ISSUER_HDR) +1;
-	size += strlen(cert->issuer) + 1;
-	size += strlen(CERT_SUBJECT_HDR) + 1;
-	size += strlen(cert->subject) + 1;
-	size += strlen(CERT_KEY_HDR) + 1;
-	size += strlen(cert->key) + 1;
-	size += strlen(CERT_SIG_HDR) + 1;
+	size = __strlen(CERT_ISSUER_HDR) +1;
+	size += __strlen(cert->issuer) + 1;
+	size += __strlen(CERT_SUBJECT_HDR) + 1;
+	size += __strlen(cert->subject) + 1;
+	size += __strlen(CERT_KEY_HDR) + 1;
+	size += __strlen(cert->key) + 1;
+	size += __strlen(CERT_SIG_HDR) + 1;
 	size += MAX_UINT_STR_SIZE + 1; //signature
-	size += strlen(CERT_EXP_HDR) + 1;
+	size += __strlen(CERT_EXP_HDR) + 1;
 	size += MAX_UINT_STR_SIZE + 1; //expiration
-	size += strlen(CERT_USE_HDR) + 1;
-	size += strlen(cert->use) + 1;
+	size += __strlen(CERT_USE_HDR) + 1;
+	size += __strlen(cert->use) + 1;
 	if(cert->revoked) {
-		size += strlen(CERT_STATUS_HDR) + 1;
-		size += strlen(cert->revoked) + 1;		
+		size += __strlen(CERT_STATUS_HDR) + 1;
+		size += __strlen(cert->revoked) + 1;		
 	}
 
 
@@ -162,11 +162,11 @@ void sendCerts(unsigned int id, Certificate *cert) {
 		}
 
 		certSize = calculateCertSize(cert);
-		if(!(buffer = malloc(certSize+10)))
+		if(!(buffer = __malloc(certSize+10)))
 			_terminate(1);
-		bzero(buffer, certSize+10);
+		__bzero(buffer, certSize+10);
 		if(cert->revoked) {
-			sprintf(buffer, "!X=!X;!X=!X;!X=!X;!X=!U;!X=!U;!X=!X;!X=!X",
+			__sprintf(buffer, "!X=!X;!X=!X;!X=!X;!X=!U;!X=!U;!X=!X;!X=!X",
 				CERT_ISSUER_HDR, cert->issuer,
 				CERT_SUBJECT_HDR, cert->subject,
 				CERT_KEY_HDR, cert->key,
@@ -175,7 +175,7 @@ void sendCerts(unsigned int id, Certificate *cert) {
 				CERT_USE_HDR, cert->use,
 				CERT_STATUS_HDR, cert->revoked);			
 		} else {
-			sprintf(buffer, "!X=!X;!X=!X;!X=!X;!X=!U;!X=!U;!X=!X",
+			__sprintf(buffer, "!X=!X;!X=!X;!X=!X;!X=!U;!X=!U;!X=!X",
 				CERT_ISSUER_HDR, cert->issuer,
 				CERT_SUBJECT_HDR, cert->subject,
 				CERT_KEY_HDR, cert->key,
@@ -184,13 +184,13 @@ void sendCerts(unsigned int id, Certificate *cert) {
 				CERT_USE_HDR, cert->use);			
 		}
 
-		certSize = strlen(buffer);
+		certSize = __strlen(buffer);
 		if((ret = transmit_all(STDOUT, buffer, certSize))) 
 			_terminate(1);
-		free(buffer);
+		__free(buffer);
 	}
 
-	if((ret = transmit_all(STDOUT, "?", strlen("?")))) 
+	if((ret = transmit_all(STDOUT, "?", __strlen("?")))) 
 		_terminate(1);
 
 }
@@ -205,11 +205,11 @@ void sendCerts(unsigned int id, Certificate *cert) {
 Certificate *parseCertificate(char* body) {
 	Certificate *cert;
 
-	cert = malloc(sizeof(Certificate));
+	cert = __malloc(sizeof(Certificate));
 	if(!cert)
 		_terminate(1);
 
-	bzero((char *)cert, sizeof(Certificate));
+	__bzero((char *)cert, sizeof(Certificate));
 
 	initializeAttributes(body);
 	getStringAttribute(&cert->issuer, CERT_ISSUER_HDR);
@@ -236,12 +236,12 @@ int checkCRLs(Certificate *cert) {
 	size_t size, size1, size2;
 
 	for(revoked_cert=CRL; revoked_cert != NULL; revoked_cert=revoked_cert->next) {
-		size1 = strlen(revoked_cert->subject);
-		size2 = strlen(cert->subject);
+		size1 = __strlen(revoked_cert->subject);
+		size2 = __strlen(cert->subject);
 		size = size1 > size2 ? size1 : size2;
 		if(!strncmp(revoked_cert->subject, cert->subject, size)) {
-			size1 = strlen(revoked_cert->key);
-			size2 = strlen(cert->key);
+			size1 = __strlen(revoked_cert->key);
+			size2 = __strlen(cert->key);
 			size = size1 > size2 ? size1 : size2;		
 			if(!strncmp(revoked_cert->key, cert->key, size))
 				return 0;
@@ -269,14 +269,14 @@ int validateCert(Certificate *cert, char* use, unsigned int* expiration_date) {
 		return 0;		
 	}
 
-	if(strncmp(cert->issuer, issuer, strlen(ISSUER_STR))) {
+	if(strncmp(cert->issuer, issuer, __strlen(ISSUER_STR))) {
 		sendErrorResponse(RESPONSE_ERR_NO_CERT);
 
 		return 0;
 	}
 
 	if(cert->revoked)
-		if(!strncmp(cert->revoked, CERT_STATUS_REVOKED, strlen(CERT_STATUS_REVOKED)))
+		if(!strncmp(cert->revoked, CERT_STATUS_REVOKED, __strlen(CERT_STATUS_REVOKED)))
 			return 0;
 
 	tmp_sig = cert->signature;
@@ -319,14 +319,14 @@ void crls(int id, char* body, unsigned int* expiration_date) {
 */
 void freeCert(Certificate* cert) {
 
-	free(cert->subject);
-	free(cert->issuer);
-	free(cert->key);
-	free(cert->use);
-	free(cert->next);
+	__free(cert->subject);
+	__free(cert->issuer);
+	__free(cert->key);
+	__free(cert->use);
+	__free(cert->next);
 	if(cert->revoked)
-		free(cert->revoked);
-	free(cert);
+		__free(cert->revoked);
+	__free(cert);
 }
 
 /**
@@ -349,11 +349,11 @@ void revokeCert(int id, char* body, unsigned int* expiration_date) {
 	if(!(ret = validateCert(cert, NULL, expiration_date)))
 		return;
 
-	size = strlen(CERT_STATUS_REVOKED);
-	if(!(cert->revoked = malloc(size+1)))
+	size = __strlen(CERT_STATUS_REVOKED);
+	if(!(cert->revoked = __malloc(size+1)))
 		_terminate(1);
-	bzero(cert->revoked, size+1);
-	memcpy(cert->revoked, CERT_STATUS_REVOKED, size);
+	__bzero(cert->revoked, size+1);
+	__memcpy(cert->revoked, CERT_STATUS_REVOKED, size);
 	signCert(&cert);
 	cert->next = NULL;
 	sendCerts(id, cert);
@@ -406,16 +406,16 @@ int checkCertUse(char* command, char* useList) {
 	if(!useList)
 		return 0;
 
-	use = strtok(useList,":");
+	use = __strtok(useList,":");
 	do {
-		size1 = strlen(command);
-		size2 = strlen(use);
+		size1 = __strlen(command);
+		size2 = __strlen(use);
 		size = size1 > size2 ? size1 : size2;
 		if(!strncmp(command, use, size) ||
-			!strncmp(REVOKE_CERT_CMD, use, strlen(REVOKE_CERT_CMD)))
+			!strncmp(REVOKE_CERT_CMD, use, __strlen(REVOKE_CERT_CMD)))
 			return 1;
 
-		use = strtok(0, ":");
+		use = __strtok(0, ":");
 	} while(use);
 
 	return 0;
@@ -449,13 +449,13 @@ void enroll(int id, char* body, unsigned int* expiration_date) {
 	}
 
 	if(cert->issuer)
-		free(cert->issuer);
+		__free(cert->issuer);
 
-	size = strlen(issuer);
-	if(!(cert->issuer = malloc(size+1)))
+	size = __strlen(issuer);
+	if(!(cert->issuer = __malloc(size+1)))
 		_terminate(1);
-	bzero(cert->issuer, size+1);
-	memcpy(cert->issuer, issuer, size);
+	__bzero(cert->issuer, size+1);
+	__memcpy(cert->issuer, issuer, size);
 
 	if(!cert->subject)
 		return;

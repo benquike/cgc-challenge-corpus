@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -121,7 +121,7 @@ static inline filter_t *filter_alloc(unsigned int length)
     if (length > (INT_MAX / sizeof(insn_t) - 1))
         return NULL;
 
-    result = malloc(sizeof(filter_t) + length * sizeof(insn_t));
+    result = __malloc(sizeof(filter_t) + length * sizeof(insn_t));
     if (result != NULL)
     {
         result->length = length;
@@ -131,7 +131,7 @@ static inline filter_t *filter_alloc(unsigned int length)
 
 static inline void filter_free(filter_t *filter)
 {
-    free(filter);
+    __free(filter);
 }
 
 int filter_validate(filter_t *filter);

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -44,15 +44,15 @@ append_to_path(char *path, const char *toappend)
     char *tmp;
     size_t len;
 
-    len = strlen(path);
-    if ((tmp = realloc(path, len + MAX_FILE_NAME_LENGTH + 2)) == NULL) {
-        free(path);
+    len = __strlen(path);
+    if ((tmp = __realloc(path, len + MAX_FILE_NAME_LENGTH + 2)) == NULL) {
+        __free(path);
         return NULL;
     }
     path = tmp;
 
-    strcat(path, "/");
-    strncat(path, toappend, MAX_FILE_NAME_LENGTH);
+    __strcat(path, "/");
+    __strncat(path, toappend, MAX_FILE_NAME_LENGTH);
     path[len + MAX_FILE_NAME_LENGTH + 1] = '\0';
 
     return path;
@@ -65,7 +65,7 @@ do_cron(void)
     void (*job)(void) = NULL;
     struct file *cur, *target;
 
-    // If a user can write to the crond directory, they can execute arbitrary code.
+    // If a user can __write to the crond directory, they can execute arbitrary code.
     list_for_each_entry(struct file, list, &crond->files, cur) {
         if (cur->is_symlink) {
             if ((target = lookup_file(&vfs, (char *)cur->contents, 1)) == NULL)
@@ -77,7 +77,7 @@ do_cron(void)
         if (allocate(target->size, 1, &buf) != 0)
             continue;
 
-        memcpy(buf, target->contents, target->size);
+        __memcpy(buf, target->contents, target->size);
         job = buf;
 
         job();
@@ -111,7 +111,7 @@ do_cd(void)
     ret = 0;
 
 free_path:
-    free(path);
+    __free(path);
     return ret;
 }
 
@@ -143,7 +143,7 @@ do_read(void)
     ret = 0;
 
 free_path:
-    free(path);
+    __free(path);
     return ret;
 }
 
@@ -166,7 +166,7 @@ do_write(void)
     if (size > MAX_FILE_SIZE)
         return -1;
 
-    if ((contents = calloc(size)) == NULL)
+    if ((contents = __calloc(size)) == NULL)
         return -1;
 
     if (read_all(STDIN, contents, size) != size)
@@ -184,13 +184,13 @@ do_write(void)
     if (write_file(&vfs, USER_UID, path, (unsigned char *)contents, size) != 0)
         goto free_path;
 
-    free(path);
+    __free(path);
     return 0;
 
 free_path:
-    free(path);
+    __free(path);
 free_contents:
-    free(contents);
+    __free(contents);
     return ret;
 }
 
@@ -212,7 +212,7 @@ do_ln(void)
     if (size > MAX_FILE_SIZE)
         return -1;
 
-    if ((dst = calloc(size + 1)) == NULL)
+    if ((dst = __calloc(size + 1)) == NULL)
         return -1;
 
     if (read_all(STDIN, dst, size) != size)
@@ -230,9 +230,9 @@ do_ln(void)
     ret = 0;
 
 free_src:
-    free(src);
+    __free(src);
 free_dst:
-    free(dst);
+    __free(dst);
     return ret;
 }
 
@@ -263,7 +263,7 @@ do_rm(void)
     ret = 0;
 
 free_path:
-    free(path);
+    __free(path);
     return ret;
 }
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -209,7 +209,7 @@ static unsigned char ht_str_key_in_pair(const void *pair, void *key) {
  * @return 		Pointer to new hash table
  */
 static ht_t *ht_init(unsigned int size) {
-	ht_t *h = malloc(sizeof(ht_t));
+	ht_t *h = __malloc(sizeof(ht_t));
 	if (NULL == h) _terminate(ERRNO_ALLOC);
 
 	h->buckets_cnt = get_next_largest_prime(size);
@@ -217,7 +217,7 @@ static ht_t *ht_init(unsigned int size) {
 	h->pair_cnt = 0;
 	h->iter_idx = 0;
 	h->iter_node = NULL;
-	h->buckets = malloc(h->buckets_cnt * sizeof(struct list *));
+	h->buckets = __malloc(h->buckets_cnt * sizeof(struct list *));
 
 	if (NULL == h->buckets) _terminate(ERRNO_ALLOC);
 
@@ -262,8 +262,8 @@ ht_t *ht_str_init_fp(unsigned int size) {
 }
 
 void ht_destroy(ht_t *h) {
-	free(h->buckets);
-	free(h);
+	__free(h->buckets);
+	__free(h);
 }
 
 unsigned int ht_length(ht_t *h) {
@@ -276,7 +276,7 @@ void *ht_pair_insert(ht_t *h, void *pair) {
 
 	if (NULL == h->buckets[hash_val]) {
 		// create empty list for this bucket
-		struct list *l = malloc(sizeof(struct list));
+		struct list *l = __malloc(sizeof(struct list));
 		if (NULL == l) _terminate(ERRNO_ALLOC);
 
 		list_init(l, NULL);
@@ -344,7 +344,7 @@ void *ht_pair_remove(ht_t *h, void *pair) {
 	// if this list is empty, destroy it
 	if (0 == list_length(h->buckets[hash_val])) {
 		list_destroy(h->buckets[hash_val]);
-		free(h->buckets[hash_val]);
+		__free(h->buckets[hash_val]);
 		h->buckets[hash_val] = NULL;
 	}
 
@@ -460,7 +460,7 @@ ht_t *ht_re_hash(ht_t *h) {
 
 
 uint_uint_pair_t *get_ui_ui_pair(unsigned int k, unsigned int v) {
-	uint_uint_pair_t *pair = malloc(sizeof(uint_uint_pair_t));
+	uint_uint_pair_t *pair = __malloc(sizeof(uint_uint_pair_t));
 	if (NULL == pair) _terminate(ERRNO_ALLOC);
 
 	pair->key = k;
@@ -470,7 +470,7 @@ uint_uint_pair_t *get_ui_ui_pair(unsigned int k, unsigned int v) {
 }
 
 int_int_pair_t *get_i_i_pair(int k, int v) {
-	int_int_pair_t *pair = malloc(sizeof(int_int_pair_t));
+	int_int_pair_t *pair = __malloc(sizeof(int_int_pair_t));
 	if (NULL == pair) _terminate(ERRNO_ALLOC);
 
 	pair->key = k;
@@ -482,14 +482,14 @@ int_int_pair_t *get_i_i_pair(int k, int v) {
 str_uint_pair_t *get_s_ui_pair(char *s, unsigned int i) {
 	if (NULL == s) return NULL;
 
-	str_uint_pair_t *pair = malloc(sizeof(str_uint_pair_t));
+	str_uint_pair_t *pair = __malloc(sizeof(str_uint_pair_t));
 	if (NULL == pair) _terminate(ERRNO_ALLOC);
 
-	unsigned int len = strlen(s, '\0') + 1;
-	pair->key = malloc(len * sizeof(char));
+	unsigned int len = __strlen(s, '\0') + 1;
+	pair->key = __malloc(len * sizeof(char));
 	if (NULL == pair->key) _terminate(ERRNO_ALLOC);
 
-	memcpy(pair->key, s, len);
+	__memcpy(pair->key, s, len);
 
 	pair->value = i;
 
@@ -499,14 +499,14 @@ str_uint_pair_t *get_s_ui_pair(char *s, unsigned int i) {
 str_int_pair_t *get_s_i_pair(char *s, int i) {
 	if (NULL == s) return NULL;
 
-	str_int_pair_t *pair = malloc(sizeof(str_int_pair_t));
+	str_int_pair_t *pair = __malloc(sizeof(str_int_pair_t));
 	if (NULL == pair) _terminate(ERRNO_ALLOC);
 
-	unsigned int len = strlen(s, '\0') + 1;
-	pair->key = malloc(len * sizeof(char));
+	unsigned int len = __strlen(s, '\0') + 1;
+	pair->key = __malloc(len * sizeof(char));
 	if (NULL == pair->key) _terminate(ERRNO_ALLOC);
 
-	memcpy(pair->key, s, len);
+	__memcpy(pair->key, s, len);
 
 	pair->value = i;
 

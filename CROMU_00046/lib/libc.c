@@ -4,7 +4,7 @@ Author: Dustin Fraze (df@cromulence.com)
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -26,7 +26,7 @@ THE SOFTWARE.
 #include <libcgc.h>
 #include "libc.h"
 
-int strlen(char * string) {
+int __strlen(char * string) {
     char *tmp;
     tmp = string;
     while(*tmp) {
@@ -35,14 +35,14 @@ int strlen(char * string) {
     return tmp-string;
 }
 
-unsigned int atoi(char *number)
+unsigned int __atoi(char *number)
 {
     int i;
     int ret = 0;
     int tmp;
-    if(strlen(number) > 8)
+    if(__strlen(number) > 8)
         return 0;
-    for(i=0;i<strlen(number);i++)
+    for(i=0;i<__strlen(number);i++)
     {
         tmp = number[i]-'0';
         if(i == 0) {
@@ -56,7 +56,7 @@ unsigned int atoi(char *number)
     return ret;
 }
 
-char *itoa(unsigned int number)
+char *__itoa(unsigned int number)
 {
     static char tmp[16];
     char *ret;
@@ -65,7 +65,7 @@ char *itoa(unsigned int number)
     ret = &tmp[15];
 
     remaining = number;
-    bzero(tmp, 16);
+    __bzero(tmp, 16);
     do {
         *--ret = '0' + (number % 10);
         number = number / 10;
@@ -89,7 +89,7 @@ int recvUntil(int fd, char *buf, int max, char delim)
     return 0;
 }
 
-void bzero(char *what, int howmany) {
+void __bzero(char *what, int howmany) {
     char *tmp;
     int i;
     tmp = what;
@@ -100,7 +100,7 @@ void bzero(char *what, int howmany) {
 
 int put(char *string) {
     int i;
-    size_t len = strlen(string);
+    size_t len = __strlen(string);
     size_t tx_bytes;
     size_t total_sent = 0;
     int ret;
@@ -115,7 +115,7 @@ int put(char *string) {
     return 0;
 }
 
-int memcpy(char *dst, char *src, int size) {
+int __memcpy(char *dst, char *src, int size) {
     while(size--)
         *dst++=*src++;
     return 0;

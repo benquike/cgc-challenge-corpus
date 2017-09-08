@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -92,7 +92,7 @@ void queue_msg(lsimp_msg_t *msg)
     tail->next = msg;
     tail = msg;
   }
-  printf("QUEUED\n");
+  __printf("QUEUED\n");
 }
 
 void clear_queue()
@@ -105,24 +105,24 @@ void clear_queue()
       if (msg->type == LMT_KEYX)
       {
         if (msg->keyx.key)
-          free(msg->keyx.key);
+          __free(msg->keyx.key);
       }
       else if (msg->type == LMT_DATA)
       {
         if (msg->data.data)
-          free(msg->data.data);
+          __free(msg->data.data);
       }
       else if (msg->type == LMT_TEXT)
       {
         if (msg->text.msg)
-          free(msg->text.msg);
+          __free(msg->text.msg);
       }
       old = msg;
       msg = msg->next;
-      free(old);
+      __free(old);
     }
   }
-  printf("QUEUE CLEARED\n");
+  __printf("QUEUE CLEARED\n");
 }
 
 void process()
@@ -146,11 +146,11 @@ void process()
           if (msg->helo.version == CURRENT_VER)
           {
             helo = &msg->helo;
-            printf("HELO [VERSION %d] [SECURE %s] [TTL %d]\n",
+            __printf("HELO [VERSION %d] [SECURE %s] [TTL %d]\n",
                 helo->version, helo->secure_mode ? "on" : "off", helo->ttl);
           }
           else
-            printf("INVALID VERSION\n");
+            __printf("INVALID VERSION\n");
         }
       }
       else if (msg->type == LMT_KEYX)
@@ -161,33 +161,33 @@ void process()
         {
           if (!helo->secure_mode)
           {
-            printf("KEYX IN NON-SECURE\n");
+            __printf("KEYX IN NON-SECURE\n");
             break;
           }
           if (msg->keyx.key_len == 0)
           {
-            printf("NO KEY\n");
+            __printf("NO KEY\n");
             break;
           }
 
           keyx = &msg->keyx;
 
-          printf("KEYX ");
-          printf("[OPTION ");
+          __printf("KEYX ");
+          __printf("[OPTION ");
           if ((keyx->option & 0x0F) == 0x07)
-            printf("prepend | ");
+            __printf("prepend | ");
           else
-            printf("append | ");
+            __printf("append | ");
           if ((keyx->option & 0xF0) == 0x30)
           {
-            printf("inverted] ");
+            __printf("inverted] ");
             int i;
             for (i = 0; i < keyx->key_len; ++i)
               keyx->key[i] = ~keyx->key[i];
           }
           else
-            printf("as-is] ");
-          printf("[LEN %d]\n", keyx->key_len);
+            __printf("as-is] ");
+          __printf("[LEN %d]\n", keyx->key_len);
         }
       }
       else if (msg->type == LMT_DATA)
@@ -196,18 +196,18 @@ void process()
           break;
         if (!helo->secure_mode)
         {
-          printf("DATA IN NON-SECURE\n");
+          __printf("DATA IN NON-SECURE\n");
           break;
         }
         if (keyx == NULL)
         {
-          printf("DATA BEFORE KEYX\n");
+          __printf("DATA BEFORE KEYX\n");
           break;
         }
-        printf("DATA [SEQ %d] [LEN %d]\n", msg->data.seq, msg->data.data_len);
+        __printf("DATA [SEQ %d] [LEN %d]\n", msg->data.seq, msg->data.data_len);
         if (dchain == NULL)
         {
-          if ((dchain = (data_node_t *)malloc(sizeof(data_node_t))) != NULL)
+          if ((dchain = (data_node_t *)__malloc(sizeof(data_node_t))) != NULL)
           {
             dchain->data = &msg->data;
             dchain->next = NULL;
@@ -216,7 +216,7 @@ void process()
         }
         else
         {
-          if ((dtail->next = (data_node_t *)malloc(sizeof(data_node_t))) != NULL)
+          if ((dtail->next = (data_node_t *)__malloc(sizeof(data_node_t))) != NULL)
           {
             dtail = dtail->next;
             dtail->data = &msg->data;
@@ -230,15 +230,15 @@ void process()
           break;
         if (helo->secure_mode)
         {
-          printf("TEXT IN SECURE\n");
+          __printf("TEXT IN SECURE\n");
           break;
         }
         if (msg->text.msg_len == 0)
         {
-          printf("NO TEXT MSG\n");
+          __printf("NO TEXT MSG\n");
           break;
         }
-        printf("TEXT [LEN %d] [MSG %s]\n", msg->text.msg_len, msg->text.msg);
+        __printf("TEXT [LEN %d] [MSG %s]\n", msg->text.msg_len, msg->text.msg);
       }
       msg = msg->next;
       ttl++;
@@ -246,44 +246,44 @@ void process()
   }
 
   if (helo == NULL)
-    printf("HELO MISSING\n");
+    __printf("HELO MISSING\n");
 
   if (dchain)
   {
     // dtail is wrong after this, but it's okay
     data_node_t *p = sorted(dchain);
-    printf("SECURE MESSAGE:\n");
+    __printf("SECURE MESSAGE:\n");
     int seq = 1, old = 0;
     while (p)
     {
       if (old == p->data->seq)
       {
-        printf("(SEQ #%d DUP)", old);
+        __printf("(SEQ #%d DUP)", old);
         p = p->next;
         continue;
       }
       if (seq != p->data->seq)
-        printf("(SEQ #%d MISSING)", seq);
+        __printf("(SEQ #%d MISSING)", seq);
       else
       {
         if (decode_data(keyx, p->data))
-          printf("%s", p->data->data);
+          __printf("%s", p->data->data);
         p = p->next;
       }
       old = seq++;
     }
-    printf("\n");
+    __printf("\n");
   }
 
-  printf("PROCESS DONE\n");
+  __printf("PROCESS DONE\n");
   clear_queue();
   head = tail = NULL;
 }
 
 void quit()
 {
-  printf("QUIT\n");
-  exit(0);
+  __printf("QUIT\n");
+  __exit(0);
 }
 
 int main()
@@ -308,7 +308,7 @@ int main()
         if (msg != NULL)
           queue_msg(msg);
         else
-          printf("FAILED TO QUEUE\n");
+          __printf("FAILED TO QUEUE\n");
         break;
       case OP_PROCESS:
         process();

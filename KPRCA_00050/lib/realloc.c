@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -29,31 +29,31 @@
 #include <stdint.h>
 #include <string.h>
 
-void *realloc(void *ptr, size_t size)
+void *__realloc(void *ptr, size_t size)
 {
   if (ptr == NULL)
-    return malloc(size);
+    return __malloc(size);
 
   if (size == 0) {
-    free(ptr);
+    __free(ptr);
 #ifdef PATCHED
-    return malloc(8);
+    return __malloc(8);
 #else
     return NULL;
 #endif
   }
 
-  void *new = malloc(size);
+  void *new = __malloc(size);
   if (new == NULL)
     return NULL;
 
   struct blk_t *blk = (struct blk_t *)((intptr_t)ptr - HEADER_PADDING);
 
   if (size < blk->size - HEADER_PADDING)
-    memcpy(new, ptr, size);
+    __memcpy(new, ptr, size);
   else
-    memcpy(new, ptr, blk->size - HEADER_PADDING);
+    __memcpy(new, ptr, blk->size - HEADER_PADDING);
 
-  free(ptr);
+  __free(ptr);
   return new;
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -100,7 +100,7 @@ int validate_alu(state_t *state)
         return 0;
 
     if (insn->dst == REG_FRAME)
-        /* frame pointer is read-only */
+        /* frame pointer is __read-only */
         return 0;
 
     if (insn->op.alu.source == SRC_REG)
@@ -121,7 +121,7 @@ int validate_alu(state_t *state)
     }
     else
     {
-        /* binary operators that read and modify dst */
+        /* binary operators that __read and modify dst */
         unsigned int result = state->registers[insn->dst] | src;
         if (result & VALUE_UNKNOWN)
             /* any operations on UNKNOWN results in UNKNOWN */

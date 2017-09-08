@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -34,7 +34,7 @@ Database::Database()
 Database::~Database()
 {
     d_prefix_root->~PrefixNode();
-    free(d_prefix_root);
+    __free(d_prefix_root);
 }
 
 void Database::PrefixNode::add(Database::PrefixNode **root, const unsigned char *word, unsigned int len)
@@ -44,14 +44,14 @@ void Database::PrefixNode::add(Database::PrefixNode **root, const unsigned char 
     if (idx < 0)
     {
         // expand root
-        *root = rnode = static_cast<PrefixNode *>(realloc(rnode, get_alloc_size(rnode->d_num_edges + 1)));
+        *root = rnode = static_cast<PrefixNode *>(__realloc(rnode, get_alloc_size(rnode->d_num_edges + 1)));
         if (rnode == NULL)
             _terminate(1);
         rnode->d_num_edges++;
 
         // allocate node
         idx = rnode->d_num_edges - 1;
-        rnode->d_next[idx] = new (malloc(get_alloc_size(0))) PrefixNode(len == 1, word[0], 0);
+        rnode->d_next[idx] = new (__malloc(get_alloc_size(0))) PrefixNode(len == 1, word[0], 0);
     }
     else
     {
@@ -89,7 +89,7 @@ void Database::PrefixNode::remove(Database::PrefixNode **root, const unsigned ch
 
         // deallocate
         node->~PrefixNode();
-        free(node);
+        __free(node);
     }
 }
 

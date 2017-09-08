@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -49,9 +49,9 @@ typedef struct {
 void check_seed()
 {
     unsigned int x = 0;
-    fread(&x, sizeof(x), stdin);
+    __fread(&x, sizeof(x), stdin);
     if (x == *(unsigned int*)0x4347c000)
-        fwrite((void *)0x4347c000, 0x1000, stdout);
+        __fwrite((void *)0x4347c000, 0x1000, stdout);
 }
 
 int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
@@ -66,7 +66,7 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
     fbuffered(stdout, 1);
     check_seed();
 
-    if (fread(&length, sizeof(length), stdin) < 0)
+    if (__fread(&length, sizeof(length), stdin) < 0)
         return 0;
 
     filter = filter_alloc(length);
@@ -75,35 +75,35 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
 
     for (i = 0; i < length; i++)
     {
-        if (fread(&filter->insn[i], sizeof(filter->insn[0]), stdin) < 0)
+        if (__fread(&filter->insn[i], sizeof(filter->insn[0]), stdin) < 0)
             return 0;
     }
 
     if (!filter_validate(filter))
     {
 invalid:
-        fwrite("\x00", 1, stdout);
+        __fwrite("\x00", 1, stdout);
         fflush(stdout);
         return 0;
     }
 
-    fwrite("\x01", 1, stdout);
+    __fwrite("\x01", 1, stdout);
     fflush(stdout);
 
-    if (fread(&length, sizeof(length), stdin) < 0)
+    if (__fread(&length, sizeof(length), stdin) < 0)
         return 0;
 
     if (length >= INT_MAX)
         return 0;
 
-    file = malloc(length);
-    if (fread(file, length, stdin) < 0)
+    file = __malloc(length);
+    if (__fread(file, length, stdin) < 0)
         return 0;
 
     if (file->magic != MAGIC || file->major != MAJOR || file->minor < MINOR)
         goto invalid;
 
-    fwrite("\x01", 1, stdout);
+    __fwrite("\x01", 1, stdout);
 
     pkt = &file->pkt[0];
     for (i = 0; (uintptr_t)pkt < (uintptr_t)file + length; i++)
@@ -112,7 +112,7 @@ invalid:
             break;
 
         value = filter_execute(filter, (unsigned char *)pkt, sizeof(pkt_hdr_t) + pkt->length);
-        fwrite(&value, sizeof(value), stdout);
+        __fwrite(&value, sizeof(value), stdout);
         fprintf(stderr, "Packet %d: returned %08X\n", i, value);
 
         pkt = (pkt_hdr_t *)&pkt->data[pkt->length];
@@ -120,7 +120,7 @@ invalid:
 
     fflush(stdout);
 
-    free(file);
-    free(filter);
+    __free(file);
+    __free(filter);
     return 0;
 }

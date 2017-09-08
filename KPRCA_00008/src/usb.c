@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -101,12 +101,12 @@ static const ep_desc_t ep_desc[2] = {
 static devinfo_t device_info = {
     .path = "/sys/devices/pci0000:00/0000:00:1d.1/usb1/1-1",
     .busid = "1-1",
-    .busnum = htobe32(1),
-    .devnum = htobe32(1),
-    .speed = htobe32(3), /* USB_SPEED_HIGH */
-    .vendor = htobe16(0x6666),
-    .product = htobe16(0xDEAD),
-    .device = htobe16(0x0100),
+    .busnum = __htobe32(1),
+    .devnum = __htobe32(1),
+    .speed = __htobe32(3), /* USB_SPEED_HIGH */
+    .vendor = __htobe16(0x6666),
+    .product = __htobe16(0xDEAD),
+    .device = __htobe16(0x0100),
     .dev_class = 0x00,
     .dev_subclass = 0x00,
     .dev_proto = 0x00,
@@ -123,25 +123,25 @@ static const intf_t device_intf = {
 
 static void fill_submit_reply(submit_rep_t *rep, urb_t *urb, uint32_t status, uint32_t length)
 {
-    rep->hdr.command = htobe32(SUBMIT_REP);
-    rep->hdr.seqnum = htobe32(urb->seqnum);
-    rep->hdr.devid = htobe32(urb->devid);
-    rep->hdr.direction = htobe32(urb->direction);
-    rep->hdr.endpoint = htobe32(urb->endpoint);
-    rep->length = htobe32(length);
-    rep->status = htobe32(status);
-    rep->start_frame = htobe32(0);
-    rep->number_of_packets = htobe32(0);
-    rep->error_length = htobe32(0);
-    memset(rep->setup, 0, sizeof(rep->setup));
+    rep->hdr.command = __htobe32(SUBMIT_REP);
+    rep->hdr.seqnum = __htobe32(urb->seqnum);
+    rep->hdr.devid = __htobe32(urb->devid);
+    rep->hdr.direction = __htobe32(urb->direction);
+    rep->hdr.endpoint = __htobe32(urb->endpoint);
+    rep->length = __htobe32(length);
+    rep->status = __htobe32(status);
+    rep->start_frame = __htobe32(0);
+    rep->number_of_packets = __htobe32(0);
+    rep->error_length = __htobe32(0);
+    __memset(rep->setup, 0, sizeof(rep->setup));
 }
 
 static void send_config_rep(usb_t *self, urb_t *urb)
 {
     uint8_t data[config_desc.wTotalLength];
-    memcpy(&data[0], &config_desc, sizeof(config_desc));
-    memcpy(&data[sizeof(config_desc)], &intf_desc, sizeof(intf_desc));
-    memcpy(&data[sizeof(config_desc)+sizeof(intf_desc)], &ep_desc, sizeof(ep_desc));
+    __memcpy(&data[0], &config_desc, sizeof(config_desc));
+    __memcpy(&data[sizeof(config_desc)], &intf_desc, sizeof(intf_desc));
+    __memcpy(&data[sizeof(config_desc)+sizeof(intf_desc)], &ep_desc, sizeof(ep_desc));
 
     uint32_t length = urb->length;
     if (config_desc.wTotalLength < length)
@@ -199,15 +199,15 @@ static int handle_ep0(usb_t *self, urb_t *urb)
 static int handle_devlist(usb_t *self, metadata_hdr_t *hdr)
 {
     devlist_rep_t rep;
-    memset(&rep, 0, sizeof(rep));
+    __memset(&rep, 0, sizeof(rep));
 
-    rep.hdr.version = htobe16(VERSION_CODE);
-    rep.hdr.command = htobe16(DEVLIST_REP);
-    rep.hdr.status = htobe16(0);
+    rep.hdr.version = __htobe16(VERSION_CODE);
+    rep.hdr.command = __htobe16(DEVLIST_REP);
+    rep.hdr.status = __htobe16(0);
     /*
      * hard-coded to 1 USB Mass Storage device
      */
-    rep.length = htobe32(1);
+    rep.length = __htobe32(1);
 
     self->send(&rep, sizeof(rep));
     self->send(&device_info, sizeof(device_info));
@@ -225,9 +225,9 @@ static int handle_import(usb_t *self, metadata_hdr_t *hdr)
 
     if (memcmp(req.busid, device_info.busid, sizeof(req.busid)) == 0)
     {
-        rep.hdr.version = htobe16(VERSION_CODE);
-        rep.hdr.command = htobe16(IMPORT_REP);
-        rep.hdr.status = htobe16(0);
+        rep.hdr.version = __htobe16(VERSION_CODE);
+        rep.hdr.command = __htobe16(IMPORT_REP);
+        rep.hdr.status = __htobe16(0);
         rep.device = device_info;
 
         if (msc_init(&self->msc))
@@ -237,9 +237,9 @@ static int handle_import(usb_t *self, metadata_hdr_t *hdr)
     }
     else
     {
-        rep.hdr.version = htobe16(VERSION_CODE);
-        rep.hdr.command = htobe16(IMPORT_REP);
-        rep.hdr.status = htobe32(1);
+        rep.hdr.version = __htobe16(VERSION_CODE);
+        rep.hdr.command = __htobe16(IMPORT_REP);
+        rep.hdr.status = __htobe32(1);
 
         self->send(&rep.hdr, sizeof(rep.hdr));
     }
@@ -256,27 +256,27 @@ static int handle_submit(usb_t *self, data_hdr_t *hdr)
     if (self->recv(&req, sizeof(req)) != sizeof(req))
         return 0;
 
-    if (be32toh(req.length) >= 0x80000000)
+    if (__be32toh(req.length) >= 0x80000000)
         return 0;
 
-    if (be32toh(hdr->direction) == DIR_OUT)
-        urb = malloc(sizeof(urb_t) + be32toh(req.length));
+    if (__be32toh(hdr->direction) == DIR_OUT)
+        urb = __malloc(sizeof(urb_t) + __be32toh(req.length));
     else
         urb = &small_urb;
     if (urb == NULL)
         return 0;
 
-    urb->devid = be32toh(hdr->devid);
-    urb->seqnum = be32toh(hdr->seqnum);
-    urb->direction = be32toh(hdr->direction);
-    urb->endpoint = be32toh(hdr->endpoint);
-    urb->flags = be32toh(req.flags);
-    urb->length = be32toh(req.length);
-    urb->interval = be32toh(req.interval);
-    memcpy(urb->setup, req.setup, sizeof(urb->setup));
+    urb->devid = __be32toh(hdr->devid);
+    urb->seqnum = __be32toh(hdr->seqnum);
+    urb->direction = __be32toh(hdr->direction);
+    urb->endpoint = __be32toh(hdr->endpoint);
+    urb->flags = __be32toh(req.flags);
+    urb->length = __be32toh(req.length);
+    urb->interval = __be32toh(req.interval);
+    __memcpy(urb->setup, req.setup, sizeof(urb->setup));
     if (urb->direction == DIR_OUT && self->recv(urb->data, urb->length) != urb->length)
     {
-        free(urb);
+        __free(urb);
         return 0;
     }
 
@@ -322,9 +322,9 @@ int usb_handle_packet(usb_t *self)
         metadata_hdr_t hdr;
         if (self->recv(&hdr, sizeof(hdr)) != sizeof(hdr))
             return 0;
-        if (be16toh(hdr.version) != VERSION_CODE)
+        if (__be16toh(hdr.version) != VERSION_CODE)
             return 0;
-        const command_t *command = lookup_command((1<<31) | be16toh(hdr.command));
+        const command_t *command = lookup_command((1<<31) | __be16toh(hdr.command));
         if (command == NULL)
             return 0;
         return command->handler(self, &hdr);
@@ -335,7 +335,7 @@ int usb_handle_packet(usb_t *self)
         data_hdr_t hdr;
         if (self->recv(&hdr, sizeof(hdr)) != sizeof(hdr))
             return 0;
-        const command_t *command = lookup_command(be32toh(hdr.command));
+        const command_t *command = lookup_command(__be32toh(hdr.command));
         if (command == NULL)
             return 0;
         return command->handler(self, &hdr);
@@ -362,9 +362,9 @@ int usb_init(usb_t *self)
 
     int busnum = id / 10;
     int devnum = id % 10;
-    device_info.busnum = htobe32(busnum);
-    device_info.devnum = htobe32(devnum);
-    memset(device_info.busid, 0, sizeof(device_info.busid));
+    device_info.busnum = __htobe32(busnum);
+    device_info.devnum = __htobe32(devnum);
+    __memset(device_info.busid, 0, sizeof(device_info.busid));
     device_info.busid[0] = busnum + '0';
     device_info.busid[1] = '-';
     device_info.busid[2] = devnum + '0';

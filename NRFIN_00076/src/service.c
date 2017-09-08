@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -71,23 +71,23 @@ int main(void) {
         Request req;
         RECV(&req, sizeof(Request));
 
-        if (0 == memcmp(LOAD_DIGRAPH, (const char *)req.cmd, sizeof(LOAD_DIGRAPH))) {
+        if (0 == __memcmp(LOAD_DIGRAPH, (const char *)req.cmd, sizeof(LOAD_DIGRAPH))) {
             ret = load_resort_digraph();
-        } else if (0 == memcmp(LOAD_RIDER_GROUP, (const char *)req.cmd, sizeof(LOAD_RIDER_GROUP))) {
+        } else if (0 == __memcmp(LOAD_RIDER_GROUP, (const char *)req.cmd, sizeof(LOAD_RIDER_GROUP))) {
             ret = load_rider_group();
-        } else if (0 == memcmp(LOAD_RIDER_SINGLE, (const char *)req.cmd, sizeof(LOAD_RIDER_SINGLE))) {
+        } else if (0 == __memcmp(LOAD_RIDER_SINGLE, (const char *)req.cmd, sizeof(LOAD_RIDER_SINGLE))) {
             ret = load_rider_single();
-        } else if (0 == memcmp(UNLOAD_RIDERS, (const char *)req.cmd, sizeof(UNLOAD_RIDERS))) {
+        } else if (0 == __memcmp(UNLOAD_RIDERS, (const char *)req.cmd, sizeof(UNLOAD_RIDERS))) {
             ret = unload_riders();
-        } else if (0 == memcmp(START, (const char *)req.cmd, sizeof(START))) {
+        } else if (0 == __memcmp(START, (const char *)req.cmd, sizeof(START))) {
             ret = start_simulation();
-        } else if (0 == memcmp(RESET, (const char *)req.cmd, sizeof(RESET))) {
+        } else if (0 == __memcmp(RESET, (const char *)req.cmd, sizeof(RESET))) {
             ret = reset_simulation();
-        } else if (0 == memcmp(LIFT_STATS, (const char *)req.cmd, sizeof(LIFT_STATS))) {
+        } else if (0 == __memcmp(LIFT_STATS, (const char *)req.cmd, sizeof(LIFT_STATS))) {
             ret = lift_stats();
-        } else if (0 == memcmp(TRAIL_STATS, (const char *)req.cmd, sizeof(TRAIL_STATS))) {
+        } else if (0 == __memcmp(TRAIL_STATS, (const char *)req.cmd, sizeof(TRAIL_STATS))) {
             ret = trail_stats();
-        } else if (0 == memcmp(RIDER_STATS, (const char *)req.cmd, sizeof(RIDER_STATS))) {
+        } else if (0 == __memcmp(RIDER_STATS, (const char *)req.cmd, sizeof(RIDER_STATS))) {
             ret = rider_stats();
         } else  {
             ret = -1;

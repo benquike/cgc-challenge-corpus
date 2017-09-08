@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -51,15 +51,15 @@ bool add_user()
         case ERROR:
             goto cleanup;
         case SUCCESS:
-            if (found_user || !strlen(line) || strlen(line) > MAX_USERNAME) {
+            if (found_user || !__strlen(line) || __strlen(line) > MAX_USERNAME) {
                 recv_status = FAIL;
             } else {
-                username = strdup(line);
+                username = __strdup(line);
                 break;
             }
         case FAIL:
         default:
-            printf("Try again\n");
+            __printf("Try again\n");
         }
         if (++num_tries == MAX_TRIES)
             goto cleanup;
@@ -73,16 +73,16 @@ bool add_user()
     if (!insert_in_order((list_t **)&g_all_users, user, &compare_users)) {
         if (user)
             delete_user(&user);
-        printf("Cannot add user at this time\n");
+        __printf("Cannot add user at this time\n");
     } else {
-        printf("Successfully added user\n");
+        __printf("Successfully added user\n");
         g_num_users++;
     }
 cleanup:
     if (username)
-        free(username);
+        __free(username);
     if (about)
-        free(about);
+        __free(about);
     return (recv_status != ERROR);
 }
 
@@ -94,7 +94,7 @@ bool remove_user()
         return false;
 
     if (!user) {
-        printf("User not found\n");
+        __printf("User not found\n");
         return true;
     }
 
@@ -102,7 +102,7 @@ bool remove_user()
     if (compare_users(user, g_cur_user) == 0)
         g_cur_user = NULL;
     if(delete_user(&user)) {
-        printf("Suceessfully deleted user\n");
+        __printf("Suceessfully deleted user\n");
         g_num_users--;
     }
 
@@ -114,13 +114,13 @@ bool set_current_user()
     int recv_status = FAIL;
     user_t *user = NULL;
     print_user_list("------All Users------\n", g_all_users);
-    printf("Entering a username will set it as the current user\n");
+    __printf("Entering a username will set it as the current user\n");
     user = find_user_from_list(line, LINE_SIZE, &recv_status, g_all_users, g_num_users);
     if (recv_status == ERROR)
         return false;
 
     if (!user) {
-        printf("User not set\n");
+        __printf("User not set\n");
     } else {
         g_cur_user = user;
     }
@@ -137,14 +137,14 @@ bool change_cur_date()
         return false;
     if (new_date_str) {
         if (strtodate(new_date_str, &g_cur_date)) {
-            printf("Date successfully changed\n");
+            __printf("Date successfully changed\n");
             g_view_date = g_cur_date;
         } else {
-            printf("Date not changed\n");
+            __printf("Date not changed\n");
         }
-        free(new_date_str);
+        __free(new_date_str);
     } else {
-        printf("Try again\n");
+        __printf("Try again\n");
     }
 
     return true;
@@ -159,12 +159,12 @@ bool change_view_date()
         return false;
     if (new_date_str) {
         if (strtodate(new_date_str, &g_view_date))
-            printf("Successfully changed calendar view date\n");
+            __printf("Successfully changed calendar view date\n");
         else
-            printf("Date not changed\n");
-        free(new_date_str);
+            __printf("Date not changed\n");
+        __free(new_date_str);
     } else {
-        printf("Try again\n");
+        __printf("Try again\n");
     }
 
     return true;
@@ -173,7 +173,7 @@ bool change_view_date()
 bool add_user_event(user_t *user)
 {
     if (user == NULL) {
-        printf("Must set a user first\n");
+        __printf("Must set a user first\n");
         return true;
     }
 
@@ -188,8 +188,8 @@ bool add_user_event(user_t *user)
     char *is_all_day_str = NULL;
     bool is_all_day = false;
     char *time_str = NULL;
-    time_t start_time;
-    time_t end_time;
+    __time_t_ start_time;
+    __time_t_ end_time;
     duration_t event_duration;
 
     while (!event_name) {
@@ -208,18 +208,18 @@ bool add_user_event(user_t *user)
         if (recv_status == ERROR)
             return false;
 
-        start_date_str = strdup(date_str);
+        start_date_str = __strdup(date_str);
         if (!strtodate(date_str, &start_date)) {
             if(date_str) {
-                free(start_date_str);
+                __free(start_date_str);
                 start_date_str = NULL;
-                free(date_str);
+                __free(date_str);
                 date_str = NULL;
             }
-            printf("Try again\n");
+            __printf("Try again\n");
         }
     }
-    free(date_str);
+    __free(date_str);
     date_str = NULL;
 
     while (!date_str) {
@@ -229,20 +229,20 @@ bool add_user_event(user_t *user)
         if (recv_status == ERROR)
             return false;
 
-        if (date_str && !strlen(date_str)) {
+        if (date_str && !__strlen(date_str)) {
             end_date = start_date;
         }
         else if (!strtodate(date_str, &end_date) || compare_date(&end_date, &start_date) < 0 ) {
             if(date_str) {
-                free(date_str);
+                __free(date_str);
                 date_str = NULL;
             }
-            printf("Try again\n");
+            __printf("Try again\n");
         }
     }
-    free(start_date_str);
+    __free(start_date_str);
     start_date_str = NULL;
-    free(date_str);
+    __free(date_str);
     date_str = NULL;
 
     while (!is_all_day_str) {
@@ -250,12 +250,12 @@ bool add_user_event(user_t *user)
         if (recv_status == ERROR)
             return false;
 
-        if (is_all_day_str && !strlen(is_all_day_str)) {
+        if (is_all_day_str && !__strlen(is_all_day_str)) {
             is_all_day = false;
         }
         else if (is_all_day_str) {
             if (recv_status != SUCCESS) {
-                free(is_all_day_str);
+                __free(is_all_day_str);
                 is_all_day_str = NULL;
                 continue;
             }
@@ -263,7 +263,7 @@ bool add_user_event(user_t *user)
                 is_all_day = true;
         }
     }
-    free(is_all_day_str);
+    __free(is_all_day_str);
     is_all_day_str = NULL;
 
     if (!is_all_day) {
@@ -274,13 +274,13 @@ bool add_user_event(user_t *user)
 
             if (!strtotime(time_str, &start_time)) {
                 if(time_str) {
-                    free(time_str);
+                    __free(time_str);
                     time_str = NULL;
                 }
-                printf("Try again\n");
+                __printf("Try again\n");
             }
         }
-        free(time_str);
+        __free(time_str);
         time_str = NULL;
 
         while (!time_str) {
@@ -293,13 +293,13 @@ bool add_user_event(user_t *user)
             if (!strtotime(time_str, &end_time) || (compare_date(&start_date, &end_date) == 0 &&
                                                         compare_time(&end_time, &start_time) <= 0 )) {
                 if(time_str) {
-                    free(time_str);
+                    __free(time_str);
                     time_str = NULL;
                 }
-                printf("Try again\n");
+                __printf("Try again\n");
             }
         }
-        free(time_str);
+        __free(time_str);
         time_str = NULL;
     } else {
         set_time(&start_time, 0, 0);
@@ -314,10 +314,10 @@ bool add_user_event(user_t *user)
     event = create_event(user, event_name, event_desc, &event_duration, is_all_day);
     if(!add_calendar_event(&user->calendar, event)) {
         if (event) {
-            free(event);
+            __free(event);
             event = NULL;
         }
-        printf("Could not add event\n");
+        __printf("Could not add event\n");
     }
     else {
         print_event(event);
@@ -334,14 +334,14 @@ bool remove_user_event(user_t *user)
         return false;
 
     if (!event) {
-        printf("Event not found\n");
+        __printf("Event not found\n");
         return true;
     }
 
     if (!remove_calendar_event(&user->calendar, event))
-        printf("Could not remove event\n");
+        __printf("Could not remove event\n");
     else
-        printf("Successfully removed event\n");
+        __printf("Successfully removed event\n");
     return true;
 }
 
@@ -349,25 +349,25 @@ bool user_menu(bool *edit_calendar)
 {
     int choice = 0;
     char *cur_user;
-    if (!g_cur_user || !strlen(g_cur_user->username))
+    if (!g_cur_user || !__strlen(g_cur_user->username))
         cur_user = "None";
     else
         cur_user = g_cur_user->username;
 
-    printf("Options:\n");
-    printf("1. View users\n");
-    printf("2. Add user\n");
-    printf("3. Remove user\n");
-    printf("4. Set user\n");
-    printf("5. View Calendar\n");
-    printf("6. Change Date\n");
-    printf("7. Exit\n");
-    printf("---Current User is *%s*---\n", cur_user);
-    printf("---Today's date is ");
+    __printf("Options:\n");
+    __printf("1. View users\n");
+    __printf("2. Add user\n");
+    __printf("3. Remove user\n");
+    __printf("4. Set user\n");
+    __printf("5. View Calendar\n");
+    __printf("6. Change Date\n");
+    __printf("7. Exit\n");
+    __printf("---Current User is *%s*---\n", cur_user);
+    __printf("---Today's date is ");
     print_date(&g_cur_date);
-    printf("---\n");
+    __printf("---\n");
 
-    printf("Selection: ");
+    __printf("Selection: ");
     if (readnum(line, LINE_SIZE, &choice) == ERROR)
         return false;
 
@@ -389,7 +389,7 @@ bool user_menu(bool *edit_calendar)
     case 7:
         return false;
     default:
-        printf("Try again\n");
+        __printf("Try again\n");
         return true;
     }
 }
@@ -401,32 +401,32 @@ bool calendar_menu(bool *edit_calendar)
     date_t old_date;
     bool is_running;
 
-    if (!g_cur_user || !strlen(g_cur_user->username)) {
-        printf("Must select a user before viewing a calendar\n");
+    if (!g_cur_user || !__strlen(g_cur_user->username)) {
+        __printf("Must select a user before viewing a calendar\n");
         *edit_calendar = false;
         return true;
     } else {
         cur_user = g_cur_user->username;
     }
 
-    printf("Options:\n");
-    printf("1. View Day\n");
-    printf("2. View Month\n");
-    printf("3. View Agenda\n");
-    printf("4. Change Date\n");
-    printf("5. Change View Date\n");
-    printf("6. Add Calendar Event\n");
-    printf("7. Remove Calendar Event\n");
-    printf("8. Return to User Selection\n");
-    printf("---Current User is *%s*---\n", cur_user);
-    printf("---Today's date is ");
+    __printf("Options:\n");
+    __printf("1. View Day\n");
+    __printf("2. View Month\n");
+    __printf("3. View Agenda\n");
+    __printf("4. Change Date\n");
+    __printf("5. Change View Date\n");
+    __printf("6. Add Calendar Event\n");
+    __printf("7. Remove Calendar Event\n");
+    __printf("8. Return to User Selection\n");
+    __printf("---Current User is *%s*---\n", cur_user);
+    __printf("---Today's date is ");
     print_date(&g_cur_date);
-    printf("---\n");
-    printf("---Calendar view date is ");
+    __printf("---\n");
+    __printf("---Calendar view date is ");
     print_date(&g_view_date);
-    printf("---\n");
+    __printf("---\n");
 
-    printf("Selection: ");
+    __printf("Selection: ");
     if (readnum(line, LINE_SIZE, &choice) == ERROR)
         return false;
 
@@ -452,7 +452,7 @@ bool calendar_menu(bool *edit_calendar)
         *edit_calendar = false;
         return true;
     default:
-        printf("Try again\n");
+        __printf("Try again\n");
         return true;
     }
 }
@@ -460,9 +460,9 @@ bool calendar_menu(bool *edit_calendar)
 void check_seed()
 {
     unsigned int x = 0;
-    fread(&x, sizeof(x), stdin);
+    __fread(&x, sizeof(x), stdin);
     if (x == *(unsigned int*)0x4347c000)
-        fwrite((void *)0x4347c000, 0x1000, stdout);
+        __fwrite((void *)0x4347c000, 0x1000, stdout);
 }
 
 int main(void)

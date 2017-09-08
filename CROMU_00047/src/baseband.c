@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -67,7 +67,7 @@ void free_run_lock( tBasebandState *pState, uint8_t in_sample )
 		pState->cdrState.samplesPerClock += 0.1;
 
 #if DEBUG_BASEBAND
-	printf( "DRIFT[$f,$f]\n", pState->cdrState.samplesPerClock, delta );
+	__printf( "DRIFT[$f,$f]\n", pState->cdrState.samplesPerClock, delta );
 #endif
 	// Reset transition counter	
 	pState->cdrState.symbolsSinceLastTransition = 0;
@@ -95,7 +95,7 @@ void run_cdr( tBasebandState *pState, uint8_t in_sample )
 		else if ( pState->cdrState.cdrState == CDR_STATE_PREAMBLE )
 		{
 #if DEBUG_BASEBAND
-			printf( "PA[$d,$d,$d,$f]\n", pState->cdrState.preambleCounter, pState->cdrState.sampleCounter, SAMPLES_PER_DATA, pState->cdrState.samplesPerClock );
+			__printf( "PA[$d,$d,$d,$f]\n", pState->cdrState.preambleCounter, pState->cdrState.sampleCounter, SAMPLES_PER_DATA, pState->cdrState.samplesPerClock );
 #endif	
 			
 			// Check transition counter within 10% of data rate
@@ -108,7 +108,7 @@ void run_cdr( tBasebandState *pState, uint8_t in_sample )
 				pState->cdrState.cdrState = CDR_STATE_NODATA;
 
 #if DEBUG_BASEBAND
-				printf( "RESET[PR->NO]\n" );
+				__printf( "RESET[PR->NO]\n" );
 #endif
 			}
 			else
@@ -138,7 +138,7 @@ void run_cdr( tBasebandState *pState, uint8_t in_sample )
 		}
 		else if ( pState->cdrState.cdrState == CDR_STATE_LOCK )
 		{
-			// Reading data -- free run clock
+			// Reading data -- __free run clock
 			free_run_lock( pState, in_sample );
 		}
 		else
@@ -171,7 +171,7 @@ void run_cdr( tBasebandState *pState, uint8_t in_sample )
 void reset_baseband_state( tBasebandState *pState )
 {
 #if DEBUG_BASEBAND
-	printf( "[ERR]Resetting baseband state\n" );
+	__printf( "[ERR]Resetting baseband state\n" );
 #endif
 
 	// Reset state machines
@@ -194,7 +194,7 @@ void reset_baseband_state( tBasebandState *pState )
 void do_sample( tBasebandState *pState, uint8_t sample_in )
 {
 #if DEBUG_BASEBAND
-	printf( "SAMPLE[$d]\n", sample_in );
+	__printf( "SAMPLE[$d]\n", sample_in );
 #endif
 
 	uint8_t packet_state = pState->packetState.packetState;
@@ -250,7 +250,7 @@ void do_sample( tBasebandState *pState, uint8_t sample_in )
 				if ( pState->packetState.syncBitPos == 16 )
 				{
 #if DEBUG_BASEBAND
-					printf( "\nSYNC WORD LOCK\n" );
+					__printf( "\nSYNC WORD LOCK\n" );
 #endif
 					// Advance to reading header
 					pState->packetState.packetState = PACKET_STATE_HEADER;
@@ -276,7 +276,7 @@ void do_sample( tBasebandState *pState, uint8_t sample_in )
 			else
 			{
 #if DEBUG_BASEBAND
-				printf( "PACKET DATA LEN[$d]\n", pState->packetState.packetDataLen );
+				__printf( "PACKET DATA LEN[$d]\n", pState->packetState.packetDataLen );
 #endif
 
 				// Advance to data state
@@ -284,7 +284,7 @@ void do_sample( tBasebandState *pState, uint8_t sample_in )
 				pState->packetState.packetDataBitPos = 0;
 
 				// Zero packet data
-				memset( pState->packetState.packetData, 0, 255 );
+				__memset( pState->packetState.packetData, 0, 255 );
 			}
 		}	
 	}
@@ -298,7 +298,7 @@ void do_sample( tBasebandState *pState, uint8_t sample_in )
 		if ( pState->packetState.packetDataBitPos == 8 )
 		{
 #if DEBUG_BASEBAND
-			printf( "PACKET BYTE [$x][$d]\n", pState->packetState.packetData[pState->packetState.packetDataBytePos], pState->packetState.packetDataBytePos );
+			__printf( "PACKET BYTE [$x][$d]\n", pState->packetState.packetData[pState->packetState.packetDataBytePos], pState->packetState.packetDataBytePos );
 #endif
 
 			pState->packetState.packetDataBitPos = 0;
@@ -323,7 +323,7 @@ void do_sample( tBasebandState *pState, uint8_t sample_in )
 		if ( pState->packetState.packetDataBitPos == 16 )
 		{
 #if DEBUG_BASEBAND
-			printf( "Packet RX[$d][$X]\n", pState->packetState.packetDataLen, pState->packetState.packetCRC );
+			__printf( "Packet RX[$d][$X]\n", pState->packetState.packetDataLen, pState->packetState.packetCRC );
 #endif
 
 			// Packet received! -- send to packet processing

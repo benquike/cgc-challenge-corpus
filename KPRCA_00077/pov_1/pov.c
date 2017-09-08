@@ -2,12 +2,12 @@
 
 int send_string(int fd, char* s)
 {
-  unsigned l = strlen(s);
+  unsigned l = __strlen(s);
 
   if (!l)
     return -1;
 
-  return transmit_all(fd, s, strlen(s));
+  return transmit_all(fd, s, __strlen(s));
 }
 
 uint32_t ReadScreen(unsigned char** Lines)
@@ -15,19 +15,19 @@ uint32_t ReadScreen(unsigned char** Lines)
 #ifdef DEBUG
   return 0;
 #endif
-  unsigned char* read;
+  unsigned char* __read;
   unsigned read_len;
   unsigned LineCnt = 0;
 
   for (;;)
   {
     send_string(STDERR, "READING\n");
-    delimited_read(STDIN, &read, &read_len, (unsigned char *)"\n", 1);
-    Lines[LineCnt++] = read;
+    delimited_read(STDIN, &__read, &read_len, (unsigned char *)"\n", 1);
+    Lines[LineCnt++] = __read;
 
-    if (!strncmp("----", (const char *)read, 4)  || !strncmp("Erro", (const char *)read, 4))
+    if (!strncmp("----", (const char *)__read, 4)  || !strncmp("Erro", (const char *)__read, 4))
       break;
-    send_string(STDERR, (char *)read);
+    send_string(STDERR, (char *)__read);
   }
 
   send_string(STDERR, "DONE\n");
@@ -69,12 +69,12 @@ int main()
 
 
     char* s = (char *)ScreenBuf[LineCnt - 2];
-    s = strchr(s, ':');
+    s = __strchr(s, ':');
     s += 2;
 
-    int m = strtol(s, NULL, 10);
+    int m = __strtol(s, NULL, 10);
     unsigned char secret[4];
-    memcpy(secret, (void *)&m, 4);
+    __memcpy(secret, (void *)&m, 4);
 
     secret[0] ^= 0x14;
     secret[1] ^= 0x15;

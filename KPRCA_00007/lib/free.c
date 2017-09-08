@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -27,14 +27,14 @@
 #include "malloc.h"
 #include "stdlib.h"
 
-void free(void *ptr)
+void __free(void *ptr)
 {
   if (ptr == NULL)
     return;
 
   struct blk_t *blk = (struct blk_t *)((intptr_t)ptr - HEADER_PADDING);
 
-  if (blk->free != 0)
+  if (blk->__free != 0)
     return;
 
   insert_into_flist(blk);

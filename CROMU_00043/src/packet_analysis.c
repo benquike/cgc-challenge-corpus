@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.co>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -50,7 +50,7 @@ void TransmitOptionHeader(OptionHeader *header) {
   switch(header->type) {
     case OPTION_TYPE_STRING: {
 #ifdef PATCHED
-      TransmitBytes(header->value, strlen(header->value));
+      TransmitBytes(header->value, __strlen(header->value));
 #else
       TransmitFormattedBytes(header->value);
 #endif
@@ -67,7 +67,7 @@ void TransmitOptionHeader(OptionHeader *header) {
       break;
     }
     case OPTION_TYPE_AUTHORITY: {
-      int authority = atoi(header->value);
+      int authority = __atoi(header->value);
       if ((authority < NUM_AUTHORITIES) && (authority >= 0)) {
         TransmitFormattedBytes("Capturing Authority: +s\n", authority_names[authority]);
       } else {
@@ -80,7 +80,7 @@ void TransmitOptionHeader(OptionHeader *header) {
       break;
     }
     case OPTION_TYPE_SHARING: {
-      int sharing_allowed = atoi(header->value);
+      int sharing_allowed = __atoi(header->value);
       if (sharing_allowed == 1) {
         TransmitFormattedBytes("Sharing Allowed: True\n");
       } else {
@@ -89,7 +89,7 @@ void TransmitOptionHeader(OptionHeader *header) {
       break;
     }
     case OPTION_TYPE_MODIFIED: {
-      int modified = atoi(header->value);
+      int modified = __atoi(header->value);
       if (modified == 1) {
         TransmitFormattedBytes("This content has been modified\n");
       } else {
@@ -366,7 +366,7 @@ int AnalyzeApplicationLayer(SystemState *state, Packet *packet) {
     packet->size -= 14;
     char buffer[256];
     while ((num_options > 0) && (packet->size != 0)) {
-      bzero(buffer, sizeof(buffer));
+      __bzero(buffer, sizeof(buffer));
       uint8_t length = *(uint8_t *)(packet->data);
       packet->data++;
       packet->size--;
@@ -374,7 +374,7 @@ int AnalyzeApplicationLayer(SystemState *state, Packet *packet) {
         DisplayFormatted(state, DISPLAY_APPLICATION, "Application layer too short\n");
         return -1;
       }
-      memcpy(buffer, (char *)packet->data, length);
+      __memcpy(buffer, (char *)packet->data, length);
       DisplayFormatted(state, DISPLAY_APPLICATION, "\t+s\n", buffer);
       packet->data += length;
       packet->size -= length;
@@ -387,10 +387,10 @@ int AnalyzeApplicationLayer(SystemState *state, Packet *packet) {
       return -1;
     }
     char namebuf[33];
-    bzero(namebuf, sizeof(namebuf));
-    memcpy(namebuf, (char *)(packet->data + 6), 32);
+    __bzero(namebuf, sizeof(namebuf));
+    __memcpy(namebuf, (char *)(packet->data + 6), 32);
     DisplayFormatted(state, DISPLAY_APPLICATION, "Filename: +s\n", namebuf);
-    memcpy(namebuf, (char *)(packet->data + 6 + 32), 32);
+    __memcpy(namebuf, (char *)(packet->data + 6 + 32), 32);
     DisplayFormatted(state, DISPLAY_APPLICATION, "File type: +s\n", namebuf);
     packet->data += 70;
     packet->size -= 70;
@@ -411,8 +411,8 @@ int AnalyzeApplicationLayer(SystemState *state, Packet *packet) {
       return -1;
     } 
     char buffer[256];
-    bzero(buffer, sizeof(buffer));
-    memcpy(buffer, (char *)packet->data, length);
+    __bzero(buffer, sizeof(buffer));
+    __memcpy(buffer, (char *)packet->data, length);
     DisplayFormatted(state, DISPLAY_APPLICATION, "From: +s\n", buffer);
     packet->data += length;
     packet->size -= length;
@@ -430,8 +430,8 @@ int AnalyzeApplicationLayer(SystemState *state, Packet *packet) {
       return -1;
     } 
     #endif 
-    bzero(buffer, sizeof(buffer));
-    memcpy(buffer, (char *)packet->data, length);
+    __bzero(buffer, sizeof(buffer));
+    __memcpy(buffer, (char *)packet->data, length);
     DisplayFormatted(state, DISPLAY_APPLICATION, "To: +s\n", buffer);
     packet->data += length;
     packet->size -= length;
@@ -448,8 +448,8 @@ int AnalyzeApplicationLayer(SystemState *state, Packet *packet) {
       return -1;
     } 
     #endif 
-    bzero(buffer, sizeof(buffer));
-    memcpy(buffer, (char *)packet->data, length);
+    __bzero(buffer, sizeof(buffer));
+    __memcpy(buffer, (char *)packet->data, length);
     DisplayFormatted(state, DISPLAY_APPLICATION, "Subject: +s\n", buffer);
     packet->data += length;
     packet->size -= length;
@@ -477,8 +477,8 @@ int AnalyzeApplicationLayer(SystemState *state, Packet *packet) {
     if (allocate(url_length + 1, 0, (void **)&url) != 0) {
       _terminate(-1);
     }
-    bzero(url, url_length + 1);
-    memcpy(url, (char *)(packet->data), url_length);
+    __bzero(url, url_length + 1);
+    __memcpy(url, (char *)(packet->data), url_length);
     DisplayFormatted(state, DISPLAY_APPLICATION, "URL: +s\n", url);
     packet->data += url_length;
     packet->size -= url_length;
@@ -503,8 +503,8 @@ int AnalyzeApplicationLayer(SystemState *state, Packet *packet) {
     if (allocate(header_length + 1, 0, (void **)&header) != 0) {
       _terminate(-1);
     }
-    bzero(header, header_length + 1);
-    memcpy(header, (char *)(packet->data), header_length);
+    __bzero(header, header_length + 1);
+    __memcpy(header, (char *)(packet->data), header_length);
     DisplayFormatted(state, DISPLAY_APPLICATION, "Headers: +s\n", header);
     packet->data += header_length;
     packet->size -= header_length;

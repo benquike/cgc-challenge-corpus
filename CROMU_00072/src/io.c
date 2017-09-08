@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -63,23 +63,23 @@ uint32_t ReadNull(uint32_t TargetLen) {
 		return(0);
 	}
 
-	if ((Buf = (unsigned char *)calloc(TargetLen)) == NULL) {
+	if ((Buf = (unsigned char *)__calloc(TargetLen)) == NULL) {
 		_terminate(0);
 	}
 
 	while ((TotalLen < TargetLen) && (receive(STDIN, Buf+TotalLen, TargetLen-TotalLen, &rxbytes) == 0)) {
 		if (rxbytes == 0) {
-			free(Buf);
+			__free(Buf);
 			return(0);
 		}
 		TotalLen += rxbytes;
 	}
 	if (TotalLen != TargetLen) {
-		free(Buf);
+		__free(Buf);
 		return(0);
 	}
 
-	free(Buf);
+	__free(Buf);
 	return(TotalLen);
 }
 
@@ -138,13 +138,13 @@ uint8_t ReadCmd(void) {
 	uint8_t NodeCount;
 	uint32_t *SPT;
 
-	// read in the basic command header
+	// __read in the basic command header
 	if (ReadBytes((unsigned char *)&Cmd, sizeof(Command)) != sizeof(Command)) {
 		return(0);
 	}
 
 	if (Cmd.Action == CMD_SEND_NODES) {
-		// read in the indicated number of Nodes
+		// __read in the indicated number of Nodes
 #ifdef PATCHED_1
 		if ((Cmd.NumElements + NumNodes) > MAX_NODES) {
 #else
@@ -154,20 +154,20 @@ uint8_t ReadCmd(void) {
 			SendErrorResponse(RESP_ERROR_TOO_MANY_NODES);
 			return(0);
 		}
-		if ((NewNodeNames = (uint32_t *)calloc(sizeof(uint32_t)*Cmd.NumElements)) == NULL) {
+		if ((NewNodeNames = (uint32_t *)__calloc(sizeof(uint32_t)*Cmd.NumElements)) == NULL) {
 			DestroyNodes();
 			DestroyEdges();
 			_terminate(1);
 		}
 		if (ReadBytes((unsigned char *)NewNodeNames, sizeof(uint32_t)*Cmd.NumElements) != sizeof(uint32_t)*Cmd.NumElements) {
-			free(NewNodeNames);
+			__free(NewNodeNames);
 			return(0);
 		}
 
 		// make sure none of the new node names exist already
 		for (i = 0; i < Cmd.NumElements; i++) {
 			if (FindNode(NewNodeNames[i]) != NULL) {
-				free(NewNodeNames);
+				__free(NewNodeNames);
 				SendErrorResponse(RESP_ERROR_DUPLICATE_NODE);
 				return(0);
 			}
@@ -176,8 +176,8 @@ uint8_t ReadCmd(void) {
 		// Create the new nodes 
 		for (i = 0; i < Cmd.NumElements; i++) {
 			// create a new node
-			if ((NewNode = (pNode)calloc(sizeof(Node))) == NULL) {
-				free(NewNodeNames);
+			if ((NewNode = (pNode)__calloc(sizeof(Node))) == NULL) {
+				__free(NewNodeNames);
 				DestroyNodes();
 				DestroyEdges();
 				_terminate(1);
@@ -186,7 +186,7 @@ uint8_t ReadCmd(void) {
 			NewNode->Distance = SIZE_MAX;
 			// Add it to the graph
 			if (!AddNode(NewNode)) {
-				free(NewNodeNames);
+				__free(NewNodeNames);
 				DestroyNodes();
 				DestroyEdges();
 				_terminate(1);
@@ -194,30 +194,30 @@ uint8_t ReadCmd(void) {
 		}
 
 		// done creating new nodes
-		free(NewNodeNames);
+		__free(NewNodeNames);
 
 	} else if (Cmd.Action == CMD_SEND_EDGES) {
-		// read in the indicated number of Edges
+		// __read in the indicated number of Edges
 		if ((Cmd.NumElements + NumEdges) > MAX_EDGES) {
 			ReadNull(sizeof(EdgeArray)*Cmd.NumElements);
 			SendErrorResponse(RESP_ERROR_TOO_MANY_EDGES);
 			return(0);
 		}
-		if ((NewEdges = (pEdgeArray)calloc(sizeof(EdgeArray)*Cmd.NumElements)) == NULL) {
+		if ((NewEdges = (pEdgeArray)__calloc(sizeof(EdgeArray)*Cmd.NumElements)) == NULL) {
 			DestroyNodes();
 			DestroyEdges();
 			_terminate(1);
 		}
 		if (ReadBytes((unsigned char *)NewEdges, sizeof(EdgeArray)*Cmd.NumElements) != sizeof(EdgeArray)*Cmd.NumElements) {
-			free(NewEdges);
+			__free(NewEdges);
 			return(0);
 		}
 		
 		// Create the new edges 
 		for (i = 0; i < Cmd.NumElements; i++) {
 			// create a new Edge
-			if ((NewEdge = (pEdge)calloc(sizeof(Edge))) == NULL) {
-				free(NewEdges);
+			if ((NewEdge = (pEdge)__calloc(sizeof(Edge))) == NULL) {
+				__free(NewEdges);
 				DestroyNodes();
 				DestroyEdges();
 				_terminate(1);
@@ -225,16 +225,16 @@ uint8_t ReadCmd(void) {
 			// make sure the starting and ending nodes exist
 			if ((NewEdge->NodeA = FindNode(NewEdges[i].NodeA)) == NULL) {
 				SendErrorResponse(RESP_ERROR_INVALID_NODE);
-				free(NewEdge);
-				free(NewEdges);
+				__free(NewEdge);
+				__free(NewEdges);
 				DestroyNodes();
 				DestroyEdges();
 				_terminate(1);
 			}
 			if ((NewEdge->NodeZ = FindNode(NewEdges[i].NodeZ)) == NULL) {
 				SendErrorResponse(RESP_ERROR_INVALID_NODE);
-				free(NewEdge);
-				free(NewEdges);
+				__free(NewEdge);
+				__free(NewEdges);
 				DestroyNodes();
 				DestroyEdges();
 				_terminate(1);
@@ -249,14 +249,14 @@ uint8_t ReadCmd(void) {
 				}
 
 				// keep the existing edge
-				free(NewEdge);
+				__free(NewEdge);
 				continue;
 			}
 
 			// Add it to the graph
 			if (!AddEdge(NewEdge)) {
-				free(NewEdge);
-				free(NewEdges);
+				__free(NewEdge);
+				__free(NewEdges);
 				DestroyNodes();
 				DestroyEdges();
 				_terminate(1);
@@ -270,7 +270,7 @@ uint8_t ReadCmd(void) {
 			return(0);
 		}
 		SendResponse(RESP_NODE_SET, NodeCount, SPT);
-		free(SPT);
+		__free(SPT);
 
 	} else {
 		SendErrorResponse(RESP_ERROR_INVALID_CMD);

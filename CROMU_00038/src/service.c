@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -55,23 +55,23 @@ int i;
     swap_short = 0;
     swap_word = 0;
 
-    // read the first two bytes and check for the Start of Message marker
+    // __read the first two bytes and check for the Start of Message marker
     ret_code = receive_bytes((unsigned char *)&SOM, sizeof(SOM));
 
     if (ret_code == -1 ) {
 
-        printf("did not receive bytes\n");
+        __printf("did not receive bytes\n");
         _terminate(-1);
     }
 
     if (SOM != 0xFFF8) {
 
-        puts("Did not find SOM marker");
+        __puts("Did not find SOM marker");
         _terminate(-1);
     }
     else {
 
-        puts("SOM marker found");
+        __puts("SOM marker found");
     }
 
     // Now look for the next marker, which can be SAP0 or SAP1 
@@ -79,57 +79,57 @@ int i;
 
     if (ret_code == -1 ) {
 
-        printf("did not receive bytes\n");
+        __printf("did not receive bytes\n");
         _terminate(-1);
     }
 
     // SAP0
     if (marker == 0xFFF0) {
 
-        printf("SAP0 marker found\n");
+        __printf("SAP0 marker found\n");
 
         ret_code = receive_bytes((unsigned char *)&segment_size, sizeof(segment_size));
 
         if (ret_code == -1 ) {
 
-            printf("did not receive bytes\n");
+            __printf("did not receive bytes\n");
             _terminate(-1);
         }
 
         if (segment_size <=2) {
 
-            printf("Invalid segment size\n", segment_size);
+            __printf("Invalid segment size\n", segment_size);
             _terminate(-1);
         }
 
 
-        // now read and discard the rest of the SAP0 header
-        xif_data = malloc(segment_size-sizeof(segment_size));
+        // now __read and discard the rest of the SAP0 header
+        xif_data = __malloc(segment_size-sizeof(segment_size));
 
         if ((int)xif_data == 0) {
 
-            printf("Unable to allocate memory\n");
+            __printf("Unable to allocate memory\n");
             _terminate(-1);
         }
 
-        // read the rest of SAP0 and discard
+        // __read the rest of SAP0 and discard
         ret_code=receive_bytes((unsigned char *)xif_data, segment_size-sizeof(segment_size));
 
         if (ret_code == -1) {
 
-            printf("unable to read SAP0 segment\n");
+            __printf("unable to __read SAP0 segment\n");
             _terminate(-1);
         }
 
-        free(xif_data);
+        __free(xif_data);
         xif_data = 0;
 
-        // now read the next marker, which should be SAP1
+        // now __read the next marker, which should be SAP1
         ret_code = receive_bytes((unsigned char *)&marker, sizeof(marker));
 
         if (ret_code == -1 ) {
 
-            printf("did not receive bytes\n");
+            __printf("did not receive bytes\n");
             _terminate(-1);
         }
 
@@ -138,38 +138,38 @@ int i;
     // look for the SAP1 marker now
     if (marker != 0xffF1) {
 
-        printf("Did not find SAP1 marker\n");
+        __printf("Did not find SAP1 marker\n");
         _terminate(-1);
 
     }
     else {
 
-        printf("SAP1 marker found\n");
+        __printf("SAP1 marker found\n");
 
     }
 
-    // read the length of the overall segment
+    // __read the length of the overall segment
     ret_code = receive_bytes((unsigned char *)&segment_size, sizeof(segment_size));
 
     if (ret_code == -1 ) {
 
-        printf("did not receive bytes\n");
+        __printf("did not receive bytes\n");
         _terminate(-1);
     }
 
-    printf("sizeof section is @d\n", segment_size);
+    __printf("sizeof section is @d\n", segment_size);
 
     if (segment_size <= 0) {
 
-        printf("Invalid segment size\n");
+        __printf("Invalid segment size\n");
         _terminate(-1);
     }
     
-    xif_data = malloc(segment_size);
+    xif_data = __malloc(segment_size);
 
     if ((int)xif_data == 0) {
 
-        printf("Unable to allocate memory\n");
+        __printf("Unable to allocate memory\n");
         _terminate(-1);
     }
 
@@ -177,14 +177,14 @@ int i;
 
     if (ret_code == -1) {
 
-        printf("unable to read SAP1 segment\n");
+        __printf("unable to __read SAP1 segment\n");
         _terminate(-1);
     }
 
     // tiff header + xif header + the count of IFD segments
     if (segment_size < sizeof(TIFF_Hdr_Type) + 6 + 2) {
 
-        printf("not enough data received\n");
+        __printf("not enough data received\n");
         _terminate(-1);
     }
 
@@ -194,7 +194,7 @@ int i;
 
     if (tiff_hdr->Byte_Order == 0x4949) {
 
-        printf("Intel formatted integers\n");
+        __printf("Intel formatted integers\n");
 
         swap_short = intel_swap_short;
         swap_word = intel_swap_word;
@@ -202,27 +202,27 @@ int i;
 
     else if (tiff_hdr->Byte_Order == 0x4d4d) {
 
-        printf("Motorola formatted integers\n");
+        __printf("Motorola formatted integers\n");
 
         swap_short = motorola_swap_short;
         swap_word = motorola_swap_word;
     }
 #ifdef PATCHED
     else {
-        printf("Invalid header values\n");
+        __printf("Invalid header values\n");
         _terminate(-1);
     }
 #endif
 
-    printf("TagMark = @x\n", swap_short(tiff_hdr->Fixed));
+    __printf("TagMark = @x\n", swap_short(tiff_hdr->Fixed));
 
     offset = swap_word(tiff_hdr->Offset_to_IFD);
 
-    printf("Offset = @x\n", swap_word(tiff_hdr->Offset_to_IFD));
+    __printf("Offset = @x\n", swap_word(tiff_hdr->Offset_to_IFD));
 
     if (offset > segment_size) {
 
-        printf("Invalid offset\n");
+        __printf("Invalid offset\n");
         _terminate(-1);
     }
 
@@ -232,46 +232,46 @@ int i;
     // how many array entries are there
     IFD->Count = swap_short(IFD->Count);
 
-    printf("# of compatility arrays: @d\n", IFD->Count);
+    __printf("# of compatility arrays: @d\n", IFD->Count);
 
     if (IFD->Count * 12 > segment_size - sizeof(TIFF_Hdr_Type) - 6 - 2) {
 
-        printf("Invalid number of IFD entries\n");
+        __printf("Invalid number of IFD entries\n");
         _terminate(-1);
     }
 
     // loop through all of the entries in the array
     for (i=0; i< (IFD->Count); ++i) {
 
-        printf("Tag: @x (", swap_short(IFD->Entry[i].Tag));
+        __printf("Tag: @x (", swap_short(IFD->Entry[i].Tag));
         print_tag_text(swap_short(IFD->Entry[i].Tag));
-        printf(")\n");
-        printf("Type: @x (", swap_short(IFD->Entry[i].Type));
+        __printf(")\n");
+        __printf("Type: @x (", swap_short(IFD->Entry[i].Type));
         print_type(swap_short(IFD->Entry[i].Type));
-        printf(")\n");
-        printf("Count: @d\n", swap_word(IFD->Entry[i].Count));
+        __printf(")\n");
+        __printf("Count: @d\n", swap_word(IFD->Entry[i].Count));
 
         if (swap_short(IFD->Entry[i].Type) == 2) {
 
             if (swap_word(IFD->Entry[i].Value) < segment_size - 8 && swap_word(IFD->Entry[i].Value) > 0)
 #ifdef PATCHED
 		{
-		if ( strlen( (char *)(tiff_hdr) + swap_word(IFD->Entry[i].Value)) > 2048) {
+		if ( __strlen( (char *)(tiff_hdr) + swap_word(IFD->Entry[i].Value)) > 2048) {
 			((char *)(tiff_hdr))[swap_word(IFD->Entry[i].Value)+2048] = '\x00';
 		}
 #endif
-                printf("Value: @s\n", (char *)(tiff_hdr) + swap_word(IFD->Entry[i].Value));
+                __printf("Value: @s\n", (char *)(tiff_hdr) + swap_word(IFD->Entry[i].Value));
 #ifdef PATCHED
 		}
 #endif
 
             else
 
-                printf("Value: 0\n");
+                __printf("Value: 0\n");
         }
         else {
 
-             printf("Value: @u\n", swap_word(IFD->Entry[i].Value));
+             __printf("Value: @u\n", swap_word(IFD->Entry[i].Value));
 
         }
 
@@ -291,7 +291,7 @@ int i;
         }
     }
  
-    puts("Finished processing");
+    __puts("Finished processing");
 
 }  // main  
 

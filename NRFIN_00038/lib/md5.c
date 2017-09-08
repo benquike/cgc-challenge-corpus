@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -131,12 +131,12 @@ md5_pad(unsigned char *dst, const unsigned char *src, size_t n,
     size_t to_pad;
 
     if (n >= 64) {
-        memcpy(dst, src, 64);
+        __memcpy(dst, src, 64);
         return n == 64;
     } else {
         to_pad = 64 - n;
 
-        memcpy(dst, src, n);
+        __memcpy(dst, src, n);
         dst += n;
 
 #ifndef PATCHED
@@ -144,7 +144,7 @@ md5_pad(unsigned char *dst, const unsigned char *src, size_t n,
         (void)(total);
         (void)(is_extra);
 
-        memset(dst, '\x80', to_pad);
+        __memset(dst, '\x80', to_pad);
         return 0;
 #else
         if (!is_extra) {
@@ -152,7 +152,7 @@ md5_pad(unsigned char *dst, const unsigned char *src, size_t n,
             to_pad--;
         }
 
-        memset(dst, '\x00', to_pad >= 8 ? to_pad - 8 : to_pad);
+        __memset(dst, '\x00', to_pad >= 8 ? to_pad - 8 : to_pad);
         if (to_pad < 8)
             return 1;
 
@@ -188,7 +188,7 @@ md5_update(const unsigned char *msg, size_t n, unsigned int total, struct md5_ct
     }
 
     // This may be optimized out but make a token effort to c=ear this info
-    memset(block, '\x00', sizeof(block));
+    __memset(block, '\x00', sizeof(block));
     total = extra_block_needed = 0;
 }
 
@@ -210,7 +210,7 @@ md5(const unsigned char *msg, size_t n, unsigned char *digest)
     *(unsigned int *)(digest + 12) = ctx.DD;
 
     // This may be optimized out but make a token effort to clear this info
-    memset(&ctx, '\x00', sizeof(ctx));
+    __memset(&ctx, '\x00', sizeof(ctx));
 }
 
 void
@@ -221,13 +221,13 @@ md5_hmac(const unsigned char *key, size_t key_len, const unsigned char *msg,
     unsigned char key_block[64], o_key_pad[64], i_key_pad[64];
     size_t i;
 
-    memset(key_block, '\x00', 64);
+    __memset(key_block, '\x00', 64);
 
     if (key_len > 64)
         md5(key, key_len, key_block);
 
     if (key_len < 64)
-        memcpy(key_block, key, key_len);
+        __memcpy(key_block, key, key_len);
 
     for (i = 0; i < 64; i++) {
         o_key_pad[i] = 0x5c ^ key_block[i];
@@ -251,10 +251,10 @@ md5_hmac(const unsigned char *key, size_t key_len, const unsigned char *msg,
     *(unsigned int *)(mac + 12) = o_ctx.DD;
 
     // This may be optimized out but make a token effort to clear this info
-    memset(&o_ctx, '\x00', sizeof(o_ctx));
-    memset(&i_ctx, '\x00', sizeof(i_ctx));
-    memset(key_block, '\x00', sizeof(key_block));
-    memset(o_key_pad, '\x00', sizeof(o_key_pad));
-    memset(i_key_pad, '\x00', sizeof(i_key_pad));
+    __memset(&o_ctx, '\x00', sizeof(o_ctx));
+    __memset(&i_ctx, '\x00', sizeof(i_ctx));
+    __memset(key_block, '\x00', sizeof(key_block));
+    __memset(o_key_pad, '\x00', sizeof(o_key_pad));
+    __memset(i_key_pad, '\x00', sizeof(i_key_pad));
 }
 

@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,7 +35,7 @@ extern Handlers Listeners[MAX_HANDLERS];
 
 uint8_t Echo(unsigned char *Data, uint8_t DataLen, unsigned char *Response, uint8_t *ResponseLen) {
 
-        memcpy(Response, Data, DataLen);
+        __memcpy(Response, Data, DataLen);
         *ResponseLen = DataLen;
 
         return(1);
@@ -83,7 +83,7 @@ uint8_t Pwdgen(unsigned char *Data, uint8_t DataLen, unsigned char *Response, ui
 		sprintf((char *)Response, "$s$s\n", Response, Password);
 	}
 
-	*ResponseLen = strlen((char *)Response);
+	*ResponseLen = __strlen((char *)Response);
 
 	return(1);
 }

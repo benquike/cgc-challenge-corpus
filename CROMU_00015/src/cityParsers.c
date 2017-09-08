@@ -4,7 +4,7 @@ Author: John Berry <hj@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,46 +37,46 @@ int cityMenu ( pCity ci )
 	}
 
 	while (1) {
-		printf("\nCity: @s\n", ci->name);
-		printf("1) Display City Info\n");
-		printf("2) Set Mayor\n");
-		printf("3) Set Url\n");
-		printf("4) Set Population\n");
-		printf("5) Add Border\n");
-		printf("6) Delete City and Exit Menu\n");
-		printf("7) Exit Menu\n");
-		printf("Selection: ");
+		__printf("\nCity: @s\n", ci->name);
+		__printf("1) Display City Info\n");
+		__printf("2) Set Mayor\n");
+		__printf("3) Set Url\n");
+		__printf("4) Set Population\n");
+		__printf("5) Add Border\n");
+		__printf("6) Delete City and Exit Menu\n");
+		__printf("7) Exit Menu\n");
+		__printf("Selection: ");
 
-		bzero( selection, 30 );
-		receive_until( selection, '\n', 4 );
-		choice = atoi( selection );
+		__bzero( selection, 30 );
+		__receive_until( selection, '\n', 4 );
+		choice = __atoi( selection );
 
 		switch (choice) {
 			case 1:
 				printCityInfo( ci );
 				break;
 			case 2:
-				printf("\n-> ");
-				bzero( selection, 30 );
-				receive_until( selection, '\n', 29);
+				__printf("\n-> ");
+				__bzero( selection, 30 );
+				__receive_until( selection, '\n', 29);
 
 				choice = 0;
-				while ( isalnum(selection[choice]) || selection[choice] == ' ') {
+				while ( __isalnum(selection[choice]) || selection[choice] == ' ') {
 					ci->mayor[choice] = selection[choice];
 					choice++;
 				}
 				ci->mayor[choice] = '\x00';
 				break;
 			case 3:
-				printf("\n-> ");
-				bzero( selection, 30 );
-				receive_until( selection, '\n', 29 );
+				__printf("\n-> ");
+				__bzero( selection, 30 );
+				__receive_until( selection, '\n', 29 );
 
 				/// While it is valid url data copy loop and copy it
 				/// Since the buffer is zeroed and the max received is 29 this loop
 				///	should be safe
 				choice = 0;
-				while( isalnum(selection[choice]) || selection[choice] == ':' || selection[choice] == '.' || selection[choice] == '/') {
+				while( __isalnum(selection[choice]) || selection[choice] == ':' || selection[choice] == '.' || selection[choice] == '/') {
 					ci->url[choice] = selection[choice];
 					choice++;
 				}
@@ -84,14 +84,14 @@ int cityMenu ( pCity ci )
 				ci->url[choice] = '\x00';
 				break;
 			case 4:
-				printf("\n-> ");
-				bzero( selection, 30);
-				receive_until( selection, '\n', 29 );
-				ci->population = atoi( selection);
+				__printf("\n-> ");
+				__bzero( selection, 30);
+				__receive_until( selection, '\n', 29 );
+				ci->population = __atoi( selection);
 				break;
 			case 5:
 				if ( ci->border_count > CITYBORDERMAX ) {
-					printf("Max Borders\n");
+					__printf("Max Borders\n");
 					break;
 				}
 
@@ -100,25 +100,25 @@ int cityMenu ( pCity ci )
                                         continue;
                                 }
 
-                                printf("Lat Start: ");
-                                bzero(selection, 30 );
-                                receive_until( selection, '\n', 19 );
-                                pb->latStart = atof(selection);
+                                __printf("Lat Start: ");
+                                __bzero(selection, 30 );
+                                __receive_until( selection, '\n', 19 );
+                                pb->latStart = __atof(selection);
 
-                                printf("Long Start: ");
-                                bzero(selection, 30 );
-                                receive_until( selection, '\n', 19 );
-                                pb->lngStart = atof(selection);
+                                __printf("Long Start: ");
+                                __bzero(selection, 30 );
+                                __receive_until( selection, '\n', 19 );
+                                pb->lngStart = __atof(selection);
 
-                                printf("Lat End: ");
-                                bzero(selection, 30 );
-                                receive_until( selection, '\n', 19 );
-                                pb->latEnd = atof(selection);
+                                __printf("Lat End: ");
+                                __bzero(selection, 30 );
+                                __receive_until( selection, '\n', 19 );
+                                pb->latEnd = __atof(selection);
 
-                                printf("Long End: ");
-                                bzero(selection, 30 );
-                                receive_until( selection, '\n', 19 );
-                                pb->lngEnd = atof(selection);
+                                __printf("Long End: ");
+                                __bzero(selection, 30 );
+                                __receive_until( selection, '\n', 19 );
+                                pb->lngEnd = __atof(selection);
 
                                 ci->borders[ ci->border_count ] = pb;
                                 ci->border_count++;
@@ -131,7 +131,7 @@ int cityMenu ( pCity ci )
 				return 1;
 				break;
 			default:
-				printf("Invalid\n");
+				__printf("Invalid\n");
 				break;
 		};
 	}
@@ -154,7 +154,7 @@ void freeCharPtr( char**buffer )
 		return;
 	}
 
-	deallocate(*buffer, strlen(*buffer) + 1 );
+	deallocate(*buffer, __strlen(*buffer) + 1 );
 
 	*buffer = NULL;
 
@@ -226,31 +226,31 @@ void printCityInfo( pCity ci )
 		return;
 	}
 
-	printf("\t\t\t\tCity: ");
+	__printf("\t\t\t\tCity: ");
 
 	if ( ci->name[0] != '\x00' ) {
-		printf("@s\n", ci->name);
+		__printf("@s\n", ci->name);
 	} else {
-		printf("Unknown\n");
+		__printf("Unknown\n");
 	}
 
 	if (ci->population >= 0 ) {
-		printf("\t\t\t\t\tPopulation: @d\n", ci->population);
+		__printf("\t\t\t\t\tPopulation: @d\n", ci->population);
 	}
 
 	if ( ci->mayor[0] != '\x00') {
-		printf("\t\t\t\t\tMayor: @s\n", ci->mayor);
+		__printf("\t\t\t\t\tMayor: @s\n", ci->mayor);
 	}
 
 	if ( ci->url[0] != '\x00' ) {
-		printf("\t\t\t\t\tUrl: @s\n", ci->url);
+		__printf("\t\t\t\t\tUrl: @s\n", ci->url);
 	}
 
 	for ( index = 0; index < ci->border_count; index++ ) {
 		b = ci->borders[index];
 
 		if ( b!= NULL ) {
-			printf("\t\t\t\t\tBorder: @f @f @f @f\n", b->latStart, b->lngStart, b->latEnd, b->lngEnd);
+			__printf("\t\t\t\t\tBorder: @f @f @f @f\n", b->latStart, b->lngStart, b->latEnd, b->lngEnd);
 		}
 	}
 
@@ -338,12 +338,12 @@ pCity cityTopLevel( pstring str )
 		goto end;
 	}
 
-	if ( strcmp( temp, "City") != 0 ) {
-		deallocate(temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, "City") != 0 ) {
+		deallocate(temp, __strlen(temp) + 1 );
 		goto end;
 	}
 
-	deallocate(temp, strlen(temp) + 1 );
+	deallocate(temp, __strlen(temp) + 1 );
 
 	skipWhiteSpace( str );
 	if ( !atChar( str, '}') ) {
@@ -367,7 +367,7 @@ pCity cityTopLevel( pstring str )
 	while ( temp != NULL ) {
 		el = elementNameToEnum( temp );
 
-		deallocate(temp, strlen(temp) + 1 );
+		deallocate(temp, __strlen(temp) + 1 );
 
 		switch (el) {
 			case name:
@@ -378,14 +378,14 @@ pCity cityTopLevel( pstring str )
 				}
 
 				/// Clear it out
-				bzero( newCity->name, 20 );
+				__bzero( newCity->name, 20 );
 
 				/// Copy the name data. It has already been filtered 
 				///	for invalid characters.
-				strncpy( newCity->name, temp, 19);
+				__strncpy( newCity->name, temp, 19);
 
 				/// Free the buffer
-				deallocate( temp, strlen(temp) + 1 );
+				deallocate( temp, __strlen(temp) + 1 );
 				temp = NULL;
 				break;
 			case mayor:
@@ -395,11 +395,11 @@ pCity cityTopLevel( pstring str )
 					goto error;
 				}
 			
-				bzero( newCity->mayor, 30 );
+				__bzero( newCity->mayor, 30 );
 #ifdef PATCHED
-				strncpy( newCity->mayor, temp, 29 );
+				__strncpy( newCity->mayor, temp, 29 );
 #else
-				strcpy( newCity->mayor, temp );
+				__strcpy( newCity->mayor, temp );
 #endif
 				freeCharPtr( &temp );
 
@@ -411,9 +411,9 @@ pCity cityTopLevel( pstring str )
 					goto error;
 				}
 
-				bzero( newCity->url, 30 );
+				__bzero( newCity->url, 30 );
 
-				strncpy( newCity->url, temp, 29 );
+				__strncpy( newCity->url, temp, 29 );
 				freeCharPtr( &temp );
 				break;
 			case border:
@@ -440,7 +440,7 @@ pCity cityTopLevel( pstring str )
 
 				break;
 			default:
-				printf("!!Invalid element ID for City\n");
+				__printf("!!Invalid element ID for City\n");
 				goto error;
 				break;
 		};
@@ -468,12 +468,12 @@ pCity cityTopLevel( pstring str )
 		goto error;
 	}
 
-	if ( strcmp( temp, "City") != 0 ) {
-		deallocate(temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, "City") != 0 ) {
+		deallocate(temp, __strlen(temp) + 1 );
 		goto error;
 	}
 
-	deallocate( temp, strlen(temp) + 1 );
+	deallocate( temp, __strlen(temp) + 1 );
 	skipWhiteSpace(str);
 	if ( !atChar( str, '}') ) {
 		goto error;
@@ -487,7 +487,7 @@ error:
 		newCity = NULL;
 	}
 
-	printf("!!Error at: @s\n", str->buffer + lastGood);
+	__printf("!!Error at: @s\n", str->buffer + lastGood);
 	str->index = lastGood;
 
 end:
@@ -498,7 +498,7 @@ end:
  * Extracts the data from the Mayor element id
  * @param str Pointer to a string structure
  * @return Returns a pointer to the data or NULL on failure
- *	The caller must free the pointer
+ *	The caller must __free the pointer
  **/
 char *extractMayor( pstring str )
 {
@@ -529,7 +529,7 @@ char *extractMayor( pstring str )
 		return NULL;
 	}
 
-	if ( strcmp( mayor, "Mayor") != 0 ) {
+	if ( __strcmp( mayor, "Mayor") != 0 ) {
 		freeCharPtr( &mayor );
 		return NULL;
 	}
@@ -554,7 +554,7 @@ char *extractMayor( pstring str )
 		return NULL;
 	}
 
-	while ( isspace( str->buffer[endIndex-1] ) ) {
+	while ( __isspace( str->buffer[endIndex-1] ) ) {
 		endIndex--;
 	}
 
@@ -584,7 +584,7 @@ char *extractMayor( pstring str )
 		goto error;
 	}
 
-	if ( strcmp( temp, "Mayor") != 0 ) {
+	if ( __strcmp( temp, "Mayor") != 0 ) {
 		freeCharPtr( &temp );
 		goto error;
 	}
@@ -635,7 +635,7 @@ char *extractUrl( pstring str )
 		goto end;
 	}
 
-	if ( strcmp( url, "Url" ) ) {
+	if ( __strcmp( url, "Url" ) ) {
 		freeCharPtr( &url );
 		goto end;
 	}
@@ -671,7 +671,7 @@ char *extractUrl( pstring str )
 		goto error;
 	}
 
-	if ( strcmp( temp, "Url") != 0 ) {
+	if ( __strcmp( temp, "Url") != 0 ) {
 		freeCharPtr( &temp );
 		goto error;
 	}

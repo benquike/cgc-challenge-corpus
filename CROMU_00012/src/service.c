@@ -4,7 +4,7 @@ Author: Dustin Fraze (df@cromulence.co)
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -65,7 +65,7 @@ void bookKeeping(carstate *drive)
 	validatePtr(drive);
 	if(drive->rpm > 6000)
 	{
-		//car explodes.  Just exit.
+		//car explodes.  Just __exit.
 		transmit_all(STDOUT, "\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff", 10);
 		_terminate(0);
 	}
@@ -92,7 +92,7 @@ void bookKeeping(carstate *drive)
 
 void raiseAlarm() {
 	char a;
-	memcpy(&a, "AAAAAAAAAAAAAAAA", 16);
+	__memcpy(&a, "AAAAAAAAAAAAAAAA", 16);
 	validateRet();
 }
 
@@ -138,7 +138,7 @@ void updateBTMetadata(carstate *drive, char *userbuf) {
 	if(len > 31)
 		len = 31;
 	#endif
-	memcpy(drive->bt_metadata, tmp, len);
+	__memcpy(drive->bt_metadata, tmp, len);
 	validateRet();
 }
 
@@ -193,12 +193,12 @@ void serviceLoop() {
 	drivestuff.drive = &drivestuff._drive;
 	char *ptr;
 	validatePtr(drivestuff.drive);
-	memset(drivestuff.drive, 0, sizeof(carstate));
+	__memset(drivestuff.drive, 0, sizeof(carstate));
 	validatePtr(drivestuff.drive);
 	initCar(drivestuff.drive);
 
 	while(1) {
-		memset(drivestuff.ibuf, 0, sizeof(drivestuff.ibuf));
+		__memset(drivestuff.ibuf, 0, sizeof(drivestuff.ibuf));
 		int got;
 		got = recvUntil(0, drivestuff.ibuf, 255, '\n');
 		if(got <= 0)

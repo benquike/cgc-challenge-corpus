@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -66,11 +66,11 @@ department_t *create_department(char *name)
     if (!name)
         return NULL;
 
-    department_t *dept = malloc(sizeof(department_t));
+    department_t *dept = __malloc(sizeof(department_t));
     if (!dept)
         return NULL;
 
-    dept->name = strdup(name);
+    dept->name = __strdup(name);
     dept->courses_available = create_ptrlist();
     add_department(dept);
 
@@ -108,10 +108,10 @@ void list_departments()
 
     int i = 0;
     department_t *iter;
-    printf("--All Departments--\n");
+    __printf("--All Departments--\n");
     for (i = 0; i < g_all_depts->length; i++) {
         iter = get_item(department_t, g_all_depts, i);
-        printf("%s\n", iter->name);
+        __printf("%s\n", iter->name);
     }
 }
 
@@ -122,10 +122,10 @@ void list_dept_courses(department_t *dept)
 
     int i;
     course_t *iter;
-    printf("--Department Availability--\n");
+    __printf("--Department Availability--\n");
     print_course_banner();
     for (i = 0; i < dept->courses_available->length; i++) {
-        printf("#%d|", i+1);
+        __printf("#%d|", i+1);
         iter = get_item(course_t, dept->courses_available, i);
         iter->print_course(iter);
     }

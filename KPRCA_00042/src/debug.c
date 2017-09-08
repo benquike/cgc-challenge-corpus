@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,7 +35,7 @@ int run_debug_mode(int *user)
     char line[LINE_SIZE];
     unsigned int dcmd = 0;
 
-    printf("##: ");
+    __printf("##: ");
     readline(STDIN, line, LINE_SIZE);
     dcmd = (line[0] & 0xFF)<<24 | (line[1] & 0xFF)<<16 | (line[2] & 0xFF)<<8 | (line[3] & 0xFF);
 

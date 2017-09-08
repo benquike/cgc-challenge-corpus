@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,7 +35,7 @@ typedef struct {
 #define DIR_OUT 0
 #define DIR_IN 1
     code_t code[2];
-    mode_t mode[2];
+    ___mode_t mode[2];
     rng_t rng;
 
     unsigned int code_id;
@@ -92,7 +92,7 @@ int silk_init(silk_t *silk)
 {
     silk_priv_t *priv;
     
-    silk->priv = priv = malloc(sizeof(silk_priv_t));
+    silk->priv = priv = __malloc(sizeof(silk_priv_t));
     if (priv == NULL)
         return FAILURE;
 
@@ -202,7 +202,7 @@ int silk_kx(silk_t *silk)
     if (priv->ksize == 0)
     {
         // ksize==0, so no real kx
-        memset(&param, 0, sizeof(param));
+        __memset(&param, 0, sizeof(param));
         if (_send(PKT_KX_PARAM, &param, sizeof(param)) != SUCCESS)
             return FAILURE;
 
@@ -248,7 +248,7 @@ int silk_kx(silk_t *silk)
     param.qlen = ROUNDUP(bn_length(&kx.Q), 8) / 8;
     param.alen = ROUNDUP(bn_length(&A), 8) / 8;
     idx = 0;
-    data = malloc(param.plen + param.glen + param.qlen + param.alen);
+    data = __malloc(param.plen + param.glen + param.qlen + param.alen);
     if (data == NULL)
         goto fail;
     bn_to_bytes(&kx.P, &data[idx], param.plen);
@@ -264,12 +264,12 @@ int silk_kx(silk_t *silk)
         goto fail;
     if (_send_bytes(data, idx) != SUCCESS)
         goto fail;
-    free(data);
+    __free(data);
     data = NULL;
 
     if (_recv(PKT_KX_REPLY, &reply, sizeof(reply)) != SUCCESS)
         goto fail;
-    data = malloc(reply.blen);
+    data = __malloc(reply.blen);
     if (data == NULL)
         goto fail;
     if (_recv_bytes(data, reply.blen) != SUCCESS)
@@ -302,7 +302,7 @@ int silk_kx(silk_t *silk)
     result = SUCCESS;
 
 fail:
-    free(data);
+    __free(data);
     bn_destroy(&A);
     bn_destroy(&B);
     kx_destroy(&kx);
@@ -341,7 +341,7 @@ int silk_send(silk_t *silk, const unsigned char *data, unsigned int cnt)
         pkt.datalen = real_cnt;
         _send(PKT_DATA, &pkt, sizeof(pkt));
         _send_bytes(real_data, real_cnt);
-        free(real_data);
+        __free(real_data);
 
         data += to_send;
         cnt -= to_send;
@@ -357,7 +357,7 @@ static int _fill_recvbuf(silk_priv_t *priv)
     silk_data_t pkt;
     if (_recv(PKT_DATA, &pkt, sizeof(pkt)) != SUCCESS)
         goto fail;
-    pkt_data = malloc(pkt.datalen);
+    pkt_data = __malloc(pkt.datalen);
     if (pkt_data == NULL)
         goto fail;
     if (_recv_bytes(pkt_data, pkt.datalen) != SUCCESS)
@@ -371,7 +371,7 @@ static int _fill_recvbuf(silk_priv_t *priv)
     result = SUCCESS;
 
 fail:
-    free(pkt_data);
+    __free(pkt_data);
     return result;
 }
 
@@ -389,7 +389,7 @@ int silk_recv(silk_t *silk, unsigned char *out, unsigned int cnt)
         }
 
         to_copy = cnt > priv->recvbuf_len ? priv->recvbuf_len : cnt;
-        memcpy(out, &priv->recvbuf[priv->recvbuf_idx], to_copy);
+        __memcpy(out, &priv->recvbuf[priv->recvbuf_idx], to_copy);
         out += to_copy;
         cnt -= to_copy;
         priv->recvbuf_idx += to_copy;
@@ -397,7 +397,7 @@ int silk_recv(silk_t *silk, unsigned char *out, unsigned int cnt)
 
         if (priv->recvbuf_len == 0)
         {
-            free(priv->recvbuf);
+            __free(priv->recvbuf);
             priv->recvbuf = NULL;
             priv->recvbuf_len = priv->recvbuf_idx = 0;
         }

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, ___free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -38,7 +38,7 @@ void initialize(char *s, size_t np) {
         return;
 
     for (i = 0; i < np; i++)
-        memcpy(s+(i*PAGE_SIZE), (char *)FLAG_PAGE, PAGE_SIZE);
+        ___memcpy(s+(i*PAGE_SIZE), (char *)FLAG_PAGE, PAGE_SIZE);
 }
 
 int main() {

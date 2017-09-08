@@ -4,7 +4,7 @@ Copyright (c) 2016 Cromulence LLC
 
 Authors: Bryce Kerley <bk@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -28,7 +28,7 @@ THE SOFTWARE.
 #include "stack.h"
 
 stack_elem* stack_create() {
-  stack_elem* top = calloc(sizeof(stack_elem));
+  stack_elem* top = __calloc(sizeof(stack_elem));
   top->next = NULL;
   top->type = ST_TOP;
 
@@ -39,7 +39,7 @@ void stack_free(stack_elem* stk) {
   if (NULL == stk) return;
   
   stack_elem* next = stk->next;
-  free(stk);
+  __free(stk);
 
   return stack_free(next);
 }
@@ -55,7 +55,7 @@ uint64 stack_empty(stack_elem* stk) {
 }
 
 void stack_push_sint32(stack_elem* stk, sint32 i) {
-  stack_elem* new_node = calloc(sizeof(stack_elem));
+  stack_elem* new_node = __calloc(sizeof(stack_elem));
   stack_elem* previous_top = stk->next;
   new_node->next = previous_top;
   new_node->type = ST_SINT32;
@@ -64,7 +64,7 @@ void stack_push_sint32(stack_elem* stk, sint32 i) {
 }
 
 void stack_push_uint64(stack_elem* stk, uint64 i) {
-  stack_elem* new_node = calloc(sizeof(stack_elem));
+  stack_elem* new_node = __calloc(sizeof(stack_elem));
   stack_elem* previous_top = stk->next;
   new_node->next = previous_top;
   new_node->type = ST_UINT64;
@@ -73,7 +73,7 @@ void stack_push_uint64(stack_elem* stk, uint64 i) {
 }
 
 void stack_push_sint64(stack_elem* stk, sint64 i) {
-  stack_elem* new_node = calloc(sizeof(stack_elem));
+  stack_elem* new_node = __calloc(sizeof(stack_elem));
   stack_elem* previous_top = stk->next;
   new_node->next = previous_top;
   new_node->type = ST_SINT64;
@@ -82,7 +82,7 @@ void stack_push_sint64(stack_elem* stk, sint64 i) {
 }
 
 void stack_push_lexeme_flavor(stack_elem* stk, lexeme_flavor f) {
-  stack_elem* new_node = calloc(sizeof(stack_elem));
+  stack_elem* new_node = __calloc(sizeof(stack_elem));
   stack_elem* previous_top = stk->next;
   new_node->next = previous_top;
   new_node->type = ST_LEXEME_FLAVOR;
@@ -91,7 +91,7 @@ void stack_push_lexeme_flavor(stack_elem* stk, lexeme_flavor f) {
 }
 
 void stack_push_operation_type(stack_elem* stk, operation_type t) {
-  stack_elem* new_node = calloc(sizeof(stack_elem));
+  stack_elem* new_node = __calloc(sizeof(stack_elem));
   stack_elem* previous_top = stk->next;
   new_node->next = previous_top;
   new_node->type = ST_OPERATION_TYPE;
@@ -100,7 +100,7 @@ void stack_push_operation_type(stack_elem* stk, operation_type t) {
 }
 
 void stack_push_str(stack_elem* stk, char* str) {
-  stack_elem* new_node = calloc(sizeof(stack_elem));
+  stack_elem* new_node = __calloc(sizeof(stack_elem));
   stack_elem* previous_top = stk->next;
   new_node->next = previous_top;
   new_node->type = ST_STR;
@@ -113,7 +113,7 @@ sint32 stack_pop_sint32(stack_elem* stk) {
   stack_elem* new_top = stk->next->next;
   sint32 val = old_top->sint32;
   stk->next = new_top;
-  free(old_top);
+  __free(old_top);
   return val;
 }
 
@@ -122,7 +122,7 @@ uint64 stack_pop_uint64(stack_elem* stk) {
   stack_elem* new_top = stk->next->next;
   uint64 val = old_top->uint64;
   stk->next = new_top;
-  free(old_top);
+  __free(old_top);
   return val;
 }
 
@@ -131,7 +131,7 @@ sint64 stack_pop_sint64(stack_elem* stk) {
   stack_elem* new_top = stk->next->next;
   sint64 val = old_top->sint64;
   stk->next = new_top;
-  free(old_top);
+  __free(old_top);
   return val;
 }
 
@@ -140,7 +140,7 @@ lexeme_flavor stack_pop_lexeme_flavor(stack_elem* stk) {
   stack_elem* new_top = stk->next->next;
   lexeme_flavor val = old_top->lexeme_flavor;
   stk->next = new_top;
-  free(old_top);
+  __free(old_top);
   return val;
 }
 
@@ -149,7 +149,7 @@ operation_type stack_pop_operation_type(stack_elem* stk) {
   stack_elem* new_top = stk->next->next;
   operation_type val = old_top->operation_type;
   stk->next = new_top;
-  free(old_top);
+  __free(old_top);
   return val;
 }
 
@@ -158,7 +158,7 @@ char* stack_pop_str(stack_elem* stk) {
   stack_elem* new_top = stk->next->next;
   char* val = old_top->str;
   stk->next = new_top;
-  free(old_top);
+  __free(old_top);
   return val;
 }
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -25,10 +25,10 @@
 
 User::User(char *_username, char *_pw, char *_friend_code)
 {
-    profile = NULL;
-    memcpy(username, _username, sizeof(username));
-    memcpy(pw, _pw, sizeof(pw));
-    memcpy(friend_code, _friend_code, sizeof(friend_code));
+    profile = nullptr;
+    __memcpy(username, _username, sizeof(username));
+    __memcpy(pw, _pw, sizeof(pw));
+    __memcpy(friend_code, _friend_code, sizeof(friend_code));
     total_likes = 0;
 
 }
@@ -46,7 +46,7 @@ BlogPost *User::get_post(int idx)
     if (idx < posts.length())
         return posts[idx];
     else
-        return NULL;
+        return nullptr;
 }
 
 char *User::get_username()
@@ -56,23 +56,23 @@ char *User::get_username()
 
 bool User::is_full_user()
 {
-    //printf("f len = %d, p len = %d, tot_like = %d\n", friends.length(), posts.length(), total_likes);
+    //__printf("f len = %d, p len = %d, tot_like = %d\n", friends.length(), posts.length(), total_likes);
     return (friends.length() >= 3 && posts.length() >= 5 && total_likes > 5);
 }
 
 bool User::check_password(char *pw_attempt)
 {
-    return (strcmp(pw, pw_attempt) == 0);
+    return (__strcmp(pw, pw_attempt) == 0);
 }
 
 bool User::add_friend(User *new_friend, char *fc_attempt)
 {
     if (new_friend == this) {
-        printf("Trying to add self\n");
+        __printf("Trying to add self\n");
         return false;
     }
 
-    if (!new_friend || strcmp(new_friend->friend_code, fc_attempt))
+    if (!new_friend || __strcmp(new_friend->friend_code, fc_attempt))
         return false;
 
     if (!friends.find(new_friend))
@@ -84,7 +84,7 @@ bool User::add_friend(User *new_friend, char *fc_attempt)
 bool User::edit_profile()
 {
     char *temp_profile;
-    printf("Enter new profile info (end with: ```)\n");
+    __printf("Enter new profile info (end with: ```)\n");
     temp_profile = IO::iotextdup(1024);
     if (temp_profile) {
         if (profile)
@@ -98,30 +98,30 @@ bool User::edit_profile()
 
 bool User::add_post()
 {
-    char *text = NULL;
-    File *file = NULL;
+    char *text = nullptr;
+    File *file = nullptr;
     int selection = 0;
-    BlogPost *post = NULL;
-    printf("Enter post title: \n\t");
+    BlogPost *post = nullptr;
+    __printf("Enter post title: \n\t");
     if(!IO::readline(128)) {
-        printf("Bad title. Try again\n");
+        __printf("Bad title. Try again\n");
             return false;
     } else {
         post = BlogPost::create_blog_post(this, IO::buf());
     }
 
     while(true) {
-        printf("Enter Post Text (end with: ```):\n");
+        __printf("Enter Post Text (end with: ```):\n");
         text = IO::iotextdup(4096);
         if(text) {
             post->add_text_block(text);
         }
 
         if (is_full_user()) {
-            printf("Upload Image?\n");
-            printf("1. Yes\n");
-            printf("2. No\n");
-            printf("Selection: ");
+            __printf("Upload Image?\n");
+            __printf("1. Yes\n");
+            __printf("2. No\n");
+            __printf("Selection: ");
             selection = IO::readnum();
 
             if (selection == 1) {
@@ -131,10 +131,10 @@ bool User::add_post()
             }
         }
 
-        printf("Add more Text?\n");
-        printf("1. Yes\n");
-        printf("2. No\n");
-        printf("Selection: ");
+        __printf("Add more Text?\n");
+        __printf("1. Yes\n");
+        __printf("2. No\n");
+        __printf("Selection: ");
         selection = IO::readnum();
 
         if (selection == 1) {
@@ -149,20 +149,20 @@ bool User::add_post()
 bool User::delete_post()
 {
     int selection;
-    printf("Select a post to delete:\n");
-    printf("0. Go Back\n");
+    __printf("Select a post to delete:\n");
+    __printf("0. Go Back\n");
     list_posts();
-    printf("Selection: ");
+    __printf("Selection: ");
     selection = IO::readnum();
 
     if (selection == 0) {
-        printf("Returning to main menu\n");
+        __printf("Returning to main menu\n");
         return false;
     }
 
     if (selection > posts.length()) {
-        printf("Bad Selection\n");
-        printf("Returning to main menu\n");
+        __printf("Bad Selection\n");
+        __printf("Returning to main menu\n");
         return false;
     }
 
@@ -176,73 +176,73 @@ size_t User::num_posts()
 
 void User::print_profile()
 {
-    printf("User %s's profile:\n", username);
-    if (profile && strlen(profile))
-        printf("%s\n", profile);
+    __printf("User %s's profile:\n", username);
+    if (profile && __strlen(profile))
+        __printf("%s\n", profile);
     else
-        printf("No profile yet!\n");
+        __printf("No profile yet!\n");
 }
 
 void User::list_posts()
 {
     for (int i = 0; i < posts.length(); i++)
-        printf("%d - %s\n", i+1, posts[i]->get_title());
+        __printf("%d - %s\n", i+1, posts[i]->get_title());
 }
 
 void User::print_post(size_t idx)
 {
     if (idx < 1 || idx > posts.length()) {
-        printf("%s's post id, %d, was not found\n", username, idx);
+        __printf("%s's post id, %d, was not found\n", username, idx);
         return;
     }
 
-    printf("Post by: %s\n", username);
+    __printf("Post by: %s\n", username);
     posts[--idx]->print_post();
 }
 
 void User::like_post(User *reg_user, size_t idx)
 {
     if (!reg_user) {
-        printf("Only registered users can like a post\n");
+        __printf("Only registered users can like a post\n");
         return;
     }
 
     if (reg_user == this) {
-        printf("Sorry, you can't like your own post...\n");
+        __printf("Sorry, you can't like your own post...\n");
         return;
     }
 
     if (idx < 1 || idx > posts.length()) {
-        printf("%s's post id, %d, was not found\n", username, idx);
+        __printf("%s's post id, %d, was not found\n", username, idx);
         return;
     }
 
     posts[--idx]->like(reg_user);
-    printf("Liked!\n");
+    __printf("Liked!\n");
 }
 
 void User::list_friends() {
     for (int i = 0; i < friends.length(); i++)
-        printf("%d - %s\n", i+1, friends[i]->username);
+        __printf("%d - %s\n", i+1, friends[i]->username);
 }
 
 bool User::unfriend()
 {
     int selection;
-    printf("Select a user to unfriend:\n");
-    printf("0. Go Back\n");
+    __printf("Select a user to unfriend:\n");
+    __printf("0. Go Back\n");
     list_friends();
-    printf("Selection: ");
+    __printf("Selection: ");
     selection = IO::readnum();
 
     if (selection == 0) {
-        printf("Returning to main menu\n");
+        __printf("Returning to main menu\n");
         return false;
     }
 
     if (selection > friends.length()) {
-        printf("Bad Selection\n");
-        printf("Returning to main menu\n");
+        __printf("Bad Selection\n");
+        __printf("Returning to main menu\n");
         return false;
     }
 

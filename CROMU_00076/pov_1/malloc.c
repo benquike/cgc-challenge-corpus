@@ -4,7 +4,7 @@ Authors: Cromulence <cgc@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -42,7 +42,7 @@ typedef struct meta {
 ///  However, the freelist bucket 0 also uses the prev pointer
 pmeta lookaside[128] = {NULL};
 
-void link( pmeta linkme )
+void __link( pmeta linkme )
 {
 	pmeta walker = lookaside[0];
 
@@ -93,7 +93,7 @@ void add_freelist_block( size_t length )
 		_terminate(-1);
 	}
 
-	bzero( block, length );
+	__bzero( block, length );
 
 	block->length = length-4;
 	
@@ -102,18 +102,18 @@ void add_freelist_block( size_t length )
 		return;
 	}
 
-	link( block );
+	__link( block );
 
 	return;
 }
 
-void free( void *block )
+void __free( void *block )
 {
 	pmeta nb = NULL;
 
 	if ( block ) {
 		nb = (pmeta) (( (char*)block) - 4);
-		link(nb);
+		__link(nb);
 	}
 
 	return;
@@ -128,7 +128,7 @@ void init_freelist( void )
 		_terminate(-1);
 	}
 
-	bzero( lookaside[0], 4096);
+	__bzero( lookaside[0], 4096);
 
 	zero_block = lookaside[0];
 	base_block = zero_block + 1;
@@ -147,7 +147,7 @@ void init_freelist( void )
 	return;
 }
 
-void unlink( pmeta block )
+void __unlink( pmeta block )
 {
 	if ( block == NULL ) {
 		return;
@@ -169,7 +169,7 @@ void *freelist_alloc( size_t length )
 	pmeta walker = NULL;
 	pmeta newone = NULL;
 
-	/// If there isn't a block on the free list then initialize one
+	/// If there isn't a block on the __free list then initialize one
 	/// This should only be the case on the first allocation request
 	if ( lookaside[0] == NULL ) {
 		init_freelist();
@@ -191,7 +191,7 @@ void *freelist_alloc( size_t length )
 		return freelist_alloc(length);
 	} else {
 
-		unlink(walker);
+		__unlink(walker);
 
 		/// If the block is less than the size needed for at
 		///	least an 8 byte block then return the whole thing
@@ -208,7 +208,7 @@ void *freelist_alloc( size_t length )
 
 		walker->length = length;
 
-		link(newone);
+		__link(newone);
 
 		return ((char*)walker) + 4;
 	}
@@ -217,9 +217,9 @@ void *freelist_alloc( size_t length )
 }
 
 
-void *calloc( size_t length )
+void *__calloc( size_t length )
 {
-	void *out = malloc( length );
+	void *out = __malloc( length );
 
 	if ( !out ) {
 		return out;
@@ -227,12 +227,12 @@ void *calloc( size_t length )
 
 	length = (length+7) & 0xfffffff8;
 
-	bzero( out, length);
+	__bzero( out, length);
 
 	return out;
 }
 
-void *malloc( size_t length )
+void *__malloc( size_t length )
 {
 	int bucket = 0;
 	pmeta outb = NULL;

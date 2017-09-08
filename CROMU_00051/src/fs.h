@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -46,15 +46,15 @@ typedef struct _file {
 	pFilesystem fp;
 	char *CurrPosition;
 	uint8_t mode;
-} FILE, *pFILE;
+} __FILE, *pFILE;
 
 void InitFilesystem(void);
 void ListFiles(void);
-pFILE fopen(char *Filename, char *Mode, uint8_t Suid);
+pFILE __fopen(char *Filename, char *Mode, uint8_t Suid);
 char *fgets(char *str, uint32_t size, pFILE stream);
-uint8_t fclose(pFILE stream);
-size_t fread(void *restrict ptr, size_t size, size_t nitems, FILE *restrict stream);
-size_t fwrite(const void *restrict ptr, size_t size, size_t nitems, FILE *restrict stream);
+uint8_t __fclose(pFILE stream);
+size_t __fread(void *restrict ptr, size_t size, size_t nitems, __FILE *restrict stream);
+size_t __fwrite(const void *restrict ptr, size_t size, size_t nitems, __FILE *restrict stream);
 uint8_t Dump(char *filename);
 
 #endif

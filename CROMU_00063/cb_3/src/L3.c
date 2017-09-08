@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -108,7 +108,7 @@ uint8_t LearnL2Adjacency(uint32_t L3Addr, uint16_t L2Addr, uint8_t Vlan) {
 	// of the device
 	for (i = MaxInterfaces; i < MAX_L2_ADJACENCIES; i++) {
 		if (Config.L2Adjacencies[i].L3Addr == 0 && FreeL2Adj == MAX_L2_ADJACENCIES) {
-			// found a free L2 Adjacency entry
+			// found a __free L2 Adjacency entry
 			FreeL2Adj = i;
 		} else if (Config.L2Adjacencies[i].L3Addr != 0 && Config.L2Adjacencies[i].Age > MaxAdjAge) {
 				// found an old L2 Adjacency entry
@@ -183,7 +183,7 @@ uint16_t ResolveL2Adjacency(uint32_t TargetAddr, uint8_t InterfaceId) {
 	pL2Ftr pL2Footer = (pL2Ftr)(Frame+sizeof(L2Hdr)+sizeof(L2Adjacency));
 	uint8_t FrameLen;
 
-	bzero(Frame, MAX_FRAME_LEN);
+	__bzero(Frame, MAX_FRAME_LEN);
 
 	if (InterfaceId > MaxInterfaces) {
 		return(0);
@@ -313,7 +313,7 @@ uint8_t L3_RxPacket(int fd, unsigned char *Packet) {
 		return(0);
 	}
 
-	bzero(Frame, MAX_FRAME_LEN);
+	__bzero(Frame, MAX_FRAME_LEN);
 
 	// Receive the L2 frame
 	if (!L2_RxFrame(fd, Frame)) {
@@ -372,7 +372,7 @@ uint8_t L3_RxPacket(int fd, unsigned char *Packet) {
 	#endif
 
 	// Copy the L3 packet bytes into the output buffer
-	memcpy(Packet, Frame+sizeof(L2Hdr), pL2->Len-sizeof(L2Ftr));
+	__memcpy(Packet, Frame+sizeof(L2Hdr), pL2->Len-sizeof(L2Ftr));
 
 	return(1);
 }
@@ -389,7 +389,7 @@ uint8_t Enqueue(unsigned char *Frame, uint32_t L3Addr, uint8_t Id) {
 	for (i = 0; i < MAX_QUEUE_DEPTH; i++) {
 		if (Config.SendQueue[i].Valid == 0 && !Added) {
 			// add this Frame to the queue
-			memcpy(Config.SendQueue[i].Frame, Frame, MAX_FRAME_LEN);
+			__memcpy(Config.SendQueue[i].Frame, Frame, MAX_FRAME_LEN);
 			Config.SendQueue[i].Age = 0;
 			Config.SendQueue[i].Id = Id;
 			Config.SendQueue[i].Valid = 1;
@@ -462,7 +462,7 @@ uint8_t L3_ForwardPacket(unsigned char *Packet) {
 	}
 
 	// Copy the L3 packet into the frame
-	memcpy(Frame+sizeof(L2Hdr), Packet, sizeof(L3Hdr)+pL3->Len);
+	__memcpy(Frame+sizeof(L2Hdr), Packet, sizeof(L3Hdr)+pL3->Len);
 
 	// check the dst addr against our interfaces
 	for (Id = 0; Id < MaxInterfaces; Id++) {

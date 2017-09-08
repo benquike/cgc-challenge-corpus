@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -33,25 +33,25 @@
 
 htbl_t* htbl_create(int size, free_value_fn *fptr)
 {
-  htbl_t *table = (htbl_t *) malloc(sizeof(htbl_t));
+  htbl_t *table = (htbl_t *) __malloc(sizeof(htbl_t));
   if (table == NULL || fptr == NULL)
     goto fail;
-  memset(table, 0, sizeof(htbl_t));
+  __memset(table, 0, sizeof(htbl_t));
   table->free_value = fptr;
   table->size = size > 0 ? size : 16;
   table->count = 0;
-  table->table = (entry_t **) malloc(table->size * sizeof(entry_t *));
+  table->table = (entry_t **) __malloc(table->size * sizeof(entry_t *));
   if (table->table == NULL)
     goto fail;
-  memset(table->table, 0x00, table->size * sizeof(entry_t *));
+  __memset(table->table, 0x00, table->size * sizeof(entry_t *));
   return table;
 
 fail:
   if (table)
   {
     if (table->table)
-      free(table->table);
-    free(table);
+      __free(table->table);
+    __free(table);
   }
   return NULL;
 }
@@ -60,7 +60,7 @@ int _htbl_hash(htbl_t *tab, char *key)
 {
   int i;
   unsigned int hash = MAGIC_PRIME;
-  for (i = 0; i < strlen(key); ++i)
+  for (i = 0; i < __strlen(key); ++i)
   {
     hash += key[i];
     hash = hash << 5;
@@ -74,10 +74,10 @@ int _htbl_double_size(htbl_t *tab)
   entry_t **tmp;
   if (tab->size > (UINT_MAX / 2) / sizeof(entry_t *))
     return -1;
-  tmp = (entry_t **) realloc(tab->table, tab->size * 2 * sizeof(entry_t *));
+  tmp = (entry_t **) __realloc(tab->table, tab->size * 2 * sizeof(entry_t *));
   if (tmp == NULL)
     return -1;
-  memset(&tmp[tab->size], 0, tab->size * sizeof(entry_t *));
+  __memset(&tmp[tab->size], 0, tab->size * sizeof(entry_t *));
   tab->table = tmp;
   tab->size *= 2;
   return 0;
@@ -99,7 +99,7 @@ int htbl_put(htbl_t *tab, char *key, void *val)
       it = tab->table[idx];
       if (it == NULL)
         break;
-      if (it && it->key && strcmp(it->key, key) == 0)
+      if (it && it->key && __strcmp(it->key, key) == 0)
       {
         tab->free_value(it->val);
         it->val = val;
@@ -110,10 +110,10 @@ int htbl_put(htbl_t *tab, char *key, void *val)
         idx = 0;
     }
 
-    new = (entry_t *) malloc(sizeof(entry_t));
+    new = (entry_t *) __malloc(sizeof(entry_t));
     if (new == NULL)
       return -1;
-    new->key = strdup(key);
+    new->key = __strdup(key);
     new->val = val;
     new->next = NULL;
     if (tab->tail == NULL)
@@ -143,7 +143,7 @@ void* htbl_get(htbl_t *tab, char *key)
       ret = tab->table[idx];
       if (ret == NULL)
         break;
-      if (ret->key && strcmp(ret->key, key) == 0)
+      if (ret->key && __strcmp(ret->key, key) == 0)
         return ret->val;
       idx++;
       if (idx == tab->size)
@@ -168,17 +168,17 @@ void htbl_destroy(htbl_t *tab)
         if (it)
         {
           if (it->key)
-            free(it->key);
+            __free(it->key);
           if (it->val)
             tab->free_value(it->val);
-          free(it);
+          __free(it);
           it = NULL;
         }
       }
-      free(tab->table);
+      __free(tab->table);
       tab->table = NULL;
     }
-    free(tab);
+    __free(tab);
     tab = NULL;
   }
 }

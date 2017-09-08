@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -29,8 +29,8 @@
 Emulator::Emulator(void *sp, void *heap)
     : d_stack((unsigned char *)sp), d_heap((unsigned char *)heap)
 {
-    memset(d_reg, 0, sizeof(d_reg));
-    memset(d_dirty_pages, 0, sizeof(d_dirty_pages));
+    __memset(d_reg, 0, sizeof(d_reg));
+    __memset(d_dirty_pages, 0, sizeof(d_dirty_pages));
     d_reg[REG_sp] = (int)sp + STACK_SIZE;
     d_zf = 0;
     d_cf = 0;
@@ -44,13 +44,13 @@ void Emulator::reset()
 {
     // Clear heap and stack memory
     traverse_dirty([this] (int mem) {
-        memset(d_heap + mem, 0, 0x1000);
+        __memset(d_heap + mem, 0, 0x1000);
     });
-    memset(d_stack, 0, STACK_SIZE);
+    __memset(d_stack, 0, STACK_SIZE);
 
     // Reset registers
-    memset(d_reg, 0, sizeof(d_reg));
-    memset(d_dirty_pages, 0, sizeof(d_dirty_pages));
+    __memset(d_reg, 0, sizeof(d_reg));
+    __memset(d_dirty_pages, 0, sizeof(d_dirty_pages));
     d_reg[REG_sp] = (int)d_stack + STACK_SIZE;
     d_zf = 0;
     d_cf = 0;

@@ -4,7 +4,7 @@ Author: Dustin Fraze (df@cromulence.co)
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,7 +37,7 @@ int validatePtr(void *ptr) {
 	if((unsigned int)ptr > PROGRAMBASE && (unsigned int)ptr < PROGRAMBASE+PROGRAMSIZE)
 		validated = 1;
 	if(validated == 0) {
-		puts("Invalid pointer detected!");
+		__puts("Invalid pointer detected!");
 		_terminate(-1);
 	}
 	return validated;
@@ -50,14 +50,14 @@ void validateRet() {
 
 	if((unsigned int)retAddr < PROGRAMBASE || (unsigned int)retAddr > PROGRAMBASE+PROGRAMSIZE) {
 		//only allowed to ret to an address within the main module.
-		puts("***** STACK SMASHING DETECTED! *****");
+		__puts("***** STACK SMASHING DETECTED! *****");
 		_terminate(-1);
 	}
 
 	retAddr=(int*)((char *)retAddr-5);
 	//check to see if the previous instruction was a call.
 	if((*retAddr & 0xff) != 0xe8) {
-		puts("***** STACK SMASHING DETECTED! *****");
+		__puts("***** STACK SMASHING DETECTED! *****");
 		_terminate(-1);
 	}
 }

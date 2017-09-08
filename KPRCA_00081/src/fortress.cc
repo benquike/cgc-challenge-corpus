@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -29,7 +29,7 @@
 CFortress::CFortress() : m_supply(50), m_day(1), m_numSuccessfulMissions(0), m_numTotalMissions(0),
                          m_totalSupplySpent(0), m_totalSupplyEarned(0)
 {
-    memset(m_owner, 0, sizeof(m_owner));
+    __memset(m_owner, 0, sizeof(m_owner));
 }
 
 CFortress::~CFortress()
@@ -167,5 +167,5 @@ int CFortress::GetAvgLevel()
 void CFortress::SetOwner(char *owner)
 {
     owner[k_maxOwnerLen] = '\0';
-    strcpy(m_owner, owner);
+    __strcpy(m_owner, owner);
 }

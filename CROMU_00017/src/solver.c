@@ -4,7 +4,7 @@ Author: James Nuttall (james@cromulence.co)
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -62,16 +62,16 @@ void run_tests()
 	{
 		char equation[256];
 		int answer = generate_one_equation(equation);
-		printf("r: @d @s = @d\n", runs, equation, answer);
+		__printf("r: @d @s = @d\n", runs, equation, answer);
 		runs++;
 	}
 
 	for (int i = 0; i < TEST_LEN; i++)
 	{ 
 		solve_equation(tests[i], &answer);
-		printf("equation: @s = @d \n", tests[i], answer);
-		printf((answer == answers[i]) ? "correct\n" : "wrong\n");
-		printf("-----------------\n");
+		__printf("equation: @s = @d \n", tests[i], answer);
+		__printf((answer == answers[i]) ? "correct\n" : "wrong\n");
+		__printf("-----------------\n");
 	}
 
 }

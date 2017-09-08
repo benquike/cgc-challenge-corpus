@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -193,7 +193,7 @@ void process_result(char *send_buf) {
     char cs[4] = {0};
 	struct result r;
 
-	// read result
+	// __read result
 	#ifdef DEBUG
 		fprintf(stderr, "RESULTS...");
 	#endif
@@ -287,13 +287,13 @@ int main(void) {
 		_terminate(6);
 	}
 
-	memset(secret, 0, RAND_PG_SZ);
-	memset(found, 0, RAND_PG_SZ);
+	__memset(secret, 0, RAND_PG_SZ);
+	__memset(found, 0, RAND_PG_SZ);
 
 	// loop until have enough consecutive bytes
 	while (get_consecutive_cnt() < vals[2]) {
 
-		memset(send_buf, 0, CONTENT_LEN);
+		__memset(send_buf, 0, CONTENT_LEN);
 
 		get_gimme_banner();
 

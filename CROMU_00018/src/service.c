@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -47,7 +47,7 @@ int main(void)
         _terminate( -3 );
 
     // Read in file data
-    uint8_t *pFileData = (uint8_t*)malloc( INPUT_FILE_SIZE_MAXIMUM );
+    uint8_t *pFileData = (uint8_t*)__malloc( INPUT_FILE_SIZE_MAXIMUM );
 
     // Read loop for file data
     uint32_t readCount = 0;
@@ -61,7 +61,7 @@ int main(void)
         _terminate( -3 );
 
     // Free memory
-    free( pFileData );
+    __free( pFileData );
 
     int32_t renderSize;
     uint8_t *pRenderData;
@@ -71,7 +71,7 @@ int main(void)
 
     // Allocate render buffer
     uint32_t destLen = renderSize;
-    pRenderData = (uint8_t*)malloc( destLen );
+    pRenderData = (uint8_t*)__malloc( destLen );
 
     if ( vgf_render_file( pFile, pRenderData, &destLen ) != 0 )
         _terminate( -3 );
@@ -83,7 +83,7 @@ int main(void)
         _terminate( -3 );
 
     // Free the render buffer
-    free( pRenderData );
+    __free( pRenderData );
 
     // Send the complete file
     size_t tx_bytes = pmSize;
@@ -91,7 +91,7 @@ int main(void)
     for ( writeCur = 0; writeCur < tx_bytes; writeCur++ )
         write_u8( pPMFileData[writeCur] );
 
-    free( pPMFileData );
+    __free( pPMFileData );
 
     vgf_destroy_file( pFile );
 

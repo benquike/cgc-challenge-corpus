@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -79,7 +79,7 @@ int send_n_bytes(int fd, size_t n, char *buf)
     return total_sent;
 }
 
-int printf(const char *fmt, ...)
+int __printf(const char *fmt, ...)
 {
     char *astring;
     int aint, i, n = 0, flags = 0, min = 0;
@@ -109,7 +109,7 @@ int printf(const char *fmt, ...)
                 case '7':
                 case '8':
                 case '9':
-                    min = strtol(fmt-1, (char**)&fmt, 10);
+                    min = __strtol(fmt-1, (char**)&fmt, 10);
                     continue;
                 }
                 break;
@@ -121,9 +121,9 @@ int printf(const char *fmt, ...)
                 break;
             case 's':
                 astring = va_arg(ap, char *);
-//                for (i = 0; i < strlen(astring); i++)
+//                for (i = 0; i < __strlen(astring); i++)
 //                    OUTPUT_BYTE(astring[i]);
-                send_n_bytes(STDOUT, astring, strlen(astring));
+                send_n_bytes(STDOUT, astring, __strlen(astring));
                 break;
             case 'd':
                 aint = va_arg(ap, int);

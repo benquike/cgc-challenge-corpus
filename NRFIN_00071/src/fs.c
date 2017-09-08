@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -27,7 +27,7 @@
 
 #define DIRSEP "#"
 #define DIRSEPCHR '#'
-#define READMESTR "This is a sample file! Feel free to add your own!"
+#define READMESTR "This is a sample file! Feel __free to add your own!"
 
 #define CHECKINIT() if (!root) init_fs();
 
@@ -52,7 +52,7 @@ char *ls_dir(char *path) {
     struct node *dirnode;
     dirtree_t *dir;
     struct node *head, *cur;
-    size_t plen = strlen(path);
+    size_t plen = __strlen(path);
 
     debug("listing fs path @b\n", path);
     CHECKINIT();
@@ -77,12 +77,12 @@ char *ls_dir(char *path) {
     head = list_head_node(files);
 
     for (i=0, cur=head; i < list_length(files); i++) {
-        len += strlen(((file_t*)cur->data)->name)+1;
+        len += __strlen(((file_t*)cur->data)->name)+1;
         cur = cur->next;
     }
 
     len++;
-    dirlist = calloc(len);
+    dirlist = __calloc(len);
 
     if (!dirlist) {
         debug("Failed to allocate dirlist.\n");
@@ -91,8 +91,8 @@ char *ls_dir(char *path) {
 
     for (i=0, idx = 0, cur = head; i < list_length(files); i++) {
         file = ((file_t*)cur->data);
-        strcpy(dirlist+idx, file->name);
-        idx += strlen(file->name);
+        __strcpy(dirlist+idx, file->name);
+        idx += __strlen(file->name);
         *(dirlist+idx++) = ':';
         cur = cur->next;
     }
@@ -113,12 +113,12 @@ int add_dir(char *path) {
 
     CHECKINIT();
 
-    if (strlen(path) <= 1) {
+    if (__strlen(path) <= 1) {
         debug("Path is too short.\n");
         return 3;
     }
 
-    if (strlen(path) > MAX_FILENAME_SIZE) {
+    if (__strlen(path) > MAX_FILENAME_SIZE) {
         debug("Path is too long.\n");
         return 4;
     }
@@ -130,31 +130,31 @@ int add_dir(char *path) {
         return 1;
     }
 
-    parent = calloc(strlen(path)+1);
+    parent = __calloc(__strlen(path)+1);
 
     if (!parent) {
         debug("Failed to allocate string.\n");
         return 2;
     }
 
-    tmp = strtok(path, DIRSEPCHR);
+    tmp = __strtok(path, DIRSEPCHR);
     while (tmp) {
         if (fn) {
             if (!*fn)
-                strcat(parent, DIRSEP);
+                __strcat(parent, DIRSEP);
             else
-                strcat(parent, fn);
+                __strcat(parent, fn);
         }
         fn = tmp;
-        tmp = strtok(NULL, DIRSEPCHR);
+        tmp = __strtok(NULL, DIRSEPCHR);
     }
 
-    if (strlen(fn) < 1) {
+    if (__strlen(fn) < 1) {
         debug("Filename too short.\n");
         return 2;
     }
 
-    if (strlen(parent) > 1) {
+    if (__strlen(parent) > 1) {
         dirnode = list_find_node_with_data_recurse(&root->directories, &get_dir, path);
         debug("path: @b\n",path);
         if (!dirnode) {
@@ -166,14 +166,14 @@ int add_dir(char *path) {
         dir = root;
     }
 
-    nd = calloc(sizeof(dirtree_t));
+    nd = __calloc(sizeof(dirtree_t));
 
     if (!nd) {
         debug("Failed to allocate directory.\n");
         return 1;
     }
 
-    strcpy(nd->name, fn);
+    __strcpy(nd->name, fn);
 
     list_init(&nd->directories, freedir);
     list_init(&nd->files, freefile);
@@ -201,7 +201,7 @@ int rm_dir(char *path) {
         return 1;
     }
 
-    len = strlen(path);
+    len = __strlen(path);
 
     if (len > MAX_FILENAME_SIZE) {
         debug("Path was too long.\n");
@@ -213,26 +213,26 @@ int rm_dir(char *path) {
         return 7;
     }
 
-    parent = calloc(len+1);
+    parent = __calloc(len+1);
 
     if (!parent) {
         debug("Failed to allocate string.\n");
         return 3;
     }
 
-    tmp = strtok(path, DIRSEPCHR);
+    tmp = __strtok(path, DIRSEPCHR);
     while (tmp) {
         if (fn) {
             if (!*fn)
-                strcat(parent, DIRSEP);
+                __strcat(parent, DIRSEP);
             else
-                strcat(parent, fn);
+                __strcat(parent, fn);
         }
         fn = tmp;
-        tmp = strtok(NULL, DIRSEPCHR);
+        tmp = __strtok(NULL, DIRSEPCHR);
     }
 
-    if (strlen(parent) == 1 && *parent == DIRSEPCHR) {
+    if (__strlen(parent) == 1 && *parent == DIRSEPCHR) {
         dir = &root->directories;
     } else {
         parentnode = list_find_node_with_data_recurse(&root->directories, &get_dir, parent);
@@ -295,14 +295,14 @@ int add_file(char *path, char *data) {
         dir = (dirtree_t *)dirnode->data;
     }
 
-    tmp = strtok(path, DIRSEPCHR);
+    tmp = __strtok(path, DIRSEPCHR);
 
     while (tmp) {
         fn = tmp;
-        tmp = strtok(NULL, DIRSEPCHR);
+        tmp = __strtok(NULL, DIRSEPCHR);
     }
 
-    len = strlen(fn);
+    len = __strlen(fn);
 
     if (len < 1) {
         debug("Filename too short.\n");
@@ -314,21 +314,21 @@ int add_file(char *path, char *data) {
         return 3;
     }
 
-    if (strlen(data)+1 > MAX_FILE_SIZE) {
+    if (__strlen(data)+1 > MAX_FILE_SIZE) {
         debug("File data too long.\n");
         return 4;
     }
 
     if (!list_find_node_with_data(&dir->files, get_file, fn)) {
-        nf  = calloc(sizeof(file_t));
+        nf  = __calloc(sizeof(file_t));
 
         if (!nf) {
             debug("Failed to allocate new file.\n");
             return 7;
         }
 
-        strcpy(nf->data, data);
-        strcpy(nf->name, fn);
+        __strcpy(nf->data, data);
+        __strcpy(nf->name, fn);
 
         list_insert_at_end(&dir->files, nf); 
 
@@ -357,7 +357,7 @@ int rm_file(char *path) {
         return 1;
     }
 
-    len = strlen(path);
+    len = __strlen(path);
 
     if (len > MAX_FILENAME_SIZE) {
         debug("Path was too long.\n");
@@ -369,26 +369,26 @@ int rm_file(char *path) {
         return 7;
     }
 
-    parent = calloc(len+1);
+    parent = __calloc(len+1);
 
     if (!parent) {
         debug("Failed to allocate string.\n");
         return 3;
     }
 
-    tmp = strtok(path, DIRSEPCHR);
+    tmp = __strtok(path, DIRSEPCHR);
     while (tmp) {
         if (fn) {
             if (!*fn)
-                strcat(parent, DIRSEP);
+                __strcat(parent, DIRSEP);
             else
-                strcat(parent, fn);
+                __strcat(parent, fn);
         }
         fn = tmp;
-        tmp = strtok(NULL, DIRSEPCHR);
+        tmp = __strtok(NULL, DIRSEPCHR);
     }
 
-    if (strlen(parent) == 1 && *parent == DIRSEPCHR) {
+    if (__strlen(parent) == 1 && *parent == DIRSEPCHR) {
         files = &root->files;
     } else {
         parentnode = list_find_node_with_data_recurse(&root->directories, &get_dir, parent);
@@ -428,11 +428,11 @@ char *readfile(char *path) {
     char *tmp;
     char *parent;
     size_t plen;
-    debug("read file @b\n", path);
+    debug("__read file @b\n", path);
 
     CHECKINIT();
 
-    plen = strlen(path);
+    plen = __strlen(path);
 
     if (plen > MAX_FILENAME_SIZE) {
         debug("File path too long.\n", path);
@@ -444,33 +444,33 @@ char *readfile(char *path) {
         return NULL;
     }
 
-    parent = calloc(MAX_FILENAME_SIZE);
+    parent = __calloc(MAX_FILENAME_SIZE);
 
     if (!parent) {
         debug("Failed to allocate string.\n");
         return NULL;
     }
 
-    tmp = strtok(path, DIRSEPCHR);
+    tmp = __strtok(path, DIRSEPCHR);
     while (tmp) {
         if (fn) {
             if (!*fn)
-                strcat(parent, DIRSEP);
+                __strcat(parent, DIRSEP);
             else
-                strcat(parent, fn);
+                __strcat(parent, fn);
         }
         fn = tmp;
-        tmp = strtok(NULL, DIRSEPCHR);
+        tmp = __strtok(NULL, DIRSEPCHR);
     }
 
 
-    if (strlen(fn) < 1) {
+    if (__strlen(fn) < 1) {
         debug("Filename too short.\n");
         return NULL;
     }
 
     debug("parent: @b\n", parent);
-    if (strlen(parent) == 1 && *parent == DIRSEPCHR) {
+    if (__strlen(parent) == 1 && *parent == DIRSEPCHR) {
         filenode = list_find_node_with_data(&root->files, get_file, fn);
     } else {
         dirnode = list_find_node_with_data_recurse(&root->directories, &get_dir, parent);
@@ -500,12 +500,12 @@ void init_fs() {
     if (root)
         _terminate(8);
 
-    root = calloc(sizeof(dirtree_t));
+    root = __calloc(sizeof(dirtree_t));
 
     if (!root)
         _terminate(9);
 
-    strcpy(root->name, DIRSEP);
+    __strcpy(root->name, DIRSEP);
 
     list_init(&root->directories, freedir);
     list_init(&root->files, freefile);
@@ -521,14 +521,14 @@ static void freedir(void *data) {
 
     list_destroy(&dir->directories);
     list_destroy(&dir->files);
-    free(dir);
+    __free(dir);
 }
 
 static void freefile(void *data) {
     file_t *file = (file_t *)data;
     debug("freeing file @b\n", file->name);
 
-    free(file);
+    __free(file);
 }
 
 static bool get_file(void *fdata, void *data) {

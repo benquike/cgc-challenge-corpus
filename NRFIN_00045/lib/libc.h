@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -31,7 +31,7 @@ typedef unsigned int uint32_t;
  *
  * @param buf Buffer
  * @param len Length of buffer
- * @return OK on error, errno on failure
+ * @return OK on error, __errno_ on failure
  */
 int send_all(char * buf, size_t len);
 
@@ -42,14 +42,14 @@ int send_all(char * buf, size_t len);
  * @param dst Destination buffer
  * @param l Number of bytes to copy
  */
-void memcpy(void *src, void *dst, size_t l);
+void __memcpy(void *src, void *dst, size_t l);
 
 /**
  * Transmit all bytes in buffer
  *
  * @param buf Source buffer
  * @param s Bytes to send
- * @return OK on success, errno on failure
+ * @return OK on success, __errno_ on failure
  */
 int transmit_all(void *buf, size_t s);
 
@@ -59,16 +59,16 @@ int transmit_all(void *buf, size_t s);
  * @param l First buffer
  * @param r Second buffer
  * @param s Number of bytes to compare
- * @param OK on match, errno on failure
+ * @param OK on match, __errno_ on failure
  */
-int memcmp(void *l, void *r, size_t s);
+int __memcmp(void *l, void *r, size_t s);
 
 /**
  * Receive set number of bytes
  *
  * @param size Number fo bytes to receive
  * @param buf Buffer to receive into
- * @return OK on success, errno on failure
+ * @return OK on success, __errno_ on failure
  */
 int recv_all(const size_t size, void *buf);
 
@@ -78,7 +78,7 @@ int recv_all(const size_t size, void *buf);
  * @param s String
  * @return Length of string, maximum 65535
  */
-size_t strlen(char * s);
+size_t __strlen(char * s);
 
 /**
  * Clear buffer

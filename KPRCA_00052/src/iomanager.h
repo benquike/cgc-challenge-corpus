@@ -20,7 +20,7 @@ public:
     bool readline(size_t max_size=0);
     int readnum(size_t max_size=0);
     void set_fd(int _fd) { fd = _fd; }
-    char *get_last_input() { return line_len ? line : NULL; }
+    char *get_last_input() { return line_len ? line : (char *)NULL; }
 };
 
 #endif

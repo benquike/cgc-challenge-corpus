@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -39,7 +39,7 @@ static uint16_t fp_idx = 0;
  * @param transport Transport
  */
 void option_new(TOption **to, toption_t o_type, void *transport) {
-	TOption *new = calloc(sizeof(TOption));
+	TOption *new = __calloc(sizeof(TOption));
 	MALLOC_OK(new);
 
 	new->o_type = o_type;
@@ -89,7 +89,7 @@ TOption *option_pop(TOption **options) {
  */
 void option_destroy_single(TOption **to) {
 
-	// Do not destroy the transport itself, would cause use-after-free issues
+	// Do not destroy the transport itself, would cause use-after-__free issues
 	// Destroy them from the lift and trail master lists in the Resort.
 
 	// switch(to->o_type) {
@@ -103,7 +103,7 @@ void option_destroy_single(TOption **to) {
 	// 		break;
 	// }
 
-	free(*to);
+	__free(*to);
 	*to = NULL;
 }
 
@@ -230,7 +230,7 @@ uint32_t decider_disembark(Decider *d) {
  */
 int32_t decider_new(Decider **d, uint32_t settings[2]) {
 
-	Decider *new = calloc(sizeof(Decider));
+	Decider *new = __calloc(sizeof(Decider));
 	MALLOC_OK(new);
 
 	new->id = settings[0];
@@ -239,7 +239,7 @@ int32_t decider_new(Decider **d, uint32_t settings[2]) {
 	new->disembark = decider_disembark;
 
 	if (0 == new->altitude) {
-		free(new);
+		__free(new);
 		return -1;
 	}
 
@@ -285,7 +285,7 @@ void decider_destroy(Decider **d, Rider **riders) {
 	TOption *to = this->t_options;
 	option_destroy_list(&to);
 
-	free(*d);
+	__free(*d);
 	*d = NULL;
 }
 

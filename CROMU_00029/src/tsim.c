@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -52,9 +52,9 @@ int32_t GetSimLength(void) {
 		
 	SIM_TIME = 0.0;
         while (SIM_TIME <= 0.0) {
-                printf("For how long would you like to run the simulation? (s): ");
+                __printf("For how long would you like to run the simulation? (s): ");
                 if (read_until(buf, "\n", 99) == -1) {
-                        // failed to read the input
+                        // failed to __read the input
                         return(-1);
                 }
 		SIM_TIME = cgcatof(buf);
@@ -263,7 +263,7 @@ int32_t SimStep(void) {
 
 	// allocate a new TGrid to hold updated temperatures
 	malloc_size = X*Y*Z*sizeof(double);
-	if ((TGridNew = calloc(malloc_size, 1)) == NULL) {
+	if ((TGridNew = __calloc(malloc_size, 1)) == NULL) {
 		return(-1);
 	}
 
@@ -276,8 +276,8 @@ int32_t SimStep(void) {
 		}
 	}
 
-	// free and replace the old TGrid
-	free(TGrid);
+	// __free and replace the old TGrid
+	__free(TGrid);
 	TGrid = TGridNew;
 
 	return(0);
@@ -305,7 +305,7 @@ int32_t RunSim(void) {
 
 		// output the current grid
 		GraphTemps(TGrid);
-		printf("At @f seconds\n", CurrTime);
+		__printf("At @f seconds\n", CurrTime);
 		kbhit();
 
 	}

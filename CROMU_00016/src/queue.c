@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -51,32 +51,32 @@ int InitQueues(void) {
 
 	// determine how many queues are needed
 	while (num_queues < MIN_QUEUES || num_queues > MAX_QUEUES) {
-		printf("How many queues (1-8)?: ");
+		__printf("How many queues (1-8)?: ");
 		if ((len = readUntil(buf, 9, '\n')) == -1) {
 			return(-1);
 		}
-		num_queues = (unsigned char)atoi(buf);
+		num_queues = (unsigned char)__atoi(buf);
 	}
 	iface.num_queues = num_queues;
 	iface.priority_queue_enabled = 0;
 
 	// allocate space to hold the interface queue pointers
 	if (allocate(num_queues * sizeof(queue *), 0, (void **)&(iface.ifqueue))) {
-		puts("Failed to allocate interface queue pointers");
+		__puts("Failed to allocate interface queue pointers");
 		return(-1);
 	}
-	bzero(iface.ifqueue, num_queues * sizeof(queue *));
+	__bzero(iface.ifqueue, num_queues * sizeof(queue *));
 
 	// for each queue
 	curr_queue = 0;
 	while (curr_queue < num_queues) {
-		printf("Queue @d:\n", curr_queue);
+		__printf("Queue @d:\n", curr_queue);
 		
 		// Is queue 0 a priority queue (serviced before all others)?
 		if (curr_queue == 0) {
-			bzero(buf, 10);
+			__bzero(buf, 10);
 			while (buf[0] != 'y' & buf[0] != 'n') {
-				printf("  Is queue #@d a priority queue(y,n): ", curr_queue);
+				__printf("  Is queue #@d a priority queue(y,n): ", curr_queue);
 				if ((len = readUntil(buf, 2, '\n')) == -1) {
 					return(-1);
 				}
@@ -90,18 +90,18 @@ int InitQueues(void) {
 		// what priority values should be placed in this queue?
 		min_pri = -1;
 		while (min_pri < MIN_PRIORITY || min_pri > MAX_PRIORITY) {
-			printf("  What's the minimum priority packet to place in queue #@d (@d-@d): ", curr_queue, MIN_PRIORITY, MAX_PRIORITY);
+			__printf("  What's the minimum priority packet to place in queue #@d (@d-@d): ", curr_queue, MIN_PRIORITY, MAX_PRIORITY);
 			if ((len = readUntil(buf, 9, '\n')) == -1) {
 				return(-1);
 			} else if (len == 0) {
 				continue;
 			}
-			min_pri = (unsigned int)atoi(buf);
+			min_pri = (unsigned int)__atoi(buf);
 
 			// make sure that priority isn't already assigned to another queue
 			for (i = 0; i < curr_queue; i++) {
 				if (iface.ifqueue[i]->min_priority <= min_pri && min_pri <= iface.ifqueue[i]->max_priority) {
-					printf("  That priority value is already assigned to queue @d\n", i);
+					__printf("  That priority value is already assigned to queue @d\n", i);
 					min_pri = -1;
 					break;
 				}
@@ -109,17 +109,17 @@ int InitQueues(void) {
 		}
 		max_pri = -1;
 		while (max_pri < MIN_PRIORITY || max_pri > MAX_PRIORITY) {
-			printf("  What's the maximum priority packet to place in queue #@d (@d-@d): ", curr_queue, MIN_PRIORITY, MAX_PRIORITY);
+			__printf("  What's the maximum priority packet to place in queue #@d (@d-@d): ", curr_queue, MIN_PRIORITY, MAX_PRIORITY);
 			if ((len = readUntil(buf, 9, '\n')) == -1) {
 				return(-1);
 			} else if (len == 0) {
 				continue;
 			}
-			max_pri = (unsigned int)atoi(buf);
+			max_pri = (unsigned int)__atoi(buf);
 
 			// make sure max >= min
 			if (max_pri < min_pri) {
-				puts("  Maximum priority must be greater or equal to minimum priority");
+				__puts("  Maximum priority must be greater or equal to minimum priority");
 				max_pri = -1;
 				continue;
 			}
@@ -127,7 +127,7 @@ int InitQueues(void) {
 			// make sure it isn't already assigned to some other queue
 			for (i = 0; i < curr_queue; i++) {
 				if (iface.ifqueue[i]->min_priority <= max_pri && max_pri <= iface.ifqueue[i]->max_priority) {
-					printf("  That priority value is already assigned to queue @d\n", i);
+					__printf("  That priority value is already assigned to queue @d\n", i);
 					max_pri = -1;
 					break;
 				}
@@ -137,30 +137,30 @@ int InitQueues(void) {
 		// how deep should the queue be?
 		queue_depth = 0;
 		while (queue_depth < MIN_DEPTH || queue_depth > MAX_DEPTH) {
-			printf("  What is the depth of queue #@d (@d - @d packets): ", curr_queue, MIN_DEPTH, MAX_DEPTH);
+			__printf("  What is the depth of queue #@d (@d - @d packets): ", curr_queue, MIN_DEPTH, MAX_DEPTH);
 			if ((len = readUntil(buf, 9, '\n')) == -1) {
 				return(-1);
 			}
-			queue_depth = (unsigned int)atoi(buf);
+			queue_depth = (unsigned int)__atoi(buf);
 		}
 
 		// what weight should be given to this queue (if it's not a priority queue)?
 		weight = 0;
 		if (!iface.priority_queue_enabled || curr_queue != 0) {
 			while (weight < MIN_WEIGHT || weight > MAX_WEIGHT) {
-				printf("  What is the weight of queue #@d (@d - @d percent): ", curr_queue, MIN_WEIGHT, MAX_WEIGHT);
+				__printf("  What is the weight of queue #@d (@d - @d percent): ", curr_queue, MIN_WEIGHT, MAX_WEIGHT);
 				if ((len = readUntil(buf, 9, '\n')) == -1) {
 					return(-1);
 				}
-				weight = (unsigned char)atoi(buf);
+				weight = (unsigned char)__atoi(buf);
 	
 				// make sure the requested weight doesn't add up to more 
 				// than the available weight for all queues
 				if (total_weight + weight > 100) {
-					puts("  Total weight of all queues can not exceed 100%");
+					__puts("  Total weight of all queues can not exceed 100%");
 					weight = 0;
 				} else if ((curr_queue == num_queues-1) && (total_weight + weight != 100)) {
-					puts("  Total weight of all queues must total up to 100%");
+					__puts("  Total weight of all queues must total up to 100%");
 					weight = 0;
 				}
 			}
@@ -172,10 +172,10 @@ int InitQueues(void) {
 
 		// allocate a new queue
 		if (allocate(sizeof(queue), 0, (void **)&(iface.ifqueue[curr_queue]))) {
-			printf("  Failed to allocate queue #@d\n", curr_queue);
+			__printf("  Failed to allocate queue #@d\n", curr_queue);
 			return(-1);
 		}
-		bzero(iface.ifqueue[curr_queue], sizeof(queue));
+		__bzero(iface.ifqueue[curr_queue], sizeof(queue));
 		q = iface.ifqueue[curr_queue];
 		q->max_depth = queue_depth;
 		q->min_priority = min_pri;
@@ -187,11 +187,11 @@ int InitQueues(void) {
 
 		// allocate a pkt array to handle the required queue depth
 		if (InitRingBuffer(queue_depth, &(q->ring_buffer))) {
-			puts("  Failed to allocate pkt ring buffer");
+			__puts("  Failed to allocate pkt ring buffer");
 			return(-1);
 		}
 		q->head = q->ring_buffer;
-		q->free = q->ring_buffer;
+		q->__free = q->ring_buffer;
 
 		// move on to the next requested queue
 		curr_queue++;
@@ -203,7 +203,7 @@ int InitQueues(void) {
 		priority_vals -= (iface.ifqueue[i]->max_priority - iface.ifqueue[i]->min_priority + 1);
 	}
 	if (priority_vals != 0) {
-		printf("Not all priority values from @d to @d are accounted for in the queue definitions.\n",
+		__printf("Not all priority values from @d to @d are accounted for in the queue definitions.\n",
 			MIN_PRIORITY, MAX_PRIORITY);
 		return(-1);
 	}
@@ -245,10 +245,10 @@ int InitRingBuffer(unsigned int num_pkts, pkt **ring_buffer) {
 	count = 0;
 	while (page < num_pages) {
 		if (allocate(PAGE_SIZE, 0, (void *)&(p))) {
-			puts("Failed to allocate pkt page");
+			__puts("Failed to allocate pkt page");
 			return(-1);
 		}
-		bzero(p, PAGE_SIZE);
+		__bzero(p, PAGE_SIZE);
 
 		// if this is the first page, set the ring buffer
 		// to point at its first packet (aka the page start)
@@ -313,7 +313,7 @@ int DestroyRingBuffer(unsigned char queue) {
 		} while ((((unsigned int)p & 0xFFFFF000) == ((unsigned int)p->next & 0xFFFFF000)) && p != page_top);
 
 		// get pointer to next page if it's not the top of the ring
-		// buffer which has already been free'd
+		// buffer which has already been __free'd
 		if (p != iface.ifqueue[queue]->ring_buffer) {
 			p = p->next;
 		}
@@ -337,11 +337,11 @@ int DestroyQueues(void) {
 			return(-1);
 		}
 
-		// free the queue
+		// __free the queue
 		deallocate(iface.ifqueue[i], sizeof(queue));
 	}
 
-	// free the interface queue pointers
+	// __free the interface queue pointers
 	deallocate(iface.ifqueue, iface.num_queues * sizeof(queue *));
 
 	return(0);

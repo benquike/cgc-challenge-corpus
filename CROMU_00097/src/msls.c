@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -47,7 +47,7 @@ uint32_t get_random()
 
 SLS_FUNCTION_PTRS *msls_get_sls_functions()
 {
-  SLS_FUNCTION_PTRS *functions = calloc(sizeof(SLS_FUNCTION_PTRS));
+  SLS_FUNCTION_PTRS *functions = __calloc(sizeof(SLS_FUNCTION_PTRS));
 
   functions->receive_msg = &msls_receive_msg;
   functions->send_msg = &msls_send_msg;
@@ -72,7 +72,7 @@ SLS_MESSAGE *msls_receive_msg(SERVER_STATE *state)
 {
   // Receive msg
   debug_print("Receive MSG\n");
-  SLS_MESSAGE *msg = calloc(sizeof(SLS_MESSAGE));
+  SLS_MESSAGE *msg = __calloc(sizeof(SLS_MESSAGE));
   receive_fixed((uint8_t *)&msg->length, sizeof(msg->length));
   debug_print("msg length: $d\n", msg->length);
   if ((msg->length < SLS_HEADER_LENGTH) || (msg->length > MSLS_MAX_MSG_LENGTH))
@@ -94,7 +94,7 @@ SLS_MESSAGE *msls_receive_msg(SERVER_STATE *state)
   }
   if (msg->msg_length > 0)
   {
-    msg->message = calloc(msg->msg_length);
+    msg->message = __calloc(msg->msg_length);
     receive_fixed(msg->message, msg->msg_length);
   }
   if (!state->functions->version_check(msg->version))
@@ -188,18 +188,18 @@ int msls_send_msg(SLS_MESSAGE *msg)
 void msls_cleanup(SERVER_STATE *state)
 {
   debug_print("Exiting\n");
-  SLS_MESSAGE *msg= calloc(sizeof(SLS_MESSAGE));
+  SLS_MESSAGE *msg= __calloc(sizeof(SLS_MESSAGE));
   msg->type = SLS_TYPE_SHUTDOWN;
   msg->version = SLS_VERSION;
   msg->length = SLS_HEADER_LENGTH;
   msls_send_msg(msg);
-  free(msg);
+  __free(msg);
   for (int i=0; i< MAX_CONNECTIONS; i++)
   {
     destroy_context(state->connections[i]);
   }
-  free(state->cookie_base);
-  free(state->functions);
+  __free(state->cookie_base);
+  __free(state->functions);
   return;
 }
 
@@ -218,7 +218,7 @@ void msls_destroy_msg(SLS_MESSAGE *msg)
         break;
       case SLS_TYPE_ERROR:
       {
-        free(msg->message);
+        __free(msg->message);
         break;
       }
       case SLS_TYPE_HANDSHAKE:
@@ -226,8 +226,8 @@ void msls_destroy_msg(SLS_MESSAGE *msg)
         SLS_HANDSHAKE_MESSAGE *hs_msg = (SLS_HANDSHAKE_MESSAGE *)msg->message;
         if (hs_msg)
         {
-          free(hs_msg->message);
-          free(hs_msg);
+          __free(hs_msg->message);
+          __free(hs_msg);
         }
         break;
       }
@@ -236,7 +236,7 @@ void msls_destroy_msg(SLS_MESSAGE *msg)
         SLS_APPLICATION_MESSAGE *ap_msg = (SLS_APPLICATION_MESSAGE *)msg->message;
         if ((ap_msg->length > 0) && (ap_msg->contents))
         {
-          free(ap_msg->contents);
+          __free(ap_msg->contents);
         }
         break;
       }
@@ -245,8 +245,8 @@ void msls_destroy_msg(SLS_MESSAGE *msg)
         SLS_HEARTBEAT_MESSAGE *hb_msg = (SLS_HEARTBEAT_MESSAGE *)msg->message;
         if (hb_msg)
         {
-          free(hb_msg->payload);
-          free(hb_msg);
+          __free(hb_msg->payload);
+          __free(hb_msg);
         }
       }
       case SLS_TYPE_SHUTDOWN:
@@ -254,7 +254,7 @@ void msls_destroy_msg(SLS_MESSAGE *msg)
       default:
         break;
     }
-    free(msg);
+    __free(msg);
   }
 }
 
@@ -287,9 +287,9 @@ void msls_decrypt(uint8_t *buffer, uint32_t length, CLIENT_CONTEXT *connection)
 void msls_send_error_msg(uint16_t error_code, uint8_t severity)
 {
   debug_print("Error: $x\n", error_code);
-  SLS_MESSAGE *msg = calloc(sizeof(SLS_MESSAGE));
+  SLS_MESSAGE *msg = __calloc(sizeof(SLS_MESSAGE));
   msg->type = SLS_TYPE_ERROR;
-  SLS_ERROR_MESSAGE *error_msg = calloc(sizeof(SLS_ERROR_MESSAGE));
+  SLS_ERROR_MESSAGE *error_msg = __calloc(sizeof(SLS_ERROR_MESSAGE));
   error_msg->error_code = error_code;
   error_msg->severity = severity;
   msg->message = (uint8_t *)error_msg;

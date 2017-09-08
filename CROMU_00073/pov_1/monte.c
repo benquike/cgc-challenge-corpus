@@ -65,7 +65,7 @@ uint8 monte_happy() {
   float64 diff = fabs((4 * ratio) - PI);
 
   float64 doubler_size = 30 * log10(1.0 / diff);
-  /* printf("scl %f rat %f dif %f dbl %f\n", scaler, ratio, diff, doubler_size); */
+  /* __printf("scl %f rat %f dif %f dbl %f\n", scaler, ratio, diff, doubler_size); */
   if (doubler_size > 254.0) return 0xff;
   if (doubler_size < 1.0) return 0;
 

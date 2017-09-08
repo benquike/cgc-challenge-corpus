@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -56,7 +56,7 @@ void initialize()
   unsigned int i, rand;
   char c;
   movie_t *movie;
-  printf("\n   . . . Initializing the inventory . . .\n         (movie info from IMDb.com)\n");
+  __printf("\n   . . . Initializing the inventory . . .\n         (movie info from IMDb.com)\n");
 
   for (i = 0; i <= sizeof(g_password)/sizeof(g_password[0]); ++i)
   {
@@ -71,16 +71,16 @@ void initialize()
 
   for (i = 0; i < sizeof(default_movies)/sizeof(default_movies[0]); ++i)
   {
-    movie = (movie_t *) malloc(sizeof(movie_t));
+    movie = (movie_t *) __malloc(sizeof(movie_t));
     if (movie == NULL)
       goto fail;
-    memset(movie, '\0', sizeof(movie_t));
-    movie->title = (char *) malloc(strlen(default_movies[i].title) + 1);
-    movie->desc = (char *) malloc(strlen(default_movies[i].desc) + 1);
+    __memset(movie, '\0', sizeof(movie_t));
+    movie->title = (char *) __malloc(__strlen(default_movies[i].title) + 1);
+    movie->desc = (char *) __malloc(__strlen(default_movies[i].desc) + 1);
     if (movie->title == NULL || movie->desc == NULL)
       goto fail;
-    strcpy(movie->title, default_movies[i].title);
-    strcpy(movie->desc, default_movies[i].desc);
+    __strcpy(movie->title, default_movies[i].title);
+    __strcpy(movie->desc, default_movies[i].desc);
     movie->year = default_movies[i].year;
     movie->score = default_movies[i].score;
     movie->genre = default_movies[i].genre;
@@ -91,7 +91,7 @@ void initialize()
   return;
 
 fail:
-  printf("[ERROR] Initialization failed. Exit.\n");
+  __printf("[ERROR] Initialization failed. Exit.\n");
   quit();
 }
 
@@ -146,7 +146,7 @@ void print_movie_detail(int id, movie_t *movie)
         genre_str = "Other"; break;
     }
 
-    printf(format, id, movie->title, movie->year,
+    __printf(format, id, movie->title, movie->year,
                              rating_str, genre_str, movie->score, movie->desc);
   }
 }
@@ -157,23 +157,23 @@ void list_movies()
   movie_node_t *node;
 
   /* Movie list (full) */
-  printf("\nMovies (Full)\n--------------\n");
+  __printf("\nMovies (Full)\n--------------\n");
   for (node = movies_full; node != NULL; node = node->next)
   {
     num_movies++;
     node->movie->print_info(num_movies, node->movie);
   }
-  printf("--------------\n%d movie(s)\n", num_movies);
+  __printf("--------------\n%d movie(s)\n", num_movies);
 
   /* Movie list (rented) */
   num_movies = 0;
-  printf("\nMovies (Rented)\n--------------\n");
+  __printf("\nMovies (Rented)\n--------------\n");
   for (node = movies_rented; node != NULL; node = node->next)
   {
     num_movies++;
     node->movie->print_info(num_movies, node->movie);
   }
-  printf("--------------\n%d movie(s)\n", num_movies);
+  __printf("--------------\n%d movie(s)\n", num_movies);
 }
 
 void rent_movie()
@@ -183,30 +183,30 @@ void rent_movie()
   char buf[256];
 
   /* Present the full movie list with index */
-  printf("\nMovies (Full)\n--------------\n");
+  __printf("\nMovies (Full)\n--------------\n");
   for (node = movies_full; node != NULL; node = node->next)
   {
     num_movies++;
     node->movie->print_info(num_movies, node->movie);
   }
-  printf("--------------\n%d movie(s)\n", num_movies);
+  __printf("--------------\n%d movie(s)\n", num_movies);
   if (num_movies == 0)
   {
     /* Shouldn't really happen with successful init */
-    printf("[ERROR] Movie list is empty. Please try again later.\n");
+    __printf("[ERROR] Movie list is empty. Please try again later.\n");
     return;
   }
 
   /* Get and validate the index */
   while (1)
   {
-    printf("Enter movie id: ");
+    __printf("Enter movie id: ");
     if (readuntil(STDIN, buf, sizeof(buf), '\n') < 0)
       return;
-    movie_id = strtoul(buf, NULL, 10);
+    movie_id = __strtoul(buf, NULL, 10);
     if (movie_id >=1 && movie_id <= num_movies)
       break;
-    printf("[ERROR] Invalid movie id. Try again.\n");
+    __printf("[ERROR] Invalid movie id. Try again.\n");
   }
 
   /* Check if the movie isn't rented already */
@@ -215,16 +215,16 @@ void rent_movie()
   tmp = movie_find(movies_rented, movie->title);
   if (tmp)
   {
-    printf("Sorry, [%s] is already rented at this time. Please try again later.\n", tmp->movie->title);
+    __printf("Sorry, [%s] is already rented at this time. Please try again later.\n", tmp->movie->title);
     return;
   }
 
   /* If not in rental list, insert it into rental list */
   tmp = movie_find_by_id(movies_full, movie_id);
   if (movie_add(&movies_rented, tmp->movie) != 0)
-    printf("[ERROR] Failed to rent. Please try again later.\n");
+    __printf("[ERROR] Failed to rent. Please try again later.\n");
   else
-    printf("Successfully rented [%s]! Enjoy!\n", tmp->movie->title);
+    __printf("Successfully rented [%s]! Enjoy!\n", tmp->movie->title);
 }
 
 void return_movie()
@@ -234,31 +234,31 @@ void return_movie()
   movie_node_t *node;
 
   /* Present the list of rented movies with index */
-  printf("\nMovies (Rented)\n--------------\n");
+  __printf("\nMovies (Rented)\n--------------\n");
   for (node = movies_rented; node != NULL; node = node->next)
   {
     num_movies++;
     node->movie->print_info(num_movies, node->movie);
   }
-  printf("--------------\n%d movie(s)\n", num_movies);
+  __printf("--------------\n%d movie(s)\n", num_movies);
   if (num_movies == 0)
   {
-    printf("[ERROR] All the movies are in our inventory.\n");
+    __printf("[ERROR] All the movies are in our inventory.\n");
     return;
   }
 
   /* Get and validate the index */
   while (1)
   {
-    printf("Enter movie id: ");
+    __printf("Enter movie id: ");
     if (readuntil(STDIN, buf, sizeof(buf), '\n') < 0)
       return;
-    movie_id = strtoul(buf, NULL, 10);
+    movie_id = __strtoul(buf, NULL, 10);
     //if (movie_id >= 1 && movie_id <= g_num_movies)
     //  break;
     if (movie_id >= 1 && movie_id <= num_movies)
       break;
-    printf("[ERROR] Invalid movie id. Try again.\n");
+    __printf("[ERROR] Invalid movie id. Try again.\n");
   }
 
   /* Remove the movie entry in rental list */
@@ -266,18 +266,18 @@ void return_movie()
   if (tmp == NULL)
   {
     /* Shouldn't happen */
-    printf("Sorry, we have some issues here. Please try again later.\n");
+    __printf("Sorry, we have some issues here. Please try again later.\n");
     return;
   }
 
   if (movie_delete(&movies_rented, movie_id) != 0)
   {
     /* Shouldn't happen */
-    printf("[ERROR] Failed to return the movie. Please try again.\n");
+    __printf("[ERROR] Failed to return the movie. Please try again.\n");
     return;
   }
 
-  printf("Successfully returned [%s]! Thank you!\n", tmp->movie->title);
+  __printf("Successfully returned [%s]! Thank you!\n", tmp->movie->title);
 }
 
 int login()
@@ -286,27 +286,27 @@ int login()
   char buf[64];
   char username[] = "admin";
 
-  printf("username: ");
+  __printf("username: ");
   readuntil(STDIN, buf, sizeof(buf), '\n');
-  if (strcmp(username, buf) != 0)
+  if (__strcmp(username, buf) != 0)
   {
-    printf("[ERROR] Permission Denied: Wrong credentials\n");
+    __printf("[ERROR] Permission Denied: Wrong credentials\n");
     return admin;
   }
 
-  printf("password: ");
+  __printf("password: ");
 #if PATCHED
   readuntil(STDIN, buf, sizeof(buf), '\n');
 #else
   readuntil(STDIN, buf, sizeof(buf) + 4, '\n');
 #endif
-  if (strcmp(g_password, buf) != 0)
+  if (__strcmp(g_password, buf) != 0)
   {
-    printf("[ERROR] Permission Denied: Wrong credentials\n");
+    __printf("[ERROR] Permission Denied: Wrong credentials\n");
     return admin;
   }
 
-  printf("\nWelcome, admin!\n");
+  __printf("\nWelcome, admin!\n");
   admin = 1;
 
   return admin;
@@ -317,55 +317,55 @@ void add_movie()
   char buf[1024];
   movie_t *movie;
 
-  movie = (movie_t *) malloc(sizeof(movie_t));
+  movie = (movie_t *) __malloc(sizeof(movie_t));
   if (!movie)
     return;
-  printf("Add a movie\n--------------\n");
-  printf("Enter Title: ");
+  __printf("Add a movie\n--------------\n");
+  __printf("Enter Title: ");
   if (readuntil(STDIN, buf, sizeof(buf), '\n') < 0)
     goto fail;
-  movie->title = (char *) malloc(strlen(buf) + 1);
+  movie->title = (char *) __malloc(__strlen(buf) + 1);
   if (movie->title == NULL)
     goto fail;
-  strcpy(movie->title, buf);
+  __strcpy(movie->title, buf);
 
-  printf("Enter Description: ");
+  __printf("Enter Description: ");
   if (readuntil(STDIN, buf, sizeof(buf), '\n') < 0)
     goto fail;
-  movie->desc = (char *) malloc(strlen(buf) + 1);
+  movie->desc = (char *) __malloc(__strlen(buf) + 1);
   if (movie->desc == NULL)
     goto fail;
-  strcpy(movie->desc, buf);
+  __strcpy(movie->desc, buf);
 
   while (1)
   {
-    printf("Enter Year (1800-2015): ");
+    __printf("Enter Year (1800-2015): ");
     if (readuntil(STDIN, buf, sizeof(buf), '\n') < 0)
       goto fail;
-    movie->year = strtoul(buf, NULL, 10);
+    movie->year = __strtoul(buf, NULL, 10);
     if (movie->year >= 1800 && movie->year <= 2015)
       break;
-    printf("[ERROR] Invalid year. Try again.\n");
+    __printf("[ERROR] Invalid year. Try again.\n");
   }
 
   while (1)
   {
-    printf("Enter Review score (0-100): ");
+    __printf("Enter Review score (0-100): ");
     if (readuntil(STDIN, buf, sizeof(buf), '\n') < 0)
       goto fail;
-    movie->score = strtoul(buf, NULL, 10);
+    movie->score = __strtoul(buf, NULL, 10);
     if (movie->score >= 0 && movie->score <= 100)
       break;
-    printf("[ERROR] Invalid rating. Try again.\n");
+    __printf("[ERROR] Invalid rating. Try again.\n");
   }
 
   int finish = 0;
   while (!finish)
   {
-    printf("Select a genre\n 1. Action\n 2. Romance\n 3. Comeda\n 4. Horror\n 5. Other\nChoice: ");
+    __printf("Select a genre\n 1. Action\n 2. Romance\n 3. Comeda\n 4. Horror\n 5. Other\nChoice: ");
     if (readuntil(STDIN, buf, sizeof(buf), '\n') < 0)
       goto fail;
-    unsigned int genre = strtoul(buf, NULL, 10);
+    unsigned int genre = __strtoul(buf, NULL, 10);
     finish = 1;
     switch (genre)
     {
@@ -381,7 +381,7 @@ void add_movie()
         movie->genre = G_OTHER; break;
       default:
         finish = 0;
-        printf("[ERROR] Invalid genre. Try again.\n");
+        __printf("[ERROR] Invalid genre. Try again.\n");
         break;
     }
   }
@@ -389,10 +389,10 @@ void add_movie()
   finish = 0;
   while (!finish)
   {
-    printf("Select a film rating\n 1. G\n 2. PG\n 3. PG-13\n 4. R\n 5. Unknown\nChoice: ");
+    __printf("Select a film rating\n 1. G\n 2. PG\n 3. PG-13\n 4. R\n 5. Unknown\nChoice: ");
     if (readuntil(STDIN, buf, sizeof(buf), '\n') < 0)
       goto fail;
-    unsigned int rating = strtoul(buf, NULL, 10);
+    unsigned int rating = __strtoul(buf, NULL, 10);
     finish = 1;
     switch (rating)
     {
@@ -408,7 +408,7 @@ void add_movie()
         movie->rating = R_UNKNOWN; break;
       default:
         finish = 0;
-        printf("[ERROR] Invalid film rating. Try again.\n");
+        __printf("[ERROR] Invalid film rating. Try again.\n");
         break;
     }
   }
@@ -417,7 +417,7 @@ void add_movie()
   movie->print_info = &print_movie_detail;
   if (movie_add(&movies_full, movie) != 0)
   {
-    printf("[ERROR] Failed to add a movie.\n");
+    __printf("[ERROR] Failed to add a movie.\n");
     goto fail;
   }
   return;
@@ -426,10 +426,10 @@ fail:
   if (movie)
   {
     if (movie->desc)
-      free(movie->desc);
+      __free(movie->desc);
     if (movie->title)
-      free(movie->title);
-    free(movie);
+      __free(movie->title);
+    __free(movie);
   }
   return;
 }
@@ -441,29 +441,29 @@ void remove_movie()
   movie_node_t *node;
 
   /* Movie list (full) */
-  printf("\nMovies (Full)\n--------------\n");
+  __printf("\nMovies (Full)\n--------------\n");
   for (node = movies_full; node != NULL; node = node->next)
   {
     num_movies++;
     node->movie->print_info(num_movies, node->movie);
   }
-  printf("--------------\n%d movie(s)\n", num_movies);
+  __printf("--------------\n%d movie(s)\n", num_movies);
   if (num_movies == 0)
   {
-    printf("[ERROR] Movie list is empty.\n");
+    __printf("[ERROR] Movie list is empty.\n");
     return;
   }
 
   /* Get and validate the index */
   while (1)
   {
-    printf("Enter movie id: ");
+    __printf("Enter movie id: ");
     if (readuntil(STDIN, buf, sizeof(buf), '\n') < 0)
       return;
-    movie_id = strtoul(buf, NULL, 10);
+    movie_id = __strtoul(buf, NULL, 10);
     if (movie_id >= 1 && movie_id <= num_movies)
       break;
-    printf("[ERROR] Invalid movie id. Try again.\n");
+    __printf("[ERROR] Invalid movie id. Try again.\n");
   }
 
   node = movie_find_by_id(movies_full, movie_id);
@@ -474,12 +474,12 @@ void remove_movie()
 #else
   if (movie_delete(&movies_full, movie_id) != 0)
 #endif
-    printf("[ERROR] Failed to remove.\n");
+    __printf("[ERROR] Failed to remove.\n");
   else
   {
     g_num_movies--;
     free_movie(movie);
-    printf("Successfully removed the movie!\n");
+    __printf("Successfully removed the movie!\n");
   }
 }
 
@@ -492,73 +492,73 @@ void update_movie()
   movie_t *movie;
 
   /* Present the full list with index */
-  printf("\nMovies (Full)\n--------------\n");
+  __printf("\nMovies (Full)\n--------------\n");
   for (node = movies_full; node != NULL; node = node->next)
   {
     num_movies++;
     node->movie->print_info(num_movies, node->movie);
   }
-  printf("--------------\n%d movie(s)\n", num_movies);
+  __printf("--------------\n%d movie(s)\n", num_movies);
   if (num_movies == 0)
   {
-    printf("[ERROR] Nothing to update.\n");
+    __printf("[ERROR] Nothing to update.\n");
     return;
   }
 
   /* Get and validate the index */
   while (1)
   {
-    printf("Enter movie id: ");
+    __printf("Enter movie id: ");
     if (readuntil(STDIN, buf, sizeof(buf), '\n') < 0)
       return;
-    movie_id = strtoul(buf, NULL, 10);
+    movie_id = __strtoul(buf, NULL, 10);
     if (movie_id >= 1 && movie_id <= num_movies)
       break;
-    printf("[ERROR] Invalid movie id. Try again.\n");
+    __printf("[ERROR] Invalid movie id. Try again.\n");
   }
 
   node = movie_find_by_id(movies_full, movie_id);
   movie = node->movie;
 
-  printf("\nUpdate a movie\n--------------\nJust leave it empty to keep the old value.\n");
-  printf("Enter new title (current: [%s]): ", movie->title);
+  __printf("\nUpdate a movie\n--------------\nJust leave it empty to keep the old value.\n");
+  __printf("Enter new title (current: [%s]): ", movie->title);
   if (readuntil(STDIN, buf, sizeof(buf), '\n') < 0)
     return;
-  if (strlen(buf) != 0)
+  if (__strlen(buf) != 0)
   {
-    new_title = (char *) malloc(strlen(buf) + 1);
+    new_title = (char *) __malloc(__strlen(buf) + 1);
     if (new_title == NULL)
       goto fail;
-    strcpy(new_title, buf);
-    free(movie->title);
+    __strcpy(new_title, buf);
+    __free(movie->title);
     movie->title = new_title;
   }
-  printf("Enter new description (current: [%s]): ", movie->desc);
+  __printf("Enter new description (current: [%s]): ", movie->desc);
   if (readuntil(STDIN, buf, sizeof(buf), '\n') < 0)
     return;
-  if (strlen(buf) != 0)
+  if (__strlen(buf) != 0)
   {
-    new_desc = (char *) malloc(strlen(buf) + 1);
+    new_desc = (char *) __malloc(__strlen(buf) + 1);
     if (new_desc == NULL)
       goto fail;
-    strcpy(new_desc, buf);
-    free(movie->desc);
+    __strcpy(new_desc, buf);
+    __free(movie->desc);
     movie->desc = new_desc;
   }
   while (1)
   {
-    printf("Enter new year (1800-2015) (current: [%d]): ", movie->year);
+    __printf("Enter new year (1800-2015) (current: [%d]): ", movie->year);
     if (readuntil(STDIN, buf, sizeof(buf), '\n') < 0)
       goto fail;
-    if (strlen(buf) != 0)
+    if (__strlen(buf) != 0)
     {
-      int new_year = strtoul(buf, NULL, 10);
+      int new_year = __strtoul(buf, NULL, 10);
       if (new_year >= 1800 && new_year <= 2015)
       {
         movie->year = new_year;
         break;
       }
-      printf("[ERROR] Invalid year. Try again.\n");
+      __printf("[ERROR] Invalid year. Try again.\n");
     }
     else
       break;
@@ -566,18 +566,18 @@ void update_movie()
 
   while (1)
   {
-    printf("Enter new review score (0-100) (current: [%d/100]: ", movie->score);
+    __printf("Enter new review score (0-100) (current: [%d/100]: ", movie->score);
     if (readuntil(STDIN, buf, sizeof(buf), '\n') < 0)
       goto fail;
-    if (strlen(buf) != 0)
+    if (__strlen(buf) != 0)
     {
-      int new_score = strtoul(buf, NULL, 10);
+      int new_score = __strtoul(buf, NULL, 10);
       if (new_score >= 0 && new_score <= 100)
       {
         movie->score = new_score;
         break;
       }
-      printf("[ERROR] Invalid rating. Try again.\n");
+      __printf("[ERROR] Invalid rating. Try again.\n");
     }
     else
       break;
@@ -586,12 +586,12 @@ void update_movie()
   int finish = 0;
   while (!finish)
   {
-    printf("Select a genre (current: [%s])\n 1. Action\n 2. Romance\n 3. Comeda\n 4. Horror\n 5. Other\nChoice: ", movie_g2s(movie->genre));
+    __printf("Select a genre (current: [%s])\n 1. Action\n 2. Romance\n 3. Comeda\n 4. Horror\n 5. Other\nChoice: ", movie_g2s(movie->genre));
     if (readuntil(STDIN, buf, sizeof(buf), '\n') < 0)
       goto fail;
-    if (strlen(buf) != 0)
+    if (__strlen(buf) != 0)
     {
-      unsigned int genre = strtoul(buf, NULL, 10);
+      unsigned int genre = __strtoul(buf, NULL, 10);
       finish = 1;
       switch (genre)
       {
@@ -607,7 +607,7 @@ void update_movie()
           movie->genre = G_OTHER; break;
         default:
           finish = 0;
-          printf("[ERROR] Invalid genre. Try again.\n");
+          __printf("[ERROR] Invalid genre. Try again.\n");
           break;
       }
     }
@@ -618,12 +618,12 @@ void update_movie()
   finish = 0;
   while (!finish)
   {
-    printf("Select a film rating (current: [%s]\n 1. G\n 2. PG\n 3. PG-13\n 4. R\n 5. Unknown\nChoice: ", movie_r2s(movie->rating));
+    __printf("Select a film rating (current: [%s]\n 1. G\n 2. PG\n 3. PG-13\n 4. R\n 5. Unknown\nChoice: ", movie_r2s(movie->rating));
     if (readuntil(STDIN, buf, sizeof(buf), '\n') < 0)
       goto fail;
-    if (strlen(buf) != 0)
+    if (__strlen(buf) != 0)
     {
-      unsigned int rating = strtoul(buf, NULL, 10);
+      unsigned int rating = __strtoul(buf, NULL, 10);
       finish = 1;
       switch (rating)
       {
@@ -639,7 +639,7 @@ void update_movie()
           movie->rating = R_UNKNOWN; break;
         default:
           finish = 0;
-          printf("[ERROR] Invalid film rating. Try again.\n");
+          __printf("[ERROR] Invalid film rating. Try again.\n");
           break;
       }
     }
@@ -647,22 +647,22 @@ void update_movie()
       break;
   }
 
-  printf("Successfully updated the movie information!\n");
+  __printf("Successfully updated the movie information!\n");
   return;
 
 fail:
   if (new_title)
-    free(new_title);
+    __free(new_title);
   if (new_desc)
-    free(new_desc);
+    __free(new_desc);
   if (movie)
-    free(movie);
+    __free(movie);
 }
 
 void quit()
 {
-  printf("Bye!\n");
-  exit(0);
+  __printf("Bye!\n");
+  __exit(0);
 }
 
 int main()
@@ -673,15 +673,15 @@ int main()
   char menu[] = "\n1. List movies\n2. Rent movie\n3. Return movie\n4. Admin mode\n5. Exit\n\nChoice: ";
   char admin_menu[] = "\n1. Add movie\n2. Remove movie\n3. Update movie\n4. Quit admin mode\n\nChoice: ";
 
-  printf(welcome);
+  __printf(welcome);
   initialize();
-  printf("=============================================");
+  __printf("=============================================");
 
   while (1)
   {
     if (admin_mode)
     {
-      printf(admin_menu);
+      __printf(admin_menu);
       if (readuntil(STDIN, buf, sizeof(buf), '\n') < 0)
         quit();
       switch (buf[0])
@@ -699,13 +699,13 @@ int main()
           admin_mode = 0;
           break;
         default:
-          printf("[ERROR] Invalid menu. Please select again.\n");
+          __printf("[ERROR] Invalid menu. Please select again.\n");
           break;
       }
     }
     else
     {
-      printf(menu);
+      __printf(menu);
       if (readuntil(STDIN, buf, sizeof(buf), '\n') < 0)
         quit();
       switch (buf[0])
@@ -726,7 +726,7 @@ int main()
           quit();
           break;
         default:
-          printf("[ERROR] Invalid menu. Please select again.\n");
+          __printf("[ERROR] Invalid menu. Please select again.\n");
           break;
       }
     }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -34,14 +34,14 @@ void init_trex()
     if (g_all_states)
         return;
 
-    g_all_states = malloc(sizeof(state_t*) * MAX_STATES);
+    g_all_states = __malloc(sizeof(state_t*) * MAX_STATES);
     g_id = 0;
 }
 
 void clear_trex() {
     unsigned int i;
     for (i = 0; i < g_id; i++)
-        free(g_all_states[i]);
+        __free(g_all_states[i]);
 
     g_id = 0;
 }
@@ -51,7 +51,7 @@ state_t *create_state(unsigned char input)
     if (g_id >= MAX_STATES)
         return NULL;
 
-    state_t *s0 = malloc(sizeof(state_t));
+    state_t *s0 = __malloc(sizeof(state_t));
     s0->id = g_id;
     s0->input = input;
     s0->is_accepting_state = TRUE;

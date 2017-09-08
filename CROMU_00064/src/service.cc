@@ -4,7 +4,7 @@ Author: James Nuttall <james@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -48,7 +48,7 @@ extern "C"
 
 
 //
-//	read input, parse command, respond to command
+//	__read input, parse command, respond to command
 //
 int main( void )
 {
@@ -65,7 +65,7 @@ int main( void )
 		// if given length is longer than the string, NO
 		if ( ctlr.GetMsgIn()->GetLenValue() != ctlr.GetMsgIn()->GetMessage().GetLength()/2 - HEADER_NUM_BYTES)
 		{
-			printf("Error: length is too long\n");
+			__printf("Error: length is too long\n");
 			continue;
 		}
 
@@ -171,14 +171,14 @@ int main( void )
 					break;
 				}
 
-				// in a loop, read each program variables into ctlr.m_controllerProgram[i]
+				// in a loop, __read each program variables into ctlr.m_controllerProgram[i]
 
 				int num_nibbles_to_start = 16; // 8 bytes
 				int num_nibbles_for_each_program = 24; // 12 bytes
 
 
 				// keep original copy in the backup
-				// write all new values to the main program
+				// __write all new values to the main program
 				// clear backup when done
 
 				ctlr.BackupProgram();
@@ -252,7 +252,7 @@ leave_case:
 			{
 				// Send the CRS our current program
 				uint8_t buffer[ MAX_PROGRAM_STEPS * 3 * sizeof( int ) ];
-				bzero( buffer, MAX_PROGRAM_STEPS * 3 * sizeof( int ) );
+				__bzero( buffer, MAX_PROGRAM_STEPS * 3 * sizeof( int ) );
 
 				uint16_t tmpValue;
 

@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -38,7 +38,7 @@ char answer[5];
 size_t size;
 
 
-	printf("Enter search term: ");
+	__printf("Enter search term: ");
 
 	size=getline(buffer, sizeof(buffer));
 
@@ -46,7 +46,7 @@ size_t size;
 		return;
 
 
-	printf("\n");
+	__printf("\n");
 
 	while(book) {
 
@@ -55,7 +55,7 @@ size_t size;
 
 			print_recipe(book);
 
-			printf("Would you like to tag this recipe? ");
+			__printf("Would you like to tag this recipe? ");
 
 			size=getline(answer, sizeof(answer));
 
@@ -88,7 +88,7 @@ size_t size;
 			}
 #endif
 
-				printf("Would you like to tag this recipe? ");
+				__printf("Would you like to tag this recipe? ");
 
 				size=getline(answer, sizeof(answer));
 

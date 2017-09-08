@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -39,7 +39,7 @@ ExecutableInMemory *LoadSharedLibrary(FileNode *file)
   {
     return NULL;
   }
-  ExecutableInMemory *sl = calloc(sizeof(ExecutableInMemory));
+  ExecutableInMemory *sl = __calloc(sizeof(ExecutableInMemory));
 
   ExecutableFileHeader *header = (ExecutableFileHeader *)file->contents;
   if (header->size != file->size)
@@ -89,17 +89,17 @@ ExecutableInMemory *LoadSharedLibrary(FileNode *file)
   }
   sl->type = header->type;
   sl->functionCount = header->functionCount;
-  sl->functionTable = calloc(header->functionCount * sizeof(FunctionTableEntry));
-  memcpy(sl->functionTable, file->contents + header->functionTableOffset, header->functionCount * sizeof(FunctionTableEntry));
+  sl->functionTable = __calloc(header->functionCount * sizeof(FunctionTableEntry));
+  __memcpy(sl->functionTable, file->contents + header->functionTableOffset, header->functionCount * sizeof(FunctionTableEntry));
   for (int i = 0; i < sl->functionCount; i++)
   {
     sl->functionTable[i].offset -= header->functionsOffset;
   }
   sl->resourceCount = header->resourceCount;
-  sl->resourceTable = calloc(header->resourceCount * sizeof(ResourceEntry));
-  memcpy(sl->resourceTable, file->contents + header->resourceOffset, header->resourceCount * sizeof(ResourceEntry));
-  sl->functions = calloc(header->functionsSize);
-  memcpy(sl->functions, file->contents + header->functionsOffset, header->functionsSize);
+  sl->resourceTable = __calloc(header->resourceCount * sizeof(ResourceEntry));
+  __memcpy(sl->resourceTable, file->contents + header->resourceOffset, header->resourceCount * sizeof(ResourceEntry));
+  sl->functions = __calloc(header->functionsSize);
+  __memcpy(sl->functions, file->contents + header->functionsOffset, header->functionsSize);
 
   uint8_t *mainAddress = GetFunctionAddress("SharedLibraryMain", sl);
   ExecuteFunction(mainAddress);
@@ -114,7 +114,7 @@ uint8_t *GetFunctionAddress(char *name, ExecutableInMemory *sl)
   }
   for(int i = 0; i < sl->functionCount; i++)
   {
-    if (strcmp(name, sl->functionTable[i].name) == 0)
+    if (__strcmp(name, sl->functionTable[i].name) == 0)
     {
       return sl->functions + sl->functionTable[i].offset;
     }
@@ -126,8 +126,8 @@ void FreeLibrary(ExecutableInMemory *sl)
 {
   if (sl)
   {
-    free(sl->functions);
-    free(sl);
+    __free(sl->functions);
+    __free(sl);
   }
 }
 

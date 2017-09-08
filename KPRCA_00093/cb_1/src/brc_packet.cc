@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -36,15 +36,15 @@ namespace {
 }
 
 
-BrcPacket::BrcPacket(FILE *fd_in, FILE *fd_out) {
+BrcPacket::BrcPacket(__FILE *fd_in, __FILE *fd_out) {
     if (fd_in) {
         fd_in_ = fd_in;
-        fbuffered(fd_in_, 0);
+        __fbuffered(fd_in_, 0);
     }
 
     if (fd_out) {
         fd_out_ = fd_out;
-        fbuffered(fd_out_, 0);
+        __fbuffered(fd_out_, 0);
     }
 
     protocol_id_ = -1;
@@ -54,8 +54,8 @@ BrcPacket::BrcPacket(FILE *fd_in, FILE *fd_out) {
 }
 
 BrcPacket::~BrcPacket() {
-    fd_in_ = (FILE *)NULL;
-    fd_out_ = (FILE *)NULL;
+    fd_in_ = (__FILE *)NULL;
+    fd_out_ = (__FILE *)NULL;
     ClearPacket();
 }
 
@@ -65,22 +65,22 @@ int BrcPacket::Recv() {
 
     for (int i = 0; i < MAGIC_SIZE; i++) {
         unsigned char m;
-        if (fread(&m, 1, fd_in_) != 1)
+        if (__fread(&m, 1, fd_in_) != 1)
             return -2;
 
         if (m != magic[i])
             goto error;
     }
-    fread(&protocol_id_, sizeof(protocol_id_), fd_in_);
+    __fread(&protocol_id_, sizeof(protocol_id_), fd_in_);
     if (!IsValidProtocolId())
         goto error;
-    fread(&length_, sizeof(length_), fd_in_);
+    __fread(&length_, sizeof(length_), fd_in_);
     if (length_ > MAX_MSG_LEN)
         goto error;
     brc_msg_ = MatchRecvdProtocol();
     if (!brc_msg_->Recv(fd_in_))
         goto error;
-    fread(&checksum_, sizeof(checksum_), fd_in_);
+    __fread(&checksum_, sizeof(checksum_), fd_in_);
     if (checksum_ != CalcChecksum())
         goto error;
 
@@ -96,15 +96,15 @@ int BrcPacket::Send() const {
     if (!IsValidPacket())
         goto error;
 
-    if (fwrite(magic, sizeof(magic), fd_out_) != sizeof(magic))
+    if (__fwrite(magic, sizeof(magic), fd_out_) != sizeof(magic))
         goto error;
-    if (fwrite(&protocol_id_, sizeof(protocol_id_), fd_out_) != sizeof(protocol_id_))
+    if (__fwrite(&protocol_id_, sizeof(protocol_id_), fd_out_) != sizeof(protocol_id_))
         goto error;
-    if (fwrite(&length_, sizeof(length_), fd_out_) != sizeof(length_))
+    if (__fwrite(&length_, sizeof(length_), fd_out_) != sizeof(length_))
         goto error;
     if (!brc_msg_->Send(fd_out_))
         goto error;
-    if (fwrite(&checksum_, sizeof(checksum_), fd_out_) != sizeof(checksum_))
+    if (__fwrite(&checksum_, sizeof(checksum_), fd_out_) != sizeof(checksum_))
         goto error;
 
     return (sizeof(magic) + sizeof(protocol_id_) + sizeof(length_) + length_ + sizeof(checksum_));

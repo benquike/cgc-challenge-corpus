@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -48,27 +48,27 @@ static int read_exactly(int fd, uint8_t *buf, size_t n)
 int main(void)
 {
   unsigned size = 0;
-  size_t read = 0;
+  size_t __read = 0;
   uint8_t buf[MAX_SIZE];
-  memset(buf, 0, sizeof(buf));
+  __memset(buf, 0, sizeof(buf));
 
-  if (receive(STDIN, &size, sizeof(size), &read) != 0)
-    exit(1);
+  if (receive(STDIN, &size, sizeof(size), &__read) != 0)
+    __exit(1);
 
-  if (read != 4)
-    exit(1);
+  if (__read != 4)
+    __exit(1);
 
   if (size > MAX_SIZE) {
-    printf("too big\n");
-    exit(1);
+    __printf("too big\n");
+    __exit(1);
   }
 
   if (read_exactly(STDIN, buf, size) != 0)
-    exit(1);
+    __exit(1);
 
   element *e = decode(buf, (unsigned) buf + size);
   if (e == NULL)
-    exit(1);
+    __exit(1);
 
   pprint(e);
 }

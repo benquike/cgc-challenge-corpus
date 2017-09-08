@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -163,7 +163,7 @@ void PrintMissions(CList<CMission *>& missions)
         char *s = m->GetReqTypeString();
         fprintf(stdout, "%d. %s [LVL %d] [GRP %d] [DUR %d] [COST %d] <%s>\n", i, m->GetName(), m->GetReqLevel(), m->GetReqGroup(), m->GetDuration(), m->GetReqSupply(), s);
         fprintf(stdout, "   ==> +%d supply, +%d experience\n", m->GetRewardSupply(), m->GetRewardExp());
-        free(s);
+        __free(s);
     }
 }
 
@@ -178,11 +178,11 @@ void PrintExplorers(CList<CExplorer *>& explorers)
         fprintf(stdout, "%d. %s [LVL %d] [EXP %d/%d] (%s)\n", i, e->GetName(), e->GetLevel(), e->GetExp(), totalExp, e->IsHired() ? "hired" : "not-hired");
         CSkill** skills = e->GetSkills();
         char *s = CRequirement::ReqTypeToString(skills[0]->GetCounter());
-        fprintf(stdout, "   ==> Skill #1: %s <%s>\n", skills[0]->GetName(), strcmp(s, "") == 0 ? "None" : s);
-        free(s);
+        fprintf(stdout, "   ==> Skill #1: %s <%s>\n", skills[0]->GetName(), __strcmp(s, "") == 0 ? "None" : s);
+        __free(s);
         s = CRequirement::ReqTypeToString(skills[1]->GetCounter());
-        fprintf(stdout, "   ==> Skill #2: %s <%s>\n", skills[1]->GetName(), strcmp(s, "") == 0 ? "None" : s);
-        free(s);
+        fprintf(stdout, "   ==> Skill #2: %s <%s>\n", skills[1]->GetName(), __strcmp(s, "") == 0 ? "None" : s);
+        __free(s);
     }
     fbuffered(stdout, 0);
 }
@@ -213,8 +213,8 @@ void HandleSendMission()
     }
     fprintf(stdout, "\nselect> ");
     if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
-        exit(0);
-    int idx = strtoul(buf, NULL, 10);
+        __exit(0);
+    int idx = __strtoul(buf, NULL, 10);
     if (idx >= availMissions.GetSize())
         fprintf(stdout, "Invalid mission.\n");
     else
@@ -239,13 +239,13 @@ void HandleSendMission()
         PrintExplorers(availExps);
         fprintf(stdout, "\nselect> ");
         if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
-            exit(0);
+            __exit(0);
         char *tmp = buf, *id = NULL;
         while ((id = strsep(&tmp, ",")))
         {
-            if (strlen(id) == 0)
+            if (__strlen(id) == 0)
                 continue;
-            idx = strtoul(id, NULL, 10);
+            idx = __strtoul(id, NULL, 10);
             if (idx >= availExps.GetSize())
                 continue;
             CExplorer *e = availExps.GetAt(idx);
@@ -266,16 +266,16 @@ void HandleSendMission()
         fprintf(stdout, "////////////////////////////\n");
         fprintf(stdout, " - Success: %d%%\n", est->GetSuccessRate());
         s = CRequirement::ReqTypeToString(est->GetMissingTypes());
-        fprintf(stdout, " - Missing: %s\n", strcmp(s, "") == 0 ? "None" : s);
-        free(s);
+        fprintf(stdout, " - Missing: %s\n", __strcmp(s, "") == 0 ? "None" : s);
+        __free(s);
         fprintf(stdout, " - Needed: %d\n", est->GetGroupNeeded());
         fprintf(stdout, " - Supplied: %d\n", est->GetGroupSupplied());
         fprintf(stdout, "////////////////////////////\n");
         fprintf(stdout, "confirm?> ");
         fbuffered(stdout, 0);
         if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
-            exit(0);
-        if (strcmp(buf, "y") == 0 || strcmp(buf, "Y") == 0)
+            __exit(0);
+        if (__strcmp(buf, "y") == 0 || __strcmp(buf, "Y") == 0)
         {
             m->Execute(selectedExps);
             m->SetSuccessRate(est->GetSuccessRate());
@@ -330,8 +330,8 @@ void HandleHireExplorer()
     PrintExplorers(unhiredExps);
     fprintf(stdout, "\nselect> ");
     if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
-        exit(0);
-    int idx = strtoul(buf, NULL, 10);
+        __exit(0);
+    int idx = __strtoul(buf, NULL, 10);
     if (idx >= unhiredExps.GetSize())
     {
         fprintf(stdout, "Invalid explorer.\n");
@@ -382,8 +382,8 @@ void HandleRemoveExplorer()
     PrintExplorers(hiredExps);
     fprintf(stdout, "\nselect> ");
     if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
-        exit(0);
-    int idx = strtoul(buf, NULL, 10);
+        __exit(0);
+    int idx = __strtoul(buf, NULL, 10);
     if (idx >= hiredExps.GetSize())
     {
         fprintf(stdout, "Invalid explorer.\n");
@@ -414,8 +414,8 @@ void HandleLearnSkills()
     PrintExplorers(availExps);
     fprintf(stdout, "\nselect> ");
     if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
-        exit(0);
-    int idx = strtoul(buf, NULL, 10);
+        __exit(0);
+    int idx = __strtoul(buf, NULL, 10);
     if (idx >= availExps.GetSize())
     {
         fprintf(stdout, "Invalid explorer.\n");
@@ -429,12 +429,12 @@ void HandleLearnSkills()
         CSkill *s = skills.GetAt(i);
         char *str = CRequirement::ReqTypeToString(s->GetCounter());
         fprintf(stdout, "%d. [%s] (counters <%s>) - %d supply\n", i, s->GetName(), str, s->GetPrice());
-        free(str);
+        __free(str);
     }
     fprintf(stdout, "\nselect> ");
     if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
-        exit(0);
-    idx = strtoul(buf, NULL, 10);
+        __exit(0);
+    idx = __strtoul(buf, NULL, 10);
     if (idx >= skills.GetSize())
     {
         fprintf(stdout, "Invalid skill.\n");
@@ -448,8 +448,8 @@ void HandleLearnSkills()
     }
     fprintf(stdout, "\nslot? (1,2)> ");
     if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
-        exit(0);
-    idx = strtoul(buf, NULL, 10);
+        __exit(0);
+    idx = __strtoul(buf, NULL, 10);
     if (idx != 1 && idx != 2)
     {
         fprintf(stdout, "Invalid slot.\n");
@@ -481,8 +481,8 @@ void HandleChangeName()
         fprintf(stdout, "%d. %s\n", i, availExps.GetAt(i)->GetName());
     fprintf(stdout, "\nselect> ");
     if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
-        exit(0);
-    int idx = strtoul(buf, NULL, 10);
+        __exit(0);
+    int idx = __strtoul(buf, NULL, 10);
     if (idx >= availExps.GetSize())
     {
         fprintf(stdout, "Invalid explorer.\n");
@@ -491,7 +491,7 @@ void HandleChangeName()
     CExplorer *e = availExps.GetAt(idx);
     fprintf(stdout, "\nNew name? ");
     if (freaduntil(name, sizeof(name), '\n', stdin) < 0)
-        exit(0);
+        __exit(0);
 #ifdef PATCHED_1
     name[CExplorer::k_maxNameLength] = '\0';
 #endif
@@ -505,7 +505,7 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
     g_rand = (char *) secret_page_i;
 
     if (freaduntil(nameBuf, sizeof(nameBuf), '\n', stdin) < 0)
-        exit(0);
+        __exit(0);
     g_fort.SetOwner(nameBuf);
 
     PrintWelcomeBanner(g_fort.GetOwner()[0]);
@@ -519,24 +519,24 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
         g_hidden = !(g_fort.GetSupply() == 1337 && g_fort.GetDay() == 1);
         if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
             break;
-        if (strcmp(buf, "0") == 0)
+        if (__strcmp(buf, "0") == 0)
         {
             g_fort.NextDay(1);
             if (g_fort.GetNumAvailableMissions() < 3)
                 CreateMoreMissions();
         }
-        else if (strtoul(buf, NULL, 10) == 1)
+        else if (__strtoul(buf, NULL, 10) == 1)
         {
             while (1)
             {
                 PrintMissionMenu();
                 if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
                     break;
-                if (strcmp(buf, "1") == 0)
+                if (__strcmp(buf, "1") == 0)
                     HandleSendMission();
-                else if (strcmp(buf, "2") == 0)
+                else if (__strcmp(buf, "2") == 0)
                     HandleViewMissions();
-                else if (strcmp(buf, "3") == 0)
+                else if (__strcmp(buf, "3") == 0)
                     break;
                 else
                     fprintf(stdout, "Invalid option.\n");
@@ -549,39 +549,39 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
                 PrintExplorerMenu();
                 if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
                     break;
-                if (strcmp(buf, "1") == 0)
+                if (__strcmp(buf, "1") == 0)
                     HandleHireExplorer();
-                else if (strcmp(buf, "2") == 0)
+                else if (__strcmp(buf, "2") == 0)
                     HandleViewExplorers();
-                else if (strcmp(buf, "3") == 0)
+                else if (__strcmp(buf, "3") == 0)
                     HandleRemoveExplorer();
-                else if (strcmp(buf, "4") == 0)
+                else if (__strcmp(buf, "4") == 0)
                     HandleLearnSkills();
-                else if (strcmp(buf, "5") == 0)
+                else if (__strcmp(buf, "5") == 0)
                     break;
                 else
                 {
-                    if (!g_hidden && strcmp(buf, "6") == 0)
+                    if (!g_hidden && __strcmp(buf, "6") == 0)
                         HandleChangeName();
                     else
                         fprintf(stdout, "Invalid option.\n");
                 }
             }
         }
-        else if (strcmp(buf, "3") == 0)
+        else if (__strcmp(buf, "3") == 0)
         {
             fprintf(stdout, "Boo.\n");
-            exit(0);
+            __exit(0);
         }
         else
         {
             if (buf[0] == '-' && memcmp(&buf[1], "1337\0", 5) == 0)
             {
-                if (g_fort.GetSupply() < strtoul(&buf[1], NULL, 10))
+                if (g_fort.GetSupply() < __strtoul(&buf[1], NULL, 10))
                     g_fort.AddSupply(1287);
                 if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
                     break;
-                g_fort.NextDay(strtoul(buf, NULL, 10));
+                g_fort.NextDay(__strtoul(buf, NULL, 10));
             }
             else
                 fprintf(stdout, "Invalid option.\n");

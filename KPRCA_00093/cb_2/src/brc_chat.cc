@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -40,19 +40,19 @@ BrcChat::BrcChat(char *sender_name, char *recp_name, char *chat_msg, short chat_
     raw_data_ = new char[length_];
     set_token();
     char *pdata = raw_data_ + token_length();
-    memcpy(pdata, &chat_type, sizeof(chat_type));
+    __memcpy(pdata, &chat_type, sizeof(chat_type));
     pdata += sizeof(chat_type);
-    memcpy(pdata, &sender_name_length, sizeof(sender_name_length));
+    __memcpy(pdata, &sender_name_length, sizeof(sender_name_length));
     pdata += sizeof(sender_name_length);
-    memcpy(pdata, &recp_name_length, sizeof(recp_name_length));
+    __memcpy(pdata, &recp_name_length, sizeof(recp_name_length));
     pdata += sizeof(recp_name_length);
-    memcpy(pdata, &chat_msg_length, sizeof(chat_msg_length));
+    __memcpy(pdata, &chat_msg_length, sizeof(chat_msg_length));
     pdata += sizeof(chat_msg_length);
-    memcpy(pdata, sender_name, sender_name_length);
+    __memcpy(pdata, sender_name, sender_name_length);
     pdata += sender_name_length;
-    memcpy(pdata, recp_name, recp_name_length);
+    __memcpy(pdata, recp_name, recp_name_length);
     pdata += recp_name_length;
-    memcpy(pdata, chat_msg, chat_msg_length);
+    __memcpy(pdata, chat_msg, chat_msg_length);
 }
 
 BrcChat::~BrcChat() {
@@ -61,7 +61,7 @@ BrcChat::~BrcChat() {
     chat_msg_len_ = 0;
 }
 
-bool BrcChat::Recv(FILE *fd_in) {
+bool BrcChat::Recv(__FILE *fd_in) {
     if (!BrcProtocol::Recv(fd_in))
         return false;
 

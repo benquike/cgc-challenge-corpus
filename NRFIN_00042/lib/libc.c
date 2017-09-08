@@ -411,7 +411,7 @@ int __umoddi3(int a, int b) {
     return a-(a/b*b);
 }
 
-void sleep(int s) {
+void ___sleep(int s) {
     struct timeval tv;
     tv.tv_sec = s;
     tv.tv_usec = 0;

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -115,7 +115,7 @@ static mailbox_t *get_sorted_mailbox(void) {
  * @param mail_item 	Pointer to a piece of mail to delete
  */
 static void delete_mail(void *mail_item) {
-	free(mail_item);
+	__free(mail_item);
 }
 
 /**
@@ -137,7 +137,7 @@ static int is_mailbox_empty(mailbox_t *m) {
 static void put_mail_in_mailbox(mail_t *mail_item, mailbox_t *box) {
 
 	if (NULL == box->data) {
-		box->data = malloc(sizeof(struct list));
+		box->data = __malloc(sizeof(struct list));
 		MALLOC_OK(box->data);
 		list_init(box->data, NULL);
 	}
@@ -176,7 +176,7 @@ static int do_receive_mail(void) {
 	// return -1 if postage is invalid
 	if (-1 == use_stamp(&s)) return -1;
 
-	mail_t *piece = malloc(sizeof(mail_t));
+	mail_t *piece = __malloc(sizeof(mail_t));
 	MALLOC_OK(piece);
 
 	// receive mail_t struct of data.
@@ -391,12 +391,12 @@ static void hash_mail(mail_t *m, unsigned char hash[]) {
 static unsigned char lm_sort(const void *m1, void *m2) {
 	unsigned char hash_m1[8];
 	unsigned char hash_m2[8];
-	memset(hash_m1, '\0', sizeof(hash_m1));
-	memset(hash_m2, '\0', sizeof(hash_m2));
+	__memset(hash_m1, '\0', sizeof(hash_m1));
+	__memset(hash_m2, '\0', sizeof(hash_m2));
 
 	hash_mail((mail_t *)m1, hash_m1);
 	hash_mail((mail_t *)m2, hash_m2);
-	return (-1 != memcmp(hash_m1, hash_m2, 8));
+	return (-1 != __memcmp(hash_m1, hash_m2, 8));
 }
 
 /**
@@ -437,7 +437,7 @@ static int do_list_lost_mail(void) {
 		m = (mail_t *)n->data;
 
 		// create hash of subj+body
-		memset(hash, '\0', sizeof(hash));
+		__memset(hash, '\0', sizeof(hash));
 		hash_mail(m, hash);
 		// send hash
 		SEND(STDOUT, (char *)hash, sizeof(hash));
@@ -506,27 +506,27 @@ short process_cmd(void) {
 
     RECV(STDIN, cmd, sizeof(cmd));
 
-    if (0 == memcmp((void *)CMD_ADD_ADDRESS, cmd, sizeof(CMD_ADD_ADDRESS))) {
+    if (0 == __memcmp((void *)CMD_ADD_ADDRESS, cmd, sizeof(CMD_ADD_ADDRESS))) {
     	ret = do_add_address();
-    } else if (0 == memcmp((void *)CMD_RECEIVE_MAIL, cmd, sizeof(CMD_RECEIVE_MAIL))) {
+    } else if (0 == __memcmp((void *)CMD_RECEIVE_MAIL, cmd, sizeof(CMD_RECEIVE_MAIL))) {
     	ret = do_receive_mail();
-    } else if (0 == memcmp((void *)CMD_LIST_ADDRESSES, cmd, sizeof(CMD_LIST_ADDRESSES))) {
+    } else if (0 == __memcmp((void *)CMD_LIST_ADDRESSES, cmd, sizeof(CMD_LIST_ADDRESSES))) {
     	ret = do_list_addresses();
-    } else if (0 == memcmp((void *)CMD_SORT_MAIL, cmd, sizeof(CMD_SORT_MAIL))) {
+    } else if (0 == __memcmp((void *)CMD_SORT_MAIL, cmd, sizeof(CMD_SORT_MAIL))) {
     	ret = do_sort_mail();
-    } else if (0 == memcmp((void *)CMD_LIST_UNDELIVERABLE_MAIL, cmd, sizeof(CMD_LIST_UNDELIVERABLE_MAIL))) {
+    } else if (0 == __memcmp((void *)CMD_LIST_UNDELIVERABLE_MAIL, cmd, sizeof(CMD_LIST_UNDELIVERABLE_MAIL))) {
     	ret = do_list_undeliverable_mail();
-    } else if (0 == memcmp((void *)CMD_DELIVER_MAIL, cmd, sizeof(CMD_DELIVER_MAIL))) {
+    } else if (0 == __memcmp((void *)CMD_DELIVER_MAIL, cmd, sizeof(CMD_DELIVER_MAIL))) {
     	ret = do_deliver_mail();
-    } else if (0 == memcmp((void *)CMD_RETURN_TO_SENDER, cmd, sizeof(CMD_RETURN_TO_SENDER))) {
+    } else if (0 == __memcmp((void *)CMD_RETURN_TO_SENDER, cmd, sizeof(CMD_RETURN_TO_SENDER))) {
     	ret = do_return_to_sender();
-    } else if (0 == memcmp((void *)CMD_LIST_LOST_MAIL, cmd, sizeof(CMD_LIST_LOST_MAIL))) {
+    } else if (0 == __memcmp((void *)CMD_LIST_LOST_MAIL, cmd, sizeof(CMD_LIST_LOST_MAIL))) {
     	ret = do_list_lost_mail();
-    } else if (0 == memcmp((void *)CMD_DESTROY_LOST_MAIL, cmd, sizeof(CMD_DESTROY_LOST_MAIL))) {
+    } else if (0 == __memcmp((void *)CMD_DESTROY_LOST_MAIL, cmd, sizeof(CMD_DESTROY_LOST_MAIL))) {
     	ret = do_destroy_lost_mail();
-    } else if (0 == memcmp((void *)CMD_BUY_POSTAGE, cmd, sizeof(CMD_BUY_POSTAGE))) {
+    } else if (0 == __memcmp((void *)CMD_BUY_POSTAGE, cmd, sizeof(CMD_BUY_POSTAGE))) {
     	ret = do_buy_postage();
-    } else if (0 == memcmp((void *)CMD_QUIT, cmd, sizeof(CMD_QUIT))) {
+    } else if (0 == __memcmp((void *)CMD_QUIT, cmd, sizeof(CMD_QUIT))) {
     	ret = -2;
     } else {
     	ret = -1;

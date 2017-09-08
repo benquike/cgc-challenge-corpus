@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -70,7 +70,7 @@ static const char *typeToString(TokenType type)
 Parser::Parser(const char *input_)
     : input(input_), root(nullptr)
 {
-    length = strlen(input);
+    length = __strlen(input);
 }
 
 Parser::~Parser()
@@ -189,14 +189,14 @@ Token::Token(const char *str)
     : Token()
 {
     literal = str;
-    length = strlen(str);
+    length = __strlen(str);
 }
 
 Token::Token(const char *str, TokenType type_)
     : Token(type_)
 {
     literal = str;
-    length = strlen(str);
+    length = __strlen(str);
 }
 
 Token::Token(const char *str, size_t len, TokenType type_)
@@ -290,7 +290,7 @@ bool Token::parse_(const char *input, size_t length, Node **pNode, size_t *pLeng
     {
         if (length < this->length)
             return false;
-        if (memcmp(input, literal, this->length) != 0)
+        if (__memcmp(input, literal, this->length) != 0)
             return false;
         if (type != TokenType::Ignore && type != TokenType::Optional && type != TokenType::Repeat)
         {
@@ -464,7 +464,7 @@ void Node::setLiteral(const char *start, size_t length)
     if (literal)
         delete[] literal;
     literal = new char [length + 1];
-    memcpy(literal, start, length);
+    __memcpy(literal, start, length);
     literal[length] = 0;
     this->length = length;
 }

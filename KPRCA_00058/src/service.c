@@ -48,13 +48,13 @@ static size_t mystrndup(const char *str, size_t n, char **out)
 {
     char *result;
 
-    if (strlen(str) < n)
-        n = strlen(str);
+    if (__strlen(str) < n)
+        n = __strlen(str);
 
-    if (n == 0 || (result = malloc(n + 1)) == NULL)
+    if (n == 0 || (result = __malloc(n + 1)) == NULL)
         return 0;
 
-    memcpy(result, str, n);
+    __memcpy(result, str, n);
     result[n] = 0;
     *out = result;
 
@@ -89,7 +89,7 @@ static uint32 recv_bytes(server_t *server, uint32 count)
     if (count > PACKET_SIZE)
         return 0;
 
-    if (fread((char *)&server->packet[server->packet_len], count, stdin) != count)
+    if (__fread((char *)&server->packet[server->packet_len], count, stdin) != count)
         return 0;
 
     server->packet_len += count;
@@ -226,7 +226,7 @@ static int write_string(server_t *server, const char *s, uint32 length)
     if (server->packet_len + length > PACKET_SIZE)
         return 0;
 
-    memcpy(&server->packet[server->packet_idx], s, length);
+    __memcpy(&server->packet[server->packet_idx], s, length);
     server->packet_idx += length;
     if (server->packet_idx > server->packet_len)
         server->packet_len = server->packet_idx;
@@ -238,7 +238,7 @@ static int safe_memcpy(server_t *server, char *dst, unsigned short n)
     /* prevent reading past end of buffer */
     if (server->packet_idx + n > PACKET_SIZE)
         n = PACKET_SIZE - server->packet_idx;
-    memcpy(dst, &server->packet[server->packet_idx], n);
+    __memcpy(dst, &server->packet[server->packet_idx], n);
     server->packet_idx += n;
     return 1;
 }
@@ -247,13 +247,13 @@ static int safe_strdup(server_t *server, char **out, unsigned short n)
 {
     char *result;
 
-    result = malloc(n + 1);
+    result = __malloc(n + 1);
     if (result == NULL)
         return 0;
 
     if (!safe_memcpy(server, result, n))
     {
-        free(result);
+        __free(result);
         return 0;
     }
     result[n] = 0;
@@ -354,7 +354,7 @@ static int send_packet(server_t *server)
     write_uint32(server, server->packet_len - 4);
     write_byte(server, padding_len);
 
-    fwrite((char *)server->packet, server->packet_len, stdout);
+    __fwrite((char *)server->packet, server->packet_len, stdout);
     return 1;
 }
 
@@ -377,7 +377,7 @@ static int send_service_accept(server_t *server, const char *service_name)
 {
     init_packet(server);
     write_byte(server, MSG_SERVICE_ACCEPT);
-    write_string(server, service_name, strlen(service_name));
+    write_string(server, service_name, __strlen(service_name));
     return send_packet(server);
 }
 
@@ -401,7 +401,7 @@ static int send_userauth_changereq(server_t *server, const char *prompt)
 {
     init_packet(server);
     write_byte(server, MSG_USERAUTH_PASSWD_CHANGEREQ);
-    write_string(server, prompt, strlen(prompt));
+    write_string(server, prompt, __strlen(prompt));
     return send_packet(server);
 }
 
@@ -423,22 +423,22 @@ static int userauth_password(server_t *server, const char *username, const char 
 
     /* lookup user */
     for (i = 0; i < NUM_CREDS; i++)
-        if (strcmp(username, server->credentials[i].username) == 0)
+        if (__strcmp(username, server->credentials[i].username) == 0)
             cred = &server->credentials[i];
 
     fprintf(stderr, "Found user %x (username=%s)\n", cred, username);
 
     /* compare user's password (order matters to prevent timing attack) */
-    success = strcmp(password, cred == NULL ? "fakepassword" : cred->password) == 0 && cred != NULL;
+    success = __strcmp(password, cred == NULL ? "fakepassword" : cred->password) == 0 && cred != NULL;
 
     /* if successful, check if new_password is compliant and change it */
     if (success && new_password)
     {
-        if (strlen(new_password) < MIN_PASSWD)
+        if (__strlen(new_password) < MIN_PASSWD)
             res = send_userauth_changereq(server, "Too short");
         else
         {
-            free(cred->password);
+            __free(cred->password);
             cred->password = new_password;
             new_password = NULL;
 
@@ -457,8 +457,8 @@ static int userauth_password(server_t *server, const char *username, const char 
     }
 
 done:
-    free(password);
-    free(new_password);
+    __free(password);
+    __free(new_password);
     return res;
 }
 
@@ -479,15 +479,15 @@ static int userauth_handler(server_t *server, byte type)
     if (!get_string_alloc(server, &auth_name))
         goto done;
 
-    if (strcmp(auth_name, "password") == 0)
+    if (__strcmp(auth_name, "password") == 0)
         res = userauth_password(server, username, service_name);
     else
         res = send_userauth_failure(server);
 
 done:
-    free(username);
-    free(service_name);
-    free(auth_name);
+    __free(username);
+    __free(service_name);
+    __free(auth_name);
     return res;
 }
 
@@ -498,7 +498,7 @@ static int handle_service_request(server_t *server)
     if (!get_string(server, service_name, sizeof(service_name)))
         return 0;
 
-    if (strcmp(service_name, "userauth") == 0)
+    if (__strcmp(service_name, "userauth") == 0)
     {
         server->service_handler = userauth_handler;
         return send_service_accept(server, "userauth");
@@ -512,7 +512,7 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
     void *secret_page = (void *)secret_page_i;
     server_t server;
 
-    memset(&server, 0, sizeof(server));
+    __memset(&server, 0, sizeof(server));
     init_creds(&server, secret_page);
 
     while (1)

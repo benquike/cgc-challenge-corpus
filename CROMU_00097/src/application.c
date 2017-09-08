@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -52,9 +52,9 @@ void msls_handle_application(SERVER_STATE *state, CLIENT_CONTEXT *connection,  S
     case APPLICATION_TYPE_LIST_BOARD:
     {
       debug_print("APP: List Board\n");
-      SLS_MESSAGE *response = calloc(sizeof(SLS_MESSAGE));
-      SLS_APPLICATION_MESSAGE *ap_response = calloc(sizeof(SLS_APPLICATION_MESSAGE));
-      APPLICATION_RESPONSE_MSG *ar_msg = calloc(sizeof(APPLICATION_RESPONSE_MSG));
+      SLS_MESSAGE *response = __calloc(sizeof(SLS_MESSAGE));
+      SLS_APPLICATION_MESSAGE *ap_response = __calloc(sizeof(SLS_APPLICATION_MESSAGE));
+      APPLICATION_RESPONSE_MSG *ar_msg = __calloc(sizeof(APPLICATION_RESPONSE_MSG));
       response->type = SLS_TYPE_APPLICATION;
       response->version = SLS_VERSION;
       response->connection_id = msg->connection_id;
@@ -80,9 +80,9 @@ void msls_handle_application(SERVER_STATE *state, CLIENT_CONTEXT *connection,  S
       APPLICATION_POST_MSG *post_msg = (APPLICATION_POST_MSG *)((uint8_t *)ap_msg + SLS_APPLICATION_HEADER_LEN);
       int ret_code = post_new_message(post_msg->message);
       debug_print("Posting to slot $d\n", numMessages-1);
-      SLS_MESSAGE *response = calloc(sizeof(SLS_MESSAGE));
-      SLS_APPLICATION_MESSAGE *ap_response = calloc(sizeof(SLS_APPLICATION_MESSAGE));
-      APPLICATION_RESPONSE_MSG *ar_msg = calloc(sizeof(APPLICATION_RESPONSE_MSG));
+      SLS_MESSAGE *response = __calloc(sizeof(SLS_MESSAGE));
+      SLS_APPLICATION_MESSAGE *ap_response = __calloc(sizeof(SLS_APPLICATION_MESSAGE));
+      APPLICATION_RESPONSE_MSG *ar_msg = __calloc(sizeof(APPLICATION_RESPONSE_MSG));
       response->type = SLS_TYPE_APPLICATION;
       response->version = SLS_VERSION;
       response->connection_id = msg->connection_id;
@@ -108,9 +108,9 @@ void msls_handle_application(SERVER_STATE *state, CLIENT_CONTEXT *connection,  S
       APPLICATION_DELETE_MSG *del_msg = (APPLICATION_DELETE_MSG *)((uint8_t *)ap_msg + SLS_APPLICATION_HEADER_LEN);
       int ret_code = delete_message(del_msg->msg_num);
       debug_print("Deleting message $d\n", del_msg->msg_num);
-      SLS_MESSAGE *response = calloc(sizeof(SLS_MESSAGE));
-      SLS_APPLICATION_MESSAGE *ap_response = calloc(sizeof(SLS_APPLICATION_MESSAGE));
-      APPLICATION_RESPONSE_MSG *ar_msg = calloc(sizeof(APPLICATION_RESPONSE_MSG));
+      SLS_MESSAGE *response = __calloc(sizeof(SLS_MESSAGE));
+      SLS_APPLICATION_MESSAGE *ap_response = __calloc(sizeof(SLS_APPLICATION_MESSAGE));
+      APPLICATION_RESPONSE_MSG *ar_msg = __calloc(sizeof(APPLICATION_RESPONSE_MSG));
       response->type = SLS_TYPE_APPLICATION;
       response->version = SLS_VERSION;
       response->connection_id = msg->connection_id;
@@ -129,9 +129,9 @@ void msls_handle_application(SERVER_STATE *state, CLIENT_CONTEXT *connection,  S
     case APPLICATION_TYPE_CLEAR_BOARD:
     {
       clear_message_board();
-      SLS_MESSAGE *response = calloc(sizeof(SLS_MESSAGE));
-      SLS_APPLICATION_MESSAGE *ap_response = calloc(sizeof(SLS_APPLICATION_MESSAGE));
-      APPLICATION_RESPONSE_MSG *ar_msg = calloc(sizeof(APPLICATION_RESPONSE_MSG));
+      SLS_MESSAGE *response = __calloc(sizeof(SLS_MESSAGE));
+      SLS_APPLICATION_MESSAGE *ap_response = __calloc(sizeof(SLS_APPLICATION_MESSAGE));
+      APPLICATION_RESPONSE_MSG *ar_msg = __calloc(sizeof(APPLICATION_RESPONSE_MSG));
       response->type = SLS_TYPE_APPLICATION;
       response->version = SLS_VERSION;
       response->connection_id = msg->connection_id;
@@ -157,9 +157,9 @@ void msls_handle_application(SERVER_STATE *state, CLIENT_CONTEXT *connection,  S
       APPLICATION_READ_MSG *read_msg = (APPLICATION_READ_MSG *)((uint8_t *)ap_msg + SLS_APPLICATION_HEADER_LEN);
 
       debug_print("Reading slot $d\n", read_msg->msg_num);
-      SLS_MESSAGE *response = calloc(sizeof(SLS_MESSAGE));
-      SLS_APPLICATION_MESSAGE *ap_response = calloc(sizeof(SLS_APPLICATION_MESSAGE));
-      APPLICATION_RESPONSE_MSG *ar_msg = calloc(sizeof(APPLICATION_RESPONSE_MSG));
+      SLS_MESSAGE *response = __calloc(sizeof(SLS_MESSAGE));
+      SLS_APPLICATION_MESSAGE *ap_response = __calloc(sizeof(SLS_APPLICATION_MESSAGE));
+      APPLICATION_RESPONSE_MSG *ar_msg = __calloc(sizeof(APPLICATION_RESPONSE_MSG));
       response->type = SLS_TYPE_APPLICATION;
       response->version = SLS_VERSION;
       response->connection_id = msg->connection_id;
@@ -173,7 +173,7 @@ void msls_handle_application(SERVER_STATE *state, CLIENT_CONTEXT *connection,  S
       {
         sprintf((char *)ar_msg->message, "INVALID MESSAGE");
       } else {
-        memcpy((char *)ar_msg->message, APPLICATION_MSG_BOARD[read_msg->msg_num], APPLICATION_MSG_LENGTH);
+        __memcpy((char *)ar_msg->message, APPLICATION_MSG_BOARD[read_msg->msg_num], APPLICATION_MSG_LENGTH);
       }
       msls_encrypt(ap_response->contents, ap_response->length, connection);
       msls_send_msg(response);
@@ -188,7 +188,7 @@ void msls_handle_application(SERVER_STATE *state, CLIENT_CONTEXT *connection,  S
 
 void clear_message_board()
 {
-  memset(APPLICATION_MSG_BOARD, 0, sizeof(APPLICATION_MSG_BOARD));
+  __memset(APPLICATION_MSG_BOARD, 0, sizeof(APPLICATION_MSG_BOARD));
   numMessages = 0;
 }
 
@@ -199,10 +199,10 @@ int delete_message(uint8_t msg_num)
   {
     return -1;
   }
-  memset(APPLICATION_MSG_BOARD[msg_num], 0, APPLICATION_MSG_LENGTH);
+  __memset(APPLICATION_MSG_BOARD[msg_num], 0, APPLICATION_MSG_LENGTH);
   for (int i = msg_num; i < APPLICATION_MAX_MESSAGES - 1; i++)
   {
-    memcpy(APPLICATION_MSG_BOARD[i], APPLICATION_MSG_BOARD[i+1], APPLICATION_MSG_LENGTH);
+    __memcpy(APPLICATION_MSG_BOARD[i], APPLICATION_MSG_BOARD[i+1], APPLICATION_MSG_LENGTH);
   }
   numMessages--;
   return 1;
@@ -214,7 +214,7 @@ int post_new_message(uint8_t *message)
   {
     return -1;
   }
-  memcpy(APPLICATION_MSG_BOARD[numMessages], message, APPLICATION_MSG_LENGTH);
+  __memcpy(APPLICATION_MSG_BOARD[numMessages], message, APPLICATION_MSG_LENGTH);
   numMessages++;
   return 1;
 }

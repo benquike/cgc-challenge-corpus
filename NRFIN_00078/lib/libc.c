@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -27,14 +27,14 @@ ssize_t
 read_all(int fd, void *buf, size_t n)
 {
     ssize_t ret = 0;
-    size_t read;
+    size_t __read;
 
     while (n) {
-        if (receive(fd, (char *)(buf + ret), n, &read) != 0)
+        if (receive(fd, (char *)(buf + ret), n, &__read) != 0)
             return -1;
 
-        n -= read;
-        ret += read;
+        n -= __read;
+        ret += __read;
     }
 
     return ret;
@@ -65,28 +65,28 @@ read_line(int fd, char **buf)
 
     char c = '\0';
     ssize_t ret = 0;
-    size_t read;
+    size_t __read;
 
     if (!buf)
         return -1;
 
     while (c != '\n' && ret < PAGE_SIZE - 1) {
-        if (receive(fd, &c, 1, &read) != 0 || read != 1)
+        if (receive(fd, &c, 1, &__read) != 0 || __read != 1)
             return -1;
 
         scratch_page[ret++] = c;
     }
 
     // Null-terminate string
-    if ((*buf = calloc(ret + 1)) == NULL)
+    if ((*buf = __calloc(ret + 1)) == NULL)
         return -1;
 
-    memcpy(*buf, scratch_page, ret);
+    __memcpy(*buf, scratch_page, ret);
     return ret;
 }
 
 void *
-memset(void *ptr_, int val, size_t n)
+__memset(void *ptr_, int val, size_t n)
 {
     unsigned char *ptr = ptr_;
     while (n--)
@@ -95,7 +95,7 @@ memset(void *ptr_, int val, size_t n)
 }
 
 void *
-memcpy(void *dst_, const void *src_, size_t n)
+__memcpy(void *dst_, const void *src_, size_t n)
 {
     unsigned char *dst = dst_;
     const unsigned char *src = src_;
@@ -123,7 +123,7 @@ memmove(void *dst_, const void *src_, size_t n)
 }
 
 int
-memcmp(const void *a_, const void *b_, size_t n)
+__memcmp(const void *a_, const void *b_, size_t n)
 {
     const unsigned char *a = a_;
     const unsigned char *b = b_;
@@ -136,7 +136,7 @@ memcmp(const void *a_, const void *b_, size_t n)
 }
 
 size_t
-strlen(const char *s) {
+__strlen(const char *s) {
     size_t ret = 0;
     while (*s++)
         ret++;
@@ -153,7 +153,7 @@ strnlen(const char *s, size_t n)
 }
 
 int
-strcmp(const char *a, const char *b)
+__strcmp(const char *a, const char *b)
 {
     for (; *a && *a == *b; a++, b++)
         ;
@@ -169,7 +169,7 @@ strncmp(const char *a, const char *b, size_t n)
 }
 
 char *
-strcpy(char *dst, const char *src)
+__strcpy(char *dst, const char *src)
 {
     size_t i = 0;
     for (; src[i]; i++)
@@ -179,7 +179,7 @@ strcpy(char *dst, const char *src)
 }
 
 char *
-strncpy(char *dst, const char *src, size_t n)
+__strncpy(char *dst, const char *src, size_t n)
 {
     size_t i = 0;
     for (; i < n && src[i]; i++)
@@ -191,26 +191,26 @@ strncpy(char *dst, const char *src, size_t n)
 }
 
 char *
-strcat(char *dst, const char *src)
+__strcat(char *dst, const char *src)
 {
     char *ret = dst;
-    dst += strlen(dst);
-    strcpy(dst, src);
+    dst += __strlen(dst);
+    __strcpy(dst, src);
     return ret;
 }
 
 char *
-strncat(char *dst, const char *src, size_t n)
+__strncat(char *dst, const char *src, size_t n)
 {
     char *ret = dst;
-    dst += strlen(dst);
-    strncpy(dst, src, n);
+    dst += __strlen(dst);
+    __strncpy(dst, src, n);
     dst[n] = '\0';
     return ret;
 }
 
 char *
-strchr(const char *s, char c)
+__strchr(const char *s, char c)
 {
     for (; *s; s++)
         if (*s == c)
@@ -231,12 +231,12 @@ strrchr(const char *s, char c)
 }
 
 char *
-strtok(char *s, char d)
+__strtok(char *s, char d)
 {
     static char *prev = NULL;
     char *token, *ret;
     
-    if (s == NULL && (prev == NULL || strlen(prev) == 0))
+    if (s == NULL && (prev == NULL || __strlen(prev) == 0))
         return NULL;
 
     if (s != NULL)
@@ -245,11 +245,11 @@ strtok(char *s, char d)
     while (*prev == d)
         prev++;
 
-    if (strlen(prev) == 0)
+    if (__strlen(prev) == 0)
         return NULL;
 
     ret = prev;
-    if ((token = strchr(prev, d)) != NULL) {
+    if ((token = __strchr(prev, d)) != NULL) {
         *token = '\0';
         prev = token + 1;
     } else {
@@ -312,14 +312,14 @@ hex_to_uint(char *s)
 }
 
 char *
-itoa(int val, char *s)
+__itoa(int val, char *s)
 {
     char tmp = '\0';
     char *t = s;
     char *ret = s;
 
     if (val == 0)
-        return strcpy(s, "0");
+        return __strcpy(s, "0");
 
     if (val < 0) {
         s++;
@@ -352,13 +352,13 @@ typedef __builtin_va_list va_list;
 #define va_end(ap) __builtin_va_end(ap)
 #define va_arg(ap, type) __builtin_va_arg(ap, type)
 
-static FILE std_files[3] = { {0, _FILE_STATE_OPEN}, {1, _FILE_STATE_OPEN}, {2, _FILE_STATE_OPEN} };
+static __FILE std_files[3] = { {0, _FILE_STATE_OPEN}, {1, _FILE_STATE_OPEN}, {2, _FILE_STATE_OPEN} };
 
-FILE *stdin = &std_files[0];
-FILE *stdout = &std_files[1];
-FILE *stderr = &std_files[2];
+__FILE *stdin = &std_files[0];
+__FILE *stdout = &std_files[1];
+__FILE *stderr = &std_files[2];
 
-int vfprintf(FILE *stream, const char *format, va_list ap);
+int __vfprintf(__FILE *stream, const char *format, va_list ap);
 int vdprintf(int fd, const char *format, va_list ap);
 
 #define IS_DIGIT     1
@@ -397,39 +397,39 @@ static unsigned char type_flags[256] = {
      IS_LOWER, IS_LOWER, IS_LOWER, 0, 0, 0, 0, 0,
 };
 
-int isalpha(int c) {
+int __isalpha(int c) {
    return (type_flags[c & 0xff] & IS_ALPHA) != 0;
 }
 
-int isdigit(int c) {
+int __isdigit(int c) {
    return (type_flags[c & 0xff] & IS_DIGIT) != 0;
 }
 
-int isxdigit(int c) {
+int __isxdigit(int c) {
    return (type_flags[c & 0xff] & IS_XDIGIT) != 0;
 }
 
 int toupper(int c) {
-   if (isalpha(c)) {
+   if (__isalpha(c)) {
       return c & ~0x20;
    }
    return c;
 }
 
-int vfprintf(FILE * stream, const char *format, va_list ap) {
+int __vfprintf(__FILE * stream, const char *format, va_list ap) {
    return vdprintf(stream->fd, format, ap);
 }
 
-int fprintf(FILE * stream, const char *format, ...) {
+int fprintf(__FILE * stream, const char *format, ...) {
    va_list va;
    va_start(va, format);
-   return vfprintf(stream, format, va);
+   return __vfprintf(stream, format, va);
 }
 
-int printf(const char *format, ...) {
+int __printf(const char *format, ...) {
    va_list va;
    va_start(va, format);
-   return vfprintf(stdout, format, va);
+   return __vfprintf(stdout, format, va);
 }
 
 struct _fd_printer {
@@ -530,10 +530,10 @@ static char *r_xtoa(unsigned int val, char *outbuf, int caps) {
 }
 
 static int hex_value_of(char ch) {
-   if (isdigit(ch)) {
+   if (__isdigit(ch)) {
       return ch - '0';
    }
-   else if (isalpha(ch)) {
+   else if (__isalpha(ch)) {
       return toupper(ch) - 'A' + 10;
    }
    return -1;
@@ -636,7 +636,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
             }
             break;
          case STATE_HEX:
-            if (isxdigit(ch) && digit_count < 2) {
+            if (__isxdigit(ch) && digit_count < 2) {
                digit_count++;
                value = value * 16 + hex_value_of(ch);
                if (digit_count == 2) {
@@ -661,11 +661,11 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                state = STATE_FLAGS;
                break;
             }
-            if (isdigit(ch)) {
+            if (__isdigit(ch)) {
                //could be width or could be arg specifier or a 0 flag
                //width and arg values don't start with 0
                width_value = 0;
-               while (isdigit(ch)) {
+               while (__isdigit(ch)) {
                   width_value = width_value * 10 + (ch - '0');
                   ch = *format++;
                }
@@ -719,8 +719,8 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
             if (ch == '*') {
                ch = *format++;
                int width_arg = 0;
-               if (isdigit(ch)) {
-                  while (isdigit(ch)) {
+               if (__isdigit(ch)) {
+                  while (__isdigit(ch)) {
                      width_arg = width_arg * 10 + (ch - '0');
                      ch = *format++;
                   }
@@ -735,9 +735,9 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                }
                width_value = (int)args[width_arg];
             }
-            else if (isdigit(ch)) {
+            else if (__isdigit(ch)) {
                width_value = 0;
-               while (isdigit(ch)) {
+               while (__isdigit(ch)) {
                   width_value = width_value * 10 + (ch - '0');
                   ch = *format++;
                }
@@ -756,8 +756,8 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                if (ch == '*') {
                   ch = *format++;
                   int prec_arg = 0;
-                  if (isdigit(ch)) {
-                     while (isdigit(ch)) {
+                  if (__isdigit(ch)) {
+                     while (__isdigit(ch)) {
                         prec_arg = prec_arg * 10 + (ch - '0');
                         ch = *format++;
                      }
@@ -772,9 +772,9 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                   }
                   prec_value = (int)args[prec_arg];
                }
-               else if (isdigit(ch)) {
+               else if (__isdigit(ch)) {
                   prec_value = 0;
-                  while (isdigit(ch)) {
+                  while (__isdigit(ch)) {
                      prec_value = prec_value * 10 + (ch - '0');
                      ch = *format++;
                   }
@@ -1231,7 +1231,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                }
                case 's': {
                   const char *s_arg = (const char *)args[field_arg];
-                  int len = strlen(s_arg);
+                  int len = __strlen(s_arg);
                   if (width_value == -1) {
                      //by default min length is the entire string
                      width_value = len;

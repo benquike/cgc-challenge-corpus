@@ -1,7 +1,7 @@
 /*
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -38,22 +38,22 @@ typedef struct BitStream {
 	/// Total length of the stream in bytes
 	unsigned int streamLength;
 
-	/// Current byte being read from in the stream index. This should
+	/// Current byte being __read from in the stream index. This should
 	///	never be greater than streamLength
 	unsigned int byteIndex;
 
-	/// Current bit index within the current byte to be read. This will
+	/// Current bit index within the current byte to be __read. This will
 	///	never be greater than 7
 	unsigned int bitIndex;
 } BitStream, *pBitStream;
 
 /**
  * Read the specified number of bits into the buffer pointed to by outBits
- * @param stream Pointer to a stream structure from which the data is read.
- * @param bitCount Number of bits to read from the stream.
+ * @param stream Pointer to a stream structure from which the data is __read.
+ * @param bitCount Number of bits to __read from the stream.
  * @param outBits Pointer to the buffer that will receive the data. The calling function
  *		is expected to provide a sufficiently large buffer.
- * @return Returns the number of bits read on success or 0 on failure.
+ * @return Returns the number of bits __read on success or 0 on failure.
  **/
 int readBits( pBitStream stream, unsigned int bitCount, unsigned int *outBits );
 

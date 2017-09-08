@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -51,11 +51,11 @@ int InitRandom(void) {
 	last_pkt_time = 0;
 	gen_bps = 0;
 	while (gen_bps == 0 || gen_bps > MAX_SPEED) {
-                printf("What average bit rate do you want the random generator to produce? (1 - @d bps): ", MAX_SPEED);
+                __printf("What average bit rate do you want the random generator to produce? (1 - @d bps): ", MAX_SPEED);
                 if ((len = readUntil(buf, 9, '\n')) == -1) {
                         return(-1);
                 }
-                gen_bps = (unsigned int)atoi(buf);
+                gen_bps = (unsigned int)__atoi(buf);
 	}
 
 	// calculate the packet rate (sec/pkt) for the given bps
@@ -107,11 +107,11 @@ int InitPoisson(void) {
 	last_pkt_time = 0;
 	gen_bps = 0;
 	while (gen_bps == 0 || gen_bps > MAX_SPEED) {
-                printf("What average bit rate do you want the poisson generator to produce? (1 - @d bps): ", MAX_SPEED);
+                __printf("What average bit rate do you want the poisson generator to produce? (1 - @d bps): ", MAX_SPEED);
                 if ((len = readUntil(buf, 9, '\n')) == -1) {
                         return(-1);
                 }
-                gen_bps = (unsigned int)atoi(buf);
+                gen_bps = (unsigned int)__atoi(buf);
 	}
 
 	// calculate the packet rate (pkt/sec) for the given bps
@@ -184,7 +184,7 @@ int InitManual(void) {
 	// provided packet stream
 	repeat = -1;
 	while (repeat == -1) {
-                printf("Should the packet generator repeat the manually entered packets? (y,n): ");
+                __printf("Should the packet generator repeat the manually entered packets? (y,n): ");
                 if ((len = readUntil(buf, 2, '\n')) == -1) {
                         return(-1);
                 }
@@ -198,11 +198,11 @@ int InitManual(void) {
 	// see how many packets they'll be sending
 	count = -1;
 	while (count < MIN_MANUAL_PKTS || count > MAX_MANUAL_PKTS) {
-                printf("How many packets would you like to enter? (@d - @d): ", MIN_MANUAL_PKTS, MAX_MANUAL_PKTS);
+                __printf("How many packets would you like to enter? (@d - @d): ", MIN_MANUAL_PKTS, MAX_MANUAL_PKTS);
                 if ((len = readUntil(buf, 10, '\n')) == -1) {
                         return(-1);
                 }
-		count = atoi(buf);
+		count = __atoi(buf);
 	}
 
 	// allocate a ring buffer to hold the packets
@@ -211,9 +211,9 @@ int InitManual(void) {
 	}
 	p = ManualRingBuffer;
 
-	// read in the manually entered packets
-	printf("Enter the packets, one per line in this format:\n");
-	printf("time since last packet (s, ##.######),length (bytes 64-1500),priority (0-63)\n");
+	// __read in the manually entered packets
+	__printf("Enter the packets, one per line in this format:\n");
+	__printf("time since last packet (s, ##.######),length (bytes 64-1500),priority (0-63)\n");
 	while (count--) {
                 if ((len = readUntil(buf, 18, '\n')) == -1) {
                         return(-1);
@@ -230,18 +230,18 @@ int InitManual(void) {
 		timestamp_s = buf;
 
 		// bytes next
-		bytes_s = strchr(buf, ',');
+		bytes_s = __strchr(buf, ',');
 		if (bytes_s == NULL) {
-			puts("Invalid bytes");
+			__puts("Invalid bytes");
 			return(-1);
 		}
 		bytes_s[0] = '\0';
 		bytes_s++;
 
 		// finally, priority
-		priority_s = strchr(bytes_s, ',');
+		priority_s = __strchr(bytes_s, ',');
 		if (priority_s == NULL) {
-			puts("Invalid priority");
+			__puts("Invalid priority");
 			return(-1);
 		}
 		priority_s[0] = '\0';
@@ -249,39 +249,39 @@ int InitManual(void) {
 
 		// sanity check the inputs
 		// timestamp
-		for (i = 0; i < strlen(timestamp_s); i++) {
-			if (!strchr("0123456789.", timestamp_s[i])) {
-				puts("Invalid timestamp");
+		for (i = 0; i < __strlen(timestamp_s); i++) {
+			if (!__strchr("0123456789.", timestamp_s[i])) {
+				__puts("Invalid timestamp");
 				return(-1);
 			}
 		}
-		timestamp = atof(timestamp_s);
+		timestamp = __atof(timestamp_s);
 		if (timestamp < 0) {
-			puts("Invalid timestamp");
+			__puts("Invalid timestamp");
 			return(-1);
 		}
 		// bytes
-		for (i = 0; i < strlen(bytes_s); i++) {
-			if (!strchr("0123456789", bytes_s[i])) {
-				puts("Invalid bytes");
+		for (i = 0; i < __strlen(bytes_s); i++) {
+			if (!__strchr("0123456789", bytes_s[i])) {
+				__puts("Invalid bytes");
 				return(-1);
 			}
 		}
-		bytes = atoi(bytes_s);
+		bytes = __atoi(bytes_s);
 		if (bytes < 64 || bytes > 1500) {
-			puts("Invalid bytes");
+			__puts("Invalid bytes");
 			return(-1);
 		}
 		// priority
-		for (i = 0; i < strlen(priority_s); i++) {
-			if (!strchr("0123456789", priority_s[i])) {
-				puts("Invalid priority");
+		for (i = 0; i < __strlen(priority_s); i++) {
+			if (!__strchr("0123456789", priority_s[i])) {
+				__puts("Invalid priority");
 				return(-1);
 			}
 		}
-		priority = atoi(priority_s);
+		priority = __atoi(priority_s);
 		if (priority < 0 || priority > 63) {
-			puts("Invalid priority");
+			__puts("Invalid priority");
 			return(-1);
 		}
 

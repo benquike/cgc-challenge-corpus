@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.co>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -103,8 +103,8 @@ void poker(player_info *player)
 		print_hand(hand, sizeof(hand));
 
 		// Allow User Hold
-		bzero(input, sizeof(input));
-		printf("Enter cards to hold by number (ex: 13 or 12345). Others will be replaced.\n");
+		__bzero(input, sizeof(input));
+		__printf("Enter cards to hold by number (ex: 13 or 12345). Others will be replaced.\n");
 		receive_fixed_input(input, '\n', sizeof(input));
 		
 		if (input[0] == 'q')
@@ -120,7 +120,7 @@ void poker(player_info *player)
 
 		// Mark any cards to hold (Card positions are numbered 1 through 5)
 		char hold[5];
-		bzero(hold, sizeof(hold));
+		__bzero(hold, sizeof(hold));
 		for (int i=0; i<5; i++)
 		{
 			if ((input[i] >= '1')&&(input[i]<= '5'))
@@ -163,20 +163,20 @@ void poker(player_info *player)
 			// Check for royal flush
 			if (hand[0]==9 || hand[0]==22 || hand[0]==35 || hand[0]==48)
 			{
-				printf("Royal Flush!\n");
+				__printf("Royal Flush!\n");
 				player->wallet += payouts[POKER_ROYAL_FLUSH];
 				goto DONE;
 			}
 			// Check for straight flush
 			else if (hand[4] == hand[0] + 4)
 			{
-				printf("Straight Flush!\n");
+				__printf("Straight Flush!\n");
 				player->wallet += payouts[POKER_STRAIGHT_FLUSH];
 				goto DONE;
 			} 
 			else
 			{
-				printf("Flush!\n");
+				__printf("Flush!\n");
 				player->wallet += payouts[POKER_FLUSH];
 				goto DONE;
 			}
@@ -197,7 +197,7 @@ void poker(player_info *player)
 			int count = count_cards(hand, sizeof(hand), hand[i]);
 			if (count == 4)
 			{
-				printf("Four of a kind!\n");
+				__printf("Four of a kind!\n");
 				player->wallet += payouts[POKER_FOUR_OF_A_KIND];
 				goto DONE;
 			}
@@ -205,7 +205,7 @@ void poker(player_info *player)
 			{
 				if (pair == 1)
 				{
-					printf("Full House!\n");
+					__printf("Full House!\n");
 					player->wallet += payouts[POKER_FULL_HOUSE];
 					goto DONE;
 				}
@@ -215,7 +215,7 @@ void poker(player_info *player)
 			{
 				if (three_of_a_kind == 1)
 				{
-					printf("Full House!\n");
+					__printf("Full House!\n");
 					player->wallet += payouts[POKER_FULL_HOUSE];
 					goto DONE;
 				}
@@ -225,7 +225,7 @@ void poker(player_info *player)
 				}
 				if (pair == 1)
 				{
-					printf("Two Pair!\n");
+					__printf("Two Pair!\n");
 					player->wallet += payouts[POKER_TWO_PAIR];
 					goto DONE;
 				}
@@ -235,13 +235,13 @@ void poker(player_info *player)
 		}
 		if (three_of_a_kind == 1)
 		{
-			printf("Three of a kind!\n");
+			__printf("Three of a kind!\n");
 			player->wallet += payouts[POKER_THREE_OF_A_KIND] ;
 			goto DONE;
 		}
 		if (jacks_or_better == 1)
 		{
-			printf("Jacks or better!\n");
+			__printf("Jacks or better!\n");
 			player->wallet += payouts[POKER_JACKS_OR_BETTER];
 			goto DONE;
 		}
@@ -249,12 +249,12 @@ void poker(player_info *player)
 		// Check for straight
 		if ((pair == 0) && (poker_value[hand[4]] == poker_value[hand[0]] + 4))
 		{
-			printf("Straight!\n");
+			__printf("Straight!\n");
 			player->wallet += payouts[POKER_STRAIGHT];
 			goto DONE;
 		}
 
-		printf("You Lose!\n");
+		__printf("You Lose!\n");
 		goto DONE;
 	
 	DONE:

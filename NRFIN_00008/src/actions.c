@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -52,9 +52,9 @@ void list(char *buf){
 
     while(cur) {
         int2str(tmp,sizeof(tmp),i++);
-        SSEND(strlen(tmp),tmp);
+        SSEND(__strlen(tmp),tmp);
         SSEND(3,".) ")
-        SSENDL(strlen(cur->name),cur->name);
+        SSENDL(__strlen(cur->name),cur->name);
         cur = cur->next;
     }
 }
@@ -83,7 +83,7 @@ void play(char *buf){
         return;
     }
 
-    key = strchr(buf,' ');
+    key = __strchr(buf,' ');
 
     if(!key) {
         SSENDL(sizeof(NOSUCHVID)-1,NOSUCHVID);
@@ -122,12 +122,12 @@ void add(char *buf){
     cur = vhead;
     size_t total, rndbytes;
 
-    if(strlen(buf) > MAX_NAME_SIZE || strlen(buf) == 0) {
+    if(__strlen(buf) > MAX_NAME_SIZE || __strlen(buf) == 0) {
         SSENDL(sizeof(MAGICWORD)-1,MAGICWORD);
         _terminate(14);
     }
 
-    if(get_video_by_name(buf) || strchr(buf,' ')) {
+    if(get_video_by_name(buf) || __strchr(buf,' ')) {
         SSENDL(sizeof(VIDEXISTS)-1,VIDEXISTS);
         return;
     }
@@ -158,7 +158,7 @@ void add(char *buf){
 
     
     new->can_delete = 1;
-    strcpy(new->name,buf);
+    __strcpy(new->name,buf);
     
     RECV(total,((char*)new)+sizeof(video));
     new->elen = total-4;

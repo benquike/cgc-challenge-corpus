@@ -1,11 +1,11 @@
 #include "string.h"
 
-size_t strcpy(char* dst, const char* src)
+size_t __strcpy(char* dst, const char* src)
 {
-  return (strncpy(dst, SIZE_MAX, src));
+  return (__strncpy(dst, SIZE_MAX, src));
 }
 
-size_t strncpy(char* dst, size_t len, const char* src)
+size_t __strncpy(char* dst, size_t len, const char* src)
 {
   size_t i = 0; 
   if ( (dst == NULL) || (src == NULL) || (len == 0) )
@@ -25,7 +25,7 @@ size_t strncpy(char* dst, size_t len, const char* src)
 
 }
 
-int strcmp(const char* s1, const char* s2)
+int __strcmp(const char* s1, const char* s2)
 {
   if (s1 == NULL)
   {
@@ -131,7 +131,7 @@ char* strrstr(char* haystack, const char* needle)
   return (ret);
 }
 
-char* strchr(char* haystack, char needle)
+char* __strchr(char* haystack, char needle)
 {
   char* ret = haystack;
 
@@ -174,7 +174,7 @@ char* strrchr(char* haystack, char needle)
   return (temp);
 }
 
-size_t strlen(const char* str)
+size_t __strlen(const char* str)
 {
   size_t ret = 0; 
   if (str == NULL)
@@ -190,7 +190,7 @@ size_t strlen(const char* str)
 
 /**
  * The maximum unsigned value is 4294967295 which is 0xFFFFFFFF
- * So the idea is to read in up to 9 digits and then convert that
+ * So the idea is to __read in up to 9 digits and then convert that
  * into a uint64_t. We need a uint64_t because 9999999999 will overflow
  * uint32_t. 
  *

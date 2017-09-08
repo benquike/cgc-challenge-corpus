@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -31,9 +31,9 @@ const char *secret = (const char*) 0x4347C000;
 
 void print_menu()
 {
-    printf("1. Compress\n");
-    printf("2. Decompress\n");
-    printf("3. Quit\n");
+    __printf("1. Compress\n");
+    __printf("2. Decompress\n");
+    __printf("3. Quit\n");
 }
 
 void handle_compress()
@@ -44,11 +44,11 @@ void handle_compress()
     size_t outlen = 0;
     sc_obj_t *sc = NULL;
 
-    printf("Key?\n");
-    if (fread(buf, sizeof(buf), stdin) != sizeof(buf))
+    __printf("Key?\n");
+    if (__fread(buf, sizeof(buf), stdin) != sizeof(buf))
         goto fail;
 
-    memset(data, 0, sizeof(data));
+    __memset(data, 0, sizeof(data));
     for (i = 0; i < sizeof(buf); ++i)
     {
         if (buf[i] < 32 || buf[i] > 126)
@@ -57,33 +57,33 @@ void handle_compress()
             goto fail;
     }
 
-    printf("Data?\n");
-    memset(data, 0, sizeof(data));
+    __printf("Data?\n");
+    __memset(data, 0, sizeof(data));
     fflush(stdout);
     if (freaduntil((char *) data, sizeof(data), '\0', stdin) < 0)
         goto fail;
 
     sc = sc_new(buf);
     sc->data = data;
-    sc->data_len = strlen((char *)data);
+    sc->data_len = __strlen((char *)data);
     if (sc_scompress(sc, &out, &outlen) < 0)
         goto fail;
-    printf("Original Size: %d\n", sc->data_len);
-    printf("Compressed Size: %d (%d%%)\n", outlen, ((int) ((outlen / (sc->data_len * 1.0)) * 100)));
-    printf("Compressed Data: ");
+    __printf("Original Size: %d\n", sc->data_len);
+    __printf("Compressed Size: %d (%d%%)\n", outlen, ((int) ((outlen / (sc->data_len * 1.0)) * 100)));
+    __printf("Compressed Data: ");
     for (i = 0; i < outlen && i < 32; ++i)
-        printf("%02X", out[i]);
-    printf("\n");
+        __printf("%02X", out[i]);
+    __printf("\n");
 
     goto done;
 
 fail:
-    printf("error.\n");
+    __printf("error.\n");
 done:
     if (sc)
-        free(sc);
+        __free(sc);
     if (out)
-        free(out);
+        __free(out);
 }
 
 void handle_decompress()
@@ -94,11 +94,11 @@ void handle_decompress()
     size_t outlen = 0, len = 0;
     sc_obj_t *sc = NULL;
 
-    printf("Key?\n");
-    if (fread(buf, sizeof(buf), stdin) != sizeof(buf))
+    __printf("Key?\n");
+    if (__fread(buf, sizeof(buf), stdin) != sizeof(buf))
         goto fail;
 
-    memset(data, 0, sizeof(data));
+    __memset(data, 0, sizeof(data));
     for (i = 0; i < sizeof(buf); ++i)
     {
         if (buf[i] < 32 || buf[i] > 126)
@@ -107,18 +107,18 @@ void handle_decompress()
             goto fail;
     }
 
-    printf("Length?\n");
-    memset(data, 0, sizeof(data));
+    __printf("Length?\n");
+    __memset(data, 0, sizeof(data));
     fflush(stdout);
     if (freaduntil((char *) data, sizeof(data), '\n', stdin) < 0)
         goto fail;
-    len = strtoul((char *) data, NULL, 10);
+    len = __strtoul((char *) data, NULL, 10);
     if (len > MAX_DATA_SIZE)
         goto fail;
 
-    printf("Data?\n");
-    memset(data, 0, sizeof(data));
-    if (fread((char *) data, len, stdin) < 0)
+    __printf("Data?\n");
+    __memset(data, 0, sizeof(data));
+    if (__fread((char *) data, len, stdin) < 0)
         goto fail;
 
     sc = sc_new(buf);
@@ -126,20 +126,20 @@ void handle_decompress()
     sc->data_len = len;
     if (sc_sdecompress(sc, &out, &outlen) < 0)
         goto fail;
-    printf("Compressed Size: %d\n", sc->data_len);
-    printf("Original Size: %d\n", strlen((char *) out));
-    printf("Original Data: ");
-    fwrite(out, outlen, stdout);
-    fwrite("\n", 1, stdout);
+    __printf("Compressed Size: %d\n", sc->data_len);
+    __printf("Original Size: %d\n", __strlen((char *) out));
+    __printf("Original Data: ");
+    __fwrite(out, outlen, stdout);
+    __fwrite("\n", 1, stdout);
     goto done;
 
 fail:
-    printf("error.\n");
+    __printf("error.\n");
 done:
     if (sc)
-        free(sc);
+        __free(sc);
     if (out)
-        free(out);
+        __free(out);
 }
 
 int main()
@@ -148,15 +148,15 @@ int main()
     int i;
     fbuffered(stdin, 1);
     for (i = 0; i < 8; i += 2)
-        printf("%02X", secret[i] & 0xFF);
-    printf("\n");
+        __printf("%02X", secret[i] & 0xFF);
+    __printf("\n");
     while(1)
     {
         print_menu();
         fflush(stdout);
         if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
             return -1;
-        switch(strtoul(buf, NULL, 10))
+        switch(__strtoul(buf, NULL, 10))
         {
             case 1:
                 handle_compress();
@@ -165,12 +165,12 @@ int main()
                 handle_decompress();
                 break;
             case 3:
-                printf("Bye.\n");
+                __printf("Bye.\n");
                 fflush(stdout);
-                exit(0);
+                __exit(0);
                 break;
             default:
-                printf("Invalid menu.\n");
+                __printf("Invalid menu.\n");
                 break;
         }
     }

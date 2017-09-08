@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -29,10 +29,10 @@ extern "C" {
 Picture::Picture(void *_header, void *data, char *_filename)
 : File(sizeof(PictureHeader), ((PictureHeader *)_header)->data_size, _filename)
 {
-    memcpy(&header, _header, sizeof(PictureHeader));
+    __memcpy(&header, _header, sizeof(PictureHeader));
     raw_header = (void *)&header;
     raw_data = new char[get_data_size() + 1];
-    memcpy(raw_data, data, get_data_size());
+    __memcpy(raw_data, data, get_data_size());
     raw_data[get_data_size()] = '\0';
 }
 
@@ -62,9 +62,9 @@ void Picture::print_picture()
 {
     for (size_t i = 0; i < get_data_size(); i++) {
         if (isprint(raw_data[i]) || raw_data[i]=='\n' || raw_data[i]=='\t')
-            printf("%c", raw_data[i]);
+            __printf("%c", raw_data[i]);
         else
-            printf(" ");
+            __printf(" ");
     }
-    printf("\n");
+    __printf("\n");
 }

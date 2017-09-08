@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,8 +37,8 @@ bool RecvNewSong(tag_and_file *new_song)
     new_song->file = new MgcFile();
     if (new_song->file->ReadMgcFile(stdin))
     {
-        fflush(stdout);
-        if (fread(&new_song->tag, new_song->tag.header_size(), stdin) != new_song->tag.header_size())
+        __fflush(stdout);
+        if (__fread(&new_song->tag, new_song->tag.header_size(), stdin) != new_song->tag.header_size())
         {
             delete new_song;
             return false;
@@ -55,25 +55,25 @@ void PrintPlaylist(Playlist *playlist, unsigned int playlist_id)
     if (!playlist)
         return;
 
-    printf("Playlist ID: " ESC "d" NL, playlist_id);
-    printf("Number of songs added to playlist: " ESC "d" NL, playlist->length());
-    fflush(stdout);
+    __printf("Playlist ID: " ESC "d" NL, playlist_id);
+    __printf("Number of songs added to playlist: " ESC "d" NL, playlist->length());
+    __fflush(stdout);
 }
 
 extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
 {
     unsigned char *secret_page = (unsigned char *)secret_page_i;
     /* If you want to obfuscate input/output, uncomment and change */
-    fxlat(stdin, "393748225");
-    fxlat(stdout, "393748225");
+    __fxlat(stdin, "393748225");
+    __fxlat(stdout, "393748225");
 
     unsigned int remix_idx;
     remix_idx = secret_page[2];
-    fbuffered(stdout, 1);
+    __fbuffered(stdout, 1);
 
-    printf("--One Amp--" NL);
-    printf(NL NL);
-    fflush(stdout);
+    __printf("--One Amp--" NL);
+    __printf(NL NL);
+    __fflush(stdout);
 
     Playlist *master = new Playlist();
     Playlist *selected_playlist = master;
@@ -85,128 +85,128 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
     int choice = 0;
     while(!exit_program)
     {
-        printf("Main Menu:" NL);
+        __printf("Main Menu:" NL);
         if (selected_playlist == master)
         {
-            printf("1. Add Song To Library" NL);
-            printf("2. Delete Song From Library" NL);
-            printf("3. Select Playlist" NL);
+            __printf("1. Add Song To Library" NL);
+            __printf("2. Delete Song From Library" NL);
+            __printf("3. Select Playlist" NL);
         }
         else
         {
-            printf("1. Add Song To Playlist" NL);
-            printf("2. Delete Song From Playlist" NL);
-            printf("3. Return to Main Library" NL);
+            __printf("1. Add Song To Playlist" NL);
+            __printf("2. Delete Song From Playlist" NL);
+            __printf("3. Return to Main Library" NL);
         }
-        printf("4. List Songs" NL);
-        printf("5. Sort By Song ID (Default Sort)" NL);
-        printf("6. Sort By Song Title" NL);
-        printf("7. Sort By Artist and Album" NL);
-        printf("8. Sort By Artist and Song Title" NL);
-        printf("9. Sort By Album" NL);
-        printf("10. Sort By Album and Song Title" NL);
-        printf("11. Remix Track" NL);
+        __printf("4. List Songs" NL);
+        __printf("5. Sort By Song ID (Default Sort)" NL);
+        __printf("6. Sort By Song Title" NL);
+        __printf("7. Sort By Artist and Album" NL);
+        __printf("8. Sort By Artist and Song Title" NL);
+        __printf("9. Sort By Album" NL);
+        __printf("10. Sort By Album and Song Title" NL);
+        __printf("11. Remix Track" NL);
         if (selected_playlist == master)
         {
-            printf("12. Create Playlist" NL);
-            printf("13. Delete Playlist" NL);
-            printf("14. List Playlists" NL);
-            printf("15. Exit" NL);
+            __printf("12. Create Playlist" NL);
+            __printf("13. Delete Playlist" NL);
+            __printf("14. List Playlists" NL);
+            __printf("15. Exit" NL);
         }
         else
         {
-            printf("12. List All Songs In Library" NL);
-            printf("13. Exit" NL);
+            __printf("12. List All Songs In Library" NL);
+            __printf("13. Exit" NL);
         }
 
-        printf("[::]  ");
-        fflush(stdout);
+        __printf("[::]  ");
+        __fflush(stdout);
 
-        if (freaduntil(input, sizeof(input), *NL, stdin) < 0)
+        if (__freaduntil(input, sizeof(input), *NL, stdin) < 0)
             break;
         if (*input == 0)
             continue;
-        choice = strtol(input, NULL, 10);
+        choice = __strtol(input, NULL, 10);
         if (choice == 1 && selected_playlist == master)
         {
             tag_and_file new_song;
             if (RecvNewSong(&new_song) && master->AddSong(&new_song))
-                printf("Added song to library" NL);
+                __printf("Added song to library" NL);
             else
-                printf("Could not add song to library" NL);
-            fflush(stdout);
+                __printf("Could not add song to library" NL);
+            __fflush(stdout);
         }
         else if (choice == 2 && selected_playlist == master)
         {
             tag_and_file song_to_remove;
-            printf("Enter Song ID to delete from library" NL);
-            printf("[::] ");
-            fflush(stdout);
+            __printf("Enter Song ID to delete from library" NL);
+            __printf("[::] ");
+            __fflush(stdout);
 
-            if (freaduntil(input, sizeof(input), *NL, stdin) <= 0)
+            if (__freaduntil(input, sizeof(input), *NL, stdin) <= 0)
                 continue;
-            unsigned int song_id = strtol(input, NULL, 10);
+            unsigned int song_id = __strtol(input, NULL, 10);
             if (master->RemoveSong(song_id, &song_to_remove))
             {
                 for (unsigned int i = 0; i < num_playlists; i++)
                     user_playlists[i].RemoveSong(song_id, (tag_and_file *)NULL);
 
                 delete song_to_remove.file;
-                printf("Successfully removed song from library" NL);
+                __printf("Successfully removed song from library" NL);
             }
             else
             {
-                printf("Could not remove song from library" NL);
+                __printf("Could not remove song from library" NL);
             }
-            fflush(stdout);
+            __fflush(stdout);
 
         }
         else if (choice == 3 && selected_playlist == master)
         {
-            printf("Select Playlist ID" NL);
-            printf("[::] ");
-            fflush(stdout);
+            __printf("Select Playlist ID" NL);
+            __printf("[::] ");
+            __fflush(stdout);
 
-            if (freaduntil(input, sizeof(input), *NL, stdin) <= 0)
+            if (__freaduntil(input, sizeof(input), *NL, stdin) <= 0)
                 continue;
-            unsigned int playlist_id = strtol(input, NULL, 10);
+            unsigned int playlist_id = __strtol(input, NULL, 10);
             if(playlist_id < num_playlists)
                 selected_playlist = &user_playlists[playlist_id];
             else
-                printf("Bad Playlist ID" NL);
-            fflush(stdout);
+                __printf("Bad Playlist ID" NL);
+            __fflush(stdout);
         }
         else if (choice == 1)
         {
-            printf("Enter Song ID to add to playlist" NL);
-            printf("[::] ");
-            fflush(stdout);
+            __printf("Enter Song ID to add to playlist" NL);
+            __printf("[::] ");
+            __fflush(stdout);
 
-            if (freaduntil(input, sizeof(input), *NL, stdin) <= 0)
+            if (__freaduntil(input, sizeof(input), *NL, stdin) <= 0)
                 continue;
-            unsigned int song_id = strtol(input, NULL, 10);
+            unsigned int song_id = __strtol(input, NULL, 10);
             tag_and_file *playlist_song = master->GetSong(song_id);
             tag_and_file *song_already_added = selected_playlist->GetSong(song_id);
             if (playlist_song && !song_already_added && selected_playlist->AddSong(playlist_song))
-                printf("Added song to playlist" NL);
+                __printf("Added song to playlist" NL);
             else
-                printf("Could not add song to playlist" NL);
-            fflush(stdout);
+                __printf("Could not add song to playlist" NL);
+            __fflush(stdout);
         }
         else if (choice == 2)
         {
-            printf("Enter Song ID to delete from playlist" NL);
-            printf("[::] ");
-            fflush(stdout);
+            __printf("Enter Song ID to delete from playlist" NL);
+            __printf("[::] ");
+            __fflush(stdout);
 
-            if (freaduntil(input, sizeof(input), *NL, stdin) <= 0)
+            if (__freaduntil(input, sizeof(input), *NL, stdin) <= 0)
                 continue;
-            unsigned int song_id = strtol(input, NULL, 10);
+            unsigned int song_id = __strtol(input, NULL, 10);
             if (selected_playlist->RemoveSong(song_id, (tag_and_file *)NULL))
-                printf("Successfully removed song from playlist" NL);
+                __printf("Successfully removed song from playlist" NL);
             else
-                printf("Could not remove song from playlist" NL);
-            fflush(stdout);
+                __printf("Could not remove song from playlist" NL);
+            __fflush(stdout);
 
         }
         else if (choice == 3)
@@ -220,87 +220,87 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
         else if (choice == 5)
         {
             selected_playlist->SortById();
-            printf("Successfully sorted list by Song ID" NL);
-            fflush(stdout);
+            __printf("Successfully sorted list by Song ID" NL);
+            __fflush(stdout);
         }
         else if (choice == 6)
         {
             selected_playlist->SortByTitle();
-            printf("Successfully sorted list by Song Title" NL);
-            fflush(stdout);
+            __printf("Successfully sorted list by Song Title" NL);
+            __fflush(stdout);
         }
         else if (choice == 7)
         {
             selected_playlist->SortByArtistAndAlbum();
-            printf("Successfully sorted list by Artist Name and Album" NL);
-            fflush(stdout);
+            __printf("Successfully sorted list by Artist Name and Album" NL);
+            __fflush(stdout);
         }
         else if (choice == 8)
         {
             selected_playlist->SortByArtistAndTitle();
-            printf("Successfully sorted list by Artist Name and Song Title" NL);
-            fflush(stdout);
+            __printf("Successfully sorted list by Artist Name and Song Title" NL);
+            __fflush(stdout);
         }
         else if (choice == 9)
         {
             selected_playlist->SortByAlbum();
-            printf("Successfully sorted list by Album" NL);
-            fflush(stdout);
+            __printf("Successfully sorted list by Album" NL);
+            __fflush(stdout);
         }
         else if (choice == 10)
         {
             selected_playlist->SortByAlbumAndTitle();
-            printf("Successfully sorted list by Album and Song Title" NL);
-            fflush(stdout);
+            __printf("Successfully sorted list by Album and Song Title" NL);
+            __fflush(stdout);
         }
         else if (choice == 11)
         {
-            printf("Enter Song ID to remix" NL);
-            printf("[::] ");
-            fflush(stdout);
+            __printf("Enter Song ID to remix" NL);
+            __printf("[::] ");
+            __fflush(stdout);
 
-            if (freaduntil(input, sizeof(input), *NL, stdin) <= 0)
+            if (__freaduntil(input, sizeof(input), *NL, stdin) <= 0)
                 continue;
-            unsigned int song_id = strtol(input, NULL, 10);
+            unsigned int song_id = __strtol(input, NULL, 10);
             tag_and_file *song = selected_playlist->GetSong(song_id);
             if (song)
             {
-                printf("Original Track Data:" NL);
+                __printf("Original Track Data:" NL);
                 song->file->PrintFrameData();
                 unsigned int secret_page_size = SECRET_PAGE_SIZE;
                 song->file->Remix(secret_page, &remix_idx, secret_page_size);
-                printf("Successfully remixed song" NL);
-                printf("Printing New Track Data:" NL);
+                __printf("Successfully remixed song" NL);
+                __printf("Printing New Track Data:" NL);
                 song->file->PrintFrameData();
             }
             else
             {
-                printf("Could not remix track" NL);
+                __printf("Could not remix track" NL);
             }
-            fflush(stdout);
+            __fflush(stdout);
         }
         else if (choice == 12 && selected_playlist == master)
         {
             if(num_playlists < MAX_USER_PLAYLISTS)
             {
                 user_playlists[num_playlists].ClearPlaylist(true);
-                printf("Created a new playlist with ID [" ESC "d]" NL, num_playlists++);
+                __printf("Created a new playlist with ID [" ESC "d]" NL, num_playlists++);
             }
             else
             {
-                printf("Maximum number of playlists reached" NL);
+                __printf("Maximum number of playlists reached" NL);
             }
-            fflush(stdout);
+            __fflush(stdout);
         }
         else if (choice == 13 && selected_playlist == master)
         {
-            printf("Enter Playlist ID to delete");
-            printf("[::] ");
-            fflush(stdout);
+            __printf("Enter Playlist ID to delete");
+            __printf("[::] ");
+            __fflush(stdout);
 
-            if (freaduntil(input, sizeof(input), *NL, stdin) <= 0)
+            if (__freaduntil(input, sizeof(input), *NL, stdin) <= 0)
                 continue;
-            unsigned int playlist_id = strtol(input, NULL, 10);
+            unsigned int playlist_id = __strtol(input, NULL, 10);
             if(playlist_id < num_playlists)
             {
                 user_playlists[playlist_id].ClearPlaylist(true);
@@ -311,13 +311,13 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
                 }
                 --num_playlists;
                 user_playlists[num_playlists].ClearPlaylist(false);
-                printf("Deleted Playlist ID: " ESC "d" NL, playlist_id);
+                __printf("Deleted Playlist ID: " ESC "d" NL, playlist_id);
             }
             else
             {
-                printf("Bad Playlist ID" NL);
+                __printf("Bad Playlist ID" NL);
             }
-            fflush(stdout);
+            __fflush(stdout);
         }
         else if (choice == 14 && selected_playlist == master)
         {
@@ -338,8 +338,8 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
         }
     }
 
-    printf("--Exited One Amp--" NL);
-    fflush(stdout);
+    __printf("--Exited One Amp--" NL);
+    __fflush(stdout);
 
     return 0;
 }

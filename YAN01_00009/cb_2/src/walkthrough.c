@@ -31,7 +31,7 @@ size_t findPage(const char* str)
     {
       break;
     }
-    else if (strcmp(gPages[i].name, str) == 0)
+    else if (__strcmp(gPages[i].name, str) == 0)
     {
       return (i);
     }

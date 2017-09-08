@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -135,7 +135,7 @@ int buffered_receive(char *buf, int length)
     { 
       byte_to_copy = bytes_in_buffer;
     }
-    memcpy(buf, p_data, byte_to_copy);
+    __memcpy(buf, p_data, byte_to_copy);
     bytes_remaining -= byte_to_copy;
     p_data += byte_to_copy;
     bytes_in_buffer -= byte_to_copy;
@@ -155,7 +155,7 @@ int buffered_receive(char *buf, int length)
   return length;
 }
 
-int receive_until(char *buf, int length, char delim) {
+int __receive_until(char *buf, int length, char delim) {
   return buffered_receive_until(buf, length, delim);
 }
 
@@ -278,13 +278,13 @@ int force_newline(char *s, int size, int bytes) {
 }
 
 
-int getopt(int argc, char **argv, char *optstring, int *opt_index) {
+int __getopt(int argc, char **argv, char *optstring, int *opt_index) {
   
   int option = -1;
   if (*opt_index >= argc || !argv[*opt_index]) {
     goto DONE;
   }
-  for (int i = 0; i < strlen(optstring); i++) {
+  for (int i = 0; i < __strlen(optstring); i++) {
     if (*argv[*opt_index] == optstring[i]) {
       option = optstring[i];
       (*opt_index)++;
@@ -308,6 +308,6 @@ void bcopy(char *s, char *d, size_t size) {
 }
 
 
-void exit(int e) {
+void __exit(int e) {
   _terminate(e);
 }

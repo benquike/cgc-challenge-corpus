@@ -4,7 +4,7 @@ Author: James Nuttall (james@cromulence.co)
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,7 +37,7 @@ int main()
 {
 	char packet_str[256];
 
-	printf("go time\n");
+	__printf("go time\n");
 
 	current_packet_count_recvd = UNINITIALIZED; 
 	current_packet_count_sent = UNINITIALIZED;
@@ -59,7 +59,7 @@ int main()
 	int seed_len = seed_prng();
 	if (seed_len == FAIL)
 	{
-		printf("didn't succeed in seeding prng()");
+		__printf("didn't succeed in seeding prng()");
 		return 1;
 	}
 	else
@@ -70,11 +70,11 @@ int main()
 	// Loops and accepts user input over packet interface
 	while (1)
 	{
-		printf("ready for next packet\n");
+		__printf("ready for next packet\n");
 
 		if (check_win(goal_len) == 1)
 		{
-			printf("Good game\n");
+			__printf("Good game\n");
 			return 1;
 		}
 
@@ -82,17 +82,17 @@ int main()
 		if (cnt_incorrect >= MAX_WRONG_MOVES)
 			break;
 
-		int len = receive_until(packet_str, '\n', 255);
-		if (strcmp(packet_str, "1212") == 0)
+		int len = __receive_until(packet_str, '\n', 255);
+		if (__strcmp(packet_str, "1212") == 0)
 		{
-			printf("good bye\n");
+			__printf("good bye\n");
 			return 1;
 		}
 
 		if (len != sizeof(Packet))
 		{
-			printf("not proper packet length: got @d, should be @d\n", len, sizeof(Packet));
-			printf("I got: @s\n", packet_str);
+			__printf("not proper packet length: got @d, should be @d\n", len, sizeof(Packet));
+			__printf("I got: @s\n", packet_str);
 			cnt_incorrect++;
 			continue;
 		}
@@ -105,7 +105,7 @@ int main()
 		int ret = validate_packet(&pkt);
 		if (ret == FAIL)
 		{
-			printf("skipping packet processing due to malformed packet\n");
+			__printf("skipping packet processing due to malformed packet\n");
 			cnt_incorrect++;
 			continue;
 		}
@@ -117,12 +117,12 @@ int main()
 			cnt_incorrect++;
 			continue;
 		}
-		else if (ret == 2) // user requested exit
+		else if (ret == 2) // user requested __exit
 		{
-			printf("exiting main loop\n");
+			__printf("exiting main loop\n");
 			return 1;
 		}
 	}	
-	printf("good bye\n");
+	__printf("good bye\n");
 	return 0;
 }

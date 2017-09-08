@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -122,12 +122,12 @@ void Deque::Expand()
 
     if (idx_0_ + size_ > cap_)
     {
-        memcpy(new_array, &tickets_[idx_0_], sizeof(Ticket *) * (cap_ - idx_0_));
-        memcpy(&new_array[cap_ - idx_0_], tickets_, sizeof(Ticket *) * (size_ - (cap_ - idx_0_)));
+        __memcpy(new_array, &tickets_[idx_0_], sizeof(Ticket *) * (cap_ - idx_0_));
+        __memcpy(&new_array[cap_ - idx_0_], tickets_, sizeof(Ticket *) * (size_ - (cap_ - idx_0_)));
     }
     else
     {
-        memcpy(new_array, &tickets_[idx_0_], sizeof(Ticket *) * size_);
+        __memcpy(new_array, &tickets_[idx_0_], sizeof(Ticket *) * size_);
     }
     delete tickets_;
     tickets_ = new_array;
@@ -145,12 +145,12 @@ void Deque::TryShrink()
 
     if (idx_0_ + size_ > cap_)
     {
-        memcpy(new_array, &tickets_[idx_0_], sizeof(Ticket *) * (cap_ - idx_0_));
-        memcpy(&new_array[cap_ - idx_0_], tickets_, sizeof(Ticket *) * (size_ - (cap_ - idx_0_)));
+        __memcpy(new_array, &tickets_[idx_0_], sizeof(Ticket *) * (cap_ - idx_0_));
+        __memcpy(&new_array[cap_ - idx_0_], tickets_, sizeof(Ticket *) * (size_ - (cap_ - idx_0_)));
     }
     else
     {
-        memcpy(new_array, &tickets_[idx_0_], sizeof(Ticket *) * size_);
+        __memcpy(new_array, &tickets_[idx_0_], sizeof(Ticket *) * size_);
     }
 
     delete tickets_;

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -30,13 +30,13 @@
 
 array_t* array_create(int size, free_element_fn *fptr)
 {
-  array_t *arr = (array_t *) malloc(sizeof(array_t));
+  array_t *arr = (array_t *) __malloc(sizeof(array_t));
   if (arr == NULL || fptr == NULL)
     goto fail;
   arr->free_element = fptr;
   arr->length = 0;
   arr->size = size > 0 ? size : 16;
-  arr->arr = (void **) malloc(sizeof(void *) * arr->size);
+  arr->arr = (void **) __malloc(sizeof(void *) * arr->size);
   if (arr->arr == NULL)
     goto fail;
   return arr;
@@ -45,8 +45,8 @@ fail:
   if (arr)
   {
     if (arr->arr)
-      free(arr->arr);
-    free(arr);
+      __free(arr->arr);
+    __free(arr);
   }
   return NULL;
 }
@@ -56,7 +56,7 @@ int _array_double_size(array_t *arr)
   void **tmp;
   if (arr->size > (UINT_MAX / 2) / sizeof(void *))
     return -1;
-  tmp = (void **) realloc(arr->arr, arr->size * 2 * sizeof(void *));
+  tmp = (void **) __realloc(arr->arr, arr->size * 2 * sizeof(void *));
   if (tmp == NULL)
     return -1;
   arr->arr = tmp;
@@ -104,8 +104,8 @@ void array_destroy(array_t *arr)
         if (arr->arr[i])
           arr->free_element(arr->arr[i]);
       }
-      free(arr->arr);
+      __free(arr->arr);
     }
-    free(arr);
+    __free(arr);
   }
 }

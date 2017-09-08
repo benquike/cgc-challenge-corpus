@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -49,7 +49,7 @@ int Order::wait_time()
 
     //Factor in wait time grows with larger orders, but not linearly
     wait_time_modifier += pizzas.length() / 5;
-    printf("Pizza length... = %d\n", pizzas.length());
+    __printf("Pizza length... = %d\n", pizzas.length());
     return (wait_time + ((max_wait_time * wait_time_modifier) / pizzas.length()));
 }
 
@@ -60,10 +60,10 @@ char *Order::get_name()
 
 bool Order::set_name(char *name)
 {
-    if (strlen(name) >= NAME_SIZE)
+    if (__strlen(name) >= NAME_SIZE)
         return false;
 
-    strcpy(pickup_name, name);
+    __strcpy(pickup_name, name);
     return true;
 }
 
@@ -91,7 +91,7 @@ void Order::remove_all_pizzas()
 Pizza *Order::get_pizza(size_t idx)
 {
     if (idx >= pizzas.length())
-        return NULL;
+      return (Pizza *)NULL;
 
     return pizzas[idx];
 }
@@ -104,17 +104,17 @@ int Order::get_num_pizzas()
 void Order::print_order()
 {
     int i, calories = 0, carbs = 0;
-    printf("==================================================\n");
+    __printf("==================================================\n");
     for (i = 0; i < pizzas.length(); i++) {
-        printf("  Item #%d. ", i+1);
+        __printf("  Item #%d. ", i+1);
         pizzas[i]->print_pizza();
         calories += pizzas[i]->get_calories();
         carbs += pizzas[i]->get_carbs();
     }
-    printf("--------------------------------------\n");
-    printf("\t\tCalories: %d\n", calories);
-    printf("\t\tCarbs   : %d\n\n", carbs);
-    printf("\t\tEstimated wait time: %d minute(s)\n", wait_time()/60);
-    printf("==================================================\n");
+    __printf("--------------------------------------\n");
+    __printf("\t\tCalories: %d\n", calories);
+    __printf("\t\tCarbs   : %d\n\n", carbs);
+    __printf("\t\tEstimated wait time: %d minute(s)\n", wait_time()/60);
+    __printf("==================================================\n");
 }
 

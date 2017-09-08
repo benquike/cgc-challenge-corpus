@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -408,7 +408,7 @@ void display_simulation_data( void )
     // Reset render grid
     clear_render_grid();
 
-    printf( "@d total particles:\n", g_particleCount );
+    __printf( "@d total particles:\n", g_particleCount );
 
     for ( i = 0; i < g_particleCount; i++ )
     {
@@ -419,7 +419,7 @@ void display_simulation_data( void )
         double mass = fp_todouble( g_particles[i].mass );
         double radius = fp_todouble( g_particles[i].radius );
 
-        printf( "@d: Position (@f,@f) Velocity (@f,@f) mass (@f) radius (@f).\n", i, x_pos, y_pos, x_vel, y_vel, mass, radius );
+        __printf( "@d: Position (@f,@f) Velocity (@f,@f) mass (@f) radius (@f).\n", i, x_pos, y_pos, x_vel, y_vel, mass, radius );
 
         // Add particle into render grid
         add_render_grid( &g_particles[i] );

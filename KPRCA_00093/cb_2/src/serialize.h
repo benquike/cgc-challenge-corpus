@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -27,9 +27,9 @@
 #define APPEND_PARAM(_cmd_str, _param, _length) \
     do { \
         unsigned short __temp_length_val = (_length); \
-        memcpy((_cmd_str), &__temp_length_val, sizeof((__temp_length_val))); \
+        __memcpy((_cmd_str), &__temp_length_val, sizeof((__temp_length_val))); \
         (_cmd_str) += sizeof(__temp_length_val); \
-        memcpy((_cmd_str), (_param), __temp_length_val); \
+        __memcpy((_cmd_str), (_param), __temp_length_val); \
         (_cmd_str) += __temp_length_val; \
     } while(0)
 
@@ -47,7 +47,7 @@
 
 #define APPEND_EOM(_cmd_str) \
     do { \
-        memcpy((_cmd_str), BrcGlobals::eom(), BrcGlobals::eom_length()); \
+        __memcpy((_cmd_str), BrcGlobals::eom(), BrcGlobals::eom_length()); \
         (_cmd_str) += BrcGlobals::eom_length(); \
     } while(0)
 

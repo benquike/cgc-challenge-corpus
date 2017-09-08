@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -51,19 +51,19 @@ void random_string(char *buf, size_t len)
 
 void print_main_menu()
 {
-    printf("\n=== Menu ===================\n");
-    printf("1. Register User\n");
-    printf("2. Login User\n");
-    printf("3. Quit\n");
-    printf("> ");
+    __printf("\n=== Menu ===================\n");
+    __printf("1. Register User\n");
+    __printf("2. Login User\n");
+    __printf("3. Quit\n");
+    __printf("> ");
 }
 
 int is_alphanum(const char *s)
 {
     int i;
-    for (i = 0; i < strlen(s) - 1; ++i)
+    for (i = 0; i < __strlen(s) - 1; ++i)
     {
-        if (!isalnum(s[i]))
+        if (!__isalnum(s[i]))
             return 0;
     }
     return 1;
@@ -78,8 +78,8 @@ void handle_register_user(ctf_t *ctf)
     error_t err;
     if ((err = user_new(&user)) != ERR_OK)
         goto fail;
-    printf("\n=== User Creation ===================\n");
-    printf("Nickname: ");
+    __printf("\n=== User Creation ===================\n");
+    __printf("Nickname: ");
     err = ERR_INVALID_VALUE;
     fflush(stdout);
     if (freaduntil(buf, sizeof(buf), '\n', stdin) <= 0)
@@ -88,7 +88,7 @@ void handle_register_user(ctf_t *ctf)
         goto fail;
     if ((err = user_set_nick(user, buf)) != ERR_OK)
         goto fail;
-    printf("Password: ");
+    __printf("Password: ");
     err = ERR_INVALID_VALUE;
     fflush(stdout);
     if (freaduntil(buf, sizeof(buf), '\n', stdin) <= 0)
@@ -97,23 +97,23 @@ void handle_register_user(ctf_t *ctf)
         goto fail;
     if ((err = user_set_pass(user, buf)) != ERR_OK)
         goto fail;
-    printf("Team token: ");
+    __printf("Team token: ");
     fflush(stdout);
     if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
         goto fail;
-    if (strcmp(buf, "") == 0)
+    if (__strcmp(buf, "") == 0)
     {
         if ((err = team_new(&team)) != ERR_OK)
             goto fail;
-        printf("\n=== Team Creation ===================\n");
-        printf("Team name: ");
+        __printf("\n=== Team Creation ===================\n");
+        __printf("Team name: ");
         err = ERR_INVALID_VALUE;
         fflush(stdout);
         if (freaduntil(buf, sizeof(buf), '\n', stdin) <= 0)
             goto fail;
         if ((err = team_change_name(team, buf)) != ERR_OK)
             goto fail;
-        printf("Shoutout: ");
+        __printf("Shoutout: ");
         err = ERR_INVALID_VALUE;
         fflush(stdout);
 #ifdef PATCHED_1
@@ -153,17 +153,17 @@ void handle_register_user(ctf_t *ctf)
         goto fail;
     if ((err = user_set_team(user, team, NULL)) != ERR_OK)
         goto fail;
-    printf("[INFO] Successfully registered.\n");
+    __printf("[INFO] Successfully registered.\n");
     if (new_team)
-        printf("[INFO] Team code: ;s\n", team->code);
+        __printf("[INFO] Team code: ;s\n", team->code);
     return;
 
 fail:
-    printf("[ERROR] ;s\n", error_to_string(err));
+    __printf("[ERROR] ;s\n", error_to_string(err));
     if (user)
-        free(user);
+        __free(user);
     if (new_team && team)
-        free(team);
+        __free(team);
     return;
 }
 
@@ -171,15 +171,15 @@ void handle_login_user(ctf_t *ctf)
 {
     error_t err;
     char nick[64], pass[64];
-    printf("\n=== Login ===================\n");
-    printf("Nick: ");
+    __printf("\n=== Login ===================\n");
+    __printf("Nick: ");
     err = ERR_INVALID_VALUE;
     fflush(stdout);
     if (freaduntil(nick, sizeof(nick), '\n', stdin) <= 0)
         goto fail;
     if (!is_alphanum(nick))
         goto fail;
-    printf("Password: ");
+    __printf("Password: ");
     fflush(stdout);
     if (freaduntil(pass, sizeof(pass), '\n', stdin) <= 0)
         goto fail;
@@ -187,11 +187,11 @@ void handle_login_user(ctf_t *ctf)
         goto fail;
     if ((err = ctf_auth_user(ctf, &ctf->logged_in, nick, pass)) != ERR_OK)
         goto fail;
-    printf("[INFO] Successfully logged in as ;s.\n", nick);
+    __printf("[INFO] Successfully logged in as ;s.\n", nick);
     return;
 
 fail:
-    printf("[ERROR] ;s\n", error_to_string(err));
+    __printf("[ERROR] ;s\n", error_to_string(err));
 }
 
 void print_ctf_ticker(ctf_t *ctf)
@@ -200,34 +200,34 @@ void print_ctf_ticker(ctf_t *ctf)
     size_t n = 1;
     team_t **tmp = NULL;
     ctf_get_ranks(ctf, &tmp, &n);
-    free(tmp);
-    printf("\n================================\n");
-    printf("| [;s] - ;d\n", t->name, t->score);
-    printf("================================\n");
+    __free(tmp);
+    __printf("\n================================\n");
+    __printf("| [;s] - ;d\n", t->name, t->score);
+    __printf("================================\n");
     int i;
     flag_t **solves = NULL;
     n = 5;
     ctf_get_solves(ctf, &solves, &n);
     if (n == 0)
-        printf("No solves yet.\n");
+        __printf("No solves yet.\n");
     for (i = 0; i < n; ++i)
-        printf("| ;s solved ;s (;d pts)\n", solves[i]->team->name, solves[i]->chal->name, solves[i]->chal->points);
+        __printf("| ;s solved ;s (;d pts)\n", solves[i]->team->name, solves[i]->chal->name, solves[i]->chal->points);
     if (solves)
-        free(solves);
-    printf("================================\n");
+        __free(solves);
+    __printf("================================\n");
 }
 
 void print_ctf_menu(ctf_t *ctf)
 {
     print_ctf_ticker(ctf);
-    printf("\n=== CTF Menu ===================\n");
-    printf("1. View challenge list\n");
-    printf("2. View challenge detail\n");
-    printf("3. View ranking\n");
-    printf("4. View team profile\n");
-    printf("5. Submit flag\n");
-    printf("6. Logout\n");
-    printf("> ");
+    __printf("\n=== CTF Menu ===================\n");
+    __printf("1. View challenge list\n");
+    __printf("2. View challenge detail\n");
+    __printf("3. View ranking\n");
+    __printf("4. View team profile\n");
+    __printf("5. Submit flag\n");
+    __printf("6. Logout\n");
+    __printf("> ");
 }
 
 void print_challenge(ctf_t *ctf, chal_t *chal, int detail)
@@ -238,26 +238,26 @@ void print_challenge(ctf_t *ctf, chal_t *chal, int detail)
         stat = CSTAT_SOLVED_U;
     const char *status = chal_status_to_string(stat);
     if (!detail)
-        printf("[;s] [;d pts] ;s - ;s\n", cat, chal->points, chal->name, status);
+        __printf("[;s] [;d pts] ;s - ;s\n", cat, chal->points, chal->name, status);
     else
     {
-        printf("[;s] [;d pts] ;s - ;s\n", cat, chal->points, chal->name, status);
+        __printf("[;s] [;d pts] ;s - ;s\n", cat, chal->points, chal->name, status);
         if (chal->status == CSTAT_LOCKED)
-            printf("Hidden.\n");
+            __printf("Hidden.\n");
         else
-            printf(";s\n", chal->desc);
-        //printf("flag: ;s\n", chal->flag);
+            __printf(";s\n", chal->desc);
+        //__printf("flag: ;s\n", chal->flag);
         flag_t **f = NULL;
         size_t n = 3;
         flg_get_solves(&ctf->flg, &f, chal, &n);
         if (n > 0)
         {
-            printf("\nTop Solvers\n");
-            printf("===========\n");
+            __printf("\nTop Solvers\n");
+            __printf("===========\n");
             int i;
             for(i = 0; i< n; ++i)
-                printf(";d. ;s\n", i+1, f[i]->team->name);
-            free(f);
+                __printf(";d. ;s\n", i+1, f[i]->team->name);
+            __free(f);
         }
     }
 }
@@ -267,13 +267,13 @@ void handle_view_challenge_list(ctf_t *ctf)
     int i;
     if (ctf->num_chals == 0)
     {
-        printf("[INFO] No challenges are available.\n");
+        __printf("[INFO] No challenges are available.\n");
         return;
     }
-    printf("\n=== Challenge list ===================\n");
+    __printf("\n=== Challenge list ===================\n");
     for (i = 0; i < ctf->num_chals; ++i)
     {
-        printf(";d. ", i);
+        __printf(";d. ", i);
         print_challenge(ctf, ctf->chals[i], 0);
     }
 }
@@ -284,20 +284,20 @@ void handle_view_challenge_detail(ctf_t *ctf)
     handle_view_challenge_list(ctf);
     if (ctf->num_chals == 0)
         return;
-    printf("\nChoose idx: ");
+    __printf("\nChoose idx: ");
     fflush(stdout);
     if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
         goto fail;
     error_t err;
     chal_t *chal = NULL;
-    if ((err = ctf_get_chal(ctf, &chal, strtoul(buf, NULL, 10))) != ERR_OK)
+    if ((err = ctf_get_chal(ctf, &chal, __strtoul(buf, NULL, 10))) != ERR_OK)
         goto fail;
-    printf("\n=== Challenge detail ===================\n");
+    __printf("\n=== Challenge detail ===================\n");
     print_challenge(ctf, chal, 1);
     return;
 
 fail:
-    printf("[ERROR] ;s\n", error_to_string(err));
+    __printf("[ERROR] ;s\n", error_to_string(err));
 }
 
 void view_ranking_page(ctf_t *ctf, size_t page)
@@ -309,45 +309,45 @@ void view_ranking_page(ctf_t *ctf, size_t page)
     for (i = 0; i < n; ++i)
     {
         int rank = i + page * 5 + 1;
-        printf(";d. ;s (;d pts)\n", rank, ranks[i]->name, ranks[i]->score);
+        __printf(";d. ;s (;d pts)\n", rank, ranks[i]->name, ranks[i]->score);
     }
-    free(ranks);
+    __free(ranks);
 }
 
 void handle_view_ranking(ctf_t *ctf)
 {
     char buf[32];
     error_t err = ERR_INVALID_VALUE;
-    printf("\n=== Ranking ===================\n");
+    __printf("\n=== Ranking ===================\n");
     size_t page = 1;
     size_t num_pages = (ctf->num_teams / 5) + ((ctf->num_teams % 5) == 0 ? 0 : 1);
     view_ranking_page(ctf, 1);
-    printf("\n=== 1 / ;d ===================\n", num_pages);
+    __printf("\n=== 1 / ;d ===================\n", num_pages);
     while (1)
     {
-        printf("\nPage: ");
+        __printf("\nPage: ");
         fflush(stdout);
         if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
             goto fail;
-        if (strcmp(buf, "q") == 0)
+        if (__strcmp(buf, "q") == 0)
             return;
-        page = strtoul(buf, NULL, 10);
+        page = __strtoul(buf, NULL, 10);
         if (page < 1 || page > num_pages)
             goto fail;
         view_ranking_page(ctf, page);
-        printf("\n=== ;d / ;d ===================\n", page, num_pages);
+        __printf("\n=== ;d / ;d ===================\n", page, num_pages);
     }
     return;
 
 fail:
-    printf("[ERROR] ;s\n", error_to_string(err));
+    __printf("[ERROR] ;s\n", error_to_string(err));
 }
 
 void handle_view_team_profile(ctf_t *ctf)
 {
     char buf[64];
     error_t err = ERR_NO_SUCH_TEAM;
-    printf("\nTeam name: ");
+    __printf("\nTeam name: ");
     fflush(stdout);
     if (freaduntil(buf, sizeof(buf), '\n', stdin) <= 0)
         goto fail;
@@ -355,7 +355,7 @@ void handle_view_team_profile(ctf_t *ctf)
     team_t *t = NULL;
     for (i = 0; i < ctf->num_teams; ++i)
     {
-        if (strcmp(ctf->teams[i]->name, buf) == 0)
+        if (__strcmp(ctf->teams[i]->name, buf) == 0)
         {
             t = ctf->teams[i];
             break;
@@ -363,29 +363,29 @@ void handle_view_team_profile(ctf_t *ctf)
     }
     if (!t)
         goto fail;
-    printf("\n=== Team profile ===================\n");
-    printf(";s\n", t->name);
-    printf("Leader: ;s\n", t->leader->nick);
-    printf("Members (;d)\n - ", t->num_members);
+    __printf("\n=== Team profile ===================\n");
+    __printf(";s\n", t->name);
+    __printf("Leader: ;s\n", t->leader->nick);
+    __printf("Members (;d)\n - ", t->num_members);
     for (i = 0; i < t->num_members; ++i)
     {
-        printf(";s", t->members[i]->nick);
+        __printf(";s", t->members[i]->nick);
         if (i != t->num_members - 1)
-            printf(", ");
+            __printf(", ");
     }
-    printf("\nShoutout: ;s\n", t->shout);
+    __printf("\nShoutout: ;s\n", t->shout);
     return;
 
 fail:
-    printf("[ERROR] ;s\n", error_to_string(err));
+    __printf("[ERROR] ;s\n", error_to_string(err));
 }
 
 void handle_submit_flag(ctf_t *ctf)
 {
     char buf[512];
     error_t err = ERR_INVALID_FLAG;
-    printf("\n=== Submit flag ===================\n");
-    printf("Flag: ");
+    __printf("\n=== Submit flag ===================\n");
+    __printf("Flag: ");
     fflush(stdout);
     if (freaduntil(buf, sizeof(buf), '\n', stdin) <= 0)
         goto fail;
@@ -393,23 +393,23 @@ void handle_submit_flag(ctf_t *ctf)
         goto fail;
     chal_t *chal = NULL;
     flg_find_chal(&ctf->flg, &chal, buf);
-    printf("[INFO] Congrats! You scored ;d points!\n", chal->points);
+    __printf("[INFO] Congrats! You scored ;d points!\n", chal->points);
     return;
 fail:
-    printf("[ERROR] ;s\n", error_to_string(err));
+    __printf("[ERROR] ;s\n", error_to_string(err));
 }
 
 void handle_logout_user(ctf_t *ctf)
 {
-    printf("[INFO] Successfully logged out.\n");
+    __printf("[INFO] Successfully logged out.\n");
     ctf->logged_in = NULL;
 }
 
 void handle_quit()
 {
-    printf("Bye.\n");
+    __printf("Bye.\n");
     fflush(stdout);
-    exit(0);
+    __exit(0);
 }
 
 void do_random_action(ctf_t *ctf)
@@ -423,7 +423,7 @@ void do_random_action(ctf_t *ctf)
         case 3:
             /* Create a random challenge */
             {
-                chal_t *chal = (chal_t *) malloc(sizeof(chal_t));
+                chal_t *chal = (chal_t *) __malloc(sizeof(chal_t));
                 random_string(chal->name, 32);
                 chal->name[32] = '\0';
                 random_string(chal->desc, 64);
@@ -433,7 +433,7 @@ void do_random_action(ctf_t *ctf)
                     chal->points = 1;
                 chal->status = CSTAT_LOCKED;
                 chal->cat = prng() % 7;
-                chal->flag = malloc(64);
+                chal->flag = __malloc(64);
                 random_string(chal->flag, 32);
                 chal->flag[32] = '\0';
                 ctf_add_chal(ctf, chal);
@@ -484,8 +484,8 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
     ctf_t ctf;
     ctf_init(&ctf);
 
-    printf("Shout CTF CLI v0.1\n");
-    printf("=================\n");
+    __printf("Shout CTF CLI v0.1\n");
+    __printf("=================\n");
     fflush(stdout);
     while (1)
     {
@@ -498,17 +498,17 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
                 break;
             if (ctf.status == CTF_STAT_DOWN)
             {
-                printf("CTF server is down! Try again later :(\n");
+                __printf("CTF server is down! Try again later :(\n");
                 continue;
             }
-            if (strcmp(buf, "1") == 0)
+            if (__strcmp(buf, "1") == 0)
                 handle_register_user(&ctf);
-            else if (strcmp(buf, "2") == 0)
+            else if (__strcmp(buf, "2") == 0)
                 handle_login_user(&ctf);
-            else if (strcmp(buf, "3") == 0)
+            else if (__strcmp(buf, "3") == 0)
                 handle_quit();
             else
-                printf("Try again.\n");
+                __printf("Try again.\n");
         }
         else
         {
@@ -518,23 +518,23 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
                 break;
             if (ctf.status == CTF_STAT_DOWN)
             {
-                printf("CTF server is down! Try again later :(\n");
+                __printf("CTF server is down! Try again later :(\n");
                 continue;
             }
-            if (strcmp(buf, "1") == 0)
+            if (__strcmp(buf, "1") == 0)
                 handle_view_challenge_list(&ctf);
-            else if (strcmp(buf, "2") == 0)
+            else if (__strcmp(buf, "2") == 0)
                 handle_view_challenge_detail(&ctf);
-            else if (strcmp(buf, "3") == 0)
+            else if (__strcmp(buf, "3") == 0)
                 handle_view_ranking(&ctf);
-            else if (strcmp(buf, "4") == 0)
+            else if (__strcmp(buf, "4") == 0)
                 handle_view_team_profile(&ctf);
-            else if (strcmp(buf, "5") == 0)
+            else if (__strcmp(buf, "5") == 0)
                 handle_submit_flag(&ctf);
-            else if (strcmp(buf, "6") == 0)
+            else if (__strcmp(buf, "6") == 0)
                 handle_logout_user(&ctf);
             else
-                printf("Try again.\n");
+                __printf("Try again.\n");
         }
     }
 

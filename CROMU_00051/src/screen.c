@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -32,31 +32,31 @@ THE SOFTWARE.
 #define CSI "\x1b\x5b"
 
 void EraseToEOL(void) {
-	printf("$sK", CSI);
+	__printf("$sK", CSI);
 }
 
 void EraseLine(uint8_t StartingX) {
 	// move to X
-	printf("$s$dG", CSI, StartingX);
+	__printf("$s$dG", CSI, StartingX);
 	// clear to the end of the line
 	EraseToEOL();
 }
 
 void MoveCursor(uint8_t x, uint8_t y) {
-	printf("$s$d;$dH", CSI, x, y);
+	__printf("$s$d;$dH", CSI, x, y);
 }
 
 void ClearScreen(void) {
-	printf("$s$d$c", CSI, 2, 'J');
+	__printf("$s$d$c", CSI, 2, 'J');
 	MoveCursor(1,1);
 }
 
 void CursorRight(uint8_t NumSpaces) {
-	printf("$s$dC", CSI, NumSpaces);
+	__printf("$s$dC", CSI, NumSpaces);
 }
 
 void CursorLeft(uint8_t NumSpaces) {
-	printf("$s$dD", CSI, NumSpaces);
+	__printf("$s$dD", CSI, NumSpaces);
 }
 
 

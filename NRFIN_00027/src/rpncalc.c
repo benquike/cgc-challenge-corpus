@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -67,7 +67,7 @@ generic_add(rpnval a, rpnval b, rpnval *res)
             if (as_matrix(b, &mb) != 0)
                 return -1;
 
-            if ((mres = malloc(SIZEOF_MATRIX(mb))) == NULL)
+            if ((mres = __malloc(SIZEOF_MATRIX(mb))) == NULL)
                 return -1;
 
             mres->width = mb->width;
@@ -79,13 +79,13 @@ generic_add(rpnval a, rpnval b, rpnval *res)
                     mres->data[j * mres->width + i] = na + mb->data[j * mb->width + i];
 
                     if (IS_NAN(mres->data[j * mres->width + i])) {
-                        free(mres);
+                        __free(mres);
                         return -1;
                     }
 #else
                     if (generic_add(a, mb->data[j * mb->width + i],
                                 &mres->data[j * mres->width + i]) != 0) {
-                        free(mres);
+                        __free(mres);
                         return -1;
                     }
 #endif
@@ -118,7 +118,7 @@ generic_add(rpnval a, rpnval b, rpnval *res)
             if (ma->width != mb->width || ma->height != mb->height)
                 return -1;
 
-            if ((mres = malloc(SIZEOF_MATRIX(ma))) == NULL)
+            if ((mres = __malloc(SIZEOF_MATRIX(ma))) == NULL)
                 return -1;
 
             mres->width = ma->width;
@@ -130,7 +130,7 @@ generic_add(rpnval a, rpnval b, rpnval *res)
                         mb->data[j * mb->width + i];
 
                     if (IS_NAN(mres->data[j * mres->width + i])) {
-                        free(mres);
+                        __free(mres);
                         return -1;
                     }
                 }
@@ -141,7 +141,7 @@ generic_add(rpnval a, rpnval b, rpnval *res)
             if (as_double(b, &db) != 0)
                 return -1;
 
-            if ((mres = malloc(SIZEOF_MATRIX(ma))) == NULL)
+            if ((mres = __malloc(SIZEOF_MATRIX(ma))) == NULL)
                 return -1;
 
             mres->width = ma->width;
@@ -152,7 +152,7 @@ generic_add(rpnval a, rpnval b, rpnval *res)
                     mres->data[j * mres->width + i] = ma->data[j * ma->width + i] + db;
 
                     if (IS_NAN(mres->data[j * mres->width + i])) {
-                        free(mres);
+                        __free(mres);
                         return -1;
                     }
                 }
@@ -208,7 +208,7 @@ generic_sub(rpnval a, rpnval b, rpnval *res)
         if (as_matrix(b, &mb) != 0)
             return -1;
 
-        if ((mnegb = malloc(SIZEOF_MATRIX(mb))) == NULL)
+        if ((mnegb = __malloc(SIZEOF_MATRIX(mb))) == NULL)
             return -1;
 
         mnegb->width = mb->width;
@@ -220,7 +220,7 @@ generic_sub(rpnval a, rpnval b, rpnval *res)
 
         set_matrix(mnegb, &negb);
         ret = generic_add(a, negb, res);
-        free(mnegb);
+        __free(mnegb);
         break;
     case DOUBLE:
         if (as_double(b, &db) != 0)
@@ -274,7 +274,7 @@ generic_mul(rpnval a, rpnval b, rpnval *res)
             if (as_matrix(b, &mb) != 0)
                 return -1;
 
-            if ((mres = malloc(SIZEOF_MATRIX(mb))) == NULL)
+            if ((mres = __malloc(SIZEOF_MATRIX(mb))) == NULL)
                 return -1;
 
             mres->width = mb->width;
@@ -286,14 +286,14 @@ generic_mul(rpnval a, rpnval b, rpnval *res)
                     mres->data[j * mres->width + i] = na * mb->data[j * mb->width + i];
 
                     if (IS_NAN(mres->data[j * mres->width + i])) {
-                        free(mres);
+                        __free(mres);
                         return -1;
                     }
 #else
                     // Future support for integer matrices, can't push these yet... ;)
                     if (get_type(mb->data[j * mb->width + i]) == INTEGER) {
                         if (as_integer(mb->data[j * mb->width + i], &nb) != 0) {
-                            free(mres);
+                            __free(mres);
                             return -1;
                         }
 
@@ -306,13 +306,13 @@ generic_mul(rpnval a, rpnval b, rpnval *res)
                             NAN_MASK | (unsigned long long)INTEGER << 32 | nres;
                     } else if (get_type(mb->data[j * mb->width + i]) == DOUBLE) {
                         if (as_double(mb->data[j * mb->width + i], &db) != 0) {
-                            free(mres);
+                            __free(mres);
                             return -1;
                         }
 
                         mres->data[j * mres->width + i] = na * db;
                         if (IS_NAN(mres->data[j * mres->width + i])) {
-                            free(mres);
+                            __free(mres);
                             return -1;
                         }
                     }
@@ -348,7 +348,7 @@ generic_mul(rpnval a, rpnval b, rpnval *res)
 
             // If ma is a n x m matrix and mb is a m x p matrix, mres is a n x p
             // matrix
-            if ((mres = malloc(sizeof(struct matrix) +
+            if ((mres = __malloc(sizeof(struct matrix) +
                             mb->width * ma->height * sizeof(double))) == NULL)
                 return -1;
 
@@ -370,7 +370,7 @@ generic_mul(rpnval a, rpnval b, rpnval *res)
 #else
                         if (IS_NAN(mres->data[j * mres->width + i])) {
 #endif
-                            free(mres);
+                            __free(mres);
                             return -1;
                         }
                     }
@@ -381,7 +381,7 @@ generic_mul(rpnval a, rpnval b, rpnval *res)
             if (as_double(b, &db) != 0)
                 return -1;
 
-            if ((mres = malloc(SIZEOF_MATRIX(ma))) == NULL)
+            if ((mres = __malloc(SIZEOF_MATRIX(ma))) == NULL)
                 return -1;
 
             mres->width = ma->width;
@@ -392,7 +392,7 @@ generic_mul(rpnval a, rpnval b, rpnval *res)
                     mres->data[j * mres->width + i] = ma->data[j * ma->width + i] * db;
 
                     if (IS_NAN(mres->data[j * mres->width + i])) {
-                        free(mres);
+                        __free(mres);
                         return -1;
                     }
                 }
@@ -463,7 +463,7 @@ generic_div(rpnval a, rpnval b, rpnval *res)
             if (as_matrix(b, &mb) != 0)
                 return -1;
 
-            if ((mres = malloc(SIZEOF_MATRIX(mb))) == NULL)
+            if ((mres = __malloc(SIZEOF_MATRIX(mb))) == NULL)
                     return -1;
 
             mres->width = mb->width;
@@ -472,14 +472,14 @@ generic_div(rpnval a, rpnval b, rpnval *res)
             for (i = 0; i < mb->width; i++)
                 for (j = 0; j < mb->height; j++) {
                     if (mb->data[j * mb->width + i] == 0.0) {
-                        free(mres);
+                        __free(mres);
                         return -1;
                     }
 
                     mres->data[j * mres->width + i] = na / mb->data[j * mb->width + i];
 
                     if (IS_NAN(mres->data[j * mres->width + i])) {
-                        free(mres);
+                        __free(mres);
                         return -1;
                     }
                 }
@@ -512,7 +512,7 @@ generic_div(rpnval a, rpnval b, rpnval *res)
                 return -1;
         }
 
-        if ((mres = malloc(SIZEOF_MATRIX(ma))) == NULL)
+        if ((mres = __malloc(SIZEOF_MATRIX(ma))) == NULL)
                 return -1;
 
         mres->width = ma->width;
@@ -521,14 +521,14 @@ generic_div(rpnval a, rpnval b, rpnval *res)
         for (i = 0; i < ma->width; i++)
             for (j = 0; j < ma->height; j++) {
                 if (db == 0.0) {
-                    free(mres);
+                    __free(mres);
                     return -1;
                 }
 
                 mres->data[j * mres->width + i] = ma->data[j * ma->width + i] / db;
 
                 if (IS_NAN(mres->data[j * mres->width + i])) {
-                    free(mres);
+                    __free(mres);
                     return -1;
                 }
             }
@@ -543,7 +543,7 @@ generic_div(rpnval a, rpnval b, rpnval *res)
             if (as_matrix(b, &mb) != 0)
                 return -1;
 
-            if ((mres = malloc(SIZEOF_MATRIX(mb))) == NULL)
+            if ((mres = __malloc(SIZEOF_MATRIX(mb))) == NULL)
                     return -1;
 
             mres->width = mb->width;
@@ -552,14 +552,14 @@ generic_div(rpnval a, rpnval b, rpnval *res)
             for (i = 0; i < mb->width; i++)
                 for (j = 0; j < mb->height; j++) {
                     if (mb->data[j * mb->width + i] == 0.0) {
-                        free(mres);
+                        __free(mres);
                         return -1;
                     }
 
                     mres->data[j * mres->width + i] = da / mb->data[j * mb->width + i];
 
                     if (IS_NAN(mres->data[j * mres->width + i])) {
-                        free(mres);
+                        __free(mres);
                         return -1;
                     }
                 }
@@ -622,7 +622,7 @@ matrix_inv(struct matrix *mat, struct matrix **res)
         return -1;
 #endif
 
-    if ((*res = malloc(SIZEOF_MATRIX(mat))) == NULL)
+    if ((*res = __malloc(SIZEOF_MATRIX(mat))) == NULL)
         return -1;
 
     (*res)->width = mat->width;
@@ -640,7 +640,7 @@ matrix_inv(struct matrix *mat, struct matrix **res)
 #ifdef PATCHED
     for (i = 0; i < (*res)->width * (*res)->height; i++)
         if (IS_NAN((*res)->data[i])) {
-            free(*res);
+            __free(*res);
             return -1;
         }
 #endif
@@ -662,7 +662,7 @@ push(struct rpncalc_state *state)
     size_t size;
     struct matrix *m = NULL;
 
-    if ((op = malloc(sizeof(struct operand))) == NULL)
+    if ((op = __malloc(sizeof(struct operand))) == NULL)
         return -1;
 
     if (read_all(STDIN, &type, sizeof(type)) != sizeof(type))
@@ -684,7 +684,7 @@ push(struct rpncalc_state *state)
         if (width == 0 || height == 0)
             goto free_op;
 
-        if ((m = malloc(sizeof(struct matrix) + size)) == NULL)
+        if ((m = __malloc(sizeof(struct matrix) + size)) == NULL)
             goto free_op;
 
         m->width = width;
@@ -693,7 +693,7 @@ push(struct rpncalc_state *state)
         if (read_all(STDIN, m->data, size) != size)
             goto free_m;
 
-        // Check to make sure we didn't read in any NaNs
+        // Check to make sure we didn't __read in any NaNs
         for (i = 0; i < size / sizeof(double); i++)
             if (IS_NAN(m->data[i]))
                 goto free_m;
@@ -717,10 +717,10 @@ push(struct rpncalc_state *state)
     return 0;
 
 free_m:
-    free(m);
+    __free(m);
 
 free_op:
-    free(op);
+    __free(op);
     return -1;
 }
 
@@ -790,10 +790,10 @@ pop(struct rpncalc_state *state)
     ret = 0;
 
 free_m:
-    free(m);
+    __free(m);
 
 free_op:
-    free(op);
+    __free(op);
     return ret;
 }
 
@@ -807,9 +807,9 @@ clear(struct rpncalc_state *state)
         list_remove_entry(struct operand, list, &state->stack, cur);
         
         if (get_type(cur->val) == MATRIX && as_matrix(cur->val, &m) == 0)
-            free(m);
+            __free(m);
             
-        free(cur);
+        __free(cur);
     }
     
     return 0;
@@ -830,7 +830,7 @@ binary_op(struct rpncalc_state *state, int (*op)(rpnval, rpnval, rpnval *))
     if ((a = list_pop_entry_front(struct operand, list, &state->stack)) == NULL)
         goto restore_stack;
 
-    if ((res = malloc(sizeof(struct operand))) == NULL)
+    if ((res = __malloc(sizeof(struct operand))) == NULL)
         goto restore_stack;
 
     if (op(a->val, b->val, &res->val) != 0)
@@ -839,12 +839,12 @@ binary_op(struct rpncalc_state *state, int (*op)(rpnval, rpnval, rpnval *))
     list_push_entry_front(struct operand, list, &state->stack, res);
 
     if (get_type(a->val) == MATRIX && as_matrix(a->val, &ma) == 0)
-        free(ma);
-    free(a);
+        __free(ma);
+    __free(a);
 
     if (get_type(b->val) == MATRIX && as_matrix(b->val, &mb) == 0)
-        free(mb);
-    free(b);
+        __free(mb);
+    __free(b);
 
     return 0;
 
@@ -855,7 +855,7 @@ restore_stack:
     if (b != NULL)
         list_push_entry_front(struct operand, list, &state->stack, b);
 
-    free(res);
+    __free(res);
     return -1;
 }
 
@@ -898,7 +898,7 @@ inv(struct rpncalc_state *state)
     if (get_type(a->val) != MATRIX || as_matrix(a->val, &ma) != 0)
         goto restore_stack;
 
-    if ((res = malloc(sizeof(struct operand))) == NULL)
+    if ((res = __malloc(sizeof(struct operand))) == NULL)
         goto restore_stack;
 
     if (matrix_inv(ma, &mres) != 0)
@@ -908,15 +908,15 @@ inv(struct rpncalc_state *state)
 
     list_push_entry_front(struct operand, list, &state->stack, res);
 
-    free(ma);
-    free(a);
+    __free(ma);
+    __free(a);
     return 0;
 
 restore_stack:
     if (a != NULL)
         list_push_entry_front(struct operand, list, &state->stack, a);
 
-    free(res);
+    __free(res);
     return -1;
 }
 

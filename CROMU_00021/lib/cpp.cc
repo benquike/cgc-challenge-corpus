@@ -5,22 +5,26 @@ extern "C"
 #include <malloc.h>
 }
 
-void *operator new( unsigned int alloc_size )
+#if defined(_CGC_EMU)
+#include <new>
+#endif
+
+void *operator new( unsigned int alloc_size ) throw(std::bad_alloc)
 {
-    return (void *)malloc( alloc_size );
+    return (void *)__malloc( alloc_size );
 }
 
-void *operator new[]( unsigned int alloc_size )
+void *operator new[]( unsigned int alloc_size ) throw(std::bad_alloc)
 {
-    return (void *)malloc( alloc_size );
+    return (void *)__malloc( alloc_size );
 }
 
-void operator delete( void *ptr )
+void operator delete( void *ptr ) throw()
 {
-    free( ptr );
+    __free( ptr );
 }
 
-void operator delete[]( void *ptr )
+void operator delete[]( void *ptr ) throw()
 {
-    free( ptr );
+    __free( ptr );
 }

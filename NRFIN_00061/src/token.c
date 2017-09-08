@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -71,13 +71,13 @@ unsigned int getToken() {
 */
 int isTokenCommand(char* command) {
 
-	if(!strncmp(command, TOKEN_CMD, strlen(TOKEN_CMD)))
+	if(!strncmp(command, TOKEN_CMD, __strlen(TOKEN_CMD)))
 		return 1;
 
-	if(!strncmp(command, REFRESH_CMD, strlen(REFRESH_CMD)))
+	if(!strncmp(command, REFRESH_CMD, __strlen(REFRESH_CMD)))
 		return 1;
 
-	if(!strncmp(command, REVOKE_TOKEN_CMD, strlen(REVOKE_TOKEN_CMD)))
+	if(!strncmp(command, REVOKE_TOKEN_CMD, __strlen(REVOKE_TOKEN_CMD)))
 		return 1;
 
 	return 0;
@@ -94,20 +94,20 @@ size_t calculateTokenSize(Token *token) {
 	size_t size, token_val_sz, token_exp_sz;
 	char buffer[20];
 
-	bzero(buffer, 20);
-	sprintf(buffer, "!U", token->value);
-	token_val_sz = strlen(buffer);
+	__bzero(buffer, 20);
+	__sprintf(buffer, "!U", token->value);
+	token_val_sz = __strlen(buffer);
 
-	bzero(buffer, 20);
-	sprintf(buffer, "!U", token->expiration);
-	token_exp_sz = strlen(buffer);
+	__bzero(buffer, 20);
+	__sprintf(buffer, "!U", token->expiration);
+	token_exp_sz = __strlen(buffer);
 
-	size = strlen(TOKEN_HDR)+ 1;
+	size = __strlen(TOKEN_HDR)+ 1;
 	size += token_val_sz + 1;
-	size += strlen(TOKEN_EXP_HDR)+ 1;
+	size += __strlen(TOKEN_EXP_HDR)+ 1;
 	size += token_exp_sz + 1;
 	size += sizeof(TOKEN_USE_HDR) + 1;
-	size += strlen(token->use);
+	size += __strlen(token->use);
 
 	return size;
 }
@@ -129,32 +129,32 @@ void sendToken(unsigned int id, Token *token) {
 
 	tokenSize = calculateTokenSize(token);
 #ifdef PATCHED_2
-	if(!(buffer = malloc(tokenSize+1)))
+	if(!(buffer = __malloc(tokenSize+1)))
 		_terminate(1);
 #else
-	if(!(buffer = malloc(tokenSize)))
+	if(!(buffer = __malloc(tokenSize)))
 		_terminate(1);
 #endif
-	bzero(buffer, tokenSize+1);
+	__bzero(buffer, tokenSize+1);
 
-	if(!(flag_buf = malloc(64)))
+	if(!(flag_buf = __malloc(64)))
 		_terminate(ALLOCATE_ERROR);
-	bzero(flag_buf, 64);
+	__bzero(flag_buf, 64);
 
 	for (unsigned int i = 0; i < 10; i++) {
-		sprintf(&flag_buf[i*4], "!H", (unsigned char) *flag++);
+		__sprintf(&flag_buf[i*4], "!H", (unsigned char) *flag++);
 	}
 
-	sprintf(buffer, "!X=!U;!X=!U;!X=!X?",
+	__sprintf(buffer, "!X=!U;!X=!U;!X=!X?",
 		TOKEN_HDR, token->value,
 		TOKEN_EXP_HDR, token->expiration,
 		TOKEN_USE_HDR, token->use);
 
-	tokenSize = strlen(buffer);
+	tokenSize = __strlen(buffer);
 	if((ret = transmit_all(STDOUT, buffer, tokenSize))) 
 		_terminate(1);
-	free(buffer);
-	free(flag_buf);
+	__free(buffer);
+	__free(flag_buf);
 
 }
 
@@ -190,7 +190,7 @@ int removeToken(Token* token) {
 		if(token->value == tok_ptr->value) {
 			if(prev != NULL)
 				prev->next = tok_ptr->next;
-			free(token);
+			__free(token);
 			return 1;
 		}
 		prev = tok_ptr;
@@ -243,9 +243,9 @@ Token* parseToken(char* body) {
 	char *command, *val_str;
 	size_t size;
 
-	if(!(token = malloc(sizeof(Token))))
+	if(!(token = __malloc(sizeof(Token))))
 		_terminate(1);
-	bzero((char *)token, sizeof(Token));
+	__bzero((char *)token, sizeof(Token));
 	if(!token)
 		_terminate(1);
 
@@ -337,16 +337,16 @@ int checkTokenUse(char* command, char* useList) {
 	if(!useList)
 		return 0;
 
-	use = strtok(useList,":");
+	use = __strtok(useList,":");
 	do {
-		size1 = strlen(command);
-		size2 = strlen(use);
+		size1 = __strlen(command);
+		size2 = __strlen(use);
 		size = size1 > size2 ? size1 : size2;
-		if(!strncmp(command, use, strlen(command)) ||
-			!strncmp(REVOKE_TOKEN_CMD, command, strlen(REVOKE_TOKEN_CMD)))
+		if(!strncmp(command, use, __strlen(command)) ||
+			!strncmp(REVOKE_TOKEN_CMD, command, __strlen(REVOKE_TOKEN_CMD)))
 			return 1;
 
-		use = strtok(0, ":");
+		use = __strtok(0, ":");
 	} while(use);
 
 	return 0;

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -75,7 +75,7 @@ state *init_state(int fd, uint32_t flags)
   int read_regs = flags & REG_FLAG;
   size_t read_mem_sz = flags & MEM_FLAG;
 
-  state *new = calloc(1, sizeof(state));
+  state *new = __calloc(1, sizeof(state));
   if (!new)
     goto err;
 
@@ -90,7 +90,7 @@ state *init_state(int fd, uint32_t flags)
   return new;
 
 err:
-  if (free) free(new);
+  if (new) __free(new);
   return NULL;
 }
 
@@ -286,7 +286,7 @@ int handle_inst(state *machine, inst *cur)
 int read_inst(int fd, state *machine, inst *cur)
 {
   int ret = -1;
-  if (!read_n_bytes(fd, sizeof(inst), (uint8_t *)cur) == sizeof(inst))
+  if (read_n_bytes(fd, sizeof(inst), (uint8_t *)cur) != sizeof(inst))
     return -1;
 
   ret = handle_inst(machine, cur);

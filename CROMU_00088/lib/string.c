@@ -4,7 +4,7 @@ Copyright (c) 2016 Cromulence LLC
 
 Authors: Cromulence <cgc@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -26,7 +26,7 @@ THE SOFTWARE.
 #include <string.h>
 #include <stdint.h>
 
-size_t strlen( const char *str )
+size_t __strlen( const char *str )
 {
 	size_t len = 0;
 	while ( *str++ != '\0' )
@@ -35,7 +35,7 @@ size_t strlen( const char *str )
 	return len;
 }
 
-int strcmp( const char *s1, const char *s2 )
+int __strcmp( const char *s1, const char *s2 )
 {
 
 	if (s1 == 0 || s2 == 0) 
@@ -63,14 +63,14 @@ size_t count = 0;
     return (*(const unsigned char *)s1 - *(const unsigned char *)s2);
 }
 
-void bzero(void *s, size_t n) {
+void __bzero(void *s, size_t n) {
         while (n) {
                 ((char *)s)[--n] = '\0';
         }
         ((char *)s)[n] = '\0';
 }
 
-void *memset( void *ptr, int value, size_t num )
+void *__memset( void *ptr, int value, size_t num )
 {
 	void *ptr_temp = ptr;
 	uint8_t set_value_byte = (uint8_t)value;
@@ -91,7 +91,7 @@ void *memset( void *ptr, int value, size_t num )
 	return (ptr_temp);
 }
 
-char *strcpy( char *pDest, const char *pSrc )
+char *__strcpy( char *pDest, const char *pSrc )
 {
 	char *pDestReturn = pDest;
 
@@ -103,7 +103,7 @@ char *strcpy( char *pDest, const char *pSrc )
 	return (pDestReturn);
 }
 
-char *strncpy( char *pDest, const char *pSrc, size_t maxlen )
+char *__strncpy( char *pDest, const char *pSrc, size_t maxlen )
 {
 	size_t n;
 
@@ -121,7 +121,7 @@ char *strncpy( char *pDest, const char *pSrc, size_t maxlen )
 	return (pDest);
 }
 
-void *memcpy( void *pDest, const void *pSource, size_t nbytes )
+void *__memcpy( void *pDest, const void *pSource, size_t nbytes )
 {
 	void *pDestReturn = pDest;
 

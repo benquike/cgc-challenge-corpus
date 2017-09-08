@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -25,7 +25,7 @@
 
 void promptc(char *buf, uint16_t  size, char *prompt) {
 
-    SSEND(strlen(prompt), prompt);
+    SSEND(__strlen(prompt), prompt);
 
     SRECV((uint32_t)size, buf);
  }
@@ -118,7 +118,7 @@ int recvline(int fd, char *buf, size_t size) {
 }
 
 //non-standard convention, returns num bytes copied instead of s1
-size_t strcpy(char *s1, char *s2) {
+size_t __strcpy(char *s1, char *s2) {
     char *tmp = s1;
     while(*s2){
         *tmp = *s2;
@@ -130,7 +130,7 @@ size_t strcpy(char *s1, char *s2) {
 }
 
 //non-standard convention, returns num bytes copied instead of s1
-size_t strncpy(char *s1, char *s2, size_t n) {
+size_t __strncpy(char *s1, char *s2, size_t n) {
     char *tmp = s1;
     while((tmp-s1 < n) && *s2){
         *tmp = *s2;
@@ -141,14 +141,14 @@ size_t strncpy(char *s1, char *s2, size_t n) {
     return tmp-s1-1;
 }
 
-char * strcat(char *s1, char *s2) {
+char * __strcat(char *s1, char *s2) {
     char *tmp = s1;
     while(*tmp) tmp++;
-    strcpy(tmp,s2);
+    __strcpy(tmp,s2);
     return s1;
 }
 
-size_t strlen(char *s){
+size_t __strlen(char *s){
     char *tmp = s;
     while(*tmp) tmp++;
     return (size_t)(tmp-s);
@@ -279,7 +279,7 @@ int int2str(char* str_buf, int buf_size, int i) {
 uint32_t str2uint(const char* str_buf) {
     int result = 0;
     int temp = 0;
-    int max_chars = 10; // max number of chars read from str_buf
+    int max_chars = 10; // max number of chars __read from str_buf
     int i = 0;
 
     if (str_buf == NULL)
@@ -308,7 +308,7 @@ uint32_t str2uint(const char* str_buf) {
     return result;
 }
 
-void * memset(void *dst, char c, size_t n) {
+void * __memset(void *dst, char c, size_t n) {
     size_t i;
     for(i=0; i<n; i++){
         *((uint8_t*)dst+i) = c;
@@ -316,7 +316,7 @@ void * memset(void *dst, char c, size_t n) {
     return dst;
 }
 
-void * memcpy(void *dst, void *src, size_t n) {
+void * __memcpy(void *dst, void *src, size_t n) {
     size_t i;
     for(i=0; i<n; i++){
         *((uint8_t*)dst+i) = *((uint8_t*)src+i);
@@ -338,7 +338,7 @@ char * b2hex(uint8_t b, char *h) {
     return h;
 }
 
-char * strchr(char *str, char c) {
+char * __strchr(char *str, char c) {
     char *tmp = str;
     while(*tmp){
         if(*tmp == c)
@@ -353,7 +353,7 @@ int __umoddi3(int a, int b) {
     return a-(a/b*b);
 }
 
-void sleep(int s) {
+void __sleep(int s) {
     struct timeval tv;
     tv.tv_sec = s;
     tv.tv_usec = 0;

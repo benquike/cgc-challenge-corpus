@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -24,9 +24,9 @@
 /**
  * Write character ch into buf n times.
  *
- * @param buf Buffer to write into
+ * @param buf Buffer to __write into
  * @param ch Character to use
- * @param n Number of times to write ch into buf
+ * @param n Number of times to __write ch into buf
  * @return Number of times ch was written into buf
  */
-unsigned int memset(void *buf, unsigned char ch, unsigned int n);
+unsigned int __memset(void *buf, unsigned char ch, unsigned int n);

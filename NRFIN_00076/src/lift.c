@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -66,7 +66,7 @@ Rider *chair_disembark_rider(Chair *c) {
 int32_t chair_new(Chair **c, uint32_t id, uint32_t seats) {
 	if (0 == seats) return -1;
 
-	Chair *new = calloc(sizeof(Chair));
+	Chair *new = __calloc(sizeof(Chair));
 	MALLOC_OK(new);
 
 	new->id = id;
@@ -150,7 +150,7 @@ Chair *chair_pop(Chair **chairs) {
  */
 void chair_destroy_single(Chair **c, Rider **riders) {
 	chair_reset(*c, riders);
-	free(*c);
+	__free(*c);
 	*c = NULL;
 }
 
@@ -265,7 +265,7 @@ uint32_t lift_disembark_riders(Lift *l) {
  */
 int32_t lift_new(Lift **l, uint32_t settings[5]) {
 
-	Lift *new = calloc(sizeof(Lift));
+	Lift *new = __calloc(sizeof(Lift));
 	MALLOC_OK(new);
 
 	new->id = settings[0];
@@ -280,7 +280,7 @@ int32_t lift_new(Lift **l, uint32_t settings[5]) {
 	if ((new->chair_count == 0) ||										// at least 1 chair
 		(new->start_decider == new->end_decider) || 					// different start/end
 		((new->chair_capacity != 2) && (new->chair_capacity != 4))) { 	// valid chair size/qty
-		free(new);
+		__free(new);
 		return -1;
 	}
 
@@ -340,7 +340,7 @@ void lift_destroy(Lift **l, Rider **riders) {
 	chair_destroy_list(&this->chairs, riders);
 	// return all riders in queue
 	rider_append(riders, this->queue);
-	free(*l);
+	__free(*l);
 	*l = NULL;
 }
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -114,11 +114,11 @@ o        o         o      o     +\n\
   {
     kty_item_t *item = array_get(parser->nyan_says, i);
 #if PATCHED
-    int sz = (buf + sizeof(buf) - c) - strlen(item->item.i_string.s);
-    sz = sz > 0 ? strlen(item->item.i_string.s) : (buf + sizeof(buf) - c - 1);
-    memcpy(c, item->item.i_string.s, sz);
+    int sz = (buf + sizeof(buf) - c) - __strlen(item->item.i_string.s);
+    sz = sz > 0 ? __strlen(item->item.i_string.s) : (buf + sizeof(buf) - c - 1);
+    __memcpy(c, item->item.i_string.s, sz);
 #else
-    strcpy(c, item->item.i_string.s);
+    __strcpy(c, item->item.i_string.s);
 #endif
     c += item->item.i_string.len;
   }
@@ -128,7 +128,7 @@ o        o         o      o     +\n\
 void quit()
 {
   fdprintf(STDOUT, "\n\n=^.^=// Bye!\n\n");
-  exit(0);
+  __exit(0);
 }
 
 void menu()
@@ -146,7 +146,7 @@ int main()
   char select[16];
   fdprintf(STDOUT, "KTY Pretty Printer v0.1\n");
 
-  parser = (kty_parser_t *) malloc(sizeof(kty_parser_t));
+  parser = (kty_parser_t *) __malloc(sizeof(kty_parser_t));
   if (kty_init(parser) != 0)
   {
     fdprintf(STDOUT, "Error!\n");
@@ -156,7 +156,7 @@ int main()
   menu();
   while (read_until(STDIN, select, sizeof(select), '\n') > 0)
   {
-    int menu = strtol(select, NULL, 10);
+    int menu = __strtol(select, NULL, 10);
     switch (menu)
     {
       case 1:

@@ -10,18 +10,18 @@ extern int fdprintf(int fd, const char *fmt, ...);
 extern int sprintf(char *s, const char *fmt, ...);
 extern int snprintf(char *s, size_t size, const char *fmt, ...);
 extern int vsnprintf(char *s, size_t size, const char *fmt, va_list ap);
-#define printf(...) fdprintf(1, __VA_ARGS__)
+#define __printf(...) fdprintf(1, __VA_ARGS__)
 
-long strtol(const char *str, char **endptr, int base);
-unsigned long strtoul(const char *str, char **endptr, int base);
+long __strtol(const char *str, char **endptr, int base);
+unsigned long __strtoul(const char *str, char **endptr, int base);
 
-extern void *malloc(size_t size);
-extern void *calloc(size_t nmemb, size_t size);
-extern void *realloc(void *ptr, size_t size);
-extern void free(void *ptr);
+extern void *__malloc(size_t size);
+extern void *__calloc(size_t nmemb, size_t size);
+extern void *__realloc(void *ptr, size_t size);
+extern void __free(void *ptr);
 extern size_t malloc_size(void *ptr);
 
-static void exit(int ret)
+static void __exit(int ret)
 {
     _terminate(ret);
 }

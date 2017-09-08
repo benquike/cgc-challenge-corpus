@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -45,7 +45,7 @@ CommandHandler::~CommandHandler()
 
 bool CommandHandler::CmdChangeDiverInfo( void )
 {
-    printf( "\n" );
+    __printf( "\n" );
 
     if ( m_bDiverInitialized )
     {
@@ -59,39 +59,39 @@ bool CommandHandler::CmdChangeDiverInfo( void )
         String sPadiNumber;
         String sPadiDate;
 
-        printf( "First Name (@s): ", m_oDiver.GetFirstName().c_str() );
+        __printf( "First Name (@s): ", m_oDiver.GetFirstName().c_str() );
         ReadLine( sFirstName );
         sFirstName.Trim( 20 );
 
-        printf( "Last Name (@s): ", m_oDiver.GetLastName().c_str() );
+        __printf( "Last Name (@s): ", m_oDiver.GetLastName().c_str() );
         ReadLine( sLastName );
         sLastName.Trim( 20 );
 
-        printf( "Street (@s): ", m_oDiver.GetStreet().c_str() );
+        __printf( "Street (@s): ", m_oDiver.GetStreet().c_str() );
         ReadLine( sStreet );
         sStreet.Trim( 29 );
 
-        printf( "City (@s): ", m_oDiver.GetCity().c_str() );
+        __printf( "City (@s): ", m_oDiver.GetCity().c_str() );
         ReadLine( sCity );
         sCity.Trim( 19 );
 
-        printf( "State (@s): ", m_oDiver.GetState().c_str() );
+        __printf( "State (@s): ", m_oDiver.GetState().c_str() );
         ReadLine( sState );
         sState.Trim( 2 );
 
-        printf( "Zip Code (@s): ", m_oDiver.GetZipCode().c_str() );
+        __printf( "Zip Code (@s): ", m_oDiver.GetZipCode().c_str() );
         ReadLine( sZipCode );
         sZipCode.Trim( 10 );
 
-        printf( "Phone Number (@s): ", m_oDiver.GetPhoneNumber().c_str() );
+        __printf( "Phone Number (@s): ", m_oDiver.GetPhoneNumber().c_str() );
         ReadLine( sPhoneNumber );
         sPhoneNumber.Trim( 15 );
 
-        printf( "PADI Diver Number (@s): ", m_oDiver.GetPadiNumber().c_str() );
+        __printf( "PADI Diver Number (@s): ", m_oDiver.GetPadiNumber().c_str() );
         ReadLine( sPadiNumber );
         sPadiNumber.Trim( 19 );
 
-        printf( "PADI Cert Date (@s): ", m_oDiver.GetPadiDate().c_str() );
+        __printf( "PADI Cert Date (@s): ", m_oDiver.GetPadiDate().c_str() );
         ReadLine( sPadiDate );
         sPadiDate.Trim( 10 );
 
@@ -135,39 +135,39 @@ bool CommandHandler::CmdChangeDiverInfo( void )
         String sPadiNumber;
         String sPadiDate;
 
-        printf( "First Name: " );
+        __printf( "First Name: " );
         ReadLine( sFirstName );
         sFirstName.Trim( 20 );
 
-        printf( "Last Name: " );
+        __printf( "Last Name: " );
         ReadLine( sLastName );
         sLastName.Trim( 20 );
 
-        printf( "Street: " );
+        __printf( "Street: " );
         ReadLine( sStreet );
         sStreet.Trim( 29 );
 
-        printf( "City: " );
+        __printf( "City: " );
         ReadLine( sCity );
         sCity.Trim( 19 );
 
-        printf( "State: " );
+        __printf( "State: " );
         ReadLine( sState );
         sState.Trim( 2 );
 
-        printf( "Zip Code: " );
+        __printf( "Zip Code: " );
         ReadLine( sZipCode );
         sZipCode.Trim( 10 );
 
-        printf( "Phone Number: " );
+        __printf( "Phone Number: " );
         ReadLine( sPhoneNumber );
         sPhoneNumber.Trim( 15 );
 
-        printf( "PADI Diver Number: " );
+        __printf( "PADI Diver Number: " );
         ReadLine( sPadiNumber );
         sPadiNumber.Trim( 19 );
 
-        printf( "PADI Cert Date: " );
+        __printf( "PADI Cert Date: " );
         ReadLine( sPadiDate );
         sPadiDate.Trim( 10 );
 
@@ -203,40 +203,40 @@ bool CommandHandler::CmdLogNewDive( void )
     String sPressureOut;
 
     // Capture dive information
-    printf( "\n" );
+    __printf( "\n" );
 
-    printf( "Dive Site: " );
+    __printf( "Dive Site: " );
     ReadLine( sDiveSite );
     sDiveSite.Trim( 25 );
 
-    printf( "Date: " );
+    __printf( "Date: " );
     ReadLine( sDate );
     sDate.Trim( 10 );
 
-    printf( "Time: " );
+    __printf( "Time: " );
     ReadLine( sTime );
     sTime.Trim( 8 );
 
-    printf( "Location (area/city): " );
+    __printf( "Location (area/city): " );
     ReadLine( sLocation );
     sLocation.Trim( 25 );
 
-    printf( "Max Depth in ft: " );
+    __printf( "Max Depth in ft: " );
     ReadLine( sMaxDepth );
 
-    printf( "Avg Depth in ft: " );
+    __printf( "Avg Depth in ft: " );
     ReadLine( sAvgDepth );
 
-    printf( "Dive Duration (mins): " );
+    __printf( "Dive Duration (mins): " );
     ReadLine( sDiveDuration );
 
-    printf( "O2 Percentage: " );
+    __printf( "O2 Percentage: " );
     ReadLine( sO2Percentage );
 
-    printf( "Pressure In (psi): " );
+    __printf( "Pressure In (psi): " );
     ReadLine( sPressureIn );
 
-    printf( "Pressure Out (psi): " );
+    __printf( "Pressure Out (psi): " );
     ReadLine( sPressureOut );
 
     // Add new dive to dive table -- parse data formats
@@ -267,7 +267,7 @@ bool CommandHandler::CmdLogNewDive( void )
 bool CommandHandler::CmdDownloadDiveData( void )
 {
     // Get download data (timeval and depth as uint32 values)
-    printf( "\n" );
+    __printf( "\n" );
 
     Dive *pNewDive = new Dive();
 
@@ -280,7 +280,7 @@ bool CommandHandler::CmdDownloadDiveData( void )
     ReadUint32( depth );
     pNewDive->AddDiveBin( timeval, depth );
 
-    // Get remaining samples (exit on timeval of 0)
+    // Get remaining samples (__exit on timeval of 0)
     for (;;)
     {
         ReadUint32( timeval );
@@ -333,38 +333,38 @@ bool CommandHandler::CmdDownloadDiveData( void )
     String sPressureOut;
 
     // Capture dive information
-    printf( "Dive Site: " );
+    __printf( "Dive Site: " );
     ReadLine( sDiveSite );
     sDiveSite.Trim( 25 );
 
-    printf( "Date (@s): ", oDate.GetString().c_str() );
+    __printf( "Date (@s): ", oDate.GetString().c_str() );
     ReadLine( sDate );
     sDate.Trim( 10 );
 
-    printf( "Time (@s): ", oTime.GetString().c_str() );
+    __printf( "Time (@s): ", oTime.GetString().c_str() );
     ReadLine( sTime );
     sTime.Trim( 8 );
 
-    printf( "Location (area/city): " );
+    __printf( "Location (area/city): " );
     ReadLine( sLocation );
     sLocation.Trim( 25 );
 
-    printf( "Max Depth in ft (@d): ", maxDepth );
+    __printf( "Max Depth in ft (@d): ", maxDepth );
     ReadLine( sMaxDepth );
 
-    printf( "Avg Depth in ft (@d): ", depthAvg );
+    __printf( "Avg Depth in ft (@d): ", depthAvg );
     ReadLine( sAvgDepth );
 
-    printf( "Dive Duration (mins) (@d): ", diveDurationInMinutes );
+    __printf( "Dive Duration (mins) (@d): ", diveDurationInMinutes );
     ReadLine( sDiveDuration );
 
-    printf( "O2 Percentage: " );
+    __printf( "O2 Percentage: " );
     ReadLine( sO2Percentage );
 
-    printf( "Pressure In (psi): " );
+    __printf( "Pressure In (psi): " );
     ReadLine( sPressureIn );
 
-    printf( "Pressure Out (psi): " );
+    __printf( "Pressure Out (psi): " );
     ReadLine( sPressureOut );
 
     // Update fields as necessary
@@ -404,13 +404,13 @@ bool CommandHandler::CmdEditDives( void )
 {
     if ( m_diveQueue.GetCount() == 0 )
     {
-        printf( "\n\nDive Log is empty\n" );
+        __printf( "\n\nDive Log is empty\n" );
         return (false);
     }
 
     PrintDiveList();
 
-    printf( "\nEnter Dive # to edit: " );
+    __printf( "\nEnter Dive # to edit: " );
 
     String sDiveNumber;
 
@@ -420,7 +420,7 @@ bool CommandHandler::CmdEditDives( void )
 
     if ( diveNumber == 0 || diveNumber > m_diveQueue.GetCount() )
     {
-        printf( "Invalid dive number entered\n" );
+        __printf( "Invalid dive number entered\n" );
         return (false);
     }
 
@@ -436,7 +436,7 @@ bool CommandHandler::CmdEditDives( void )
 
     if ( pCur == NULL )
     {
-        printf( "Invalid dive number entered\n" );
+        __printf( "Invalid dive number entered\n" );
         return (false);
     }
 
@@ -452,40 +452,40 @@ bool CommandHandler::CmdEditDives( void )
     String sPressureOut;
 
     // Capture dive information
-    printf( "Editing dive number @d\n", diveNumber );
+    __printf( "Editing dive number @d\n", diveNumber );
 
-    printf( "Dive Site (@s): ", pCur->GetDiveSite().c_str() );
+    __printf( "Dive Site (@s): ", pCur->GetDiveSite().c_str() );
     ReadLine( sDiveSite );
     sDiveSite.Trim( 25 );
 
-    printf( "Date (@s): ", pCur->GetDate().GetString().c_str() );
+    __printf( "Date (@s): ", pCur->GetDate().GetString().c_str() );
     ReadLine( sDate );
     sDate.Trim( 10 );
 
-    printf( "Time (@s): ", pCur->GetTime().GetString().c_str() );
+    __printf( "Time (@s): ", pCur->GetTime().GetString().c_str() );
     ReadLine( sTime );
     sTime.Trim( 8 );
 
-    printf( "Location (area/city) (@s): ", pCur->GetLocation().c_str() );
+    __printf( "Location (area/city) (@s): ", pCur->GetLocation().c_str() );
     ReadLine( sLocation );
     sLocation.Trim( 25 );
 
-    printf( "Max Depth in ft (@d): ", pCur->GetMaxDepth() );
+    __printf( "Max Depth in ft (@d): ", pCur->GetMaxDepth() );
     ReadLine( sMaxDepth );
 
-    printf( "Avg Depth in ft (@d): ", pCur->GetAvgDepth() );
+    __printf( "Avg Depth in ft (@d): ", pCur->GetAvgDepth() );
     ReadLine( sAvgDepth );
 
-    printf( "Dive Duration (mins) (@d): ", pCur->GetDuration() );
+    __printf( "Dive Duration (mins) (@d): ", pCur->GetDuration() );
     ReadLine( sDiveDuration );
 
-    printf( "O2 Percentage (@d): ", pCur->GetO2Percentage() );
+    __printf( "O2 Percentage (@d): ", pCur->GetO2Percentage() );
     ReadLine( sO2Percentage );
 
-    printf( "Pressure In (psi) (@d): ", pCur->GetStartPressure() );
+    __printf( "Pressure In (psi) (@d): ", pCur->GetStartPressure() );
     ReadLine( sPressureIn );
 
-    printf( "Pressure Out (psi) (@d): ", pCur->GetEndPressure() );
+    __printf( "Pressure Out (psi) (@d): ", pCur->GetEndPressure() );
     ReadLine( sPressureOut );
 
     Date oDiveDate;
@@ -512,13 +512,13 @@ bool CommandHandler::CmdPrintDiveLogs( void )
 {
     if ( m_diveQueue.GetCount() == 0 )
     {
-        printf( "\n\nDive Log is empty\n" );
+        __printf( "\n\nDive Log is empty\n" );
         return (false);
     }
 
     PrintDiveList();
 
-    printf( "\nEnter Dive # to display: " );
+    __printf( "\nEnter Dive # to display: " );
 
     String sDiveNumber;
 
@@ -528,7 +528,7 @@ bool CommandHandler::CmdPrintDiveLogs( void )
 
     if ( diveNumber == 0 || diveNumber > m_diveQueue.GetCount() )
     {
-        printf( "Invalid dive number entered\n" );
+        __printf( "Invalid dive number entered\n" );
         return (false);
     }
 
@@ -544,23 +544,23 @@ bool CommandHandler::CmdPrintDiveLogs( void )
 
     if ( pCur == NULL )
     {
-        printf( "Invalid dive number entered\n" );
+        __printf( "Invalid dive number entered\n" );
         return (false);
     }
 
-    printf( "\n" );
-    printf( "          Date: @s\n", pCur->GetDate().GetString().c_str() );
-    printf( "          Time: @s\n", pCur->GetTime().GetString().c_str() );
-    printf( "     Dive Site: @s\n", pCur->GetDiveSite().c_str() );
-    printf( "      Location: @s\n", pCur->GetLocation().c_str() );
-    printf( "     Max Depth: @d\n", pCur->GetMaxDepth() );
-    printf( "     Avg Depth: @d\n", pCur->GetAvgDepth() );
-    printf( "      Duration: @d\n", pCur->GetDuration() );
-    printf( "    O2 Percent: @d\n", pCur->GetO2Percentage() );
-    printf( "Start Pressure: @d\n", pCur->GetStartPressure() );
-    printf( "  End Pressure: @d\n", pCur->GetEndPressure() );
-    printf( "     Bin Count: @d\n", pCur->GetBinCount() );
-    printf( "\n" );
+    __printf( "\n" );
+    __printf( "          Date: @s\n", pCur->GetDate().GetString().c_str() );
+    __printf( "          Time: @s\n", pCur->GetTime().GetString().c_str() );
+    __printf( "     Dive Site: @s\n", pCur->GetDiveSite().c_str() );
+    __printf( "      Location: @s\n", pCur->GetLocation().c_str() );
+    __printf( "     Max Depth: @d\n", pCur->GetMaxDepth() );
+    __printf( "     Avg Depth: @d\n", pCur->GetAvgDepth() );
+    __printf( "      Duration: @d\n", pCur->GetDuration() );
+    __printf( "    O2 Percent: @d\n", pCur->GetO2Percentage() );
+    __printf( "Start Pressure: @d\n", pCur->GetStartPressure() );
+    __printf( "  End Pressure: @d\n", pCur->GetEndPressure() );
+    __printf( "     Bin Count: @d\n", pCur->GetBinCount() );
+    __printf( "\n" );
 
     return (false);
 }
@@ -569,13 +569,13 @@ bool CommandHandler::CmdRemoveDives( void )
 {
     if ( m_diveQueue.GetCount() == 0 )
     {
-        printf( "\n\nDive Log is empty\n" );
+        __printf( "\n\nDive Log is empty\n" );
         return (false);
     }
 
     PrintDiveList();
 
-    printf( "\nEnter Dive # to delete or blank to abort: " );
+    __printf( "\nEnter Dive # to delete or blank to abort: " );
 
     String sDiveNumber;
 
@@ -593,7 +593,7 @@ bool CommandHandler::CmdRemoveDives( void )
 
     if ( diveNumber == 0 || diveNumber > m_diveQueue.GetCount() )
     {
-        printf( "Invalid dive number entered\n" );
+        __printf( "Invalid dive number entered\n" );
         return (false);
     }
 
@@ -609,7 +609,7 @@ bool CommandHandler::CmdRemoveDives( void )
 
     if ( pCur == NULL )
     {
-        printf( "Invalid dive number entered\n" );
+        __printf( "Invalid dive number entered\n" );
         return (false);
     }
 
@@ -626,7 +626,7 @@ bool CommandHandler::CmdDiverStatistics( void )
 {
     if ( m_diveQueue.GetCount() == 0 )
     {
-        printf( "\n\nNo dives are logged\n" );
+        __printf( "\n\nNo dives are logged\n" );
         return (false);
     }
 
@@ -641,41 +641,41 @@ bool CommandHandler::CmdDiverStatistics( void )
         lengthTotal += pCur->GetDuration();
     }
 
-    printf( "\n\n" );
-    printf( "Dives logged: @d\n", m_diveQueue.GetCount() );
-    printf( "Average Max Depth: @d\n", (depthTotal / m_diveQueue.GetCount()) );
-    printf( "Average Dive Length: @d\n", (lengthTotal / m_diveQueue.GetCount()) );
+    __printf( "\n\n" );
+    __printf( "Dives logged: @d\n", m_diveQueue.GetCount() );
+    __printf( "Average Max Depth: @d\n", (depthTotal / m_diveQueue.GetCount()) );
+    __printf( "Average Dive Length: @d\n", (lengthTotal / m_diveQueue.GetCount()) );
 
     return (false);
 }
 
 bool CommandHandler::CmdExitApplication( void )
 {
-    // Return true to exit application
+    // Return true to __exit application
     return (true);
 }
 
 void CommandHandler::PrintDiverInfo( void )
 {
-    printf( "\n" );
-    printf( "     Name: @s @s\n", m_oDiver.GetFirstName().c_str(), m_oDiver.GetLastName().c_str() );
-    printf( "  Address: @s\n", m_oDiver.GetStreet().c_str() );
-    printf( "     City: @s\n", m_oDiver.GetCity().c_str() );
-    printf( "    State: @s\n", m_oDiver.GetState().c_str() );
-    printf( " Zip Code: @s\n", m_oDiver.GetZipCode().c_str() );
-    printf( "    Phone: @s\n", m_oDiver.GetPhoneNumber().c_str() );
-    printf( " PADI Num: @s\n", m_oDiver.GetPadiNumber().c_str() );
-    printf( "Cert Date: @s\n", m_oDiver.GetPadiDate().c_str() );
-    printf( "\n" );
+    __printf( "\n" );
+    __printf( "     Name: @s @s\n", m_oDiver.GetFirstName().c_str(), m_oDiver.GetLastName().c_str() );
+    __printf( "  Address: @s\n", m_oDiver.GetStreet().c_str() );
+    __printf( "     City: @s\n", m_oDiver.GetCity().c_str() );
+    __printf( "    State: @s\n", m_oDiver.GetState().c_str() );
+    __printf( " Zip Code: @s\n", m_oDiver.GetZipCode().c_str() );
+    __printf( "    Phone: @s\n", m_oDiver.GetPhoneNumber().c_str() );
+    __printf( " PADI Num: @s\n", m_oDiver.GetPadiNumber().c_str() );
+    __printf( "Cert Date: @s\n", m_oDiver.GetPadiDate().c_str() );
+    __printf( "\n" );
 }
 
 void CommandHandler::PrintCommandTable( tCommandFunction *pCommandTable )
 {
-    printf( "\n" );
+    __printf( "\n" );
     for ( uint32_t i = 0; pCommandTable[i].pCmdFunc != NULL; i++ )
-        printf( "@s - @s\n", pCommandTable[i].szCommand, pCommandTable[i].szDescription );
+        __printf( "@s - @s\n", pCommandTable[i].szCommand, pCommandTable[i].szDescription );
 
-    printf( ":" );
+    __printf( ":" );
 }
 
 void CommandHandler::ParserLoop( void )
@@ -719,13 +719,13 @@ void CommandHandler::ParserLoop( void )
 void CommandHandler::PrintDiveList( void )
 {
     Dive *pCur;
-    printf( "\n\n" );
-    printf( "Dive# Date       Time     Dive Site                 Location                 \n" );
+    __printf( "\n\n" );
+    __printf( "Dive# Date       Time     Dive Site                 Location                 \n" );
 
     uint32_t curPos = 1;
     for ( pCur = (Dive *)m_diveQueue.GetFirst(); pCur; pCur = (Dive *)pCur->GetNext() )
     {
-        printf( "@4d: @-10s @-8s @-25s @-25s\n", curPos, pCur->GetDate().GetString().c_str(),
+        __printf( "@4d: @-10s @-8s @-25s @-25s\n", curPos, pCur->GetDate().GetString().c_str(),
                 pCur->GetTime().GetString().c_str(), pCur->GetDiveSite().c_str(), pCur->GetLocation().c_str() );
         curPos++;
     }

@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -33,7 +33,7 @@ char *strsep(char **stringp, const char *delim)
     return NULL;
 
   char *i;
-  for (i = *stringp; *i && !strchr(delim, *i); i++);
+  for (i = *stringp; *i && !__strchr(delim, *i); i++);
 
   delim = *stringp;
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -44,25 +44,25 @@ dupepkt_t *dupe_next(dupefile_t *f) {
     if (f->caplen > MAX_DUPE_SIZE || f->caplen < 0)
         return NULL;
 
-    pkt = malloc(sizeof(dupepkt_hdr_t)+f->framelen);
+    pkt = __malloc(sizeof(dupepkt_hdr_t)+f->framelen);
     if (!pkt)
         return NULL;
 
     if (f->idx+sizeof(dupepkt_hdr_t) > f->caplen) {
-        free(pkt);
+        __free(pkt);
         return NULL;
     }
 
     pkt->parent = f;
-    memcpy(&pkt->hdr, f->data+f->idx, sizeof(dupepkt_hdr_t));
+    __memcpy(&pkt->hdr, f->data+f->idx, sizeof(dupepkt_hdr_t));
     f->idx += sizeof(dupepkt_hdr_t);
 
     if (pkt->hdr.size <= 0 || f->idx+pkt->hdr.size > f->caplen || pkt->hdr.size > f->framelen) {
-        free(pkt);
+        __free(pkt);
         return NULL;
     }
 
-    memcpy(pkt->payload, f->data+f->idx, pkt->hdr.size);
+    __memcpy(pkt->payload, f->data+f->idx, pkt->hdr.size);
 
     f->idx += pkt->hdr.size;
 
@@ -70,9 +70,9 @@ dupepkt_t *dupe_next(dupefile_t *f) {
 }
 
 void dupe_free(dupepkt_t *pkt) {
-    free(pkt);
+    __free(pkt);
 }
 
 void dupe_close(dupefile_t *f) {
-    free(f);
+    __free(f);
 }

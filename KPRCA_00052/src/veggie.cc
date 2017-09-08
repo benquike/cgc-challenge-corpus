@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -53,14 +53,14 @@ namespace {
                 return &veggies[i];
         }
 
-        return NULL;
+        return (veggie_lut *) NULL;
     }
 
     void print_list()
     {
         size_t i;
         for (i = 0; i < sizeof(veggies) / sizeof(veggies[0]); i++)
-            printf("%d. %s\n", i + 1, veggies[i].name);
+            __printf("%d. %s\n", i + 1, veggies[i].name);
     }
 }
 
@@ -79,7 +79,7 @@ Veggie *Veggie::pick_veggie(const char *veggie_name)
 {
     veggie_lut *veggie_entry = find_veggie_entry(veggie_name);
     if (!veggie_entry)
-        return NULL;
+      return (Veggie *)NULL;
 
     return new Veggie(veggie_entry->name, veggie_entry->calories, veggie_entry->carbs);
 }

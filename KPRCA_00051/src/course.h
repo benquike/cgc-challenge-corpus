@@ -20,8 +20,8 @@ struct course
     short current_enrollment;
     short max_enrollment;
     days_t days;
-    time_t start;
-    time_t end;
+    __time_t_ start;
+    __time_t_ end;
     char *title;
 
     void (*print_course)(course_t *);
@@ -30,7 +30,7 @@ struct course
 
 course_t *create_course(unsigned int course_id, char *prof_name, char *dept_name, short course_num,
                         short credits, short current_enrollment, short max_enrollment,
-                        days_t days, time_t start, time_t end, char *title);
+                        days_t days, __time_t_ start, __time_t_ end, char *title);
 ptrlist_t *get_course(int course_id);
 
 void list_courses_by_num(char *name, short course_num);

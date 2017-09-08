@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -40,7 +40,7 @@ unsigned int g_random_usage = 0;
 short *create_random_shorts()
 {
     uint8_t *secret_page = (uint8_t *)0x4347c000;
-    short *prand_shorts = malloc(RANDOM_SHORTS * sizeof(short));
+    short *prand_shorts = __malloc(RANDOM_SHORTS * sizeof(short));
     if (!prand_shorts)
         return NULL;
 
@@ -107,7 +107,7 @@ int readnum(char *buf, size_t buf_size, int *num)
     if (retval != SUCCESS)
         *num = 0;
     else
-        *num = strtol(&buf[0], NULL, 10);
+        *num = __strtol(&buf[0], NULL, 10);
 
     return retval;
 }
@@ -115,7 +115,7 @@ int readnum(char *buf, size_t buf_size, int *num)
 int select_menu_choice(char *buf, int buf_size)
 {
     int choice = 0;
-    printf("Make a selection: \n"
+    __printf("Make a selection: \n"
         "1. Input Matrix\n"
         "2. Print Matrix\n"
         "3. Add Matrices\n"
@@ -138,7 +138,7 @@ int select_menu_choice(char *buf, int buf_size)
 matrix_t *choose_matrix(matrix_t *m1, matrix_t *m2, char *buf, int buf_size)
 {
     int choice = 0, retval = 0;
-    printf("Select Matrix 1 or Matrix 2\n"
+    __printf("Select Matrix 1 or Matrix 2\n"
         ">> ");
 
     retval = readnum(buf, buf_size, &choice);
@@ -153,20 +153,20 @@ int resize_matrix(matrix_t *m, char *buf, int buf_size)
     int row = 0, col = 0;
     while (1)
     {
-        printf("New Row Size (0 to stay the same): ");
+        __printf("New Row Size (0 to stay the same): ");
         if (readnum(buf, buf_size, &row) == ERROR)
             return ERROR;
         if (row == 0)
             row = m->num_rows;
 
-        printf("New Column Size (0 to stay the same): ");
+        __printf("New Column Size (0 to stay the same): ");
         if (readnum(buf, buf_size, &col) == ERROR)
             return ERROR;
         if (col == 0)
             col = m->num_cols;
 
         if (m->set_rows_cols(m, row, col) != SUCCESS)
-            printf("Row and Column Sizes must be between 1-16\n");
+            __printf("Row and Column Sizes must be between 1-16\n");
         else
             return SUCCESS;
     }
@@ -184,14 +184,14 @@ int input_matrix(matrix_t *m, char *buf, int buf_size)
     retval = readline(buf, buf_size);
     if (retval == ERROR || retval == FAIL)
     {
-        printf("Bad Input\n");
+        __printf("Bad Input\n");
         return retval;
     }
 
     int number_count = 1;
     int i, j;
 
-    for (i = 0; i < strlen(buf); i++)
+    for (i = 0; i < __strlen(buf); i++)
     {
         if (buf[i] == ' ')
             number_count++;
@@ -199,7 +199,7 @@ int input_matrix(matrix_t *m, char *buf, int buf_size)
 
     if (number_count != num_cells)
     {
-        printf("Bad Input\n");
+        __printf("Bad Input\n");
         return FAIL;
     }
 
@@ -211,7 +211,7 @@ int input_matrix(matrix_t *m, char *buf, int buf_size)
             if (!num_str)
                 return ERROR;
 
-            cell_val = strtol(num_str, NULL, 10);
+            cell_val = __strtol(num_str, NULL, 10);
             m->set_cell(m, i, j, cell_val);
         }
     }
@@ -238,23 +238,23 @@ int random_matrix(matrix_t *m, char *buf, int buf_size, short *prandom_data)
 
 void print_matrix(char *text, matrix_t *m)
 {
-    printf("%s\n", text);
+    __printf("%s\n", text);
     m->print_matrix(m);
 }
 
 void print_matrices(matrix_t *m1, matrix_t *m2, matrix_t *m_result)
 {
     print_matrix("-Matrix 1-", m1);
-    printf("\n");
+    __printf("\n");
     print_matrix("-Matrix 2-", m2);
-    printf("\n");
+    __printf("\n");
     print_matrix("-Resultant Matrix-", m_result);
 }
 
 void add_matrices(matrix_t *m1, matrix_t *m2, matrix_t *m_result)
 {
     if (m_add(m1, m2, m_result) != SUCCESS)
-        printf("Could not add matrices together. Check sizes\n");
+        __printf("Could not add matrices together. Check sizes\n");
     else
         print_matrix("Result:", m_result);
 
@@ -263,7 +263,7 @@ void add_matrices(matrix_t *m1, matrix_t *m2, matrix_t *m_result)
 void subtract_matrices(matrix_t *m1, matrix_t *m2, matrix_t *m_result)
 {
     if (m_subtract(m1, m2, m_result) != SUCCESS)
-        printf("Could not subtract matrices. Check sizes\n");
+        __printf("Could not subtract matrices. Check sizes\n");
     else
         print_matrix("Result:", m_result);
 }
@@ -271,7 +271,7 @@ void subtract_matrices(matrix_t *m1, matrix_t *m2, matrix_t *m_result)
 void multiply_matrices(matrix_t *m1, matrix_t *m2, matrix_t *m_result)
 {
     if (m_multiply(m1, m2, m_result) != SUCCESS)
-        printf("Could not multiply matrices together. Check sizes\n");
+        __printf("Could not multiply matrices together. Check sizes\n");
     else
         print_matrix("Result:", m_result);
 }
@@ -296,21 +296,21 @@ int swap_matrix_row_col(matrix_t *m, int row_or_col, char *buf, int buf_size)
         return FAIL;
     }
 
-    printf("Enter %s Index 1: ", row_or_col_str);
+    __printf("Enter %s Index 1: ", row_or_col_str);
     if (readnum(buf, buf_size, &idx1) == ERROR)
         return ERROR;
     if (idx1 >= max_idx)
     {
-        printf("Bad Input\n");
+        __printf("Bad Input\n");
         return FAIL;
     }
 
-    printf("Enter %s Index 2: ", row_or_col_str);
+    __printf("Enter %s Index 2: ", row_or_col_str);
     if (readnum(buf, buf_size, &idx2) == ERROR)
         return ERROR;
     if (idx2 >= max_idx)
     {
-        printf("Bad Input\n");
+        __printf("Bad Input\n");
         return FAIL;
     }
 
@@ -333,7 +333,7 @@ void transpose_matrix(matrix_t *m)
 void rref_matrix(matrix_t *m, matrix_t *m_result)
 {
     if (m_rref(m, m_result) != SUCCESS)
-        printf("Could not complete reduced row echelon form\n");
+        __printf("Could not complete reduced row echelon form\n");
     else
         print_matrix("RREF Result:", m_result);
 }
@@ -357,91 +357,91 @@ int main(void)
     m2 = create_matrix(SHORT, NULL);
     m_result = create_matrix(INT, m_result_data);
 
-    char *input = malloc(2048);
-    printf("Matrix math is fun!\n");
-    printf("-------------------\n");
+    char *input = __malloc(2048);
+    __printf("Matrix math is fun!\n");
+    __printf("-------------------\n");
     while (1)
     {
         choice = select_menu_choice(input, LINE_SIZE);
         switch(choice)
         {
         case 1:
-            printf("Inputting Matrix Values:\n");
+            __printf("Inputting Matrix Values:\n");
             m = choose_matrix(m1, m2, input, LINE_SIZE);
             if (!m)
-                goto exit;
+                goto __exit;
             if (input_matrix(m, input, LINE_SIZE) == ERROR)
-                goto exit;
+                goto __exit;
             break;
         case 2:
-            printf("Print Matrices:\n");
+            __printf("Print Matrices:\n");
             print_matrices(m1, m2, m_result);
             break;
         case 3:
-            printf("Adding Matrices:\n");
+            __printf("Adding Matrices:\n");
             add_matrices(m1, m2, m_result);
             break;
         case 4:
-            printf("Subtracting Matrices:\n");
+            __printf("Subtracting Matrices:\n");
             subtract_matrices(m1, m2, m_result);
             break;
         case 5:
-            printf("Multiplying Matrices:\n");
+            __printf("Multiplying Matrices:\n");
             multiply_matrices(m1, m2, m_result);
             break;
         case 6:
-            printf("Swap Rows in a  Matrix:\n");
+            __printf("Swap Rows in a  Matrix:\n");
             m = choose_matrix(m1, m2, input, LINE_SIZE);
             if (!m)
-                goto exit;
+                goto __exit;
             retval = swap_matrix_row_col(m, SWAP_ROW, input, LINE_SIZE);
             if (retval == ERROR)
-                goto exit;
+                goto __exit;
             if (retval == SUCCESS)
                 print_matrix("Swapped Rows", m);
             break;
         case 7:
-            printf("Swap Columns in a  Matrix:\n");
+            __printf("Swap Columns in a  Matrix:\n");
             m = choose_matrix(m1, m2, input, LINE_SIZE);
             if (!m)
-                goto exit;
+                goto __exit;
             retval = swap_matrix_row_col(m, SWAP_COL, input, LINE_SIZE);
             if (retval == ERROR)
-                goto exit;
+                goto __exit;
             if (retval == SUCCESS)
                 print_matrix("Swapped Columns", m);
             break;
         case 8:
-            printf("Transpose a Matrix:\n");
+            __printf("Transpose a Matrix:\n");
             m = choose_matrix(m1, m2, input, LINE_SIZE);
             if (!m)
-                goto exit;
+                goto __exit;
             transpose_matrix(m);
             break;
         case 9:
-            printf("Perform Reduced Row Echelon Form on Matrix\n");
+            __printf("Perform Reduced Row Echelon Form on Matrix\n");
             m = choose_matrix(m1, m2, input, LINE_SIZE);
             if (!m)
-                goto exit;
+                goto __exit;
             rref_matrix(m, m_result);
             break;
         case 10:
-            printf("Create a Random Matrix:\n");
+            __printf("Create a Random Matrix:\n");
             m = choose_matrix(m1, m2, input, LINE_SIZE);
             if (!m)
-                goto exit;
+                goto __exit;
             if (random_matrix(m, input, LINE_SIZE, prandom_data) == ERROR)
-                goto exit;
+                goto __exit;
             break;
         case 11:
-            goto exit;
+            goto __exit;
         default:
-            printf("Bad Selection\n");
+            __printf("Bad Selection\n");
         }
     }
 
-exit:
-    printf("Exiting...\n");
+__exit:
+    __printf("Exiting...\n");
     return 0;
 }
 

@@ -17,7 +17,7 @@ char* gSeedWords[] = {
 "Carpe diem. Seize the day, boys.",
 "Greed, for lack of a better word, is good.",
 "Snap out of it!",
-"Nobody puts Baby in a corner.",
+"Nobody __puts Baby in a corner.",
 "I feel the need-the need for speed!",
 "I'll be back.",
 "Go ahead, make my day.",

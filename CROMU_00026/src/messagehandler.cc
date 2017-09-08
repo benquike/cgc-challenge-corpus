@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -69,7 +69,7 @@ CFullMessage *CMessageFragmentList::CFragmentData::AssembleFragments( void ) con
         if ( m_pMessageFragments[i] )
         {
             // Copy data
-            memcpy( pFullMessageData+fullMessagePos, (void *)m_pMessageFragments[i]->GetData(), m_pMessageFragments[i]->GetDataLength() );
+            __memcpy( pFullMessageData+fullMessagePos, (void *)m_pMessageFragments[i]->GetData(), m_pMessageFragments[i]->GetDataLength() );
 
             // Update full message position
             fullMessagePos += m_pMessageFragments[i]->GetDataLength();
@@ -147,7 +147,7 @@ bool CMessageFragmentList::AddFragment( CMessagePacket *pPacket, CFullMessage *&
 
         if ( pOtherFragments->HasAllFragments() )
         {
-            // Build a new assembled message, unlink from fragment list, and delete the fragment data
+            // Build a new assembled message, __unlink from fragment list, and delete the fragment data
             pNewFullMessage = pOtherFragments->AssembleFragments( );
 
             // Remove from fragment list
@@ -170,7 +170,7 @@ CFullMessage::CFullMessage( uint8_t *pMessageData, uint32_t messageLength, bool 
     {
         m_pMessageData = new uint8_t[messageLength];
 
-        memcpy( m_pMessageData, pMessageData, messageLength );
+        __memcpy( m_pMessageData, pMessageData, messageLength );
     }
     else
         m_pMessageData = pMessageData;

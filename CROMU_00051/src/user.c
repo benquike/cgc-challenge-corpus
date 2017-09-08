@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,8 +35,8 @@ THE SOFTWARE.
 extern environment ENV;
 
 void Login(void) {
-	strcpy(ENV.User, "crs");
-	strcpy(ENV.Group, "crs");
+	__strcpy(ENV.User, "crs");
+	__strcpy(ENV.Group, "crs");
 }
 
 uint8_t ChUser(Command *pCmd) {
@@ -51,64 +51,64 @@ uint8_t ChUser(Command *pCmd) {
 		return(0);
 	}
 	if (pCmd->argc != 2) {
-		puts("Input error");
-		puts("Usage: chuser <username>");
+		__puts("Input error");
+		__puts("Usage: chuser <username>");
 		return(0);
 	}
 
-	if ((PasswdFile = fopen("passwd", "r", 1)) == NULL) {
-		puts("Unable to open passwd file");
+	if ((PasswdFile = __fopen("passwd", "r", 1)) == NULL) {
+		__puts("Unable to open passwd file");
 		return(0);
 	}
 
 	while (fgets(buf, 128, PasswdFile)) {
-		if ((password = strtok(buf, ":")) == NULL) {
-			fclose(PasswdFile);
-			puts("Passwd file is corrupted");
+		if ((password = __strtok(buf, ":")) == NULL) {
+			__fclose(PasswdFile);
+			__puts("Passwd file is corrupted");
 			return(0);
 		}
-		if ((user = strtok(NULL, ":")) == NULL) {
-			fclose(PasswdFile);
-			puts("Passwd file is corrupted");
+		if ((user = __strtok(NULL, ":")) == NULL) {
+			__fclose(PasswdFile);
+			__puts("Passwd file is corrupted");
 			return(0);
 		}
-		if (!strcmp(user, pCmd->argv[1])) {
-			if ((group = strtok(NULL, ":")) == NULL) {
-				fclose(PasswdFile);
-				puts("Passwd file is corrupted");
+		if (!__strcmp(user, pCmd->argv[1])) {
+			if ((group = __strtok(NULL, ":")) == NULL) {
+				__fclose(PasswdFile);
+				__puts("Passwd file is corrupted");
 				return(0);
 			}
 			// root always has su rights
-			if (!strcmp(ENV.User, "root")) {
-				strcpy(ENV.User, user);
-				strcpy(ENV.Group, group);
-				printf("Authentication success for user '$s'\n\r",ENV.User);
-				fclose(PasswdFile);
+			if (!__strcmp(ENV.User, "root")) {
+				__strcpy(ENV.User, user);
+				__strcpy(ENV.Group, group);
+				__printf("Authentication success for user '$s'\n\r",ENV.User);
+				__fclose(PasswdFile);
 				return(1);
 			}
 				
-			printf("Password: ");
+			__printf("Password: ");
 			if (ReadUntilNewline(STDIN, password_buf, 32) == 0) {
-				fclose(PasswdFile);
+				__fclose(PasswdFile);
 				return(0);
 			}
-			printf("\b\b  \b\b\n\r");
+			__printf("\b\b  \b\b\n\r");
 			
-			if (!strcmp(password, password_buf)) {
+			if (!__strcmp(password, password_buf)) {
 				// passwords match
-				strcpy(ENV.User, user);
-				strcpy(ENV.Group, group);
-				printf("Authentication success for user '$s'\n\r",ENV.User);
-				fclose(PasswdFile);
+				__strcpy(ENV.User, user);
+				__strcpy(ENV.Group, group);
+				__printf("Authentication success for user '$s'\n\r",ENV.User);
+				__fclose(PasswdFile);
 				return(1);
 			} else {
-				puts("Authentication failure");
+				__puts("Authentication failure");
 				return(0);
 			}
 		}
 	}
-	printf("No passwd entry for user '$s'\n\r", pCmd->argv[1]);
-	fclose(PasswdFile);
+	__printf("No passwd entry for user '$s'\n\r", pCmd->argv[1]);
+	__fclose(PasswdFile);
 	return(0);
 }
 
@@ -126,107 +126,107 @@ uint8_t ChPw(Command *pCmd) {
 	if (!pCmd) {
 		return(0);
 	}
-	if (!strcmp(ENV.User, "root")) {
+	if (!__strcmp(ENV.User, "root")) {
 		if (pCmd->argc != 2) {
-			puts("Input error");
-			puts("Usage: chpw <username>");
+			__puts("Input error");
+			__puts("Usage: chpw <username>");
 			return(0);
 		}
-		strcpy(TargetUser, pCmd->argv[1]);
+		__strcpy(TargetUser, pCmd->argv[1]);
 	} else {
 		if (pCmd->argc != 1) {
-			puts("Input error");
-			puts("Usage: chpw");
+			__puts("Input error");
+			__puts("Usage: chpw");
 			return(0);
 		}
-		strcpy(TargetUser, ENV.User);
+		__strcpy(TargetUser, ENV.User);
 	}
 
-	if ((PasswdFile = fopen("passwd", "r", 1)) == NULL) {
-		puts("Unable to open passwd file");
+	if ((PasswdFile = __fopen("passwd", "r", 1)) == NULL) {
+		__puts("Unable to open passwd file");
 		return(0);
 	}
 
-	bzero(OutputBuf, MAX_FILE_SIZE);
+	__bzero(OutputBuf, MAX_FILE_SIZE);
 
 	while (fgets(buf, 128, PasswdFile)) {
 		if (buf[0] == '\0') {
 			// empty line
 			continue;
 		}
-		if ((password = strtok(buf, ":")) == NULL) {
-			fclose(PasswdFile);
-			puts("Passwd file is corrupted");
-			fclose(PasswdFile);
+		if ((password = __strtok(buf, ":")) == NULL) {
+			__fclose(PasswdFile);
+			__puts("Passwd file is corrupted");
+			__fclose(PasswdFile);
 			return(0);
 		}
-		if ((user = strtok(NULL, ":")) == NULL) {
-			fclose(PasswdFile);
-			puts("Passwd file is corrupted");
-			fclose(PasswdFile);
+		if ((user = __strtok(NULL, ":")) == NULL) {
+			__fclose(PasswdFile);
+			__puts("Passwd file is corrupted");
+			__fclose(PasswdFile);
 			return(0);
 		}
-		if (!strcmp(user, TargetUser)) {
+		if (!__strcmp(user, TargetUser)) {
 			// found the target user
-			if ((group = strtok(NULL, ":")) == NULL) {
-				fclose(PasswdFile);
-				puts("Passwd file is corrupted");
+			if ((group = __strtok(NULL, ":")) == NULL) {
+				__fclose(PasswdFile);
+				__puts("Passwd file is corrupted");
 				return(0);
 			}
 
-			printf("New password: ");
+			__printf("New password: ");
 			if (ReadUntilNewline(STDIN, password_buf, 32) == 0) {
-				fclose(PasswdFile);
-	                	printf("\b\b  \b\b\n\r");
-				puts("Password not changed");
+				__fclose(PasswdFile);
+	                	__printf("\b\b  \b\b\n\r");
+				__puts("Password not changed");
 				return(0);
 			}
-	                printf("\b\b  \b\b\n\r");
+	                __printf("\b\b  \b\b\n\r");
 #ifdef PATCHED_1
-			if (strchr(password_buf, ':')) {
-				puts("Passwords may not contain ':' characters");
-				fclose(PasswdFile);
+			if (__strchr(password_buf, ':')) {
+				__puts("Passwords may not contain ':' characters");
+				__fclose(PasswdFile);
 				return(0);
 			}
 #endif
 
 			// add the new passwd file line to the buffer we'll 
-			// eventually write back to the passwd file
+			// eventually __write back to the passwd file
 			// output_buffer += "user:group:password_buf"
 			sprintf(NewPasswdLine, "$s:$s:$s\n", password_buf, user, group);
-			if (strlen(OutputBuf) + strlen(NewPasswdLine) > MAX_FILE_SIZE) {
-				puts("Password file is too large");
-				fclose(PasswdFile);
+			if (__strlen(OutputBuf) + __strlen(NewPasswdLine) > MAX_FILE_SIZE) {
+				__puts("Password file is too large");
+				__fclose(PasswdFile);
 				return(0);
 			}
-			strcat(OutputBuf, NewPasswdLine);
+			__strcat(OutputBuf, NewPasswdLine);
 			
 		} else {
 			// this is not the user you're looking for
 			// add it to the buffer we'll eventually
-			// write back to the passwd file
-			// but first put back the ':' delimiter the strtok removed
-			password[strlen(password)] = ':';
-			user[strlen(user)] = ':';
-			strcat(OutputBuf, buf);
-			strcat(OutputBuf, "\n");
+			// __write back to the passwd file
+			// but first put back the ':' delimiter the __strtok removed
+			password[__strlen(password)] = ':';
+			user[__strlen(user)] = ':';
+			__strcat(OutputBuf, buf);
+			__strcat(OutputBuf, "\n");
 		}
 	}
-	fclose(PasswdFile);
+	__fclose(PasswdFile);
 
-	if (strlen(OutputBuf) > 0) {
-		if ((PasswdFile = fopen("passwd", "w", 1)) == NULL) {
-			puts("Unable to open passwd file");
+	if (__strlen(OutputBuf) > 0) {
+		if ((PasswdFile = __fopen("passwd", "w", 1)) == NULL) {
+			__puts("Unable to open passwd file");
 			return(0);
 		}
-		// write the new password buf
-		if (fwrite(OutputBuf, strlen(OutputBuf)+1, 1, PasswdFile) != strlen(OutputBuf)+1) {
-			puts("Password file update failed\n\r");
-			fclose(PasswdFile);
+		// __write the new password buf
+		if (__fwrite(OutputBuf, __strlen(OutputBuf)+1, 1, PasswdFile) != __strlen(OutputBuf)+1) {
+			__puts("Password file update failed\n\r");
+			__fclose(PasswdFile);
 			return(0);
 		}
 
-		fclose(PasswdFile);
+		__fclose(PasswdFile);
 	}
 
 	return(1);
@@ -240,12 +240,12 @@ uint8_t ID(Command *pCmd) {
 	}
 
 	if (pCmd->argc != 1) {
-		puts("Input error");
-		puts("Usage: id");
+		__puts("Input error");
+		__puts("Usage: id");
 		return(0);
 	}
 
-	printf("uid=$s gid=$s\n\r", ENV.User, ENV.Group);
+	__printf("uid=$s gid=$s\n\r", ENV.User, ENV.Group);
 
 	return(1);
 }
@@ -263,89 +263,89 @@ uint8_t NewUser(Command *pCmd) {
 		return(0);
 	}
 
-	if (strcmp(ENV.User, "root")) {
-		puts("Must be root");
+	if (__strcmp(ENV.User, "root")) {
+		__puts("Must be root");
 		return(0);
 	}
 
 	if (pCmd->argc != 3) {
-		puts("Input error");
-		puts("Usage: newuser <username> <group>");
+		__puts("Input error");
+		__puts("Usage: newuser <username> <group>");
 		return(0);
 	}
 
 	// see if the new user already exists
-	if ((PasswdFile = fopen("passwd", "r", 1)) == NULL) {
-		puts("Unable to open passwd file");
+	if ((PasswdFile = __fopen("passwd", "r", 1)) == NULL) {
+		__puts("Unable to open passwd file");
 		return(0);
 	}
-	bzero(OutputBuf, MAX_FILE_SIZE);
+	__bzero(OutputBuf, MAX_FILE_SIZE);
 
 	while (fgets(buf, 128, PasswdFile)) {
 		if (buf[0] == '\0') {
 			// empty line
 			continue;
 		}
-		if ((passwd = strtok(buf, ":")) == NULL) {
-			fclose(PasswdFile);
-			puts("Passwd file is corrupted");
-			fclose(PasswdFile);
+		if ((passwd = __strtok(buf, ":")) == NULL) {
+			__fclose(PasswdFile);
+			__puts("Passwd file is corrupted");
+			__fclose(PasswdFile);
 			return(0);
 		}
-		if ((user = strtok(NULL, ":")) == NULL) {
-			fclose(PasswdFile);
-			puts("Passwd file is corrupted");
-			fclose(PasswdFile);
+		if ((user = __strtok(NULL, ":")) == NULL) {
+			__fclose(PasswdFile);
+			__puts("Passwd file is corrupted");
+			__fclose(PasswdFile);
 			return(0);
 		}
-		if (!strcmp(user, pCmd->argv[1])) {
-			printf("User '$s' already exists\n\r", pCmd->argv[1]);
-			fclose(PasswdFile);
+		if (!__strcmp(user, pCmd->argv[1])) {
+			__printf("User '$s' already exists\n\r", pCmd->argv[1]);
+			__fclose(PasswdFile);
 			return(0);
 		}
 
 		// add this line to the output buffer
-		passwd[strlen(passwd)] = ':';
-		user[strlen(user)] = ':';
-		strcat(OutputBuf, buf);
-		strcat(OutputBuf, "\n");
+		passwd[__strlen(passwd)] = ':';
+		user[__strlen(user)] = ':';
+		__strcat(OutputBuf, buf);
+		__strcat(OutputBuf, "\n");
 	}
-	fclose(PasswdFile);
+	__fclose(PasswdFile);
 
 	// got to the end of the file and didn't find the user, so
 	// get a password for the new user
-	printf("New user password: ");
+	__printf("New user password: ");
 	if (ReadUntilNewline(STDIN, password_buf, 32) == 0) {
-		fclose(PasswdFile);
+		__fclose(PasswdFile);
 		return(0);
 	}
-	printf("\b\b  \b\b\n\r");
+	__printf("\b\b  \b\b\n\r");
 
 	// add the new user to the passwd file
 	sprintf(NewPasswdLine, "$s:$s:$s\n", password_buf, pCmd->argv[1], pCmd->argv[2]);
-	if (strlen(OutputBuf) + strlen(NewPasswdLine) > MAX_FILE_SIZE) {
-		puts("Password file is too large");
-		fclose(PasswdFile);
+	if (__strlen(OutputBuf) + __strlen(NewPasswdLine) > MAX_FILE_SIZE) {
+		__puts("Password file is too large");
+		__fclose(PasswdFile);
 		return(0);
 	}
-	strcat(OutputBuf, NewPasswdLine);
+	__strcat(OutputBuf, NewPasswdLine);
 
-	if (strlen(OutputBuf) > 0) {
-		if ((PasswdFile = fopen("passwd", "w", 1)) == NULL) {
-			puts("Unable to open passwd file");
+	if (__strlen(OutputBuf) > 0) {
+		if ((PasswdFile = __fopen("passwd", "w", 1)) == NULL) {
+			__puts("Unable to open passwd file");
 			return(0);
 		}
-		// write the new password buf
-		if (fwrite(OutputBuf, strlen(OutputBuf)+1, 1, PasswdFile) != strlen(OutputBuf)+1) {
-			puts("Password file update failed\n\r");
-			fclose(PasswdFile);
+		// __write the new password buf
+		if (__fwrite(OutputBuf, __strlen(OutputBuf)+1, 1, PasswdFile) != __strlen(OutputBuf)+1) {
+			__puts("Password file update failed\n\r");
+			__fclose(PasswdFile);
 			return(0);
 		}
 
-		fclose(PasswdFile);
+		__fclose(PasswdFile);
 	}
 
-	printf("User '$s' added\n\r", pCmd->argv[1]);
+	__printf("User '$s' added\n\r", pCmd->argv[1]);
 	return(1);
 }
 
@@ -361,74 +361,74 @@ uint8_t DelUser(Command *pCmd) {
 		return(0);
 	}
 
-	if (strcmp(ENV.User, "root")) {
-		puts("Must be root");
+	if (__strcmp(ENV.User, "root")) {
+		__puts("Must be root");
 		return(0);
 	}
 
 	if (pCmd->argc != 2) {
-		puts("Input error");
-		puts("Usage: deluser <username>");
+		__puts("Input error");
+		__puts("Usage: deluser <username>");
 		return(0);
 	}
 
 	// see if the user exists
-	if ((PasswdFile = fopen("passwd", "r", 1)) == NULL) {
-		puts("Unable to open passwd file");
+	if ((PasswdFile = __fopen("passwd", "r", 1)) == NULL) {
+		__puts("Unable to open passwd file");
 		return(0);
 	}
-	bzero(OutputBuf, MAX_FILE_SIZE);
+	__bzero(OutputBuf, MAX_FILE_SIZE);
 
 	while (fgets(buf, 128, PasswdFile)) {
 		if (buf[0] == '\0') {
 			// empty line
 			continue;
 		}
-		if ((passwd = strtok(buf, ":")) == NULL) {
-			fclose(PasswdFile);
-			puts("Passwd file is corrupted");
-			fclose(PasswdFile);
+		if ((passwd = __strtok(buf, ":")) == NULL) {
+			__fclose(PasswdFile);
+			__puts("Passwd file is corrupted");
+			__fclose(PasswdFile);
 			return(0);
 		}
-		if ((user = strtok(NULL, ":")) == NULL) {
-			fclose(PasswdFile);
-			puts("Passwd file is corrupted");
-			fclose(PasswdFile);
+		if ((user = __strtok(NULL, ":")) == NULL) {
+			__fclose(PasswdFile);
+			__puts("Passwd file is corrupted");
+			__fclose(PasswdFile);
 			return(0);
 		}
-		if (strcmp(user, pCmd->argv[1])) {
+		if (__strcmp(user, pCmd->argv[1])) {
 			// not the target user, just add this user to the outputbuf
-			passwd[strlen(passwd)] = ':';
-			user[strlen(user)] = ':';
-			strcat(OutputBuf, buf);
-			strcat(OutputBuf, "\n");
+			passwd[__strlen(passwd)] = ':';
+			user[__strlen(user)] = ':';
+			__strcat(OutputBuf, buf);
+			__strcat(OutputBuf, "\n");
 		} else {
 			Found = 1;
 		}
 		
 	}
-	fclose(PasswdFile);
+	__fclose(PasswdFile);
 
 	if (Found) {
-		if (strlen(OutputBuf) > 0) {
-			if ((PasswdFile = fopen("passwd", "w", 1)) == NULL) {
-				puts("Unable to open passwd file");
+		if (__strlen(OutputBuf) > 0) {
+			if ((PasswdFile = __fopen("passwd", "w", 1)) == NULL) {
+				__puts("Unable to open passwd file");
 			return(0);
 			}
-			// write the new password buf
-			if (fwrite(OutputBuf, strlen(OutputBuf)+1, 1, PasswdFile) != strlen(OutputBuf)+1) {
-				puts("Password file update failed\n\r");
-				fclose(PasswdFile);
+			// __write the new password buf
+			if (__fwrite(OutputBuf, __strlen(OutputBuf)+1, 1, PasswdFile) != __strlen(OutputBuf)+1) {
+				__puts("Password file update failed\n\r");
+				__fclose(PasswdFile);
 				return(0);
 			}
 	
-			fclose(PasswdFile);
+			__fclose(PasswdFile);
 		}
-		printf("User '$s' deleted\n\r", pCmd->argv[1]);
+		__printf("User '$s' deleted\n\r", pCmd->argv[1]);
 		return(1);
 	}
 
-	printf("User '$s' not found\n\r", pCmd->argv[1]);
+	__printf("User '$s' not found\n\r", pCmd->argv[1]);
 	return(0);
 
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -26,7 +26,7 @@
 #include "stdio.h"
 #include "povbarcode.h"
 
-#define transmit_str(_str) transmit_all(STDOUT, (_str), strlen((_str)))
+#define transmit_str(_str) transmit_all(STDOUT, (_str), __strlen((_str)))
 #define transmit_type2_byte(_pov) transmit_all(3, (_pov), sizeof(char))
 #define transmit_type2_short(_pov) transmit_all(3, (_pov), sizeof(short))
 #define transmit_type2_int(_pov) transmit_all(3, (_pov), sizeof(int))
@@ -40,7 +40,7 @@ void read_until_line(char *line)
     while (!ready) {
         delimited_read(STDIN, &resp, &resp_len, (unsigned char *)"\n", 1);
         transmit_all(STDERR, resp, resp_len);
-        if (memcmp(resp, line, strlen(line)) == 0) {
+        if (memcmp(resp, line, __strlen(line)) == 0) {
             ready = 1;
         }
     }
@@ -99,7 +99,7 @@ int main()
         else
             ex_count = 0;
     }
-    // read leaked bytes until exclamation
+    // __read leaked bytes until exclamation
     while (i < 4)
     {
         if (length_read(STDIN, &c, 1) != 1)
@@ -113,7 +113,7 @@ int main()
     if (i < 4)
     {
         // we hit an exclamation mark
-        // read next byte to determine if it is NUL or exclamation
+        // __read next byte to determine if it is NUL or exclamation
         if (length_read(STDIN, &c, 1) != 1)
             _terminate(0);
         if (c == '!') // NUL
@@ -169,8 +169,8 @@ int main()
     }
     transmit_all(3, (unsigned char *) type2_buf, 4);
 
-    char *exit = "6\n";
-    transmit_str(exit);
+    char *__exit = "6\n";
+    transmit_str(__exit);
 
     return 0;
 }

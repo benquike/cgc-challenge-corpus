@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -43,11 +43,11 @@ professor_t *create_professor(char *name)
     if (!name)
         return NULL;
 
-    professor_t *prof = malloc(sizeof(professor_t));
+    professor_t *prof = __malloc(sizeof(professor_t));
     if (!prof)
         return NULL;
 
-    prof->name = strdup(name);
+    prof->name = __strdup(name);
     prof->courses_taught = create_ptrlist();
     add_professor(prof);
 
@@ -93,10 +93,10 @@ void list_professors()
 
     int i = 0;
     professor_t *iter;
-    printf("--All Professors--\n");
+    __printf("--All Professors--\n");
     for (i = 0; i < g_all_profs->length; i++) {
         iter = get_item(professor_t, g_all_profs, i);
-        printf("%s\n", iter->name);
+        __printf("%s\n", iter->name);
     }
 }
 
@@ -107,10 +107,10 @@ void list_classes_taught(professor_t *prof)
 
     int i = 0;
     course_t *iter;
-    printf("--%s's Classes--\n", prof->name);
+    __printf("--%s's Classes--\n", prof->name);
     print_course_banner();
     for (i = 0; i < prof->courses_taught->length; i++) {
-        printf("#%d|", i+1);
+        __printf("#%d|", i+1);
         iter = get_item(course_t, prof->courses_taught, i);
         iter->print_course(iter); //brief?
     }

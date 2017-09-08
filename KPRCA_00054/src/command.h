@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -48,7 +48,7 @@ class Command
 
     friend bool operator== (Command &cmd1, Command &cmd2)
     {
-      return (strcmp(cmd1.name, cmd2.name) == 0);
+      return (__strcmp(cmd1.name, cmd2.name) == 0);
     }
     friend bool operator!= (Command &cmd1, Command &cmd2)
     {
@@ -62,12 +62,12 @@ class Command
     void SetName(const char* name)
     {
       /* Assumes the length of the strings are validated */
-      strcpy(this->name, name);
+      __strcpy(this->name, name);
     }
     void SetAlias(const char* alias)
     {
       /* Assumes the length of the strings are validated */
-      strcpy(this->alias, alias);
+      __strcpy(this->alias, alias);
     }
     const char* GetName() { return name; }
     const char* GetAlias() { return alias; }
@@ -154,11 +154,11 @@ class ReadCmd: public Command
 {
   public:
     ~ReadCmd() {};
-    ReadCmd() : Command("read", "cat") {}
+    ReadCmd() : Command("__read", "cat") {}
 
     const char* Usage()
     {
-      return "read <fileno> [pos] [len]\n - Reads a file.";
+      return "__read <fileno> [pos] [len]\n - Reads a file.";
     }
 
     int Execute(FileManager *fm, int argc, char** argv);
@@ -169,7 +169,7 @@ class ModifyCmd: public Command
 {
   public:
     ~ModifyCmd() {};
-    ModifyCmd() : Command("modify", "write") {}
+    ModifyCmd() : Command("modify", "__write") {}
 
     const char* Usage()
     {
@@ -199,11 +199,11 @@ class CreateDirCmd: public Command
 {
   public:
     ~CreateDirCmd() {};
-    CreateDirCmd() : Command("mkdir", 0) {}
+    CreateDirCmd() : Command("__mkdir", 0) {}
 
     const char* Usage()
     {
-      return "mkdir <dirname>\n - Creates a directory.";
+      return "__mkdir <dirname>\n - Creates a directory.";
     }
 
     int Execute(FileManager *fm, int argc, char** argv);
@@ -214,11 +214,11 @@ class DeleteDirCmd: public Command
 {
   public:
     ~DeleteDirCmd() {};
-    DeleteDirCmd() : Command("rmdir", 0) {}
+    DeleteDirCmd() : Command("__rmdir", 0) {}
 
     const char* Usage()
     {
-      return "rmdir <dirname>\n - Deletes a directory.";
+      return "__rmdir <dirname>\n - Deletes a directory.";
     }
 
     int Execute(FileManager *fm, int argc, char** argv);
@@ -244,7 +244,7 @@ class QuitCmd: public Command
 {
   public:
     ~QuitCmd() {};
-    QuitCmd() : Command("quit", "exit") {}
+    QuitCmd() : Command("quit", "__exit") {}
 
     const char* Usage()
     {

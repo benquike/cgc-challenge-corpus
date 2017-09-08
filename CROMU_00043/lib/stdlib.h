@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.co>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -30,11 +30,11 @@ typedef unsigned char uint8_t;
 typedef unsigned short int uint16_t;
 typedef unsigned int uint32_t;
 
-int strlen(char *s);
-void bzero(char *s, size_t length);
-void memcpy(char *d, char *s, size_t num);
+int __strlen(char *s);
+void __bzero(char *s, size_t length);
+void __memcpy(char *d, char *s, size_t num);
 int count_strings(char *s);
 char *next_string(char *s);
-int atoi(char *s);
+int __atoi(char *s);
 
 #endif

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -58,7 +58,7 @@ int verify_init(packet_head_t *p){
 }
 
 packet_head_t * alloc_new_pkt(size_t payload_sz){
-	packet_head_t *p =  calloc(1, sizeof(packet_head_t)+ payload_sz);
+	packet_head_t *p =  __calloc(1, sizeof(packet_head_t)+ payload_sz);
 	return p;
 }
 
@@ -81,7 +81,7 @@ uint32_t register_auth_code(){
 }
 
 void init_resp_structs(){
-	RESP_PAD = malloc(sizeof(pack_and_data_t));
+	RESP_PAD = __malloc(sizeof(pack_and_data_t));
 	RESP_PACKET = alloc_new_pkt(2048);
 	assert(RESP_PACKET != NULL);
 	assert(RESP_PAD != NULL);
@@ -196,7 +196,7 @@ pack_and_data_t * error_out_and_free_txn(acct_txn_entry_t * aet, uint32_t erno){
 		ERRNO = erno;	
 	}
 	
-	free(aet);
+	__free(aet);
 
 	return NULL;
 }
@@ -218,7 +218,7 @@ acct_txn_entry_t * get_acct_txn_reg(uint32_t cid, uint32_t acd, uint32_t txn_id)
 		return NULL;
 	}
 
-	acct_txn_entry_t *aet = (acct_txn_entry_t *) malloc(sizeof(acct_txn_entry_t));
+	acct_txn_entry_t *aet = (acct_txn_entry_t *) __malloc(sizeof(acct_txn_entry_t));
 	if(aet == NULL){
 		ERRNO = ERRNO_MP_ALLOC;
 		return NULL;
@@ -334,7 +334,7 @@ pack_and_data_t * process_client_history(pack_and_data_t *padi, size_t *ds){
 		if(txn->data == NULL)
 			_terminate(26);
 #endif
-		memcpy(&(txn_ptr->details), txn->data, dss);
+		__memcpy(&(txn_ptr->details), txn->data, dss);
 		hist_ct += 1;
 		
 
@@ -391,7 +391,7 @@ pack_and_data_t * process_client_balance(pack_and_data_t *pin){
 	inline_bal->balance = aet->ae->balance;
 
 	txn_entry_t * te = add_transaction_log_entry(aet->ae, pad);
-	free(aet);
+	__free(aet);
 
 	return pad;
 
@@ -451,7 +451,7 @@ pack_and_data_t * process_client_refund_op(pack_and_data_t * pin){
 	add_transaction_log_entry(aet->ae, pin);
 	
 	remove_transaction_log_entry(aet->ae,ref_txn);
-	free(aet);
+	__free(aet);
 	return create_basic_response(cid, acd, txn_id, OPS, REFUND, OK, 0);
 }
 
@@ -495,7 +495,7 @@ pack_and_data_t * process_client_recharge_op(pack_and_data_t *pad){
 
 	add_transaction_log_entry(aet->ae, pad);
 
-	free(aet);
+	__free(aet);
 	return create_basic_response(cid, acd, txn_id, OPS, RECHARGE, OK, 0);
 }
 
@@ -512,7 +512,7 @@ pack_and_data_t * generate_error(packet_head_t *ph){
 	}
 
 
-	size_t m_sz = strlen(ERROR_MSGS[ERRNO]);
+	size_t m_sz = __strlen(ERROR_MSGS[ERRNO]);
 	
 	size_t pay_sz  = sizeof(packet_data_error_t) + m_sz - sizeof(char *) ;
 	pack_and_data_t *pad = create_basic_response(cid, acd, txn_id, ph->pkt_type, ph->op_code, ERRNO, pay_sz);
@@ -521,7 +521,7 @@ pack_and_data_t * generate_error(packet_head_t *ph){
 	packet_data_error_t * e = (packet_data_error_t *) get_payload(resp);
 	e->length = m_sz;
 
-	memcpy(&(e->msg), ERROR_MSGS[ERRNO], m_sz);
+	__memcpy(&(e->msg), ERROR_MSGS[ERRNO], m_sz);
 	
 	return pad;
 
@@ -564,7 +564,7 @@ pack_and_data_t * process_client_purchase_op(pack_and_data_t * pin){
 
 	add_transaction_log_entry(aet->ae, pin);
 
-	free(aet);
+	__free(aet);
 	return create_basic_response(cid, acd, txn_id, OPS, PURCHASE, OK, 0);
 
 }

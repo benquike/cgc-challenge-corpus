@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -40,9 +40,9 @@ void add_to_cache(barcode_128_t *barcode)
     if (g_replace_oldest || g_c_idx >= CACHE_SIZE) {
         g_replace_oldest = 1;
         removed = g_barcode_cache[g_c_oldest];
-        free(removed->raw_str);
-        free(removed->encoded_data);
-        free(removed);
+        __free(removed->raw_str);
+        __free(removed->encoded_data);
+        __free(removed);
         removed = NULL;
         g_c_idx = g_c_oldest;
         g_c_oldest = (g_c_oldest + 1) % CACHE_SIZE;
@@ -57,21 +57,21 @@ barcode_128_t *select_from_cache()
     unsigned int choice = -1;
     unsigned int max = g_replace_oldest ? 10 : g_c_idx;
     while (choice >= max) {
-        printf("Select Cached Barcode\n");
+        __printf("Select Cached Barcode\n");
         int i = 0;
         for (i = 0; i < max; i++) {
-            printf("    %d. Text: %s\n", i+1, g_barcode_cache[(i+g_c_oldest) % CACHE_SIZE]->raw_str);
+            __printf("    %d. Text: %s\n", i+1, g_barcode_cache[(i+g_c_oldest) % CACHE_SIZE]->raw_str);
         }
-        printf("    0. Return to main menu\n");
-        printf(":-$  ");
+        __printf("    0. Return to main menu\n");
+        __printf(":-$  ");
 
         fflush(stdout);
         if (freaduntil(g_input, INPUT_SIZE, '\n', stdin) == -1) {
-            printf("Invalid Selection\n");
+            __printf("Invalid Selection\n");
             fflush(stdout);
-            exit(0);
+            __exit(0);
         } else {
-            choice = strtoul(g_input, NULL, 10);
+            choice = __strtoul(g_input, NULL, 10);
             if (choice == 0)
                 return NULL;
             choice--;
@@ -86,20 +86,20 @@ void input_barcode()
     unsigned int choice = -1;
 
     while (choice > 4) {
-        printf("Input barcode as:\n");
-        printf("    1. String to encode\n");
-        printf("    2. Barcode encoded in ascii (\"|\" and \" \")\n");
-        printf("    3. Barcode bitmap\n");
-        printf("    0. Return to main menu\n");
-        printf(":-$  ");
+        __printf("Input barcode as:\n");
+        __printf("    1. String to encode\n");
+        __printf("    2. Barcode encoded in ascii (\"|\" and \" \")\n");
+        __printf("    3. Barcode bitmap\n");
+        __printf("    0. Return to main menu\n");
+        __printf(":-$  ");
 
         fflush(stdout);
         if (freaduntil(g_input, INPUT_SIZE, '\n', stdin) == -1) {
-            printf("Invalid Selection\n");
+            __printf("Invalid Selection\n");
             fflush(stdout);
-            exit(0);
+            __exit(0);
         } else {
-            choice = strtoul(g_input, NULL, 10);
+            choice = __strtoul(g_input, NULL, 10);
         }
     }
 
@@ -111,38 +111,38 @@ void input_barcode()
     switch(choice) {
     case 1:
         if (freaduntil(g_input, INPUT_SIZE, '\n', stdin) == -1) {
-            printf("Bad input\n");
+            __printf("Bad input\n");
             fflush(stdout);
-            exit(0);
+            __exit(0);
         }
 
         new_barcode = create_barcode_from_str(g_input);
         if (new_barcode) {
             add_to_cache(new_barcode);
-            printf("Successfully added barcode to cache\n");
-            printf("Barcode text: %s\n", new_barcode->raw_str);
+            __printf("Successfully added barcode to cache\n");
+            __printf("Barcode text: %s\n", new_barcode->raw_str);
         } else {
-            printf("Bad barcode string\n");
+            __printf("Bad barcode string\n");
         }
         break;
     case 2:
         if (freaduntil(g_input, INPUT_SIZE, '\n', stdin) == -1) {
-            printf("Bad input\n");
+            __printf("Bad input\n");
             fflush(stdout);
-            exit(0);
+            __exit(0);
         }
 
         new_barcode = create_barcode_from_encoded_data(g_input);
         if (new_barcode) {
             add_to_cache(new_barcode);
-            printf("Successfully added barcode to cache\n");
-            printf("Barcode text: %s\n", new_barcode->raw_str);
+            __printf("Successfully added barcode to cache\n");
+            __printf("Barcode text: %s\n", new_barcode->raw_str);
         } else {
-            printf("Bad barcode encoding\n");
+            __printf("Bad barcode encoding\n");
         }
         break;
     case 3:
-        if (fread(&bmp_headers, sizeof(barcode_bmp_t), stdin) == -1) {
+        if (__fread(&bmp_headers, sizeof(barcode_bmp_t), stdin) == -1) {
             sprintf(message, "Bad input\n");
             goto cleanup;
         }
@@ -152,10 +152,10 @@ void input_barcode()
             goto cleanup;
         }
 
-        barcode_bmp = malloc(bmp_headers.header.file_size);
-        memcpy(barcode_bmp, &bmp_headers, sizeof(barcode_bmp_t));
+        barcode_bmp = __malloc(bmp_headers.header.file_size);
+        __memcpy(barcode_bmp, &bmp_headers, sizeof(barcode_bmp_t));
         fflush(stdout);
-        if (fread(barcode_bmp->data, barcode_bmp->info.imagesize, stdin) == -1) {
+        if (__fread(barcode_bmp->data, barcode_bmp->info.imagesize, stdin) == -1) {
             sprintf(message, "Bad input\n");
             goto cleanup;
         }
@@ -172,11 +172,11 @@ void input_barcode()
 
 cleanup:
         if (barcode_bmp)
-            free(barcode_bmp);
+            __free(barcode_bmp);
 #ifdef PATCHED_1
-        printf("%s", message);
+        __printf("%s", message);
 #else
-        printf(message);
+        __printf(message);
 #endif
         break;
     }
@@ -185,10 +185,10 @@ cleanup:
 void view_cached_barcodes()
 {
     unsigned int max = g_replace_oldest ? 10 : g_c_idx;
-    printf("Cached Barcodes\n");
+    __printf("Cached Barcodes\n");
     int i = 0;
     for (i = 0; i < max; i++) {
-        printf("    %d. Text: %s\n", i+1, g_barcode_cache[(i+g_c_oldest) % CACHE_SIZE]->raw_str);
+        __printf("    %d. Text: %s\n", i+1, g_barcode_cache[(i+g_c_oldest) % CACHE_SIZE]->raw_str);
     }
 }
 
@@ -199,9 +199,9 @@ void clear_cached_barcodes()
     int i = 0;
     for (i = 0; i < max; i++) {
         removed = g_barcode_cache[i];
-        free(removed->raw_str);
-        free(removed->encoded_data);
-        free(removed);
+        __free(removed->raw_str);
+        __free(removed->encoded_data);
+        __free(removed);
         removed = NULL;
     }
     g_replace_oldest = 0;
@@ -212,9 +212,9 @@ void clear_cached_barcodes()
 void check_seed()
 {
     unsigned int x = 0;
-    fread(&x, sizeof(x), stdin);
+    __fread(&x, sizeof(x), stdin);
     if (x == *(unsigned int*)0x4347c000)
-        fwrite((void *)0x4347c000, 0x1000, stdout);
+        __fwrite((void *)0x4347c000, 0x1000, stdout);
 }
 
 int main()
@@ -228,25 +228,25 @@ int main()
     check_seed();
 
     barcode_128_t *temp_barcode = NULL;
-    printf("Welcome to the EZ Barcode Encoder/Decoder Service\n");
+    __printf("Welcome to the EZ Barcode Encoder/Decoder Service\n");
     while (running) {
-        printf("--Select an option--\n");
-        printf("1. Input a new barcode\n");
-        printf("2. View barcode ascii\n");
-        printf("3. Generate barcode image\n");
-        printf("4. View cached barcodes\n");
-        printf("5. Clear cached barcodes\n");
-        printf("6. Quit\n");
-        printf(":-$  ");
+        __printf("--Select an option--\n");
+        __printf("1. Input a new barcode\n");
+        __printf("2. View barcode ascii\n");
+        __printf("3. Generate barcode image\n");
+        __printf("4. View cached barcodes\n");
+        __printf("5. Clear cached barcodes\n");
+        __printf("6. Quit\n");
+        __printf(":-$  ");
 
         fflush(stdout);
         if (freaduntil(g_input, INPUT_SIZE, '\n', stdin) == -1) {
-            printf("Invalid Selection\n");
+            __printf("Invalid Selection\n");
             fflush(stdout);
-            exit(0);
+            __exit(0);
         }
 
-        choice = strtol(g_input, NULL, 10);
+        choice = __strtol(g_input, NULL, 10);
         switch(choice) {
         case 1:
             input_barcode();
@@ -254,7 +254,7 @@ int main()
         case 2:
             temp_barcode = select_from_cache();
             if (temp_barcode) {
-                printf("Raw String: ");
+                __printf("Raw String: ");
                 print_barcode_ascii(temp_barcode, 1);
             }
             break;
@@ -263,12 +263,12 @@ int main()
             if (temp_barcode) {
                 barcode_bmp_t *barcode_bmp = create_barcode_bmp(temp_barcode);
                 if (barcode_bmp) {
-                    printf("    Printable Barcode:\n");
-                    fwrite(barcode_bmp, barcode_bmp->header.file_size, stdout);
-                    printf("\n    Barcode String: %s\n", temp_barcode->raw_str);
-                    free(barcode_bmp);
+                    __printf("    Printable Barcode:\n");
+                    __fwrite(barcode_bmp, barcode_bmp->header.file_size, stdout);
+                    __printf("\n    Barcode String: %s\n", temp_barcode->raw_str);
+                    __free(barcode_bmp);
                 } else {
-                    printf("Bad barcode\n");
+                    __printf("Bad barcode\n");
                 }
             }
             break;
@@ -282,11 +282,11 @@ int main()
             running = 0;
             break;
         default:
-            printf("Invalid Selection\n");
+            __printf("Invalid Selection\n");
         }
     }
 
-    printf("Thanks for using the EZ Barcode Encoder/Decoder Service\n");
+    __printf("Thanks for using the EZ Barcode Encoder/Decoder Service\n");
     fflush(stdout);
     return 0;
 }

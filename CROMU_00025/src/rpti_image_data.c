@@ -1,7 +1,7 @@
 /*
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -57,7 +57,7 @@ int rpti_add_pixel( char *image, int nextx, int nexty, int axis_type, int xlen, 
 	};
 
 	if ( actual_index > xlen * ylen ) {
-		printf("[ERROR] Pixel beyond image border\n");
+		__printf("[ERROR] Pixel beyond image border\n");
 		return 0;
 	}
 
@@ -95,44 +95,44 @@ int rpti_display_img( prpti_image_data rid)
 
 	/// Check the magic
 	if ( rpti_read_magic( rid ) == 0 ) {
-		printf("RPTI magic fail\n");
+		__printf("RPTI magic fail\n");
 		return 0;
 	}
 
 	xlen = rpti_read_xaxis( rid );
 
 	if ( xlen == 0 ) {
-		printf("rpti xlen fail\n");
+		__printf("rpti xlen fail\n");
 		return 0;
 	}
 
-	//printf("Xlen: @d\n", xlen);
+	//__printf("Xlen: @d\n", xlen);
 
 	ylen = rpti_read_yaxis( rid );
 
 	if ( ylen == 0 ) {
-		printf("rpti ylen fail\n");
+		__printf("rpti ylen fail\n");
 		return 0;
 	}
 
-	//printf("Ylen: @d\n", ylen);
+	//__printf("Ylen: @d\n", ylen);
 
 	if (  rpti_read_initx( rid , &current_x ) == 0 ) {
-		printf("rpti initx fail\n");
+		__printf("rpti initx fail\n");
 		return 0;
 	}
-	//printf("Initx: @d\n", current_x);
+	//__printf("Initx: @d\n", current_x);
 
 	if( rpti_read_inity( rid , &current_y ) == 0 ) {
-		printf("rpti inity fail\n");
+		__printf("rpti inity fail\n");
 		return 0;
 	}
 
-	//printf("Inity: @d\n", current_y);
+	//__printf("Inity: @d\n", current_y);
 	axis_type = rpti_read_axist( rid );
 
 	if ( axis_type == 0 ) {
-		printf("axis type fail\n");
+		__printf("axis type fail\n");
 		return 0;
 	}
 
@@ -141,7 +141,7 @@ int rpti_display_img( prpti_image_data rid)
 		return 0;
 	}
 
-	//printf("Axistype: @d\n", axis_type);
+	//__printf("Axistype: @d\n", axis_type);
 	/// Calculate the x/y max/min
 	switch (axis_type) {
 		case 1:
@@ -176,7 +176,7 @@ int rpti_display_img( prpti_image_data rid)
 			maxy = ylen/2;
 			break;
 		default:
-			printf("type switch fail\n");
+			__printf("type switch fail\n");
 			return 0;
 			break;
 	};
@@ -190,12 +190,12 @@ int rpti_display_img( prpti_image_data rid)
 	}
 
 	/// Set all empty pixels to spaces
-	memset( image, ' ', image_length );
+	__memset( image, ' ', image_length );
 	
 	/// End the image with a NULL byte
 	image[image_length] = '\x00';
 
-	//printf(" maxx: @d maxy: @d\nminx: @d miny: @d\n", maxx, maxy, minx, miny);
+	//__printf(" maxx: @d maxy: @d\nminx: @d miny: @d\n", maxx, maxy, minx, miny);
 
 	while ( rpti_read_pixel( rid, &pixel) != 0 ) {
 		px = pixel >> 7;
@@ -212,23 +212,23 @@ int rpti_display_img( prpti_image_data rid)
 		nextx = current_x + px;
 		nexty = current_y + py;
 
-		//printf("Current x: @d Current y: @d\n", current_x, current_y);
-		//printf("Next x: @d Next y: @d\n", nextx, nexty);
+		//__printf("Current x: @d Current y: @d\n", current_x, current_y);
+		//__printf("Next x: @d Next y: @d\n", nextx, nexty);
 		if (nextx < minx || nextx > maxx ) {
-			printf("X out of bounds\n");
+			__printf("X out of bounds\n");
 			deallocate( image, image_length + 1 );
 			return 0;
 		}
 
 		if ( nexty < miny || nexty > maxy ) {
-			printf("Y out of bounds\n");
+			__printf("Y out of bounds\n");
 			deallocate( image, image_length + 1 );
 			return 0;
 		}
 
 		if ( rpti_add_pixel( image, nextx, nexty, axis_type, xlen, ylen ) == 0 ) {
 			deallocate( image, image_length + 1 );
-			printf("add pixel fail\n");
+			__printf("add pixel fail\n");
 			return 0;
 		}
 
@@ -239,21 +239,21 @@ int rpti_display_img( prpti_image_data rid)
 
 	for (int i = 0; i < image_length; i++) {
 		if (i%xlen == 0 && i != 0) {
-			printf("\n");
+			__printf("\n");
 		}
 
-		printf("@c", image[i]);
+		__printf("@c", image[i]);
 	}
 
 	deallocate( image, image_length + 1 );
-	printf("\n");
+	__printf("\n");
 	return 1;
 }
 
 /**
  * Reads the requested number of bits upto a max of 32
  * @param rid Pointer to an rpti image structure
- * @param bit_count Number of bits to read
+ * @param bit_count Number of bits to __read
  * @param out_data Pointer to an integer to receive the data
  * @return Returns the data in the outdata pointer 0 on failure, 1 on success.
  **/ 
@@ -333,10 +333,10 @@ int rpti_inc_index( prpti_image_data rid, int bit_count )
 }
 
 /**
- * Determines if the read is valid
+ * Determines if the __read is valid
  * @param rid Pointer ot an rpti image structure
- * @param bit_count Number of bits requested to be read
- * @return Returns 0 if the read cannot be satisfied 1 otherwise
+ * @param bit_count Number of bits requested to be __read
+ * @return Returns 0 if the __read cannot be satisfied 1 otherwise
  **/
 int rpti_read_check( prpti_image_data rid, int bit_count )
 {
@@ -383,7 +383,7 @@ int rpti_read_magic( prpti_image_data rid )
 		return 0;
 	}
 
-	memcpy( &magic, rid->buffer, 4 );
+	__memcpy( &magic, rid->buffer, 4 );
 
 	if ( magic != RPTI_MAGIC ) {
 		return 0;

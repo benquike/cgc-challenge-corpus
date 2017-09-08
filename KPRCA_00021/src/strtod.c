@@ -10,7 +10,7 @@ double strtod(const char *str, char **endptr)
     int n, neg = 0, point = 0;
     double val = 0, under = 1;
 
-    while (*str && isspace(*str))
+    while (*str && __isspace(*str))
         str++;
 
     if (*str == '-')

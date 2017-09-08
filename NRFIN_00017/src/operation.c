@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -92,7 +92,7 @@ int do_build() {
     uint32_t model_id = 0;
 
     assemble_result_t result;
-    memset(&result, 0, sizeof(assemble_result_t));
+    __memset(&result, 0, sizeof(assemble_result_t));
 
     switch(command) {
 	case B_CMD_INIT_PANEL:

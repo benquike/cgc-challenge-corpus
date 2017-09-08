@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -90,7 +90,7 @@ void set_search_lock(uint32_t p_id, R_TYPES rt) {
  * Free the search map
  */
 void free_search_map(void) {
-    free(search_map);
+    __free(search_map);
     search_map = NULL;
 }
 
@@ -101,11 +101,11 @@ void free_search_map(void) {
  */
 int new_search_map(void) {
     if (total_person_count > (SIZE_MAX / sizeof(Search) - 1))
-        return -1; // prevent overflow calloc size
+        return -1; // prevent overflow __calloc size
 
     if (NULL != search_map) free_search_map();
 
-    search_map = calloc(total_person_count * sizeof(Search));
+    search_map = __calloc(total_person_count * sizeof(Search));
     MALLOC_OK(search_map);
 
     Person *p = person_list;
@@ -489,7 +489,7 @@ int cmd_add_person(size_t bytes) {
         return -1;
     }
 
-    char *buf = calloc(PERSON_IN_SZ);
+    char *buf = __calloc(PERSON_IN_SZ);
     MALLOC_OK(buf);
     RECV(buf, PERSON_IN_SZ);
 
@@ -503,7 +503,7 @@ int cmd_add_person(size_t bytes) {
     total_person_count++;
 
 cap_end:
-    free(buf);
+    __free(buf);
 
     return ret;
 }
@@ -523,7 +523,7 @@ int cmd_set_biological_child(size_t bytes) {
         return -1;
     }
 
-    char *buf = calloc(bytes_needed);
+    char *buf = __calloc(bytes_needed);
     MALLOC_OK(buf);
     RECV(buf, bytes_needed);
 
@@ -554,7 +554,7 @@ int cmd_set_biological_child(size_t bytes) {
     set_biological_father(child, father);
 
 sbc_end:
-    free(buf);
+    __free(buf);
 
     return ret;
 }
@@ -574,7 +574,7 @@ int cmd_set_adopted_child(size_t bytes) {
         return -1;
     }
 
-    char *buf = calloc(bytes_needed);
+    char *buf = __calloc(bytes_needed);
     MALLOC_OK(buf);
     RECV(buf, bytes_needed);
 
@@ -625,7 +625,7 @@ int cmd_set_adopted_child(size_t bytes) {
     }
 
 sac_end:
-    free(buf);
+    __free(buf);
 
     return ret;
 }
@@ -644,7 +644,7 @@ int cmd_set_union(size_t bytes) {
         return -1;
     }
 
-    char *buf = calloc(bytes_needed);
+    char *buf = __calloc(bytes_needed);
     MALLOC_OK(buf);
     RECV(buf, bytes_needed);
 
@@ -659,7 +659,7 @@ int cmd_set_union(size_t bytes) {
     ret = union_two_persons(person1, person2);
 
 su_end:
-    free(buf);
+    __free(buf);
 
     return ret;
 }
@@ -678,7 +678,7 @@ int cmd_set_deceased(size_t bytes) {
         return -1;
     }
 
-    char *buf = calloc(bytes_needed);
+    char *buf = __calloc(bytes_needed);
     MALLOC_OK(buf);
     RECV(buf, bytes_needed);
 
@@ -693,7 +693,7 @@ int cmd_set_deceased(size_t bytes) {
     person1->lifecycle.death_year = death_year[2];
 
 die_end:
-    free(buf);
+    __free(buf);
     return ret;
 }
 
@@ -711,7 +711,7 @@ int cmd_set_separated(size_t bytes) {
         return -1;
     }
 
-    char *buf = calloc(bytes_needed);
+    char *buf = __calloc(bytes_needed);
     MALLOC_OK(buf);
     RECV(buf, bytes_needed);
 
@@ -727,7 +727,7 @@ int cmd_set_separated(size_t bytes) {
     ret = separate_two_persons(person1, person2);
 
 ss_end:
-    free(buf);
+    __free(buf);
     return ret;
 }
 
@@ -745,7 +745,7 @@ int cmd_are_related(size_t bytes) {
         return -1;
     }
 
-    char *buf = calloc(bytes_needed);
+    char *buf = __calloc(bytes_needed);
     MALLOC_OK(buf);
     RECV(buf, bytes_needed);
 
@@ -765,7 +765,7 @@ int cmd_are_related(size_t bytes) {
     }
 
 ar_end:
-    free(buf);
+    __free(buf);
 
     return ret;
 }
@@ -784,7 +784,7 @@ int cmd_degrees_of_separation(size_t bytes) {
         return -1;
     }
 
-    char *buf = calloc(bytes_needed);
+    char *buf = __calloc(bytes_needed);
     MALLOC_OK(buf);
     RECV(buf, bytes_needed);
 
@@ -809,7 +809,7 @@ int cmd_degrees_of_separation(size_t bytes) {
     ret = SUCCESS;
 
 ds_end:
-    free(buf);
+    __free(buf);
 
     return ret;
 
@@ -837,21 +837,21 @@ int main(void) {
         Request req;
         RECV(&req, sizeof(Request));
 
-        if (0 == memcmp(ADD_PERSON, (const char *)req.cmd, sizeof(ADD_PERSON))) {
+        if (0 == __memcmp(ADD_PERSON, (const char *)req.cmd, sizeof(ADD_PERSON))) {
             ret = cmd_add_person(req.bytes);
-        } else if (0 == memcmp(SET_BIOLOGICAL_CHILD, (const char *)req.cmd, sizeof(SET_BIOLOGICAL_CHILD))) {
+        } else if (0 == __memcmp(SET_BIOLOGICAL_CHILD, (const char *)req.cmd, sizeof(SET_BIOLOGICAL_CHILD))) {
             ret = cmd_set_biological_child(req.bytes);
-        } else if (0 == memcmp(SET_ADOPTED_CHILD, (const char *)req.cmd, sizeof(SET_ADOPTED_CHILD))) {
+        } else if (0 == __memcmp(SET_ADOPTED_CHILD, (const char *)req.cmd, sizeof(SET_ADOPTED_CHILD))) {
             ret = cmd_set_adopted_child(req.bytes);
-        } else if (0 == memcmp(SET_UNION, (const char *)req.cmd, sizeof(SET_UNION))) {
+        } else if (0 == __memcmp(SET_UNION, (const char *)req.cmd, sizeof(SET_UNION))) {
             ret = cmd_set_union(req.bytes);
-        } else if (0 == memcmp(SET_DECEASED, (const char *)req.cmd, sizeof(SET_DECEASED))) {
+        } else if (0 == __memcmp(SET_DECEASED, (const char *)req.cmd, sizeof(SET_DECEASED))) {
             ret = cmd_set_deceased(req.bytes);
-        } else if (0 == memcmp(SET_SEPARATED, (const char *)req.cmd, sizeof(SET_SEPARATED))) {
+        } else if (0 == __memcmp(SET_SEPARATED, (const char *)req.cmd, sizeof(SET_SEPARATED))) {
             ret = cmd_set_separated(req.bytes);
-        } else if (0 == memcmp(ARE_RELATED, (const char *)req.cmd, sizeof(ARE_RELATED))) {
+        } else if (0 == __memcmp(ARE_RELATED, (const char *)req.cmd, sizeof(ARE_RELATED))) {
             ret = cmd_are_related(req.bytes);
-        } else if (0 == memcmp(DEGREES, (const char *)req.cmd, sizeof(DEGREES))) {
+        } else if (0 == __memcmp(DEGREES, (const char *)req.cmd, sizeof(DEGREES))) {
             ret = cmd_degrees_of_separation(req.bytes);
         } else  {
             ret = -1;

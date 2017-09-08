@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -157,7 +157,7 @@ Person *new_person(char *input) {
 
 	if (NULL == input) return p;
 
-	p = calloc(sizeof(Person));
+	p = __calloc(sizeof(Person));
 	MALLOC_OK(p);
 
 	p->id = *(uint32_t *)idx;
@@ -167,13 +167,13 @@ Person *new_person(char *input) {
 	idx += sizeof(uint16_t);
 
 	shift = 10*sizeof(uint8_t);
-	memcpy(&p->name.fname, idx, shift);
+	__memcpy(&p->name.fname, idx, shift);
 	idx += shift;
 
-	memcpy(&p->name.mname, idx, shift);
+	__memcpy(&p->name.mname, idx, shift);
 	idx += shift;
 
-	memcpy(&p->name.lname, idx, shift);
+	__memcpy(&p->name.lname, idx, shift);
 	idx += shift;
 
 	p->shift = shift_relation;

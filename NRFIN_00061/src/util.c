@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -44,7 +44,7 @@ void clearAttributes() {
 		attr_ptr->value = 0;
 		attr_ptr->key = 0;
 		attr_ptr->next = 0;
-		free(attr_ptr);
+		__free(attr_ptr);
 	}
 	attributes = NULL;
 }
@@ -64,25 +64,25 @@ void initializeAttributes(char* body) {
 
 	clearAttributes();
 
-	key = strtok(body, "=");
+	key = __strtok(body, "=");
 	do {
-		value = strtok(0, ";");
-		if(!(new_attr = malloc(sizeof(Attribute))))
+		value = __strtok(0, ";");
+		if(!(new_attr = __malloc(sizeof(Attribute))))
 			_terminate(1);
-		bzero((char *)new_attr, sizeof(Attribute));
-		size = strlen(key);
-		if(!(new_attr->key = malloc(size+1)))
+		__bzero((char *)new_attr, sizeof(Attribute));
+		size = __strlen(key);
+		if(!(new_attr->key = __malloc(size+1)))
 			_terminate(1);
-		bzero(new_attr->key, size+1);
-		memcpy(new_attr->key, key, size);
-		size = strlen(value);
-		if(!(new_attr->value = malloc(size+1)))
+		__bzero(new_attr->key, size+1);
+		__memcpy(new_attr->key, key, size);
+		size = __strlen(value);
+		if(!(new_attr->value = __malloc(size+1)))
 			_terminate(1);
-		bzero(new_attr->value, size+1);
-		memcpy(new_attr->value, value, size);
+		__bzero(new_attr->value, size+1);
+		__memcpy(new_attr->value, value, size);
 		new_attr->next = attributes;
 		attributes = new_attr;
-	} while((key = strtok(0, "=")));
+	} while((key = __strtok(0, "=")));
 }
 
 /**
@@ -97,15 +97,15 @@ void sendErrorResponse(const char* response) {
 	size_t bytes;
 	int ret;
 
-	if(!(buffer = malloc(sizeof(RESPONSE_HDR)+strlen(response)+1)))
+	if(!(buffer = __malloc(sizeof(RESPONSE_HDR)+__strlen(response)+1)))
 		_terminate(1);
 
-	bzero(buffer, sizeof(RESPONSE_HDR)+strlen(response)+1);
-	sprintf(buffer, "!X=!X?", RESPONSE_HDR, response);
-	if((ret = transmit_all(STDOUT, buffer, strlen(buffer)))) 
+	__bzero(buffer, sizeof(RESPONSE_HDR)+__strlen(response)+1);
+	__sprintf(buffer, "!X=!X?", RESPONSE_HDR, response);
+	if((ret = transmit_all(STDOUT, buffer, __strlen(buffer)))) 
 		_terminate(1);
 
-	free(buffer);
+	__free(buffer);
 }
 
 /**
@@ -121,8 +121,8 @@ void getStringAttribute(char** buffer_ptr, const char* name) {
 	size_t size, size1, size2;
 
 	for(attr_ptr=attributes; attr_ptr != NULL; attr_ptr = attr_ptr->next) {
-		size1 = strlen(attr_ptr->key);
-		size2 = strlen(name);
+		size1 = __strlen(attr_ptr->key);
+		size2 = __strlen(name);
 		size = size1 > size2 ? size1 : size2;
 		if(!strncmp(attr_ptr->key, name, size)) {
 			*buffer_ptr = attr_ptr->value;
@@ -146,7 +146,7 @@ void getIntegerAttribute(unsigned int* int_ptr, const char* name) {
 
 	getStringAttribute((char **) &buffer, name);
 	if(buffer)
-		*int_ptr = atoi(buffer);
+		*int_ptr = __atoi(buffer);
 	else
 		*int_ptr = 0;
 

@@ -1,12 +1,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *strdup(const char *str)
+char *__strdup(const char *str)
 {
-    size_t n = strlen(str) + 1;
-    char *dup = malloc(n);
+    size_t n = __strlen(str) + 1;
+    char *dup = __malloc(n);
     if (dup == NULL)
         return NULL;
-    memcpy(dup, str, n);
+    __memcpy(dup, str, n);
     return dup;
 }

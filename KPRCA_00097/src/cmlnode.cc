@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -51,11 +51,11 @@ void CmlNode::set_attr(const char *name, String *value)
     {
         char *end;
         unsigned int major, minor = 0;
-        major = strtoul(value->cstr(), &end, 10);
+        major = __strtoul(value->cstr(), &end, 10);
         if (end != NULL)
         {
             end++;
-            minor = strtoul(end, &end, 10);
+            minor = __strtoul(end, &end, 10);
         }
         d_version = value;
         d_version_code = ((unsigned long long)major << 32) | minor;

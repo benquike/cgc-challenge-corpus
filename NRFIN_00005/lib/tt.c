@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -40,31 +40,31 @@ void make_board(tt_data * data, char * board) {
 	char *bottom_row =  " 2 | ~o | ~o | ~o |\n";  // bottom row
 					 // "   +---+---+---+\n"
 
-	strncpy( board + 17 * 0, TOP_NUMBERS, 17);
-	strncpy( board + 17 * 1, ROW_DIVIDER, 17);
+	__strncpy( board + 17 * 0, TOP_NUMBERS, 17);
+	__strncpy( board + 17 * 1, ROW_DIVIDER, 17);
 	snprintf(board + 17 * 2, 18, top_row, 
 			 data->top[0], 
 			 data->top[1], 
 			 data->top[2]);
-	strncpy( board + 17 * 3, ROW_DIVIDER, 17);
+	__strncpy( board + 17 * 3, ROW_DIVIDER, 17);
 	snprintf(board + 17 * 4, 18, middle_row, 
 			 data->middle[0], 
 			 data->middle[1], 
 			 data->middle[2]);
-	strncpy( board + 17 * 5, ROW_DIVIDER, 17);
+	__strncpy( board + 17 * 5, ROW_DIVIDER, 17);
 	snprintf(board + 17 * 6, 18, bottom_row, 
 			 data->bottom[0], 
 			 data->bottom[1], 
 			 data->bottom[2]);
-	strncpy( board + 17 * 7, ROW_DIVIDER, 17);
+	__strncpy( board + 17 * 7, ROW_DIVIDER, 17);
 	board[17 * 8] = '\0';
 }
 
 // initialize game data
 void init_game_data(tt_data * data) {
-	memset(data->top, EMPTY, 3);
-	memset(data->middle, EMPTY, 3);
-	memset(data->bottom, EMPTY, 3);
+	__memset(data->top, EMPTY, 3);
+	__memset(data->middle, EMPTY, 3);
+	__memset(data->bottom, EMPTY, 3);
 	data->moves = 0;
 	data->winner = EMPTY;
 }

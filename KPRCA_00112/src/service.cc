@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -101,25 +101,25 @@ unsigned int g_difficulty_easy = EASIEST_DIFFICULTY;
 unsigned int RecvCmdId()
 {
     unsigned int cmd_id;
-    if (fread(&cmd_id, sizeof(cmd_id), stdin) != sizeof(cmd_id))
-        exit(0);
+    if (__fread(&cmd_id, sizeof(cmd_id), stdin) != sizeof(cmd_id))
+        __exit(0);
     return cmd_id;
 }
 
 void SendMsgId(unsigned int msg_id)
 {
-    fwrite(&msg_id, sizeof(msg_id), stdout);
+    __fwrite(&msg_id, sizeof(msg_id), stdout);
 }
 
 void SendMsg(void *msg, unsigned int msg_size)
 {
-    fwrite(msg, msg_size, stdout);
+    __fwrite(msg, msg_size, stdout);
 }
 
 void RecvBoard(unsigned int *pboard, unsigned int max_size)
 {
     max_size = max_size > G_GRIDDER_SIZE ? G_GRIDDER_SIZE : max_size;
-    fread(pboard, max_size, stdin);
+    __fread(pboard, max_size, stdin);
 }
 
 extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
@@ -140,7 +140,7 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
     while (!exited)
     {
         pmsg_status = &g_error_table[0];
-        memset(gridder_recv_buf, 0, sizeof(gridder_recv_buf));
+        __memset(gridder_recv_buf, 0, sizeof(gridder_recv_buf));
         cmd_id = RecvCmdId();
         switch (cmd_id)
         {
@@ -240,15 +240,15 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
     }
 
     //grid.GenerateNewGridder(0, &ngen);
-    //printf("pooooooooooooooop\n");
+    //__printf("pooooooooooooooop\n");
     //grid.Debug();
     //grid.MakeGridderSolveable(20, &ngen);
-    //printf("pooooooooooooooop\n");
+    //__printf("pooooooooooooooop\n");
     //grid.Debug();
     //grid.FindSolution(0);
-    //printf("pooooooooooooooop\n");
+    //__printf("pooooooooooooooop\n");
     //grid.Debug();
-    //printf("pooooooooooooooop\n");
+    //__printf("pooooooooooooooop\n");
     return 0;
 }
 

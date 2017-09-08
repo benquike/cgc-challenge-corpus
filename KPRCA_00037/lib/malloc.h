@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -38,7 +38,7 @@ extern size_t size_class_limits[NUM_FREE_LISTS];
 
 struct blk_t {
   size_t size;
-  unsigned int free;
+  unsigned int __free;
   struct blk_t *fsucc;
   struct blk_t *fpred;
   struct blk_t *next;

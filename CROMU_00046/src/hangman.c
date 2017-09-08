@@ -4,7 +4,7 @@ Author: Dustin Fraze (df@cromulence.com)
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -47,9 +47,9 @@ void hangman() {
 	int correctcount = 0;
 	unsigned int wagered = 0;
 
-	bzero(correct, 128);
+	__bzero(correct, 128);
 	toguess = pickaword(state);
-	len = strlen(toguess);
+	len = __strlen(toguess);
 	state->hangmanguess = 0;
 
 	wagered = getBet(state);
@@ -59,7 +59,7 @@ void hangman() {
 	while(state->hangmanguess < 5)
 	{
 		right = 0;
-		bzero(guess, 4);
+		__bzero(guess, 4);
 		put(renderBoard(state));
 		for(i=0;i<len;i++)
 		{
@@ -67,7 +67,7 @@ void hangman() {
 				put("_");
 			else {
 				put(&correct[i]);
-				i+= strlen(&correct[i])-1;
+				i+= __strlen(&correct[i])-1;
 			}
 		}
 
@@ -85,7 +85,7 @@ void hangman() {
 		}
 		if(right == 0)
 			state->hangmanguess++;
-		if(strlen(correct) == strlen(toguess))
+		if(__strlen(correct) == __strlen(toguess))
 		{
 			handleOutcome(state, 1, wagered);
 			return;

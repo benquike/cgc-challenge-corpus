@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.co>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -88,7 +88,7 @@ void HexDump(uint8_t *data, size_t size) {
   int byte;
   int line_pos;
   while (count < size ) {
-    bzero(one_line, 50);
+    __bzero(one_line, 50);
     line_pos = 0;
     for (byte = 0; byte < 16; byte++) {
       if (count + byte >= size) {
@@ -99,7 +99,7 @@ void HexDump(uint8_t *data, size_t size) {
       one_line[line_pos++] = ' ';
     }
     one_line[line_pos] = '\n';
-    TransmitBytes(one_line, strlen(one_line));
+    TransmitBytes(one_line, __strlen(one_line));
     count = count + byte;
   }
 }
@@ -170,7 +170,7 @@ void vTransmitFormattedBytes(char *format, va_list arg_list) {
             buf[num_digits--] = '0' + temp_int % 10;
             temp_int /= 10;
           }
-          TransmitBytes(buf, strlen(buf)); 
+          TransmitBytes(buf, __strlen(buf)); 
           break;
         }
         case 'u': {
@@ -195,13 +195,13 @@ void vTransmitFormattedBytes(char *format, va_list arg_list) {
             buf[num_digits--] = '0' + temp_int % 10;
             temp_int /= 10;
           }
-          TransmitBytes(buf, strlen(buf)); 
+          TransmitBytes(buf, __strlen(buf)); 
           break;
         }
         case 's': {
           // Print string
           char *s = va_arg(arg_list, char *);
-          TransmitBytes(s, strlen(s));
+          TransmitBytes(s, __strlen(s));
           break;
         }
         case 'x': {

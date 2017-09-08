@@ -532,7 +532,7 @@ pDiveEntryListNode SelectDive( pDiverInfo DiverInfo, char prompt[32] ){
 		count += 1;
 		__printf("@4d: @-10s @-8s",count, DiveEntryThis->DiveDate, DiveEntryThis->DiveTime);
 		__printf(" @-25s @-25s\n", DiveEntryThis->SiteName, DiveEntryThis->DiveLocation );
-		//DiveEntryListThis is ++, but doesn't matter because exit loop on count which is most certainly
+		//DiveEntryListThis is ++, but doesn't matter because __exit loop on count which is most certainly
 		//greater then MAXDIVECOUNT 
 		DiveEntryListThis = DiveEntryListThis->next;
 	}

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -57,7 +57,7 @@ int read_initial_words(main_t *state)
     if (count >= UINT_MAX / sizeof(char *))
         return 0;
 
-    words = malloc(sizeof(char *) * count);
+    words = __malloc(sizeof(char *) * count);
     if (words == NULL)
         return 0;
 
@@ -67,7 +67,7 @@ int read_initial_words(main_t *state)
         if (words[i] == NULL)
             goto error;
 
-        if (strlen(words[i]) == 0)
+        if (__strlen(words[i]) == 0)
             goto error;
     }
 
@@ -82,13 +82,13 @@ int read_initial_words(main_t *state)
     for (i = 0; i < count; i++)
         atree_add(state->tree, words[i]);
 
-//    free(words);
+//    __free(words);
     return 1;
 
 error:
 //    for (i = 0; i < count; i++)
-//        free(words[i]);
-//    free(words);
+//        __free(words[i]);
+//    __free(words);
     return 0;
 }
 
@@ -104,7 +104,7 @@ void cmd_add_word(main_t *state)
         if (!atree_add(state->tree, str))
         {
             write_int(STATUS_ERROR);
-            free(str);
+            __free(str);
         }
         else
         {
@@ -130,7 +130,7 @@ void cmd_remove_word(main_t *state)
         {
             write_int(STATUS_SUCCESS);
         }
-        free(str);
+        __free(str);
     }
 }
 
@@ -142,7 +142,7 @@ static void sort_results(char **results, int count)
         char *a = results[i];
         for (j = i; j > 0; j--)
         {
-            if (strcmp(results[j-1], a) <= 0)
+            if (__strcmp(results[j-1], a) <= 0)
                 break;
             results[j] = results[j-1];
         }
@@ -164,7 +164,7 @@ void cmd_query(main_t *state, int subset)
             results = atree_query_subset(state->tree, str);
         else
             results = atree_query(state->tree, str);
-        free(str);
+        __free(str);
 
         if (results == NULL)
         {
@@ -247,10 +247,10 @@ void cmd_play_game(main_t *state)
                 }
             }
 
-            free(str);
+            __free(str);
         }
 
-        free(answers);
+        __free(answers);
     }
 
     write_int(STATUS_SUCCESS);
@@ -259,7 +259,7 @@ void cmd_play_game(main_t *state)
 int main()
 {
     main_t state;
-    memset(&state, 0, sizeof(main_t));
+    __memset(&state, 0, sizeof(main_t));
 
     while (!read_initial_words(&state))
     {

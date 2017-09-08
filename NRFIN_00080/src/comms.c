@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -33,9 +33,9 @@
 void session_append(Session **s_list, Session *s) {
 	Session *tmp = *s_list;
 	Session *prev = *s_list;
-	Session *new = calloc(sizeof(Session));
+	Session *new = __calloc(sizeof(Session));
 	MALLOC_OK(new);
-	memcpy(new, s, sizeof(Session) - 2*sizeof(char *));
+	__memcpy(new, s, sizeof(Session) - 2*sizeof(char *));
 
 	if (NULL == tmp) {
 		*s_list = new;
@@ -53,7 +53,7 @@ Session *session_remove(Session **s_list, Session *s) {
 	Session *prev = *s_list;
 	while (NULL != tmp) {
 
-	    if (0 == memcmp(s->login.key, tmp->login.key, sizeof(tmp->login.key))) {
+	    if (0 == __memcmp(s->login.key, tmp->login.key, sizeof(tmp->login.key))) {
 
 	    	if (tmp == prev) { // first node in list
 	    		*s_list = tmp->next;
@@ -75,7 +75,7 @@ Session *session_get_by_username(Session *s_list, Session *s) {
     Session *s_result = NULL;
     Session *tmp = s_list;
 	while (NULL != tmp) {
-	    if (0 == memcmp(s->login.username, tmp->login.username, sizeof(tmp->login.username))) {
+	    if (0 == __memcmp(s->login.username, tmp->login.username, sizeof(tmp->login.username))) {
 	    	s_result = tmp;
 			break;
 	    }

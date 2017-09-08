@@ -1,7 +1,7 @@
 #include <string.h>
 
-char *strcat(char *dest, const char *src)
+char *__strcat(char *dest, const char *src)
 {
-  strcpy(dest + strlen(dest), src);
+  __strcpy(dest + __strlen(dest), src);
   return dest;
 }

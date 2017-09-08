@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -61,14 +61,14 @@ static int send(void *data, size_t length)
 
 static int read_fully(void *dest, size_t length)
 {
-    size_t read = 0, bytes;
-    while (read < length)
+    size_t __read = 0, bytes;
+    while (__read < length)
     {
-        if (receive(STDIN, (uint8_t *)dest + read, length - read, &bytes) != 0)
+        if (receive(STDIN, (uint8_t *)dest + __read, length - __read, &bytes) != 0)
             return 1;
         if (bytes == 0)
             return 1;
-        read += bytes;
+        __read += bytes;
     }
     return 0;
 }
@@ -83,14 +83,14 @@ static void send_error(STATUS status, char *msg)
 
     packet_data_error_t data;
     data.length = sizeof(data.msg);
-    strncpy(data.msg, msg, data.length);
+    __strncpy(data.msg, msg, data.length);
     send(&data, sizeof(data));
 
     if (transaction)
         transaction->status = status;
 
-    // according to the spec, exit on error
-    exit(0);
+    // according to the spec, __exit on error
+    __exit(0);
 }
 
 static int enlarge_transactions_array(size_t new_length)
@@ -99,7 +99,7 @@ static int enlarge_transactions_array(size_t new_length)
         return 0;
 
 #if 0
-    void *new_array = realloc(transactions_array, sizeof(transaction_t) * new_length);
+    void *new_array = __realloc(transactions_array, sizeof(transaction_t) * new_length);
     if (new_array == NULL)
         return 1;
     transactions_array = new_array;
@@ -152,7 +152,7 @@ static int handle_issue()
 {
     packet_data_issue_t *data = transaction->data;
 
-    card_info_t *card = malloc(sizeof(card_info_t));
+    card_info_t *card = __malloc(sizeof(card_info_t));
     if (card == NULL)
     {
         send_error(ERRNO_MP_ALLOC, ALLOC_MSG);
@@ -166,7 +166,7 @@ static int handle_issue()
     card_info_list = card;
 
     packet_head_t hdr;
-    memset(&hdr, 0, sizeof(hdr));
+    __memset(&hdr, 0, sizeof(hdr));
     hdr.card_id = card->card_id;
     hdr.auth_code = card->auth_code;
     hdr.pkt_type = INIT;
@@ -207,7 +207,7 @@ static int read_data(transaction_t *t)
 
     if (datalen > 0)
     {
-        t->data = malloc(datalen);
+        t->data = __malloc(datalen);
         if (t->data == NULL)
             goto fail;
         if (read_fully(t->data, datalen) != 0)
@@ -232,7 +232,7 @@ static int read_data(transaction_t *t)
 
     if (extralen > 0)
     {
-        void *newdata = realloc(t->data, datalen+extralen);
+        void *newdata = __realloc(t->data, datalen+extralen);
         if (newdata == NULL)
             goto fail;
         t->data = newdata;
@@ -242,7 +242,7 @@ static int read_data(transaction_t *t)
     return 0;
 
 fail:
-    free(t->data);
+    __free(t->data);
     t->data = NULL;
     return 1;
 }
@@ -253,7 +253,7 @@ static transaction_t *new_transaction()
         return NULL;
 
     transaction_t *t = &transactions_array[transactions_idx++];
-    memset(t, 0, sizeof(transaction_t));
+    __memset(t, 0, sizeof(transaction_t));
     t->id = (uint32_t) t;
     t->op_code = pkthdr.op_code;
     t->state = pkthdr.pkt_type;
@@ -335,7 +335,7 @@ static int handle_balance()
 {
     card_info_t *card = lookup_card(transaction->card_id);
 
-    transaction->data = malloc(sizeof(packet_data_balance_t));
+    transaction->data = __malloc(sizeof(packet_data_balance_t));
     if (transaction->data == NULL)
     {
         send_error(ERRNO_MP_ALLOC, ALLOC_MSG);
@@ -348,7 +348,7 @@ static int handle_balance()
     send(&hdr, sizeof(hdr));
 
     packet_data_balance_t *data = transaction->data;
-    memset(data, 0, sizeof(packet_data_balance_t));
+    __memset(data, 0, sizeof(packet_data_balance_t));
     data->balance = card->value;
     send(data, sizeof(packet_data_balance_t));
 
@@ -393,7 +393,7 @@ static int handle_history()
         transaction_t *t = &transactions_array[i-1];
 
         packet_data_transaction_t dt;
-        memset(&dt, 0, sizeof(dt));
+        __memset(&dt, 0, sizeof(dt));
         dt.op_code = t->op_code;
         dt.state = t->state;
         dt.status = t->status;

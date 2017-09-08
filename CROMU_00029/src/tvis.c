@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -36,7 +36,7 @@ extern uint32_t X;
 extern uint32_t Y;
 extern uint32_t Z;
 
-#define CLEAR_SCREEN printf("\033[2J\033[H")
+#define CLEAR_SCREEN __printf("\033[2J\033[H")
 
 #define MAX_WIDTH 10.0
 #define MAX_HEIGHT 10.0
@@ -85,7 +85,7 @@ int32_t GraphTemps(double *grid) {
 	county = (Y/MAX_HEIGHT)+1;
 
 	for (z = 0; z < Z; z++) {
-		printf("z: @d\n", z);
+		__printf("z: @d\n", z);
 
 		starty = 0;
 		y = 0;
@@ -112,7 +112,7 @@ int32_t GraphTemps(double *grid) {
 				datapoint = output[out_x][out_y] - 273.15;
 	
 				// print out decimal point aligned
-				// the printf @f function rounds up or down by
+				// the __printf @f function rounds up or down by
 				// by using .5*F32_PRECISION if the value is positive
 				// or negative.  So, we need to do the same to 
 				// make sure the resulting string is aligned properly
@@ -123,22 +123,22 @@ int32_t GraphTemps(double *grid) {
 					round = 0.000005;
 				}
 				if (datapoint+round <= -100.0) {
-					printf("@f ", datapoint);
+					__printf("@f ", datapoint);
 				} else if (datapoint+round <= -10.0) {
-					printf(" @f ", datapoint);
+					__printf(" @f ", datapoint);
 				} else if (datapoint+round < 0.0) {
-					printf("  @f ", datapoint);
+					__printf("  @f ", datapoint);
 				} else if (datapoint+round < 10.0) {
-					printf("   @f ", datapoint);
+					__printf("   @f ", datapoint);
 				} else if (datapoint+round < 100.0) {
-					printf("  @f ", datapoint);
+					__printf("  @f ", datapoint);
 				} else {
-					printf(" @f ", datapoint);
+					__printf(" @f ", datapoint);
 				}
 			}
-			printf("\n");
+			__printf("\n");
 		}
-		printf("\n");
+		__printf("\n");
 	}
 
 	return(0);

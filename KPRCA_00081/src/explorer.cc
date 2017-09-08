@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -29,7 +29,7 @@
 CExplorer::CExplorer(const char *name) : m_exp(1000), m_level(1), m_skills(), m_avail(true), m_hired(false)
 {
     char *tmp = strndup(name, k_maxNameLength);
-    strcpy(m_name, tmp);
+    __strcpy(m_name, tmp);
 }
 
 int CExplorer::GetNextExp()
@@ -86,5 +86,5 @@ CRequirement::Type CExplorer::GetCounters()
 
 void CExplorer::ChangeName(const char *name)
 {
-    strcpy(m_name, name);
+    __strcpy(m_name, name);
 }

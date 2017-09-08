@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -63,7 +63,7 @@ int endIt;
 
     if (retcode != 0) {
 
-        printf("Error making filesystem.\n");
+        __printf("Error making filesystem.\n");
         _terminate(-1);
     }
 
@@ -71,7 +71,7 @@ int endIt;
 
     if ( retcode != 0 ) {
 
-        printf("Error making posts.log\n");
+        __printf("Error making posts.log\n");
         _terminate(-1);
     }
 
@@ -79,7 +79,7 @@ int endIt;
 
     if ( retcode != 0 ) {
 
-        printf("Error making posts.log\n");
+        __printf("Error making posts.log\n");
         _terminate(-1);
     }
 
@@ -87,7 +87,7 @@ int endIt;
     
     if ( retcode != 0 ) {
 
-        printf("Error making Users.db\n");
+        __printf("Error making Users.db\n");
         _terminate(-1);
     }
 
@@ -95,7 +95,7 @@ int endIt;
 
     if ( retcode != 0 ) {
 
-        printf("Error making posts.log\n");
+        __printf("Error making posts.log\n");
         _terminate(-1);
     }
 
@@ -104,7 +104,7 @@ int endIt;
 
     if ( fh < 0 ) {
 
-        printf("Error opening initialPostID.mem\n");
+        __printf("Error opening initialPostID.mem\n");
         _terminate(-1);
     }
     readFile(fh, (void *)&nextPostID, sizeof(nextPostID), 0, 0, ROOT_ID);
@@ -114,12 +114,12 @@ int endIt;
     deleteFile(fh, ROOT_ID);
 
     // this file will allow us to get semi-random userID's from the magic page.  It is kept open and a new ID is 
-    // read whenever a new account is created
+    // __read whenever a new account is created
     retcode = makeMemoryFile("UserIDs.mem", 0x4347C004, 1532, 1, ROOT_ID );
 
     if ( retcode != 0 ) {
 
-        printf("Error making UserIDs.mem\n");
+        __printf("Error making UserIDs.mem\n");
         _terminate(-1);
     }
 
@@ -264,7 +264,7 @@ int endIt;
 
     } // while (1)
 
-    printf("BYE!\n");
+    __printf("BYE!\n");
 
 }  // main  
 

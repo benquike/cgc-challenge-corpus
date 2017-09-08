@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -47,12 +47,12 @@
 #ifdef PATCHED_1
 #define READ_PARAM(_input, _length, _parambuf) \
     do { \
-        fread(_input, 2, stdin); \
+        __fread(_input, 2, stdin); \
         _length = *((unsigned short *)(_input)); \
         if (_length <= 1024) { \
-            fread(_input, _length, stdin); \
+            __fread(_input, _length, stdin); \
             _parambuf = new char[_length]; \
-            memcpy(_parambuf, _input, _length); \
+            __memcpy(_parambuf, _input, _length); \
         } else {\
             _length = 0; \
         } \
@@ -60,12 +60,12 @@
 #else
 #define READ_PARAM(_input, _length, _parambuf) \
     do { \
-        fread(_input, 2, stdin); \
+        __fread(_input, 2, stdin); \
         _length = *((unsigned short *)(_input)); \
         if (_length <= 1048) { \
-            fread(_input, _length, stdin); \
+            __fread(_input, _length, stdin); \
             _parambuf = new char[_length]; \
-            memcpy(_parambuf, _input, _length); \
+            __memcpy(_parambuf, _input, _length); \
         } else {\
             _length = 0; \
         } \
@@ -74,10 +74,10 @@
 
 #define READ_PARAM_G_INPUT(_length) \
     do { \
-        fread(g_input, 2, stdin); \
+        __fread(g_input, 2, stdin); \
         _length = *((unsigned short *)(g_input)); \
         if (_length <= 1024) { \
-            fread(g_input, _length, stdin); \
+            __fread(g_input, _length, stdin); \
         } else {\
             _length = 0; \
         } \
@@ -111,22 +111,22 @@ bool FindCachedUser(char *name, unsigned short name_length) {
 
 void WriteClientNeedsReauth() {
     unsigned short session_timeout_alert = CLIENT_SESSION_TIMEOUT_ALERT;
-    fwrite(&session_timeout_alert, sizeof(session_timeout_alert), stdout);
+    __fwrite(&session_timeout_alert, sizeof(session_timeout_alert), stdout);
 }
 
 void WriteClientSuccess() {
     unsigned short client_success = CLIENT_SUCCESS;
-    fwrite(&client_success, sizeof(client_success), stdout);
+    __fwrite(&client_success, sizeof(client_success), stdout);
 }
 
 void WriteClientFail() {
     unsigned short client_fail = CLIENT_FAIL;
-    fwrite(&client_fail, sizeof(client_fail), stdout);
+    __fwrite(&client_fail, sizeof(client_fail), stdout);
 }
 
 void WriteClientLogoutAlert() {
     unsigned short client_logout_alert = CLIENT_LOGOUT_ALERT;
-    fwrite(&client_logout_alert, sizeof(client_logout_alert), stdout);
+    __fwrite(&client_logout_alert, sizeof(client_logout_alert), stdout);
 }
 
 bool UserLogin() {
@@ -215,10 +215,10 @@ bool RegisterUser() {
         PRINTF("Assigned Password Length: ");
         _PRINTF("\n");
         pass_length = g_cur_user->pass_length();
-        fwrite(&pass_length, sizeof(pass_length), stdout);
+        __fwrite(&pass_length, sizeof(pass_length), stdout);
         PRINTF("Assigned Password: ");
         _PRINTF("\n");
-        fwrite(g_cur_user->pass(), g_cur_user->pass_length(), stdout);
+        __fwrite(g_cur_user->pass(), g_cur_user->pass_length(), stdout);
         PRINTF("\n");
         delete user;
         return true;
@@ -337,12 +337,12 @@ void RemoteAdminTokenRequest() {
 
     int token = 0;
     unsigned short page_idx = 0;
-    fread(g_input, 2, stdin);
+    __fread(g_input, 2, stdin);
     page_idx = *((unsigned short *)(g_input));
     if (BrcClient::RemoteAdminTokenRequest(g_cur_user, page_idx, &token)) {
         PRINTF("Successfully received token from server\n");
         WriteClientSuccess();
-        fwrite(&token, sizeof(token), stdout);
+        __fwrite(&token, sizeof(token), stdout);
         PRINTF("\n");
     } else {
         PRINTF("Could not retrieve token from server\n");
@@ -364,8 +364,8 @@ bool Reauthenticate() {
 extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
     bool is_running = true;
 
-    FILE *cb_s_in = fopen(SERVER_FD, 0);
-    FILE *cb_s_out = fopen(SERVER_FD, 1);
+    __FILE *cb_s_in = __fopen(SERVER_FD, 0);
+    __FILE *cb_s_out = __fopen(SERVER_FD, 1);
     unsigned short client_cmd_id = 0;
     int session_timeout = SESSION_TIMEOUT_VAL;
 
@@ -396,7 +396,7 @@ still_running:
             }
         }
 
-        if (fread(g_input, 2, stdin) != 2)
+        if (__fread(g_input, 2, stdin) != 2)
             return 0;
         client_cmd_id = *((unsigned short *)(g_input));
         PRINTF("The cmd id recv'd is: %d\n", client_cmd_id);

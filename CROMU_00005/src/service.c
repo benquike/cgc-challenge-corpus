@@ -4,7 +4,7 @@ Author: James Nuttall (james@cromulence.co)
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -67,7 +67,7 @@ void displayboard(void)
         {
             transmit(0, (char*)&(*ptr_array)[j][i], 1, NULL);
         }
-        printf("\n");
+        __printf("\n");
     }
 }
 
@@ -159,7 +159,7 @@ int checkNoCollision(Move move)
 	if (getColor(piece) == BLACK_PIECE && getColor(getPiece(move.dst)) == BLACK_PIECE)
 		return COLLISION;
 
-	// determine squares between src and dst on a FILE
+	// determine squares between src and dst on a __FILE
 	if (move.src.x == move.dst.x)
 	{
 		if (move.src.y < move.dst.y)
@@ -431,7 +431,7 @@ int performMove(Move move)
 				return 1;
 			}
 		}
-		// moving on RANK or FILE
+		// moving on RANK or __FILE
 		if (dst.x == src.x || dst.y == src.y)
 		{
 			if (checkNoCollision(move))
@@ -460,7 +460,7 @@ int performMove(Move move)
 	}
 	if (piece == ROOK_BLACK || piece == ROOK_WHITE)
 	{
-		// moving on RANK or FILE
+		// moving on RANK or __FILE
 		if (dst.x == src.x || dst.y == src.y)
 		{
 			if (checkNoCollision(move))
@@ -516,7 +516,7 @@ int parseUserInput(Move *movers)
 
 	Move tmp = {77,77,77,77}; // arbitrary default values. used later to ensure we received values
 
-	bzero(buf,15);
+	__bzero(buf,15);
 	int status;
 	status = receive(STDIN, buf, sizeof(buf) - 1, &size);
 	if (status != 0)
@@ -548,13 +548,13 @@ int parseUserInput(Move *movers)
 	}
 	else if (size != 7) 
 	{
-		printf("incorrect input\n");
+		__printf("incorrect input\n");
 		return INVALID_INPUT;
 	}
 
 	if (!verifyFormat(buf, size))
 	{
-		printf("incorrect input\n");
+		__printf("incorrect input\n");
 		return INVALID_INPUT;
 	}
 
@@ -563,13 +563,13 @@ int parseUserInput(Move *movers)
 		if (buf[i] <= '9' && buf[i] >= '0')
 		{
 			if (i == 0)
-				tmp.src.x = atoi(&buf[i]);
+				tmp.src.x = __atoi(&buf[i]);
 			else if (i == 2)
-				tmp.src.y = atoi(&buf[i]);
+				tmp.src.y = __atoi(&buf[i]);
 			else if (i == 4)
-				tmp.dst.x = atoi(&buf[i]);
+				tmp.dst.x = __atoi(&buf[i]);
 			else if (i == 6)
-				tmp.dst.y = atoi(&buf[i]);
+				tmp.dst.y = __atoi(&buf[i]);
 		}
 	}
 	
@@ -604,15 +604,15 @@ int main(void)
 	{
 		// print prompt
 		if (current_team == WHITE_TEAM)
-			printf(PROMPT_WHITE);
+			__printf(PROMPT_WHITE);
 		else
-			printf(PROMPT_BLACK);
+			__printf(PROMPT_BLACK);
 
 		// receive: x,y x,y
 		int ret = parseUserInput(&move);
 		if (ret == INVALID_INPUT)
 		{
-			printf(WARNING);
+			__printf(WARNING);
 			continue;
 		}
 		else if (ret == DISPLAY_BOARD)
@@ -622,7 +622,7 @@ int main(void)
 		}
 		else if (ret == END_GAME)
 		{
-			printf("good game\n");
+			__printf("good game\n");
 			_terminate(0);
 		}
 		else if (ret == INPUT_ERROR)
@@ -633,7 +633,7 @@ int main(void)
 		if(performMove(move))
 		{
 			// Move suceeded
-			printf(OK);
+			__printf(OK);
 
 			// Switch teams
 			if (current_team == WHITE_TEAM)
@@ -644,7 +644,7 @@ int main(void)
 		else
 		{
 			// Move was illegal
-			printf(NO);
+			__printf(NO);
 		}
 	}
 

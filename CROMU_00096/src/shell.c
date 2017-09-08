@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -43,9 +43,9 @@ void ListFilesRecurse(FileNode *file, int level)
   }
   for (int i=0; i < level; i++)
   {
-    printf("    ");
+    __printf("    ");
   }
-  printf("$s ($d)\n", file->name,  GetFileID(file));
+  __printf("$s ($d)\n", file->name,  GetFileID(file));
   ListFilesRecurse(file->child, level+1);
   ListFilesRecurse(file->next, level);
 }
@@ -66,7 +66,7 @@ void ListFilesLong(FileNode *parent)
       ExtractLinkTargetAndID((ShortcutFileHeader *)file->contents, parent,  &resourceSL, &index);
     }
     char *resource = LookupResource(resourceSL, index);
-    printf("$s \t$d\t$s\n", GetFileName(file), GetFileSize(file), resource);
+    __printf("$s \t$d\t$s\n", GetFileName(file), GetFileSize(file), resource);
     file = file->next;
   }
 }
@@ -93,7 +93,7 @@ void ExtractLinkTargetAndID(ShortcutFileHeader *sh, FileNode *parent, Executable
   }
 
   // Verify separator is not present
-  char *sepPtr = strchr(sh->targetName, '+');
+  char *sepPtr = __strchr(sh->targetName, '+');
   if (sepPtr != NULL)
   {
     return;
@@ -102,21 +102,21 @@ void ExtractLinkTargetAndID(ShortcutFileHeader *sh, FileNode *parent, Executable
   char fileAndID[77];
   sprintf(fileAndID, "$s+$d", sh->targetName, newIndex);
 #ifdef PATCHED_1
-  char *pFileAndID = calloc(MAX_FILENAME + 4);
-  strncpy(pFileAndID, fileAndID, MAX_FILENAME + 3);
+  char *pFileAndID = __calloc(MAX_FILENAME + 4);
+  __strncpy(pFileAndID, fileAndID, MAX_FILENAME + 3);
 #else
-  char *pFileAndID = calloc(MAX_FILENAME + 3);
-  strncpy(pFileAndID, fileAndID, MAX_FILENAME + 2);
+  char *pFileAndID = __calloc(MAX_FILENAME + 3);
+  __strncpy(pFileAndID, fileAndID, MAX_FILENAME + 2);
 #endif
 
   // Check for separator
-  char *indexPtr = strchr(pFileAndID, '+');
+  char *indexPtr = __strchr(pFileAndID, '+');
   if (indexPtr == NULL)
   {
     return;
   }
   
-  newIndex = atoi(indexPtr + 1);
+  newIndex = __atoi(indexPtr + 1);
 
   // Attempt usage of this flavor file
   if (newIndex >= 0)
@@ -137,20 +137,20 @@ ExecutableInMemory *VerifyAndLoadFlavorFile(char *name, FileNode *parent)
 { 
   // check name fits with .listofiles added
   char listofiles[65];
-  memset(listofiles, 0, 65);
-  strncpy(listofiles, name, 64);
-  char *sepIndex = strchr(listofiles, '_');
+  __memset(listofiles, 0, 65);
+  __strncpy(listofiles, name, 64);
+  char *sepIndex = __strchr(listofiles, '_');
   if (sepIndex)
   {
     *sepIndex = 0;
   } else {
-    sepIndex = listofiles + strlen(listofiles);
+    sepIndex = listofiles + ___strlen(listofiles);
   }
-  if (strlen(listofiles) > 64 - strlen(".listofiles"))
+  if (___strlen(listofiles) > 64 - ___strlen(".listofiles"))
   {
     return NULL;
   }
-  strcpy(sepIndex, ".listofiles");
+  __strcpy(sepIndex, ".listofiles");
   FileNode *listFile =  FindFile(listofiles, parent);
 
   // check file exists
@@ -190,7 +190,7 @@ int main()
   InitializeOSFiles();
 
   while (activeSession) {
-    printf(">");
+    __printf(">");
     // Receive a command
     char cmd = ReceiveCommand();
     switch(cmd)
@@ -204,7 +204,7 @@ int main()
         cString *contents = ReceiveCString(MAX_FILE_SIZE);
         if (CreateFile(name->string, type, contents->length, contents->string, cwd) != FS_SUCCESS)
         {
-          printf("FAILED\n");
+          __printf("FAILED\n");
         } 
         DestroyCString(name);
         DestroyCString(contents);
@@ -222,8 +222,8 @@ int main()
         if (file)
         {
           char *contents = ReadFile(file);
-          printf("$s\n", contents);
-          free(contents);
+          __printf("$s\n", contents);
+          __free(contents);
         }
         DestroyCString(name);
         break;
@@ -233,7 +233,7 @@ int main()
         cString *name = ReceiveCString(64);
         if ((DeleteFile(name->string, cwd)) != FS_SUCCESS)
         {
-          printf("FAILED\n");
+          __printf("FAILED\n");
         }
         DestroyCString(name);
         break;
@@ -253,20 +253,20 @@ int main()
         cString *name = ReceiveCString(64);
         if(CreateFile(name->string, FILE_DIRECTORY, 0, 0, cwd) != FS_SUCCESS)
         {
-          printf("FAILED\n");
+          __printf("FAILED\n");
         }
         DestroyCString(name);
         break;
       }
       case PWD:
       {
-        printf("$s$s\n", GetFilePath(cwd), GetFileName(cwd));
+        __printf("$s$s\n", GetFilePath(cwd), GetFileName(cwd));
         break;
       }
       case CHANGE_DIR:
       {
         cString *name = ReceiveCString(64);
-        if (strcmp("upone", name->string) == 0)
+        if (__strcmp("upone", name->string) == 0)
         {
           cwd = GetParent(cwd);
           break;
@@ -276,7 +276,7 @@ int main()
         {
           cwd = newDir;
         } else {
-          printf("File Not Found\n");
+          __printf("File Not Found\n");
         }
         break;
       }
@@ -284,10 +284,10 @@ int main()
         activeSession = 0;
         break;
       default:
-        printf("Invalid Command\n");
+        __printf("Invalid Command\n");
     }
   }
 
-  printf("\n");
+  __printf("\n");
 }
 

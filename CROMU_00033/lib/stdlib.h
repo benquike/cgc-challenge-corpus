@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -29,30 +29,30 @@ THE SOFTWARE.
 #include <libcgc.h>
 #include "malloc.h"
 
-int isspace( int c );
-int isdigit( int c );
-int islower( int c );
-int isupper( int c );
-int isalpha( int c );
+int __isspace( int c );
+int __isdigit( int c );
+int __islower( int c );
+int __isupper( int c );
+int __isalpha( int c );
 int isascii( int c );
-int isnan( double val );
-int isinf( double val );
+int __isnan( double val );
+int __isinf( double val );
 int tolower( int c );
 int toupper( int c );
-double atof(const char *str);
-int atoi(const char *str);
+double __atof(const char *str);
+int __atoi(const char *str);
 int abs( int );
 
-int strcmp( char *str1, char *str2 );
-char *strchr( char *src, char c);
-char *strcpy( char *dest, char *src );
-char *strcat( char *dest, char *src );
-char *strncat( char *dest, char *src, size_t n );
-char *strncpy( char *dest, const char *src, size_t num );
-size_t strlen( const char *str );
-int printf( const char *fmt, ... );
+int __strcmp( char *str1, char *str2 );
+char *__strchr( char *src, char c);
+char *__strcpy( char *dest, char *src );
+char *__strcat( char *dest, char *src );
+char *__strncat( char *dest, char *src, size_t n );
+char *__strncpy( char *dest, const char *src, size_t num );
+size_t __strlen( const char *str );
+int __printf( const char *fmt, ... );
 
-void* memcpy( void *dest, void *src, size_t numbytes );
-void* memset( void *dest, int value, size_t num );
+void* __memcpy( void *dest, void *src, size_t numbytes );
+void* __memset( void *dest, int value, size_t num );
 
 #endif // __STDLIB_H__

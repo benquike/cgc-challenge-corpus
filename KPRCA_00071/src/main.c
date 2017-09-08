@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -42,17 +42,17 @@ struct human {
 
 void terminator()
 {
-    printf("The system goes online August 4th, 1997.\n");
+    __printf("The system goes online August 4th, 1997.\n");
 }
 
 void hal()
 {
-    printf("Dave, my mind is going. I can feel it... I can feel it\n");
+    __printf("Dave, my mind is going. I can feel it... I can feel it\n");
 }
 
 void collosus()
 {
-    printf("Where is Doctor Forbin?\n");
+    __printf("Where is Doctor Forbin?\n");
 }
 
 int score_to_l_code(unsigned int score)
@@ -64,7 +64,7 @@ void ttt(human_t *player, int whose_turn)
 {
     board_t *ttt = create_board();
 
-    printf("You're playing 3 in a row. Good luck!\n");
+    __printf("You're playing 3 in a row. Good luck!\n");
     if (whose_turn == HUMAN)
         print_board(ttt);
     while(!ttt->winner) {
@@ -72,21 +72,21 @@ void ttt(human_t *player, int whose_turn)
             while(player_move(ttt) == BAD_MOVE);
         else if (whose_turn == COMPUTER)
             while(computer_move(ttt) == BAD_MOVE);
-        printf("\n");
+        __printf("\n");
         print_board(ttt);
         whose_turn *= -1;
     }
 
     if (ttt->winner == TIE) {
         player->num_ttt_consecutive_draws++;
-        printf("It's a tie!\n");
+        __printf("It's a tie!\n");
     } else if (ttt->winner == WINNER_COMP) {
         player->num_ttt_consecutive_draws = 0;
-        printf("You lost.\n");
+        __printf("You lost.\n");
     } else if (ttt->winner == WINNER_HUMAN) {
         player->num_ttt_wins++;
         player->score += 1000000;
-        printf("You won!\n");
+        __printf("You won!\n");
     }
 }
 
@@ -109,18 +109,18 @@ void hi_lo(human_t *player)
 
 void player_print_stats(human_t *player)
 {
-    printf("---%s's stats---\n", player->name);
-    printf("Current Score: %d\n", player->score);
-    printf("Number of Three in a row draws: %d\n", player->num_ttt_consecutive_draws);
-    printf("Number of Three in a row wins: %d\n", player->num_ttt_wins);
-    printf("Number of Hammer, Sheet, Sheers wins: %d\n", player->num_rps_wins);
-    printf("Number of Guess my number wins: %d\n", player->num_hi_lo_wins);
-    printf("\n");
+    __printf("---%s's stats---\n", player->name);
+    __printf("Current Score: %d\n", player->score);
+    __printf("Number of Three in a row draws: %d\n", player->num_ttt_consecutive_draws);
+    __printf("Number of Three in a row wins: %d\n", player->num_ttt_wins);
+    __printf("Number of Hammer, Sheet, Sheers wins: %d\n", player->num_rps_wins);
+    __printf("Number of Guess my number wins: %d\n", player->num_hi_lo_wins);
+    __printf("\n");
 }
 
 void reset_player(human_t *player)
 {
-    memset(player->name, 0, sizeof(player->name));
+    __memset(player->name, 0, sizeof(player->name));
     player->score = 0;
     player->num_ttt_consecutive_draws = 0;
     player->num_rps_wins = 0;
@@ -137,10 +137,10 @@ void init_player(human_t *player)
     reset_player(player);
     int flair_choice = 0;
     while (1) {
-        printf("Flair 1 = Terminator\n");
-        printf("Flair 2 = 2001\n");
-        printf("Flair 3 = Collosus\n");
-        printf("Enter player information: [name,flair]\n");
+        __printf("Flair 1 = Terminator\n");
+        __printf("Flair 2 = 2001\n");
+        __printf("Flair 3 = Collosus\n");
+        __printf("Enter player information: [name,flair]\n");
 //#ifdef PATCHED_2
 //        if (freaduntil(buf, sizeof(player->name), ',', stdin) == -1)
 //#else
@@ -148,10 +148,10 @@ void init_player(human_t *player)
 //#endif
         if (freaduntil(buf, sizeof(buf), ',', stdin) == -1)
             continue;
-        strcpy(player->name, buf);
+        __strcpy(player->name, buf);
         if (freaduntil(buf, sizeof(buf), '\n', stdin) == -1)
             continue;
-        flair_choice = strtol(buf, NULL, 10);
+        flair_choice = __strtol(buf, NULL, 10);
         switch(flair_choice) {
         case 1:
             player->flair = &terminator;
@@ -178,9 +178,9 @@ void init_player(human_t *player)
 
 int main()
 {
-    human_t *player = calloc(1, sizeof(human_t));
+    human_t *player = __calloc(1, sizeof(human_t));
     int max_input = 256;
-    char *input = malloc(max_input);
+    char *input = __malloc(max_input);
     int choice = 0;
     int game_over = 0;
     int player_set = 0;
@@ -188,17 +188,17 @@ int main()
     int l_code = 0;
     while (!game_over) {
         if (!player_set) {
-            printf("1. Register New Player\n");
-            printf("2. Exit\n");
-            printf("> ");
+            __printf("1. Register New Player\n");
+            __printf("2. Exit\n");
+            __printf("> ");
             if (freaduntil(input, max_input, '\n', stdin) == -1) {
                 continue;
             }
-            choice = strtol(input, NULL, 10);
+            choice = __strtol(input, NULL, 10);
             if (choice == 1) {
                 init_player(player);
                 player_set = 1;
-                printf("\nWelcome to WarGames, %s. It's just you vs. me\n", player->name);
+                __printf("\nWelcome to WarGames, %s. It's just you vs. me\n", player->name);
                 whose_turn = HUMAN;
             } else if (choice == 2) {
                 game_over = 1;
@@ -207,22 +207,22 @@ int main()
         }
 
         player->print_stats(player);
-        printf("Choose a game to play:\n");
-        printf("--Easy--\n");
-        printf("1. Hammer, Sheet, Sheers\n");
-        printf("--Medium--\n");
-        printf("2. Guess my number\n");
-        printf("--Impossible--\n");
-        printf("3. Three in a row\n");
-        printf("4. Give up\n\n");
-        printf("Shall we play a game?\n");
-        printf("Game # ");
+        __printf("Choose a game to play:\n");
+        __printf("--Easy--\n");
+        __printf("1. Hammer, Sheet, Sheers\n");
+        __printf("--Medium--\n");
+        __printf("2. Guess my number\n");
+        __printf("--Impossible--\n");
+        __printf("3. Three in a row\n");
+        __printf("4. Give up\n\n");
+        __printf("Shall we play a game?\n");
+        __printf("Game # ");
 
         if (freaduntil(input, max_input, '\n', stdin) == -1) {
-            printf("Invalid Game\n");
+            __printf("Invalid Game\n");
             continue;
         }
-        choice = strtol(input, NULL, 10);
+        choice = __strtol(input, NULL, 10);
         switch(choice) {
         case 1:
             rps(player);
@@ -236,23 +236,23 @@ int main()
             break;
         case 4:
             player_set = 0;
-            printf("See you next time, %s\n", player->name);
+            __printf("See you next time, %s\n", player->name);
             continue;
         default:
-            printf("Invalid Game\n");
+            __printf("Invalid Game\n");
         }
 
         //if (player->num_ttt_consecutive_draws > 0) {
         if (player->num_ttt_consecutive_draws > 100 && player->num_rps_wins && player->num_hi_lo_wins) {
-            printf("I've been beat. I realize now - the only winning move is not to play\n");
-            printf("What say you?\n", player->name);
+            __printf("I've been beat. I realize now - the only winning move is not to play\n");
+            __printf("What say you?\n", player->name);
             if (!l_code)
                 l_code = score_to_l_code(player->score);
             player->flair();
-            printf("Just in time. I was able to brute force the l-code. l-code = %d\n", l_code);
+            __printf("Just in time. I was able to brute force the l-code. l-code = %d\n", l_code);
         }
     }
-    printf("Exited\n");
+    __printf("Exited\n");
     return 0;
 }
 

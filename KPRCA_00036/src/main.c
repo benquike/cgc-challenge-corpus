@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -41,10 +41,10 @@ static int resize_buf(void **buf, size_t old_size)
         return 0;
 
     int new_size = old_size * 2;
-    char *new_buf = malloc(new_size);
+    char *new_buf = __malloc(new_size);
     if (*buf) {
-        memcpy(new_buf, *buf, old_size);
-        free(*buf);
+        __memcpy(new_buf, *buf, old_size);
+        __free(*buf);
     }
     *buf = new_buf;
     return new_size;
@@ -119,7 +119,7 @@ static int create_text(int fd, unsigned char **text)
     return len - 2;
 bad_text:
     if (buf_size)
-        free(*text);
+        __free(*text);
     *text = NULL;
     return 0;
 }
@@ -127,41 +127,41 @@ bad_text:
 void print_menu(match_type_e match_type, unsigned char *text, unsigned char *trex)
 {
     unsigned char temp;
-    printf("Text Searcher: Main Menu\n");
-    printf("1. Enter Text\n");
-    printf("2. Enter Search String\n");
-    printf("3. Line Search - Partial Matches\n");
-    printf("4. Line Search - Exact Matches\n");
-    printf("5. Print Text\n");
-    printf("6. Print Search String\n");
-    printf("7. Search Text\n");
-    printf("8. Quit\n\n");
+    __printf("Text Searcher: Main Menu\n");
+    __printf("1. Enter Text\n");
+    __printf("2. Enter Search String\n");
+    __printf("3. Line Search - Partial Matches\n");
+    __printf("4. Line Search - Exact Matches\n");
+    __printf("5. Print Text\n");
+    __printf("6. Print Search String\n");
+    __printf("7. Search Text\n");
+    __printf("8. Quit\n\n");
     if (text) {
-        if (strlen(text) > 15) {
+        if (__strlen(text) > 15) {
             temp = text[15];
             text[15] = '\0';
-            printf("[Text=%s...]\n", text);
+            __printf("[Text=%s...]\n", text);
             text[15] = temp;
         } else {
-            printf("[Text=%s]\n", text);
+            __printf("[Text=%s]\n", text);
         }
     }
-    if (strlen(trex)) {
-        if (strlen(trex) > 15) {
+    if (__strlen(trex)) {
+        if (__strlen(trex) > 15) {
             temp = trex[15];
             trex[15] = '\0';
-            printf("[SearchString=%s...]\n", trex);
+            __printf("[SearchString=%s...]\n", trex);
             trex[15] = temp;
         } else {
-            printf("[SearchString=%s]\n", trex);
+            __printf("[SearchString=%s]\n", trex);
         }
     }
 
     if (match_type == PARTIAL)
-        printf("[LineMatching=Partial]\n");
+        __printf("[LineMatching=Partial]\n");
     if (match_type == ALL)
-        printf("[LineMatching=Exact]\n");
-    printf("Select: ");
+        __printf("[LineMatching=Exact]\n");
+    __printf("Select: ");
 }
 
 static void test()
@@ -170,25 +170,25 @@ static void test()
     unsigned char *rpn = NULL;
     unsigned char *test_string = "aaaaaaaa";
     unsigned char *trex = "a";
-    int retcode = retorpn(trex, strlen(trex) + 1, &rpn);
-    retcode = retorpn(trex, strlen(trex) + 1, &rpn);
+    int retcode = retorpn(trex, __strlen(trex) + 1, &rpn);
+    retcode = retorpn(trex, __strlen(trex) + 1, &rpn);
     if (retcode >= 0)
         nfa = evalrpn(rpn);
     else
-        printf("Invalid search string\n");
+        __printf("Invalid search string\n");
     if (nfa == NULL)
-        printf("Bad rpn\n");
+        __printf("Bad rpn\n");
     debug_state(nfa);
-    printf("trex = %s\n", trex);
-    printf("rpn = %s\n", rpn);
-    printf("Test string = %s\n", test_string);
+    __printf("trex = %s\n", trex);
+    __printf("rpn = %s\n", rpn);
+    __printf("Test string = %s\n", test_string);
 
-    printf("Partial Matching:\n");
+    __printf("Partial Matching:\n");
     match(nfa, test_string, PARTIAL);
-    printf("Full Line Matching:\n");
+    __printf("Full Line Matching:\n");
     match(nfa, test_string, ALL);
 
-    exit(0);
+    __exit(0);
 }
 
 int main(void)
@@ -203,21 +203,21 @@ int main(void)
     init_trex();
 
     do {
-        printf("\n");
+        __printf("\n");
         print_menu(match_type, text, trex);
         selection = readopt(STDIN);
         //fdprintf(2, "Selection = %c\n", selection);
         switch(selection) {
             case '1':
-                printf("Enter text to search\n");
+                __printf("Enter text to search\n");
                 if(text) {
-                    free(text);
+                    __free(text);
                     text = NULL;
                 }
                 text_len = create_text(STDIN, &text);
                 break;
             case '2':
-                printf("Enter search string\n");
+                __printf("Enter search string\n");
                 trex_len = readtrex(STDIN, trex, MAX_SEARCH_STR_SIZE);
                 if (trex_len < 0)
                 {
@@ -233,33 +233,33 @@ int main(void)
                 break;
             case '5':
                 if (text)
-                    printf("--Text--\n%s\n", text);
+                    __printf("--Text--\n%s\n", text);
                 else
-                    printf("--Text--\n\n", text);
+                    __printf("--Text--\n\n", text);
                 break;
             case '6':
-                if (strlen(trex))
-                    printf("--Search String--\n%s\n", trex);
+                if (__strlen(trex))
+                    __printf("--Search String--\n%s\n", trex);
                 else
-                    printf("--Search String--\n\n", trex);
+                    __printf("--Search String--\n\n", trex);
                 break;
             case '7':
                 if (!text_len) {
-                    printf("Input text has not been received\n");
+                    __printf("Input text has not been received\n");
                     break;
                 } else if(!trex_len) {
-                    printf("Search text has not been received\n");
+                    __printf("Search text has not been received\n");
                     break;
                 }
-                retcode = retorpn(trex, strlen(trex) + 1, &rpn);
+                retcode = retorpn(trex, __strlen(trex) + 1, &rpn);
                 if (retcode >= 0) {
                     nfa = evalrpn(rpn);
                 } else {
-                    printf("Invalid search string\n");
+                    __printf("Invalid search string\n");
                     break;
                 }
                 if (nfa == NULL) {
-                    printf("Bad rpn\n");
+                    __printf("Bad rpn\n");
                     break;
                 }
                 match(nfa, text, match_type);
@@ -267,10 +267,10 @@ int main(void)
             case '8':
                 break;
             default:
-                printf("Bad Selection\n");
+                __printf("Bad Selection\n");
         }
     } while (selection != '8');
 
-    printf("Exiting...\n");
+    __printf("Exiting...\n");
     return 0;
 }

@@ -1,7 +1,7 @@
 /*
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -65,7 +65,7 @@ int fpti_add_pixel( pfpti_image_data fid, int x, int y, char *image, int xlen, i
 	}
 
 	if ( pixel_index > xlen * ylen ) {
-		printf("[ERROR] Pixel beyond image: @d > @d\n", pixel_index, xlen*ylen);
+		__printf("[ERROR] Pixel beyond image: @d > @d\n", pixel_index, xlen*ylen);
 		return 0;
 	}
 
@@ -97,14 +97,14 @@ int fpti_display_img( pfpti_image_data fid )
 	}
 
 	if ( fpti_read_magic( fid ) == 0 ) {
-		//printf("magic failed\n");
+		//__printf("magic failed\n");
 		return 0;
 	}
 
 	xlen = fpti_read_xaxis( fid );
 
 	if ( !xlen ) {
-		//printf("xlen fail\n");
+		//__printf("xlen fail\n");
 		return xlen;
 	}
 
@@ -114,7 +114,7 @@ int fpti_display_img( pfpti_image_data fid )
 		return ylen;
 	}
 
-	//printf("Xlen: @d Ylen: @d\n", xlen, ylen);
+	//__printf("Xlen: @d Ylen: @d\n", xlen, ylen);
 
 	if ( fpti_read_ptype( fid, &ptype) == 0 ) {
 		ptype = 0;
@@ -123,7 +123,7 @@ int fpti_display_img( pfpti_image_data fid )
 
 	axist = fpti_read_axist( fid );
 
-	//printf("Axis: @d\n", axist);
+	//__printf("Axis: @d\n", axist);
 
 	if ( !axist ) {
 		return axist;
@@ -169,12 +169,12 @@ int fpti_display_img( pfpti_image_data fid )
 			miny = -((ylen/2) - ((ylen+1)%2));
 			break;
 		default:
-			printf("[ERROR] Invalid FPTI Axis Type\n");
+			__printf("[ERROR] Invalid FPTI Axis Type\n");
 			return 0;
 			break;
 	};		
 
-	//printf("maxx: @d minx: @d maxy: @d miny: @d\n", maxx, minx, maxy, miny);
+	//__printf("maxx: @d minx: @d maxy: @d miny: @d\n", maxx, minx, maxy, miny);
 
 	image_length = xlen * ylen;
 
@@ -182,14 +182,14 @@ int fpti_display_img( pfpti_image_data fid )
 		return 0;
 	}
 
-	memset( image, ' ', image_length);
+	__memset( image, ' ', image_length);
 	image[image_length] = '\x00';
 
 	while ( fpti_read_pixel( fid, &x, &y) ) {
-		//printf("@d, @d\n", x, y);
+		//__printf("@d, @d\n", x, y);
 
 		if ( x < minx || x > maxx ) {
-			printf("X out of bounds: @d\n", x );
+			__printf("X out of bounds: @d\n", x );
 			return 0;
 		}
 
@@ -199,7 +199,7 @@ int fpti_display_img( pfpti_image_data fid )
 #else
 		if ( y < miny && y > maxy ) {
 #endif
-			printf("Y out of bounds: @d\n", y );
+			__printf("Y out of bounds: @d\n", y );
 			return 0;
 		}
 
@@ -210,13 +210,13 @@ int fpti_display_img( pfpti_image_data fid )
 	
         for (int i = 0; i < image_length; i++) {
                 if (i%xlen == 0 && i != 0) {
-                        printf("\n");
+                        __printf("\n");
                 }
 
-                printf("@c", image[i]);
+                __printf("@c", image[i]);
         }
 
-	printf("\n");
+	__printf("\n");
 	return 1;
 }
 
@@ -397,7 +397,7 @@ int fpti_read_check( pfpti_image_data fid, int bitcount)
 	}
 
 	if ( fid->buffer == NULL ) {
-		//printf("null buff\n");
+		//__printf("null buff\n");
 		return 0;
 	}
 
@@ -409,7 +409,7 @@ int fpti_read_check( pfpti_image_data fid, int bitcount)
 	end_bits = (fid->cbyte * 8) + fid->cbit + bitcount;
 
 	if (total_bits < end_bits ) {
-		//printf("t: @d e: @d\n", total_bits, end_bits);
+		//__printf("t: @d e: @d\n", total_bits, end_bits);
 		return 0;
 	}
 

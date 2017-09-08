@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -80,7 +80,7 @@ static int readline(int fd, char *line, size_t line_size)
 
     for (i = 0; i < line_size; i++) {
         if (receive(fd, line, 1, &rx) != 0 || rx == 0)
-            exit(0);
+            __exit(0);
         if (*line == '\n')
             break;
         line++;
@@ -100,11 +100,11 @@ static int parse_num_steps(char *line, size_t line_size)
 {
     char *temp = line;
     while(*temp) {
-        if (!isdigit(*temp++))
+        if (!__isdigit(*temp++))
             return -1;
     }
 
-    int num_steps = strtol(line, NULL, 10);
+    int num_steps = __strtol(line, NULL, 10);
     if (num_steps < MIN_STEPS || num_steps > MAX_STEPS)
         return -1;
 
@@ -121,23 +121,23 @@ static coord_t parse_coordinate(char *line, size_t line_size)
     if (line != NULL)
         ycoord = line;
 
-    if(!xcoord || !ycoord || !strlen(xcoord) || !strlen(ycoord))
+    if(!xcoord || !ycoord || !__strlen(xcoord) || !__strlen(ycoord))
         return coord;
 
     char *temp = xcoord;
     while(*temp) {
-        if (!isdigit(*temp++))
+        if (!__isdigit(*temp++))
             return coord;
     }
 
     temp = ycoord;
     while(*temp) {
-        if (!isdigit(*temp++))
+        if (!__isdigit(*temp++))
             return coord;
     }
 
-    coord.x = strtol(xcoord, NULL, 10);
-    coord.y = strtol(ycoord, NULL, 10);
+    coord.x = __strtol(xcoord, NULL, 10);
+    coord.y = __strtol(ycoord, NULL, 10);
 
     return coord;
 }
@@ -147,20 +147,20 @@ static void take_shot()
     int score = 0;
     coord_t coord;
 
-    printf("Enter Shot Coordinates Ex: 100, 100:: ");
+    __printf("Enter Shot Coordinates Ex: 100, 100:: ");
     if (readline(STDIN, g_buf, MAX_LINE_SIZE) != 0) {
-        printf("Invalid coordinates\n");
+        __printf("Invalid coordinates\n");
         return;
     }
 
     coord = parse_coordinate(g_buf, MAX_LINE_SIZE);
     if (coord.x < 0 || coord.y < 0) {
-        printf("Invalid coordinates\n");
+        __printf("Invalid coordinates\n");
         return;
     }
 
     if (g_shots_left == 0) {
-        printf("You're out of bullets.\n");
+        __printf("You're out of bullets.\n");
         return;
     } else {
         score = g_game_board->shoot_pixel(coord);
@@ -168,10 +168,10 @@ static void take_shot()
     }
 
     if (score != 0) {
-        printf("Great shot! You got one\n");
-        printf("Scored: %d points\n", score);
+        __printf("Great shot! You got one\n");
+        __printf("Scored: %d points\n", score);
     } else {
-        printf("You missed. Better luck next time.\n");
+        __printf("You missed. Better luck next time.\n");
     }
 
     g_current_score += score;
@@ -181,25 +181,25 @@ static void place_bomb()
 {
     coord_t coord;
 
-    printf("Enter Bomb Coordinates Ex: 100, 100:: ");
+    __printf("Enter Bomb Coordinates Ex: 100, 100:: ");
     if (readline(STDIN, g_buf, MAX_LINE_SIZE) != 0) {
-        printf("Invalid coordinates\n");
+        __printf("Invalid coordinates\n");
         return;
     }
 
     coord = parse_coordinate(g_buf, MAX_LINE_SIZE);
     if (coord.x < 0 || coord.y < 0 || coord.x >= MAX_BOARD_WIDTH || coord.y >= MAX_BOARD_WIDTH) {
-        printf("Invalid coordinates\n");
+        __printf("Invalid coordinates\n");
         return;
     }
 
     if (g_bombs_left == 0) {
-        printf("You're out of bombs.\n");
+        __printf("You're out of bombs.\n");
     } else if (g_game_board->set_bomb(coord)) {
-        printf("Successfully planted bomb.\n");
+        __printf("Successfully planted bomb.\n");
         g_bombs_left--;
     } else {
-        printf("There is already a bomb here. Try somewhere else.\n");
+        __printf("There is already a bomb here. Try somewhere else.\n");
     }
 }
 
@@ -207,7 +207,7 @@ static void reveal_board()
 {
     g_board_revealed = TRUE;
     gld_print_board("GAME BOARD\n");
-    printf("\n");
+    __printf("\n");
 }
 
 static void place_runner(int x, int y)
@@ -289,28 +289,28 @@ static void new_game()
     g_num_steps_left = STEPS_PER_GAME;
     g_shots_left = SHOTS_PER_GAME;
     g_bombs_left = BOMBS_PER_GAME;
-    printf("New Game -- Ready, set, go!\n");
+    __printf("New Game -- Ready, set, go!\n");
 }
 
 
 static void run()
 {
     int num_steps = 0, score = 0;
-    printf("Enter amount of time to run: [%d-%d]:: ", MIN_STEPS, MAX_STEPS);
+    __printf("Enter amount of time to run: [%d-%d]:: ", MIN_STEPS, MAX_STEPS);
     if (readline(STDIN, g_buf, MAX_LINE_SIZE) != 0) {
-        printf("Invalid amount of time\n");
+        __printf("Invalid amount of time\n");
         return;
     }
 
     num_steps = parse_num_steps(g_buf, MAX_LINE_SIZE);
     if (num_steps == -1) {
-        printf("Invalid amount of time\n");
+        __printf("Invalid amount of time\n");
         return;
     }
 
     score = g_game_board->step(num_steps);
     if (score > 0)
-        printf("Nice bombing! You racked up %d points.\n", score);
+        __printf("Nice bombing! You racked up %d points.\n", score);
 
     g_num_steps_left = g_num_steps_left > num_steps ? g_num_steps_left - num_steps : 0;
     g_current_score += score;
@@ -319,7 +319,7 @@ static void run()
 
 static int quit()
 {
-    printf("Thanks for Playing\n");
+    __printf("Thanks for Playing\n");
     return 0;
 }
 
@@ -328,39 +328,39 @@ static void print_menu()
 {
     if (g_num_steps_left <= 0 || (!g_shots_left && !g_bombs_left)) {
         g_num_steps_left = 0;
-        printf("GAME OVER!\n");
+        __printf("GAME OVER!\n");
         if(g_current_score > g_high_score) {
-            printf("A new high score!!\n\n");
+            __printf("A new high score!!\n\n");
             g_high_score = g_current_score;
         }
-        printf("                              --GAME OVER--\n");
-        printf("1. New Game\n");
-        printf("2. Quit\n\n");
-        printf("High Score = %d\n\n", g_high_score);
+        __printf("                              --GAME OVER--\n");
+        __printf("1. New Game\n");
+        __printf("2. Quit\n\n");
+        __printf("High Score = %d\n\n", g_high_score);
     } else if (!g_board_revealed) {
-        printf("                              --Board: HIDDEN--\n");
-        printf("1. Shoot!\n");
-        printf("2. Reveal Board\n");
-        printf("3. New Game\n");
-        printf("4. Quit\n");
-        printf("Current Score = %d | Total Time Remaining: %d | High Score = %d \n",
+        __printf("                              --Board: HIDDEN--\n");
+        __printf("1. Shoot!\n");
+        __printf("2. Reveal Board\n");
+        __printf("3. New Game\n");
+        __printf("4. Quit\n");
+        __printf("Current Score = %d | Total Time Remaining: %d | High Score = %d \n",
                 g_current_score, g_num_steps_left, g_high_score);
-        printf("Shots Remaining: %d | Bombs Remaining: %d\n\n",
+        __printf("Shots Remaining: %d | Bombs Remaining: %d\n\n",
                 g_shots_left, g_bombs_left);
     } else {
-        printf("                              --Board: REVEALED--\n");
-        printf("1. Place Bomb\n");
-        printf("2. Reveal Board\n");
-        printf("3. Let them Run!\n");
-        printf("4. New Game\n");
-        printf("5. Quit\n");
-        printf("Current Score = %d | Total Time Remaining: %d | High Score = %d \n",
+        __printf("                              --Board: REVEALED--\n");
+        __printf("1. Place Bomb\n");
+        __printf("2. Reveal Board\n");
+        __printf("3. Let them Run!\n");
+        __printf("4. New Game\n");
+        __printf("5. Quit\n");
+        __printf("Current Score = %d | Total Time Remaining: %d | High Score = %d \n",
                 g_current_score, g_num_steps_left, g_high_score);
-        printf("Shots Remaining: %d | Bombs Remaining: %d\n\n",
+        __printf("Shots Remaining: %d | Bombs Remaining: %d\n\n",
                 g_shots_left, g_bombs_left);
     }
 
-    printf("Selection-: ");
+    __printf("Selection-: ");
 }
 
 static int game_selection()
@@ -368,7 +368,7 @@ static int game_selection()
     char choice = readopt(STDIN);
 
     if (choice == -1) {
-        printf("Bad Input\n");
+        __printf("Bad Input\n");
         return -1;
     }
 
@@ -381,7 +381,7 @@ static int game_selection()
             quit();
             return 0;
         default:
-            printf("Bad Choice\n");
+            __printf("Bad Choice\n");
             return -1;
         }
     } else if (!g_board_revealed) {
@@ -399,7 +399,7 @@ static int game_selection()
             quit();
             return 0;
         default:
-            printf("Bad Choice\n");
+            __printf("Bad Choice\n");
             return -1;
         }
     } else {
@@ -420,7 +420,7 @@ static int game_selection()
             quit();
             return 0;
         default:
-            printf("Bad Choice\n");
+            __printf("Bad Choice\n");
             return -1;
         }
     }
@@ -432,21 +432,21 @@ static void init_randomness()
     char *temp;
 
 try_again:
-    printf("Before we begin. Enter a number [1 - 4294967295]\n"     \
+    __printf("Before we begin. Enter a number [1 - 4294967295]\n"     \
             "Or any number. We'll figure it out: ");
 
     while (readline(STDIN, g_buf, MAX_LINE_SIZE) != 0) {
-        printf("Bad input\n");
+        __printf("Bad input\n");
     }
 
     temp = g_buf;
     while(temp && *temp) {
-        if(!isdigit(*temp++)) {
-            printf("Invalid number\n");
+        if(!__isdigit(*temp++)) {
+            __printf("Invalid number\n");
             goto try_again;
         }
     }
-    a = strtol(g_buf, NULL, 10);
+    a = __strtol(g_buf, NULL, 10);
 }
 int main() {
     init_randomness();
@@ -458,6 +458,6 @@ int main() {
         status = game_selection();
     } while (status);
 
-    printf("EXITING...\n");
+    __printf("EXITING...\n");
     return 0;
 }

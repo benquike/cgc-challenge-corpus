@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -116,7 +116,7 @@ uint16_t NewContact(uint8_t NewDevice) {
 	// Add the new device
 	Devices[NewDevice].Type = DEVICE_CONTACT;
 	Devices[NewDevice].DeviceId = DeviceId;
-	if ((NewContact = (pContact)calloc(sizeof(Contact))) == NULL) {
+	if ((NewContact = (pContact)__calloc(sizeof(Contact))) == NULL) {
 		return(0);
 	}
 	NewContact->Mode = Mode;
@@ -140,7 +140,7 @@ uint16_t NewMotion(uint8_t NewDevice) {
 	// Add the new device
 	Devices[NewDevice].Type = DEVICE_MOTION;
 	Devices[NewDevice].DeviceId = DeviceId;
-	if ((NewMotion = (pMotion)calloc(sizeof(Motion))) == NULL) {
+	if ((NewMotion = (pMotion)__calloc(sizeof(Motion))) == NULL) {
 		return(0);
 	}
 	NewMotion->State = State;
@@ -168,7 +168,7 @@ uint16_t NewHeat(uint8_t NewDevice) {
 	// Add the new device
 	Devices[NewDevice].Type = DEVICE_HEAT;
 	Devices[NewDevice].DeviceId = DeviceId;
-	if ((NewHeat = (pHeat)calloc(sizeof(Heat))) == NULL) {
+	if ((NewHeat = (pHeat)__calloc(sizeof(Heat))) == NULL) {
 		return(0);
 	}
 	NewHeat->CurrentTemperature = CurrentTemperature;
@@ -191,7 +191,7 @@ uint16_t NewSmoke(uint8_t NewDevice) {
 	// Add the new device
 	Devices[NewDevice].Type = DEVICE_SMOKE;
 	Devices[NewDevice].DeviceId = DeviceId;
-	if ((NewSmoke = (pSmoke)calloc(sizeof(Smoke))) == NULL) {
+	if ((NewSmoke = (pSmoke)__calloc(sizeof(Smoke))) == NULL) {
 		return(0);
 	}
 	NewSmoke->State = State;
@@ -237,7 +237,7 @@ uint8_t DeleteDevice(uint16_t DeviceId) {
 	Devices[Target].Type = DEVICE_UNUSED;
 	Devices[Target].DeviceId = 0;
 	if (Devices[Target].Attributes) {
-		free(Devices[Target].Attributes);
+		__free(Devices[Target].Attributes);
 		Devices[Target].Attributes = NULL;
 	}
 
@@ -272,7 +272,7 @@ uint8_t GrantAccess(uint16_t DeviceId, uint8_t UserId) {
 
 	// allocate new attributes buffer if it's not already in place
 	if (!Devices[DeviceIndex].Attributes) {
-		if ((codes = (pAuthorizedCodes)calloc(sizeof(AuthorizedCodes))) == NULL) {
+		if ((codes = (pAuthorizedCodes)__calloc(sizeof(AuthorizedCodes))) == NULL) {
 			return(0);
 		}
 		Devices[DeviceIndex].Attributes = codes;
@@ -287,7 +287,7 @@ uint8_t GrantAccess(uint16_t DeviceId, uint8_t UserId) {
 			// found a open slot
 			NewCode = i;
 		}
-		if (!strcmp(codes->AccessCodes[i], Users[UserId].Pin) || !strcmp(codes->AccessCodes[i], Users[UserId].AccessCode)) {
+		if (!__strcmp(codes->AccessCodes[i], Users[UserId].Pin) || !__strcmp(codes->AccessCodes[i], Users[UserId].AccessCode)) {
 			// code is already in the list
 			return(1);
 		}
@@ -299,11 +299,11 @@ uint8_t GrantAccess(uint16_t DeviceId, uint8_t UserId) {
 
 	// Add the pin to a Keypad device
 	if (Devices[DeviceIndex].Type == DEVICE_KEYPAD) {
-		strcpy(codes->AccessCodes[NewCode], Users[UserId].Pin);
+		__strcpy(codes->AccessCodes[NewCode], Users[UserId].Pin);
 		codes->AccessCodes[NewCode][PIN_LEN] = '\0';
 	// Add the access code to a swipe device
 	} else if (Devices[DeviceIndex].Type == DEVICE_SWIPE) {	
-		strcpy(codes->AccessCodes[NewCode], Users[UserId].AccessCode);
+		__strcpy(codes->AccessCodes[NewCode], Users[UserId].AccessCode);
 		codes->AccessCodes[NewCode][ACCESS_CODE_LEN] = '\0';
 	}
 
@@ -330,7 +330,7 @@ uint8_t RevokeAccess(uint8_t UserIndex) {
 		
 		// run through the codes on this device
 		for (j = 0; j < MAX_USERS; j++) {
-			if (!strcmp(codes->AccessCodes[j], Users[UserIndex].Pin) || !strcmp(codes->AccessCodes[j], Users[UserIndex].AccessCode)) {
+			if (!__strcmp(codes->AccessCodes[j], Users[UserIndex].Pin) || !__strcmp(codes->AccessCodes[j], Users[UserIndex].AccessCode)) {
 				// found matching code, remove it
 				codes->AccessCodes[j][0] = '\0';
 			}
@@ -358,7 +358,7 @@ uint8_t AddDeviceToAlarm(uint16_t DeviceId, uint16_t AlarmId) {
 
 	// allocate new attributes buffer if it's not already in place
 	if (!Devices[AlarmIndex].Attributes) {
-		if ((AA = (pAlarmAttributes)calloc(sizeof(AlarmAttributes))) == NULL) {
+		if ((AA = (pAlarmAttributes)__calloc(sizeof(AlarmAttributes))) == NULL) {
 			return(0);
 		}
 		Devices[AlarmIndex].Attributes = AA;
@@ -417,7 +417,7 @@ uint8_t IsValidCredential(uint8_t DeviceIndex, char *TargetCode) {
 
 	Codes = (pAuthorizedCodes)(Devices[DeviceIndex].Attributes);
 	for (i = 0; i < MAX_USERS; i++) {
-		if (!strcmp(Codes->AccessCodes[i], TargetCode)) {
+		if (!__strcmp(Codes->AccessCodes[i], TargetCode)) {
 			return(1);
 		}
 	}
@@ -442,7 +442,7 @@ uint8_t UpdateDevice(uint16_t DeviceId) {
 
 	switch (Devices[DeviceIndex].Type) {
 		case DEVICE_KEYPAD:
-			// read in the PIN
+			// __read in the PIN
 			if (!ReadBytes((unsigned char *)&Pin, PIN_LEN)) {
 				return(0);
 			}
@@ -459,7 +459,7 @@ uint8_t UpdateDevice(uint16_t DeviceId) {
 			break;
 
 		case DEVICE_SWIPE:
-			// read in the Code
+			// __read in the Code
 			if (!ReadBytes((unsigned char *)&Code, ACCESS_CODE_LEN)) {
 				return(0);
 			}
@@ -565,11 +565,11 @@ void SortCodes(pAuthorizedCodes Codes) {
 	while (!Sorted) {
 		Sorted = 1;
 		for (i = 0; i < MAX_DEVICES-1; i++) {
-			res = strcmp(Codes->AccessCodes[i], Codes->AccessCodes[i+1]);
+			res = __strcmp(Codes->AccessCodes[i], Codes->AccessCodes[i+1]);
 			if (res > 0) {
-				memcpy(Temp, Codes->AccessCodes[i+1], 32);
-				memcpy(Codes->AccessCodes[i+1], Codes->AccessCodes[i], 32);
-				memcpy(Codes->AccessCodes[i], Temp, 32);
+				__memcpy(Temp, Codes->AccessCodes[i+1], 32);
+				__memcpy(Codes->AccessCodes[i+1], Codes->AccessCodes[i], 32);
+				__memcpy(Codes->AccessCodes[i], Temp, 32);
 				Sorted = 0;
 			}
 		}
@@ -597,10 +597,10 @@ uint8_t ListValidAlarmCodes(uint16_t DeviceId) {
 		SendResp(RESP_SUCCESS, NULL);
 		return(1);
 	}
-	if ((codes = (pAuthorizedCodes)calloc(sizeof(AuthorizedCodes))) == NULL) {
+	if ((codes = (pAuthorizedCodes)__calloc(sizeof(AuthorizedCodes))) == NULL) {
 		return(0);
 	}
-	memcpy(codes, Devices[DeviceIndex].Attributes, sizeof(AuthorizedCodes));
+	__memcpy(codes, Devices[DeviceIndex].Attributes, sizeof(AuthorizedCodes));
 	SortCodes(codes);
 
 	// once through to get a count of codes we'll be sending
@@ -624,7 +624,7 @@ uint8_t ListValidAlarmCodes(uint16_t DeviceId) {
 
 	SendResp(RESP_SUCCESS, NULL);
 
-	free(codes);
+	__free(codes);
 
 	return(1);
 }

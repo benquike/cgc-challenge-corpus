@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,20 +35,20 @@ extern double max_wall_clock;
 
 int main(void) {
 
-	puts("Welcome to the network queuing simulator");
+	__puts("Welcome to the network queuing simulator");
 
 	if (InitInterface()) {
-		puts("Unable to init interface\n");
+		__puts("Unable to init interface\n");
 		_terminate(-1);
 	}
 
 	if (InitReceive()) {
-		puts("Unable to init packet generator\n");
+		__puts("Unable to init packet generator\n");
 		_terminate(-1);
 	}
 
 	if (InitQueues()) {
-		puts("Failed to initialize queues\n");
+		__puts("Failed to initialize queues\n");
 		_terminate(-1);
 	}
 

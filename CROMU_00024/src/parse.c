@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -51,7 +51,7 @@ int parse_command(char *buffer, char separator, char ***args) {
 	} // while
 
 	// allocate one char pointer for each field in the command
-	*args=calloc(arg_count, sizeof(char *));
+	*args=__calloc(arg_count, sizeof(char *));
 
 	// failed to allocate the memory
 	if (*args==0) {

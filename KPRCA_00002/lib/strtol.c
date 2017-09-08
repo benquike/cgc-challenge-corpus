@@ -3,7 +3,7 @@
  * 
  * Copyright (c) 2014 Kaprica Security, Inc.
  * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -26,7 +26,7 @@
 #include <ctype.h>
 #include <string.h>
 
-long strtol(const char *str, char **endptr, int base)
+long __strtol(const char *str, char **endptr, int base)
 {
     const char *orig = str;
     int c, neg = 0;
@@ -36,7 +36,7 @@ long strtol(const char *str, char **endptr, int base)
     if (base != 0 && (base < 2 || base > 36)) return 0;
 
     /* skip whitespace */
-    while (*str && isspace(*str))
+    while (*str && __isspace(*str))
         str++;
 
     /* parse potential -/+ (default to positive) */
@@ -95,7 +95,7 @@ long strtol(const char *str, char **endptr, int base)
         return val;
 }
 
-unsigned long strtoul(const char *str, char **endptr, int base)
+unsigned long __strtoul(const char *str, char **endptr, int base)
 {
-    return (unsigned long)strtol(str, endptr, base);
+    return (unsigned long)__strtol(str, endptr, base);
 }

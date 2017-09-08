@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -143,16 +143,16 @@ void md5(uint8_t *data, size_t s, uint32_t* out) {
     //alloc our temp buffer
     len = (((s+8)/64)+1)*64;
     ALLOC(0, (void**)&d, len);
-    memset(d, '\x00', len);
-    memcpy(d, data, s);
+    __memset(d, '\x00', len);
+    __memcpy(d, data, s);
 
     //pad appropriately
     d[s] = 0x80;
     i = 8*s;
-    memcpy(&d[len-8], &i, 4);
+    __memcpy(&d[len-8], &i, 4);
 
     for (b=0; b < len/64; b++) {
-        memcpy(curb, d+(b*64), 64);
+        __memcpy(curb, d+(b*64), 64);
         for (i=0; i< 4; i++) {
             k = rot[4][i];
             l = rot[5][i];
@@ -171,5 +171,5 @@ void md5(uint8_t *data, size_t s, uint32_t* out) {
             block[i] = final[i];
         }
     }
-    memcpy(out,final,16);
+    __memcpy(out,final,16);
 }

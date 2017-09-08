@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.co>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -95,16 +95,16 @@ struct InitialPageInfo InitialInfo[NUM_INITIAL_PAGES] = {
 int InitializeTree() {
   TreeNode *ptr;
   for (int i = 0; i < NUM_INITIAL_PAGES; ++i) {
-    TreeNode *node = calloc(sizeof(TreeNode), 1);
+    TreeNode *node = __calloc(sizeof(TreeNode), 1);
     VerifyPointerOrTerminate(node, "TreeNode during initialization");
-    strncpy(node->name, InitialInfo[i].name, sizeof(node->name));
-    node->page_size = strlen(InitialInfo[i].data) + 1;
-    node->page = calloc(node->page_size, 1);
+    __strncpy(node->name, InitialInfo[i].name, sizeof(node->name));
+    node->page_size = __strlen(InitialInfo[i].data) + 1;
+    node->page = __calloc(node->page_size, 1);
     VerifyPointerOrTerminate(node->page, "node->page during initialization");
-    memcpy(node->page, InitialInfo[i].data, node->page_size);
+    __memcpy(node->page, InitialInfo[i].data, node->page_size);
     if (InsertNodeInTree(node) != 0) {
-      free(node->page);
-      free(node);
+      __free(node->page);
+      __free(node);
       return -1;
     } 
   }
@@ -122,7 +122,7 @@ void WalkTree(TreeNode *nodein) {
   int what = 0xfe;
   TreeNode *node = nodein;
 
-  printf("@s\n", node);
+  __printf("@s\n", node);
 
   if (node->child) {
     node_stack[index++] = node->child;
@@ -135,9 +135,9 @@ void WalkTree(TreeNode *nodein) {
     node = node_stack[--index];
     
     for (int i=0; i<indent; i++) {
-      printf("    ");
+      __printf("    ");
     }
-    printf("@s\n", node);
+    __printf("@s\n", node);
 
     if (node->peer) {
       node_stack[index++] = node->peer;
@@ -159,7 +159,7 @@ int PrintTree(char *name) {
     start = LookupNode(name);
   }
   if (start == NULL) {
-    printf("ERROR: Tree not found: @s\n", name);
+    __printf("ERROR: Tree not found: @s\n", name);
     return -1;
   }
   WalkTree(start);
@@ -175,9 +175,9 @@ void FreeTree(TreeNode *node) {
     FreeTree(node->peer);
   }
   if (node->page != NULL) {
-    free(node->page);
+    __free(node->page);
   }
-  free(node);
+  __free(node);
 }
 
 int DeleteNode(char *name) {
@@ -185,12 +185,12 @@ int DeleteNode(char *name) {
   // Lookup node
   node = LookupNode(name);
   if (node == NULL) {
-    printf("ERROR: Could not locate node for deletion\n");
+    __printf("ERROR: Could not locate node for deletion\n");
     return -1;
   }
   // Lookup parent node
   char local_name[64];
-  memcpy(local_name, name, sizeof(local_name));
+  __memcpy(local_name, name, sizeof(local_name));
   char *last_part = strrchr(local_name, '.');
   if (last_part == NULL) {
     parent = root;
@@ -213,7 +213,7 @@ int DeleteNode(char *name) {
       prev = prev->peer;
     }
     if (prev == NULL) {
-      printf("ERROR: Could not locate node for deletion\n");
+      __printf("ERROR: Could not locate node for deletion\n");
       return -1;
     }
     prev->peer = node->peer;
@@ -229,20 +229,20 @@ TreeNode *LookupNode(char *name) {
   TreeNode *node = root->child;
   // Make a local copy of the name and walk its subparts
   char local_name[64];
-  memcpy(local_name, name, sizeof(local_name));
+  __memcpy(local_name, name, sizeof(local_name));
   char *part = local_name;
-  char *next_part = strchr(local_name, '.');
+  char *next_part = __strchr(local_name, '.');
   if (next_part != NULL) {
     next_part[0] = '\0';
   }
   while (node != NULL) {
-    if (strcmp(node->name, part) == 0)
+    if (__strcmp(node->name, part) == 0)
     {
       if (next_part == NULL) {
         return node;
       } else {
         part = next_part + 1;
-        next_part = strchr(part, '.');
+        next_part = __strchr(part, '.');
         if (next_part != NULL) {
           next_part[0] = '\0';
         }
@@ -257,24 +257,24 @@ TreeNode *LookupNode(char *name) {
 
 int InsertNodeInTree(TreeNode *node) {
   if (root == NULL) {
-    TreeNode *node = calloc(sizeof(TreeNode), 1);
+    TreeNode *node = __calloc(sizeof(TreeNode), 1);
     VerifyPointerOrTerminate(node, "root TreeNode during insert");
     node->name[0] = '.';
     root = node;
   }
   // Make sure node doesn't exist
   if (LookupNode(node->name) != NULL) {
-    printf("ERROR: node already exists\n");
+    __printf("ERROR: node already exists\n");
     return -1;
   }
   // Make sure name isn't blank
   if (node->name[0] == '\0') {
-    printf("ERROR: Name cannot be blank\n");
+    __printf("ERROR: Name cannot be blank\n");
     return -1;
   }
    // Lookup parent node
   char local_name[64];
-  memcpy(local_name, node->name, sizeof(local_name));
+  __memcpy(local_name, node->name, sizeof(local_name));
   char *last_part = strrchr(local_name, '.');
   TreeNode *insert_location = root;
   // If no subparts in name, insert as child to root
@@ -291,11 +291,11 @@ int InsertNodeInTree(TreeNode *node) {
     return 0;
   } 
   // Strip leading portion of name
-  strncpy(node->name, last_part + 1, sizeof(node->name));  
+  __strncpy(node->name, last_part + 1, sizeof(node->name));  
   last_part[0] = '\0';
   insert_location = LookupNode(local_name);
   if (insert_location == NULL) {
-    printf("ERROR: Parent node doesn't exist: @s\n", local_name);
+    __printf("ERROR: Parent node doesn't exist: @s\n", local_name);
     return -1;
   }
   if (insert_location->child == NULL) {

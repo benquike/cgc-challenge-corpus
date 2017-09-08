@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,14 +35,14 @@ void OrderIoManager::list_orders()
 {
     int i = 0;
     for (i = 0; i < orders.length(); i++) {
-        printf("%d - %s: Ordered %d pizza(s)\n", i+1, orders[i].get_name(), orders[i].get_num_pizzas());
+        __printf("%d - %s: Ordered %d pizza(s)\n", i+1, orders[i].get_name(), orders[i].get_num_pizzas());
     }
 }
 
 bool OrderIoManager::input_order(size_t idx)
 {
     if (orders.is_full()) {
-        printf("Maxed out orders\n");
+        __printf("Maxed out orders\n");
         return false;
     }
 
@@ -54,10 +54,10 @@ bool OrderIoManager::input_order(size_t idx)
     bool is_new_order = true;
 
     if (idx == -1) {
-        printf("Enter Pickup Name: ");
+        __printf("Enter Pickup Name: ");
         while (!readline(Order::NAME_SIZE)) {
-            printf("Bad Pickup Name\n");
-            printf("Enter Pickup Name: ");
+            __printf("Bad Pickup Name\n");
+            __printf("Enter Pickup Name: ");
         }
 
         if (!order.set_name(get_last_input()))
@@ -70,17 +70,17 @@ bool OrderIoManager::input_order(size_t idx)
     } else {
         is_new_order = false;
         order = orders[idx];
-        printf("Editing order for %s\n", order.get_name());
+        __printf("Editing order for %s\n", order.get_name());
     }
 
     while (!done_adding_pizzas) {
-        printf("1. Add another Pizza\n");
-        printf("2. Quit\n");
+        __printf("1. Add another Pizza\n");
+        __printf("2. Quit\n");
         if (order.get_num_pizzas() > 1)
-            printf("3. Remove Pizza from order\n");
+            __printf("3. Remove Pizza from order\n");
 
         while (true) {
-            printf("Choice: ");
+            __printf("Choice: ");
             choice = readnum();
             if (choice == 1) {
                 pim.new_pizza();
@@ -96,32 +96,32 @@ bool OrderIoManager::input_order(size_t idx)
 #else
             } else if (choice == 3) {
 #endif
-                printf("0. Cancel\n");
+                __printf("0. Cancel\n");
                 order.print_order();
-                printf("Choice: ");
+                __printf("Choice: ");
                 choice = readnum();
                 if (choice == 0) {
-                    printf("Canceled\n");
+                    __printf("Canceled\n");
                     break;
                 } else if (choice > order.get_num_pizzas()) {
-                    printf("Bad Selection\n");
+                    __printf("Bad Selection\n");
                 } else {
                     order.remove_pizza(--choice);
-                    printf("Removed Item #%d\n", choice+1);
+                    __printf("Removed Item #%d\n", choice+1);
                 }
                 break;
             } else {
-                printf("Bad Selection\n");
+                __printf("Bad Selection\n");
             }
         }
     }
 
     if (is_new_order) {
         orders.add(order);
-        printf("Order successfully added!\n");
+        __printf("Order successfully added!\n");
     } else {
         orders[idx] = order;
-        printf("Order successfully updated!\n");
+        __printf("Order successfully updated!\n");
     }
     return true;
 }
@@ -132,20 +132,20 @@ bool OrderIoManager::update_order()
     int choice;
 
     if (orders.is_empty()) {
-        printf("No orders have been inputted\n");
+        __printf("No orders have been inputted\n");
         return false;
     }
 
-    printf("Update an Order\n");
-    printf("0. Cancel\n");
+    __printf("Update an Order\n");
+    __printf("0. Cancel\n");
     list_orders();
-    printf("Choice: ");
+    __printf("Choice: ");
     choice = readnum();
     if (choice == 0) {
-        printf("Canceled\n");
+        __printf("Canceled\n");
         return false;
     } else if (choice > orders.length()) {
-        printf("Bad Selection\n");
+        __printf("Bad Selection\n");
         return false;
     }
 
@@ -158,20 +158,20 @@ bool OrderIoManager::delete_order()
     int choice;
 
     if (orders.is_empty()) {
-        printf("No orders have been inputted\n");
+        __printf("No orders have been inputted\n");
         return false;
     }
 
-    printf("Delete an Order\n");
-    printf("0. Cancel\n");
+    __printf("Delete an Order\n");
+    __printf("0. Cancel\n");
     list_orders();
-    printf("Choice: ");
+    __printf("Choice: ");
     choice = readnum();
     if (choice == 0) {
-        printf("Canceled\n");
+        __printf("Canceled\n");
         return false;
     } else if (choice < 1 || choice > orders.length()) {
-        printf("Bad Selection\n");
+        __printf("Bad Selection\n");
         return false;
     }
 
@@ -185,19 +185,19 @@ void OrderIoManager::clear_all_orders(bool force)
     int choice;
 
     if (!force) {
-        printf("Delete ALL Orders\n");
-        printf("0. Cancel\n");
-        printf("1. Confirm\n");
-        printf("Choice: ");
+        __printf("Delete ALL Orders\n");
+        __printf("0. Cancel\n");
+        __printf("1. Confirm\n");
+        __printf("Choice: ");
         choice = readnum();
         if (choice == 0) {
-            printf("Canceled\n");
+            __printf("Canceled\n");
             return;
         } else if (choice > 1) {
-            printf("Bad Selection\n");
+            __printf("Bad Selection\n");
         }
 
-        printf("Removing all orders\n");
+        __printf("Removing all orders\n");
     }
 
     while(orders.pop(order)) {
@@ -212,28 +212,28 @@ bool OrderIoManager::view_single_order()
     int choice, i;
 
     if (orders.is_empty()) {
-        printf("No orders have been inputted\n");
+        __printf("No orders have been inputted\n");
         return false;
     }
 
-    printf("View single Order\n");
-    printf("0. Cancel\n");
+    __printf("View single Order\n");
+    __printf("0. Cancel\n");
     list_orders();
-    printf("Choice: ");
+    __printf("Choice: ");
     choice = readnum();
     if (choice == 0) {
-        printf("Canceled\n");
+        __printf("Canceled\n");
         return false;
     } else if (choice > orders.length()) {
-        printf("Bad Selection\n");
+        __printf("Bad Selection\n");
         return false;
     }
 
     i = --choice;
-    printf("%d - %s: Ordered %d pizza(s)\n", i+1, orders[i].get_name(), orders[i].get_num_pizzas());
+    __printf("%d - %s: Ordered %d pizza(s)\n", i+1, orders[i].get_name(), orders[i].get_num_pizzas());
     orders[i].print_order();
-    printf("*  = Contains Meat\n");
-    printf("** = Contains Pork\n");
+    __printf("*  = Contains Meat\n");
+    __printf("** = Contains Pork\n");
     return true;
 }
 
@@ -242,14 +242,14 @@ void OrderIoManager::print_orders()
     int i = 0;
 
     if (orders.is_empty()) {
-        printf("No orders have been inputted\n");
+        __printf("No orders have been inputted\n");
         return;
     }
 
     for (i = 0; i < orders.length(); i++) {
-        printf("%d - %s: Ordered %d pizza(s)\n", i+1, orders[i].get_name(), orders[i].get_num_pizzas());
+        __printf("%d - %s: Ordered %d pizza(s)\n", i+1, orders[i].get_name(), orders[i].get_num_pizzas());
         orders[i].print_order();
     }
-    printf("*  = Contains Meat\n");
-    printf("** = Contains Pork\n");
+    __printf("*  = Contains Meat\n");
+    __printf("** = Contains Pork\n");
 }

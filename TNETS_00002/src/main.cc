@@ -66,12 +66,12 @@ public:
 	void Debug();
 	void Name(const char *s) {
 #ifdef PATCHED
-		if (strlen(s) < sizeof(name))
+		if (__strlen(s) < sizeof(name))
 			strlcat(name, s, sizeof(name));
 #else
-		if (strlen(s) < sizeof(name)) {
-			char *n = name + strlen(name);
-			memcpy(n, s, strlen(s) + 1);
+		if (__strlen(s) < sizeof(name)) {
+			char *n = name + __strlen(name);
+			__memcpy(n, s, __strlen(s) + 1);
 		}
 #endif
 	}
@@ -175,7 +175,7 @@ Dog::Speak() {
 void
 Dog::Flush() {
 	put(name);
-	put(" goes to sleep... permanently\n");
+	put(" goes to __sleep... permanently\n");
 }
 
 void
@@ -209,7 +209,7 @@ petlist::~petlist() {
 void
 petlist::append(Pet *pet) {
 	if (n == 100) {
-		put("too many pets already... put one to sleep\n");
+		put("too many pets already... put one to __sleep\n");
 		return;
 	}
 
@@ -306,11 +306,11 @@ do_create(const char *cmd, const char *opt) {
 		return;
 	}
 
-	if (!strcmp(opt, "hotdog"))
+	if (!__strcmp(opt, "hotdog"))
 		p = new Hotdog();
-	else if (!strcmp(opt, "cat"))
+	else if (!__strcmp(opt, "cat"))
 		p = new Cat();
-	else if (!strcmp(opt, "dog"))
+	else if (!__strcmp(opt, "dog"))
 		p = new Dog();
 	else {
 		put("unknown pet\n");
@@ -326,7 +326,7 @@ do_name(const char *cmd, const char *opt) {
 	const char *name;
 
 	if (!opt) {
-		printf("missing option\n");
+		__printf("missing option\n");
 		return;
 	}
 
@@ -346,7 +346,7 @@ bad_num:
 	}
 
 	name = &opt[i + 1];
-	if (opt[i] == '\0' || strlen(name) == 0) {
+	if (opt[i] == '\0' || __strlen(name) == 0) {
 		put("missing name\n");
 		return;
 	}
@@ -373,7 +373,7 @@ do_delete(const char *cmd, const char *opt) {
 	int n = 0;
 
 	if (!opt) {
-		printf("missing option\n");
+		__printf("missing option\n");
 		return;
 	}
 
@@ -436,7 +436,7 @@ do_line(char *line) {
 	const char *number = NULL;
 	const char *cmd = NULL;
 	const char *opt = NULL;
-	int nextiscmd = 0, nextisopt = 0, len = strlen(line);
+	int nextiscmd = 0, nextisopt = 0, len = __strlen(line);
 
 	number = line;
 	for (int i = 0; i < len; i++) {
@@ -471,24 +471,24 @@ do_line(char *line) {
 	}
 
 	if (!cmd) {
-		printf("no command?\n");
+		__printf("no command?\n");
 		return;
 	}
 
 	if (get_number(number))
 		return;
 
-	if (!strcmp(cmd, "create"))
+	if (!__strcmp(cmd, "create"))
 		do_create(cmd, opt);
-	else if (!strcmp(cmd, "delete"))
+	else if (!__strcmp(cmd, "delete"))
 		do_delete(cmd, opt);
-	else if (!strcmp(cmd, "speak"))
+	else if (!__strcmp(cmd, "speak"))
 		do_speak(cmd, opt);
-	else if (!strcmp(cmd, "rollover"))
+	else if (!__strcmp(cmd, "rollover"))
 		do_rollover(cmd, opt);
-	else if (!strcmp(cmd, "debug"))
+	else if (!__strcmp(cmd, "debug"))
 		do_debug(cmd, opt);
-	else if (!strcmp(cmd, "name"))
+	else if (!__strcmp(cmd, "name"))
 		do_name(cmd, opt);
 	else {
 		put("invalid cmd\n");
@@ -511,7 +511,7 @@ main() {
 		if (c == '\n') {
 			buf[nbuf] = '\0';
 			do_line(buf);
-			memset(buf, 0, sizeof(buf));
+			__memset(buf, 0, sizeof(buf));
 			nbuf = 0;
 		} else
 			buf[nbuf++] = c;

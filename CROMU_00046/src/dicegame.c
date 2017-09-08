@@ -4,7 +4,7 @@ Author: Dustin Fraze (df@cromulence.com)
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -33,12 +33,12 @@ extern gamestate *state;
 void dicegame() {
 	char howmany[16];
 	unsigned int rolls[16];
-	bzero((char *)rolls, sizeof(rolls));
+	__bzero((char *)rolls, sizeof(rolls));
 	int rollnum = 0;
 	int wager = 0;
 	int maxrolls;
 
-	bzero(howmany, 16);
+	__bzero(howmany, 16);
 
 	wager = getBet(state);
 	if(wager == -1)
@@ -46,7 +46,7 @@ void dicegame() {
 
 	put("How many rolls do you want? ");
 	recvUntil(0, howmany, 15, '\n');
-	maxrolls = atoi(howmany);
+	maxrolls = __atoi(howmany);
 
 	while(rollnum < maxrolls) {
 		put("Rolling a 31337 sided dice. 31337 wins jackpot. If you guess within 100, you win.\n");
@@ -63,12 +63,12 @@ void dicegame() {
 			wager*=1000;
 			handleOutcome(state, 1, wager);
 		} else {
-			bzero(howmany, 16);
+			__bzero(howmany, 16);
 			recvUntil(0, howmany, 15, '\n');
 			#ifdef PATCHED_1
-			if((((rolls[rollnum%16]%31338) < 100) || (atoi(howmany) > (rolls[rollnum%16]%31338)-100)) && (atoi(howmany) < (rolls[rollnum%16]%31338)+100))
+			if((((rolls[rollnum%16]%31338) < 100) || (__atoi(howmany) > (rolls[rollnum%16]%31338)-100)) && (__atoi(howmany) < (rolls[rollnum%16]%31338)+100))
 			#else
-			if((((rolls[rollnum]%31338) < 100) || (atoi(howmany) > (rolls[rollnum]%31338)-100)) && (atoi(howmany) < (rolls[rollnum]%31338)+100))
+			if((((rolls[rollnum]%31338) < 100) || (__atoi(howmany) > (rolls[rollnum]%31338)-100)) && (__atoi(howmany) < (rolls[rollnum]%31338)+100))
 			#endif
 			{
 	
@@ -76,23 +76,23 @@ void dicegame() {
 				put(howmany);
 				put(" is ");
 				#ifdef PATCHED_1
-				if((signed int)((rolls[rollnum%16]%31338)-atoi(howmany)) < 0) {
-					put(itoa(atoi(howmany)-(rolls[rollnum%16]%31338)));
+				if((signed int)((rolls[rollnum%16]%31338)-__atoi(howmany)) < 0) {
+					put(__itoa(__atoi(howmany)-(rolls[rollnum%16]%31338)));
 				} else {
-					put(itoa((rolls[rollnum%16]%31338)-atoi(howmany)));
+					put(__itoa((rolls[rollnum%16]%31338)-__atoi(howmany)));
 				}
 				#else
-				if((signed int)((rolls[rollnum]%31338)-atoi(howmany)) < 0) {
-					put(itoa(atoi(howmany)-(rolls[rollnum]%31338)));
+				if((signed int)((rolls[rollnum]%31338)-__atoi(howmany)) < 0) {
+					put(__itoa(__atoi(howmany)-(rolls[rollnum]%31338)));
 				} else {
-					put(itoa((rolls[rollnum]%31338)-atoi(howmany)));
+					put(__itoa((rolls[rollnum]%31338)-__atoi(howmany)));
 				}
 				#endif
 				put(" away from ");
 				#ifdef PATCHED_1
-				put(itoa((rolls[rollnum%16]%31338)));
+				put(__itoa((rolls[rollnum%16]%31338)));
 				#else
-				put(itoa((rolls[rollnum]%31338)));
+				put(__itoa((rolls[rollnum]%31338)));
 				#endif
 				put("\n");
 				handleOutcome(state, 1, wager);

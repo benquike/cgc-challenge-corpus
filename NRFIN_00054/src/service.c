@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -59,10 +59,10 @@ static void
 write_ppm(struct image *img)
 {
     unsigned int i;
-    printf("%d %d\n", img->width, img->height);
+    __printf("%d %d\n", img->width, img->height);
     for (i = 0; i < img->width * img->height; i++)
-        printf("%d %d %d ", img->data[i].r, img->data[i].g, img->data[i].b);
-    printf("\n%x\n", calculate_csum(img));
+        __printf("%d %d %d ", img->data[i].r, img->data[i].g, img->data[i].b);
+    __printf("\n%x\n", calculate_csum(img));
 }
 
 static int
@@ -74,19 +74,19 @@ read_vector(struct vector *out)
     if (fread_until(buf, '\n', sizeof(buf), stdin) == EXIT_FAILURE)
         return EXIT_FAILURE;
 
-    if ((tok = strtok(buf, ", ")) == NULL || strlen(tok) == 0)
+    if ((tok = __strtok(buf, ", ")) == NULL || __strlen(tok) == 0)
         return EXIT_FAILURE;
 
     if (strtod(tok, &x) == EXIT_FAILURE)
         return EXIT_FAILURE;
     
-    if ((tok = strtok(NULL, ", ")) == NULL || strlen(tok) == 0)
+    if ((tok = __strtok(NULL, ", ")) == NULL || __strlen(tok) == 0)
         return EXIT_FAILURE;
 
     if (strtod(tok, &y) == EXIT_FAILURE)
         return EXIT_FAILURE;
 
-    if ((tok = strtok(NULL, ", ")) == NULL || strlen(tok) == 0)
+    if ((tok = __strtok(NULL, ", ")) == NULL || __strlen(tok) == 0)
         return EXIT_FAILURE;
 
     if (strtod(tok, &z) == EXIT_FAILURE)
@@ -117,7 +117,7 @@ read_sphere(struct shape *out)
     struct sphere *sphere = (struct sphere *)out;
     double radius;
 
-    printf("Enter 'd' for diffuse, 's' for specular:\n");
+    __printf("Enter 'd' for diffuse, 's' for specular:\n");
     if (fread_until(buf, '\n', sizeof(buf), stdin) == EXIT_FAILURE)
         return EXIT_FAILURE;
 
@@ -126,20 +126,20 @@ read_sphere(struct shape *out)
 
     sphere->shape.material = (buf[0] == 'd' ? DIFFUSE : SPECULAR);
 
-    printf("Enter radius:\n");
+    __printf("Enter radius:\n");
     if (read_double(&radius) == EXIT_FAILURE)
         return EXIT_FAILURE;
     sphere->radius = radius;
 
-    printf("Enter position as \"x, y, z\":\n");
+    __printf("Enter position as \"x, y, z\":\n");
     if (read_vector(&sphere->shape.position) == EXIT_FAILURE)
         return EXIT_FAILURE;
 
-    printf("Enter color as \"r, g, b\":\n");
+    __printf("Enter color as \"r, g, b\":\n");
     if (read_vector(&sphere->shape.color) == EXIT_FAILURE)
         return EXIT_FAILURE;
 
-    printf("Enter emission as \"r, g, b\":\n");
+    __printf("Enter emission as \"r, g, b\":\n");
     if (read_vector(&sphere->shape.emission) == EXIT_FAILURE)
         return EXIT_FAILURE;
 
@@ -152,7 +152,7 @@ read_plane(struct shape *out)
 {
     struct plane *plane = (struct plane *)out;
 
-    printf("Enter 'd' for diffuse, 's' for specular:\n");
+    __printf("Enter 'd' for diffuse, 's' for specular:\n");
     if (fread_until(buf, '\n', sizeof(buf), stdin) == EXIT_FAILURE)
         return EXIT_FAILURE;
 
@@ -161,19 +161,19 @@ read_plane(struct shape *out)
 
     plane->shape.material = (buf[0] == 'd' ? DIFFUSE : SPECULAR);
 
-    printf("Enter normal as \"x, y, z\":\n");
+    __printf("Enter normal as \"x, y, z\":\n");
     if (read_vector(&plane->normal) == EXIT_FAILURE)
         return EXIT_FAILURE;
 
-    printf("Enter position as \"x, y, z\":\n");
+    __printf("Enter position as \"x, y, z\":\n");
     if (read_vector(&plane->shape.position) == EXIT_FAILURE)
         return EXIT_FAILURE;
 
-    printf("Enter color as \"r, g, b\":\n");
+    __printf("Enter color as \"r, g, b\":\n");
     if (read_vector(&plane->shape.color) == EXIT_FAILURE)
         return EXIT_FAILURE;
 
-    printf("Enter emission as \"r, g, b\":\n");
+    __printf("Enter emission as \"r, g, b\":\n");
     if (read_vector(&plane->shape.emission) == EXIT_FAILURE)
         return EXIT_FAILURE;
 
@@ -204,7 +204,7 @@ main(void)
         return EXIT_FAILURE;
 
     while (1) {
-        printf("Enter 's' for sphere, 'p' for plane, 'c' for camera, 'r' for render, 'q' for quit\n");
+        __printf("Enter 's' for sphere, 'p' for plane, 'c' for camera, 'r' for render, 'q' for quit\n");
         if ((ret = fread_until(buf, '\n', sizeof(buf), stdin)) == EXIT_FAILURE || ret < 1)
             continue;
 
@@ -248,15 +248,15 @@ main(void)
             shape = NULL;
             continue;
         case 'c':
-            printf("Enter camera position as \"x, y, z\":\n");
+            __printf("Enter camera position as \"x, y, z\":\n");
             if (read_vector(&camera_origin) == EXIT_FAILURE)
                 goto fail;
 
-            printf("Enter camera direction as \"x, y, z\":\n");
+            __printf("Enter camera direction as \"x, y, z\":\n");
             if (read_vector(&camera_direction) == EXIT_FAILURE)
                 goto fail;
 
-            printf("Enter camera fov:\n");
+            __printf("Enter camera fov:\n");
             if (read_double(&camera_fov) == EXIT_FAILURE)
                 goto fail;
 
@@ -268,12 +268,12 @@ main(void)
             pt_clear_ctx(&ctx);
             continue;
         default:
-            printf("No such command!\n");
+            __printf("No such command!\n");
             continue;
         }
 
 fail:
-        printf("Invalid option\n");
+        __printf("Invalid option\n");
     }
 
     pt_destroy(&ctx);

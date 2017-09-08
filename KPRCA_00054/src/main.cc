@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -49,7 +49,7 @@ void init_commands()
   OpenCmd *open = new OpenCmd();
   CloseCmd *close = new CloseCmd();
   CloseAllCmd *closeAll = new CloseAllCmd();
-  ReadCmd *read = new ReadCmd();
+  ReadCmd *__read = new ReadCmd();
   ModifyCmd *modify = new ModifyCmd();
   DeleteCmd *del = new DeleteCmd();
   CreateDirCmd *createDir = new CreateDirCmd();
@@ -64,7 +64,7 @@ void init_commands()
   cmdMan->InstallCommand(open);
   cmdMan->InstallCommand(close);
   cmdMan->InstallCommand(closeAll);
-  cmdMan->InstallCommand(read);
+  cmdMan->InstallCommand(__read);
   cmdMan->InstallCommand(modify);
   cmdMan->InstallCommand(del);
   cmdMan->InstallCommand(createDir);
@@ -85,24 +85,24 @@ char** parse_args(char *s, int *argc)
   p = s;
   while (*p)
   {
-    while (isspace(*p)) p++;
+    while (__isspace(*p)) p++;
     if (!*p) break;
-    while (*p && !isspace(*p)) p++;
+    while (*p && !__isspace(*p)) p++;
     (*argc)++;
   }
   if (*argc > 0)
   {
     p = s;
-    argv = (char **) calloc((*argc + 1), sizeof(char *));
-    while (isspace(*p)) p++;
+    argv = (char **) __calloc((*argc + 1), sizeof(char *));
+    while (__isspace(*p)) p++;
     while (*p)
     {
       argv[i] = p;
-      while (*p && !isspace(*p)) p++;
+      while (*p && !__isspace(*p)) p++;
       if (!*p) break;
       *p = '\0';
       p++;
-      while (*p && isspace(*p)) p++;
+      while (*p && __isspace(*p)) p++;
       i++;
     }
   }
@@ -121,15 +121,15 @@ int main()
 
   while (1)
   {
-    printf("$ ");
+    __printf("$ ");
     if (read_until(STDIN, buf, sizeof(buf), '\n') < 0)
       return -1;
     argv = parse_args(buf, &argc);
     if (argc)
     {
       if (cmdMan->ExecuteCommand(argv[0], --argc, &argv[1]) < 0)
-        printf("Unknown command [%s]\n", argv[0]);
-      free(argv);
+        __printf("Unknown command [%s]\n", argv[0]);
+      __free(argv);
     }
   }
   return 0;

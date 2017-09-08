@@ -4,9 +4,9 @@
 #include <stdint.h>
 
 #define betoh32 swap32
-#define htobe32 swap32
+#define __htobe32 swap32
 #define betoh16 swap16
-#define htobe16 swap16
+#define __htobe16 swap16
 
 static inline uint16_t swap16(uint16_t x)
 {

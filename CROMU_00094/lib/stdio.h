@@ -4,7 +4,7 @@ Copyright (c) 2015 Cromulence LLC
 
 Authors: Cromulence <cgc@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -31,14 +31,14 @@ THE SOFTWARE.
 
 int putchar( int c );
 
-int printf( const char *format, ... );
+int __printf( const char *format, ... );
 int vprintf( const char *format, va_list args );
 int sprintf( char *buf, const char *format, ... );
 int vsprintf( char *buf, const char *format, va_list args );
-int puts( const char *s );
+int __puts( const char *s );
 
 // Receive length number of bytes into buffer
-// Returns number of bytes read or -1 for error. 
+// Returns number of bytes __read or -1 for error. 
 int ReceiveBytes(char *buffer, int length);
 
 // Sends length bytes from buffer. 

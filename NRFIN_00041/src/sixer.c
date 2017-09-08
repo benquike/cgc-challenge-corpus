@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -45,7 +45,7 @@ void init_sixer(struct sixer *s, const char *ais_msg) {
 
 unsigned int sixer_strlen(struct sixer *s) {
 	// ais_msg is 6bit ASCII encoded, so each byte/char has 6 bits of data encoded in it.
-	return (6 * strlen(s->p_idx)) - s->bits_used;
+	return (6 * __strlen(s->p_idx)) - s->bits_used;
 }
 
 char get_msg_type(const char *ais_msg) {

@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -33,7 +33,7 @@ THE SOFTWARE.
 #define F32_PRECISION       0.00001
 
 
-int memcpy( void *dest, void *src, size_t n )
+int __memcpy( void *dest, void *src, size_t n )
 {
         size_t index = 0;
 
@@ -45,7 +45,7 @@ int memcpy( void *dest, void *src, size_t n )
         return index;
 }
 
-int islower( int c )
+int __islower( int c )
 {
         if ( c >= 0x61 && c <= 0x7a )
                 return 1;
@@ -53,7 +53,7 @@ int islower( int c )
                 return 0;
 }
 
-int isupper( int c )
+int __isupper( int c )
 {
         if ( c >= 0x41 && c <= 0x5a )
                 return 1;
@@ -61,17 +61,17 @@ int isupper( int c )
                 return 0;
 }
 
-int isalpha( int c )
+int __isalpha( int c )
 {
-        return islower( c ) | isupper( c );
+        return __islower( c ) | __isupper( c );
 }
 
-int isalnum( int c )
+int __isalnum( int c )
 {
-        return isalpha( c ) | isdigit( c );
+        return __isalpha( c ) | __isdigit( c );
 }
 
-int isspace( int c )
+int __isspace( int c )
 {
     if ( c == ' ' ||
          c == '\t' ||
@@ -84,7 +84,7 @@ int isspace( int c )
         return 0;
 }
 
-int isdigit( int c )
+int __isdigit( int c )
 {
     if ( c >= '0' && c <= '9' )
         return 1;
@@ -92,17 +92,17 @@ int isdigit( int c )
         return 0;
 }
 
-int isnan( double val )
+int __isnan( double val )
 {
     return __builtin_isnan( val );
 }
 
-int isinf( double val )
+int __isinf( double val )
 {
     return __builtin_isinf( val );
 }
 
-double atof(const char* str)
+double __atof(const char* str)
 {
     if ( str == NULL )
         return 0.0;
@@ -113,7 +113,7 @@ double atof(const char* str)
     int part;
 
     // Skip whitespace
-    while ( isspace( str[0] ) )
+    while ( __isspace( str[0] ) )
         str++;
 
     part = 0; // First part (+/-/./number is acceptable)
@@ -142,7 +142,7 @@ double atof(const char* str)
             else
                 return 0.0;
         }
-        else if ( isdigit( *str ) )
+        else if ( __isdigit( *str ) )
         {
             if ( part == 0 || part == 1 )
             {
@@ -171,7 +171,7 @@ double atof(const char* str)
 }
 
 
-int atoi(const char* str)
+int __atoi(const char* str)
 {
     if ( str == NULL )
         return 0;
@@ -183,7 +183,7 @@ int atoi(const char* str)
     int retval;
 
     // Skip whitespace
-    while ( isspace( str[0] ) )
+    while ( __isspace( str[0] ) )
         str++;
 
     part = 0; // First part (+/-/number is acceptable)
@@ -205,7 +205,7 @@ int atoi(const char* str)
 
             part++;
         }
-        else if ( isdigit( *str ) )
+        else if ( __isdigit( *str ) )
         {
             if ( part == 0 || part == 1 )
             {
@@ -238,7 +238,7 @@ int atoi(const char* str)
     }
 }
 
-char *strcpy( char *dest, char *src )
+char *__strcpy( char *dest, char *src )
 {
     size_t i;
 
@@ -254,7 +254,7 @@ char *strcpy( char *dest, char *src )
     return (dest);
 }
 
-char *strncpy( char *dest, const char *src, size_t n )
+char *__strncpy( char *dest, const char *src, size_t n )
 {
     size_t i;
 
@@ -266,7 +266,7 @@ char *strncpy( char *dest, const char *src, size_t n )
     return (dest);
 }
 
-void bzero( void *buff, size_t len )
+void __bzero( void *buff, size_t len )
 {
     size_t index = 0;
     unsigned char *c = buff;
@@ -287,7 +287,7 @@ end:
     return;
 }
 
-void *memset(void *s, int c, size_t n)
+void *__memset(void *s, int c, size_t n)
 {
     unsigned char *t = (unsigned char *)s;
     while (--n)
@@ -296,7 +296,7 @@ void *memset(void *s, int c, size_t n)
     return(s);
 }
 /*
-int strcmp( const char *s1, const char *s2 )
+int __strcmp( const char *s1, const char *s2 )
 {
     while ( *s1 && *s2 && (*s1 == *s2) )
     {
@@ -308,7 +308,7 @@ int strcmp( const char *s1, const char *s2 )
 */
 
 
-int strcmp( char *str1, char *str2 )
+int __strcmp( char *str1, char *str2 )
 {
     size_t i;
 
@@ -334,9 +334,9 @@ int strcmp( char *str1, char *str2 )
 }
 
 
-char *strncat ( char *dest, const char *src, size_t n )
+char *__strncat ( char *dest, const char *src, size_t n )
 {
-    size_t dest_len = strlen(dest);
+    size_t dest_len = __strlen(dest);
     size_t i;
 
     if (dest == NULL || src == NULL)
@@ -380,7 +380,7 @@ return count;
 
 }
 
-size_t receive_until( char *dst, char delim, size_t max )
+size_t __receive_until( char *dst, char delim, size_t max )
 {
     size_t len = 0;
     size_t rx = 0;
@@ -441,7 +441,7 @@ end:
     return len;
 }
 
-size_t strcat( char *dest, char*src )
+size_t __strcat( char *dest, char*src )
 {
     size_t length = 0;
     size_t start = 0;
@@ -450,7 +450,7 @@ size_t strcat( char *dest, char*src )
         goto end;
     }
 
-    start = strlen( dest );
+    start = __strlen( dest );
 
     for ( ; src[length] != 0x00 ; start++, length++ ) {
         dest[start] = src[length];
@@ -461,7 +461,7 @@ end:
     return length;
 }
 /*
-size_t strlen( char * str )
+size_t __strlen( char * str )
 {
     size_t length = 0;
 
@@ -476,7 +476,7 @@ end:
 }
 */
 
-size_t strlen( const char *str )
+size_t __strlen( const char *str )
 {
     size_t length = 0;
 
@@ -489,7 +489,7 @@ size_t strlen( const char *str )
 
 
 
-size_t itoa( char *out, size_t val, size_t max )
+size_t __itoa( char *out, size_t val, size_t max )
 {
     size_t length = 0;
     size_t end = 0;
@@ -527,7 +527,7 @@ end:
     return length;
 }
 
-void puts( char *t )
+void __puts( char *t )
 {
     size_t size;
     size_t total_sent = 0;
@@ -537,7 +537,7 @@ void puts( char *t )
        return;
     }
 
-    len = strlen(t);
+    len = __strlen(t);
 
     while (total_sent < len) {
         if (transmit(STDOUT, t+total_sent, len-total_sent, &size) != 0) {
@@ -553,7 +553,7 @@ void puts( char *t )
     }
 }
 
-char *strchr(const char *s, int c) {
+char *__strchr(const char *s, int c) {
 	while (*s != '\0') {
 		if (*s == c) {
 			return((char *)s);
@@ -570,7 +570,7 @@ char *token = NULL;
 char *prev_str = NULL;
 unsigned int prev_str_len = 0;
 char *prev_str_ptr = NULL;
-char *strtok(char *str, const char *delim) {
+char *__strtok(char *str, const char *delim) {
 	char *start;
 	char *end;
 	char *t;
@@ -591,7 +591,7 @@ char *strtok(char *str, const char *delim) {
 			return(NULL);
 		}
 	} else {
-		// called with new string, so free the old one
+		// called with new string, so __free the old one
 		if (prev_str) {
 			deallocate(prev_str, prev_str_len);
 			prev_str = NULL;
@@ -602,22 +602,22 @@ char *strtok(char *str, const char *delim) {
 
 	// not been called before, so make a copy of the string
 	if (prev_str == NULL) {
-		if (strlen(str) > 4096) {
+		if (__strlen(str) > 4096) {
 			// too big
 			return(NULL);
 		} 
-		prev_str_len = strlen(str);
+		prev_str_len = __strlen(str);
 		if (allocate(prev_str_len, 0, (void *)&prev_str)) {
 			return(NULL);
 		}
-		strcpy(prev_str, str);
+		__strcpy(prev_str, str);
 		prev_str_ptr = prev_str;
 	}
 
 	str = prev_str_ptr;
 
 	// make sure the string isn't starting with a delimeter
-	while (strchr(delim, str[0]) && str < prev_str+prev_str_len) {
+	while (__strchr(delim, str[0]) && str < prev_str+prev_str_len) {
 		str++;
 	}
 	if (str >= prev_str+prev_str_len) {
@@ -626,9 +626,9 @@ char *strtok(char *str, const char *delim) {
 
 	// find the earliest next delimiter
 	start = str;
-	end = str+strlen(str);
-	for (i = 0; i < strlen((char *)delim); i++) {
-		if ((t = strchr(start, delim[i]))) {
+	end = str+__strlen(str);
+	for (i = 0; i < __strlen((char *)delim); i++) {
+		if ((t = __strchr(start, delim[i]))) {
 			if (t != NULL && t < end) {
 				end = t;
 			}
@@ -645,7 +645,7 @@ char *strtok(char *str, const char *delim) {
 }
 
 
-ssize_t write( const void *buf, size_t count )
+ssize_t __write( const void *buf, size_t count )
 {
     size_t size;
     size_t total_sent = 0;
@@ -666,7 +666,7 @@ ssize_t write( const void *buf, size_t count )
 }
 
 
-char *strdup(char *s) 
+char *__strdup(char *s) 
 {
         char *retval;
 
@@ -674,17 +674,17 @@ char *strdup(char *s)
                 return(NULL);
         }
 
-        if (allocate(strlen(s)+1, 0, (void *)&retval)) {
+        if (allocate(__strlen(s)+1, 0, (void *)&retval)) {
                 return(NULL);
         }
 
-        bzero(retval, strlen(s)+1);
-        strcpy(retval, s);
+        __bzero(retval, __strlen(s)+1);
+        __strcpy(retval, s);
 
         return(retval);
 }
 
-int putc( int c )
+int __putc( int c )
 {
     size_t tx_count = 0;
 
@@ -769,17 +769,17 @@ void float_to_str( double val, char *buf, int precision )
     if ( buf == NULL )
         return;
 
-    if ( isnan( val ) )
+    if ( __isnan( val ) )
     {
-        strcpy( buf, "nan" );
+        __strcpy( buf, "nan" );
     }
-    else if ( isinf( val ) )
+    else if ( __isinf( val ) )
     {
-        strcpy( buf, "inf" );
+        __strcpy( buf, "inf" );
     }
     else if ( val == 0.0 )
     {
-        strcpy( buf, "0.00000" );
+        __strcpy( buf, "0.00000" );
     }
     else
     {
@@ -815,7 +815,7 @@ void float_to_str( double val, char *buf, int precision )
         while ( val > F32_PRECISION || m >= 0 )
         {
             double weight = pow( 10.0, m );
-            if ( weight > 0 && !isinf(weight) )
+            if ( weight > 0 && !__isinf(weight) )
             {
                 digit = floor( val / weight );
                 val -= (digit * weight);
@@ -872,7 +872,7 @@ int vprintf( const char *fmt, va_list arg )
             // We handle width, precision, and justification (but not for floats yet)
             if (*fmt == '@') {
 
-                putc('@');
+                __putc('@');
                 fmt++;
                 character_count++;
                 continue;
@@ -884,7 +884,7 @@ int vprintf( const char *fmt, va_list arg )
                 ++fmt;
             }
 
-            if (isdigit(*fmt)) {
+            if (__isdigit(*fmt)) {
 
                 if (*fmt == '0') {
 
@@ -892,12 +892,12 @@ int vprintf( const char *fmt, va_list arg )
                     fmt++;
                 }
 
-                if (isdigit(*fmt)) {
+                if (__isdigit(*fmt)) {
 
-                    width = atoi(fmt);
+                    width = __atoi(fmt);
 
                     // skip past the width specification
-                    while (isdigit(*fmt))
+                    while (__isdigit(*fmt))
                         fmt++;
                 }
             }
@@ -907,10 +907,10 @@ int vprintf( const char *fmt, va_list arg )
                 // skip over the '.'
                 fmt++;
 
-                precision=atoi(fmt);
+                precision=__atoi(fmt);
 
                 // now skip past the integer precision value
-                while (isdigit(*fmt))
+                while (__isdigit(*fmt))
                     fmt++;
 
             }
@@ -927,16 +927,16 @@ int vprintf( const char *fmt, va_list arg )
                     for (i=0; i< pad_len; ++i) {
 
                         if (zero_padding)
-                            putc('0');
+                            __putc('0');
                         else
-                            putc(' ');
+                            __putc(' ');
 
                         character_count++;
                     }
                 }
 
                 // output the char itself
-                putc(c);
+                __putc(c);
                 character_count++;
 
                 // justify to the left
@@ -944,7 +944,7 @@ int vprintf( const char *fmt, va_list arg )
                     for (i=0; i< pad_len; ++i) {
 
                         // the option to pad with 0 is ignored when left justified
-                        putc(' ');
+                        __putc(' ');
                         character_count++;
                     }
                 }
@@ -962,16 +962,16 @@ int vprintf( const char *fmt, va_list arg )
                 int_to_str( int_arg, temp_buf );
 
                 // is the output string shorter than the desired width?
-                pad_len = width - strlen(temp_buf);
+                pad_len = width - __strlen(temp_buf);
 
                 // right justification
                 if (!left_justification) {
                     for (i=0; i< pad_len; ++i) {
 
                         if (zero_padding)
-                            putc('0');
+                            __putc('0');
                         else
-                            putc(' ');
+                            __putc(' ');
 
                         character_count++;
                     }
@@ -981,7 +981,7 @@ int vprintf( const char *fmt, va_list arg )
                 c = temp_buf;
                 while ( *c )
                 {
-                    putc( *c );
+                    __putc( *c );
                     character_count++;
                     c++;
                 }
@@ -991,7 +991,7 @@ int vprintf( const char *fmt, va_list arg )
                     for (i=0; i< pad_len; ++i) {
 
                         // the option to pad with 0 is ignored when left justified
-                        putc(' ');
+                        __putc(' ');
                         character_count++;
                     }
                 }
@@ -1010,16 +1010,16 @@ int vprintf( const char *fmt, va_list arg )
                 int_to_hex( int_arg, temp_buf );
 
                 // is the output string shorter than the desired width?
-                pad_len = width - strlen(temp_buf);
+                pad_len = width - __strlen(temp_buf);
 
                 // right justification
                 if (!left_justification) {
                     for (i=0; i< pad_len; ++i) {
 
                         if (zero_padding)
-                            putc('0');
+                            __putc('0');
                         else
-                            putc(' ');
+                            __putc(' ');
 
                         character_count++;
                     }
@@ -1029,7 +1029,7 @@ int vprintf( const char *fmt, va_list arg )
                 c = temp_buf;
                 while ( *c )
                 {
-                    putc( *c );
+                    __putc( *c );
                     character_count++;
                     c++;
                 }
@@ -1039,7 +1039,7 @@ int vprintf( const char *fmt, va_list arg )
                     for (i=0; i< pad_len; ++i) {
 
                         // the option to pad with 0 is ignored when left justified
-                        putc(' ');
+                        __putc(' ');
                         character_count++;
                     }
                 }
@@ -1060,16 +1060,16 @@ int vprintf( const char *fmt, va_list arg )
                 float_to_str( float_arg, temp_buf, precision);
 
                 // is the output string shorter than the desired width?
-                pad_len = width - strlen(temp_buf);
+                pad_len = width - __strlen(temp_buf);
 
                 // pad the output with spaces or zeros
                 if (!left_justification) {
                     for (i=0; i< pad_len; ++i) {
 
                         if (zero_padding)
-                            putc('0');
+                            __putc('0');
                         else
-                            putc(' ');
+                            __putc(' ');
 
                         character_count++;
                     }
@@ -1079,7 +1079,7 @@ int vprintf( const char *fmt, va_list arg )
                 c = temp_buf;
                 while ( *c )
                 {
-                    putc( *c );
+                    __putc( *c );
                     character_count++;
                     c++;
                 }
@@ -1092,11 +1092,11 @@ int vprintf( const char *fmt, va_list arg )
                 char *string_arg = va_arg( arg, char * );
                 int output_strlen;
 
-                if (precision > 0 && precision < strlen(string_arg))
+                if (precision > 0 && precision < __strlen(string_arg))
 
                     output_strlen = precision;
                 else
-                    output_strlen = strlen(string_arg);
+                    output_strlen = __strlen(string_arg);
 
 
                 pad_len = width - output_strlen;
@@ -1107,9 +1107,9 @@ int vprintf( const char *fmt, va_list arg )
                     for (i=0; i< pad_len; ++i) {
 
                         if (zero_padding)
-                            putc('0');
+                            __putc('0');
                         else
-                            putc(' ');
+                            __putc(' ');
 
                         character_count++;
                     }
@@ -1117,7 +1117,7 @@ int vprintf( const char *fmt, va_list arg )
 
                 while ( *string_arg && output_strlen > 0 )
                 {
-                    putc( *string_arg );
+                    __putc( *string_arg );
                     character_count++;
                     string_arg++;
                     --output_strlen;
@@ -1128,7 +1128,7 @@ int vprintf( const char *fmt, va_list arg )
                     for (i=0; i< pad_len; ++i) {
 
                         // the option to pad with 0 is ignored when left justified
-                        putc(' ');
+                        __putc(' ');
                         character_count++;
                     }
                 }
@@ -1141,7 +1141,7 @@ int vprintf( const char *fmt, va_list arg )
         }
         else
         {
-            putc( *fmt );
+            __putc( *fmt );
             fmt++;
 
             character_count++;
@@ -1192,7 +1192,7 @@ int vsprintf( char *str, const char *fmt, va_list arg )
                 ++fmt;
             }
 
-            if (isdigit(*fmt)) {
+            if (__isdigit(*fmt)) {
 
                 if (*fmt == '0') {
 
@@ -1200,11 +1200,11 @@ int vsprintf( char *str, const char *fmt, va_list arg )
                     fmt++;
                 }
 
-                if (isdigit(*fmt)) {
+                if (__isdigit(*fmt)) {
 
-                    width = atoi(fmt);
+                    width = __atoi(fmt);
 
-                    while (isdigit(*fmt))
+                    while (__isdigit(*fmt))
                         fmt++;
                 }
             }
@@ -1214,10 +1214,10 @@ int vsprintf( char *str, const char *fmt, va_list arg )
                 // skip over the '.'
                 fmt++;
 
-                precision=atoi(fmt);
+                precision=__atoi(fmt);
 
                 // now skip past the integer precision value
-                while (isdigit(*fmt))
+                while (__isdigit(*fmt))
                     fmt++;
 
             }
@@ -1268,7 +1268,7 @@ int vsprintf( char *str, const char *fmt, va_list arg )
                 int_to_str( int_arg, temp_buf );
 
                 // is the output string shorter than the desired width?
-                pad_len = width - strlen(temp_buf);
+                pad_len = width - __strlen(temp_buf);
 
                 // right justification
                 if (!left_justification) {
@@ -1316,7 +1316,7 @@ int vsprintf( char *str, const char *fmt, va_list arg )
                 int_to_hex( int_arg, temp_buf );
 
                 // is the output string shorter than the desired width?
-                pad_len = width - strlen(temp_buf);
+                pad_len = width - __strlen(temp_buf);
 
                 // right justification
                 if (!left_justification) {
@@ -1364,7 +1364,7 @@ int vsprintf( char *str, const char *fmt, va_list arg )
                 float_to_str( float_arg, temp_buf, precision);
 
                 // is the output string shorter than the desired width?
-                pad_len = width - strlen(temp_buf);
+                pad_len = width - __strlen(temp_buf);
 
                 // pad the output with spaces or zeros
                 if (!left_justification) {
@@ -1396,11 +1396,11 @@ int vsprintf( char *str, const char *fmt, va_list arg )
                 char *string_arg = va_arg( arg, char * );
                 int output_strlen;
 
-                if (precision > 0 && precision < strlen(string_arg))
+                if (precision > 0 && precision < __strlen(string_arg))
 
                     output_strlen = precision;
                 else
-                    output_strlen = strlen(string_arg);
+                    output_strlen = __strlen(string_arg);
 
 
                 pad_len = width - output_strlen;
@@ -1454,7 +1454,7 @@ int vsprintf( char *str, const char *fmt, va_list arg )
     return (character_count);
 }
 
-int printf( const char *fmt, ... )
+int __printf( const char *fmt, ... )
 {
     va_list arg;
     int done;
@@ -1489,14 +1489,14 @@ int sprintf( char *str, const char *fmt, ... )
 heap_metadata *heap_manager = NULL;
 
 
-void *calloc(size_t count, size_t size) {
+void *__calloc(size_t count, size_t size) {
     void *ret;
-    ret = malloc(size * count);
-    memset(ret, 0, size * count);
+    ret = __malloc(size * count);
+    __memset(ret, 0, size * count);
     return ret;
 }
 
-void free(void *ptr) {
+void __free(void *ptr) {
     heap_header *chunkHeader;
     heap_block_header *blockHead;
 
@@ -1507,7 +1507,7 @@ void free(void *ptr) {
     return;
 }
 
-void *malloc(size_t size) {
+void *__malloc(size_t size) {
     heap_block_header *blockHead;
     if (heap_manager == NULL) {
         void *mallocPtr;
@@ -1518,7 +1518,7 @@ void *malloc(size_t size) {
         heap_manager->mem_inuse = sizeof(heap_manager);
         heap_manager->mem_free = 4096-heap_manager->mem_inuse;
         allocate(4096, 0, (void *)&heap_manager->blocks);
-        memset(heap_manager->blocks, 0, 4096);
+        __memset(heap_manager->blocks, 0, 4096);
         blockHead = (heap_block_header *)heap_manager->blocks;
         blockHead->remaining_size = 4096-sizeof(heap_block_header);
         blockHead->next = NULL;
@@ -1527,7 +1527,7 @@ void *malloc(size_t size) {
     if(size > blockHead->remaining_size) {
         allocate(4096, 0, (void *)&blockHead->next);
         if(blockHead->next == NULL) {
-            puts("Not enough space available to allocate more heap.  Failure.");
+            __puts("Not enough space available to allocate more heap.  Failure.");
             _terminate(-1);
         }
         blockHead = blockHead->next;

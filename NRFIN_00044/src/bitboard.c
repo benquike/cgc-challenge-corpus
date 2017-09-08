@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -69,7 +69,7 @@ init_bitboard(struct bitboard *board)
     enum color color;
     unsigned int i;
 
-    memset(board, '\0', sizeof(struct bitboard));
+    __memset(board, '\0', sizeof(struct bitboard));
     board->can_castle[WHITE][KINGSIDE] = board->can_castle[BLACK][KINGSIDE] = 1;
     board->can_castle[WHITE][QUEENSIDE] = board->can_castle[BLACK][QUEENSIDE] = 1;
     board->ep_row = board->ep_col = -1;
@@ -140,26 +140,26 @@ print_bitboard(struct bitboard *board, enum color color)
 
     for (i = 0; i < BOARD_SIZE; i++) {
         row = color == WHITE ? i : BOARD_SIZE - i - 1;
-        printf("%d ", BOARD_SIZE - row);
+        __printf("%d ", BOARD_SIZE - row);
 
         for (j = 0; j < BOARD_SIZE; j++) {
             col = color == WHITE ? j : BOARD_SIZE - j - 1;
 
             if (get_piece(board, (BOARD_SIZE - row - 1), col, &piece) == 1)
-                printf("%s%s%s", COLOR(piece.color, ((row % 2) + (col % 2)) % 2),
+                __printf("%s%s%s", COLOR(piece.color, ((row % 2) + (col % 2)) % 2),
                         PIECE(piece.color, piece.type), reset);
             else
-                printf("%s  %s", COLOR(0, ((row % 2) + (col % 2)) % 2), reset);
+                __printf("%s  %s", COLOR(0, ((row % 2) + (col % 2)) % 2), reset);
         }
 
-        printf("\n");
+        __printf("\n");
     }
 
-    printf("  ");
+    __printf("  ");
     c = "abcdefgh";
     for (c += (color == WHITE ? 0 : 7); *c; c += (color == WHITE ? 1 : -1))
-        printf("%c ", *c);
-    printf("\n");
+        __printf("%c ", *c);
+    __printf("\n");
 
 #undef COLOR
 #undef PIECE
@@ -651,13 +651,13 @@ parse_san(struct bitboard *board, enum color color, char *san, struct move *move
         DONE
     } state = PIECE;
 
-    memset(move, '\0', sizeof(struct move));
+    __memset(move, '\0', sizeof(struct move));
     move->piece.color = color;
     move->src_row = move->src_col = -1;
     move->dst_row = move->dst_col = -1;
 
     // Castle kingside
-    if (strcmp(san, "O-O") == 0) {
+    if (__strcmp(san, "O-O") == 0) {
         move->piece.type = KING;
         move->is_castle_kingside = 1;
         move->src_row = color ? 7 : 0;
@@ -668,7 +668,7 @@ parse_san(struct bitboard *board, enum color color, char *san, struct move *move
         return 0;
     }
 
-    if (strcmp(san, "O-O-O") == 0) {
+    if (__strcmp(san, "O-O-O") == 0) {
         move->piece.type = KING;
         move->is_castle_queenside = 1;
         move->src_row = color ? 7 : 0;

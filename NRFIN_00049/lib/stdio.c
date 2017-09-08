@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -30,7 +30,7 @@
 
 #include "stdio.h"
 
-struct FILE {
+struct __FILE {
     int fd;
     enum mode mode;
     unsigned char *buf;
@@ -38,7 +38,7 @@ struct FILE {
     size_t bufpos;
 };
 
-static FILE stdfiles[3] = {
+static __FILE stdfiles[3] = {
     { STDIN, READ, NULL, 0, 0 },
     { STDOUT, WRITE, NULL, 0, 0 },
     { STDERR, WRITE, NULL, 0, 0 }
@@ -46,9 +46,9 @@ static FILE stdfiles[3] = {
 
 static struct pool file_pool = { 0, NULL };
 
-FILE *stdin = &stdfiles[0];
-FILE *stdout = &stdfiles[1];
-FILE *stderr = &stdfiles[2];
+__FILE *stdin = &stdfiles[0];
+__FILE *stdout = &stdfiles[1];
+__FILE *stderr = &stdfiles[2];
 
 ssize_t
 read_all(int fd, void *ptr, size_t size)
@@ -117,7 +117,7 @@ write_all(int fd, const void *ptr, size_t size)
 }
 
 static int
-allocate_buffer(FILE *stream)
+allocate_buffer(__FILE *stream)
 {
     if (stream->buf)
         return EXIT_FAILURE;
@@ -131,12 +131,12 @@ allocate_buffer(FILE *stream)
     return EXIT_SUCCESS;
 }
 
-FILE *
+__FILE *
 fdopen(int fd, enum mode mode)
 {
-    FILE *ret;
+    __FILE *ret;
 
-    if (file_pool.size == 0 && pool_init(&file_pool, sizeof(struct FILE)) != EXIT_SUCCESS)
+    if (file_pool.size == 0 && pool_init(&file_pool, sizeof(struct __FILE)) != EXIT_SUCCESS)
         return NULL;
 
     if ((ret = pool_alloc(&file_pool)) == NULL)
@@ -152,7 +152,7 @@ fdopen(int fd, enum mode mode)
 }
 
 void
-fclose(FILE *stream)
+__fclose(__FILE *stream)
 {
     if (stream->buf)
         deallocate(stream->buf, PAGE_SIZE);
@@ -161,11 +161,11 @@ fclose(FILE *stream)
 }
 
 int
-fflush(FILE *stream)
+__fflush(__FILE *stream)
 {
     ssize_t written;
 
-    if (!stream || !stream->mode == WRITE)
+    if (!stream || stream->mode != WRITE)
         return EXIT_FAILURE;
 
     if (!stream->buf || stream->bufsize == 0)
@@ -182,7 +182,7 @@ fflush(FILE *stream)
 }
 
 ssize_t
-fread(void *ptr, size_t size, FILE *stream)
+__fread(void *ptr, size_t size, __FILE *stream)
 {
     ssize_t ret = 0;
     size_t bytes_rx, buffered, whole_chunks;
@@ -198,7 +198,7 @@ fread(void *ptr, size_t size, FILE *stream)
     if (stream->bufsize > 0) {
         buffered = MIN(size, stream->bufsize);
 
-        memcpy(ptr_, &stream->buf[stream->bufpos], buffered);
+        __memcpy(ptr_, &stream->buf[stream->bufpos], buffered);
         stream->bufsize -= buffered;
         stream->bufpos = stream->bufsize ? stream->bufpos + buffered : 0;
         size -= buffered;
@@ -228,7 +228,7 @@ fread(void *ptr, size_t size, FILE *stream)
     }
 
     // Read the remainder, attempting to overread to fill buffer but breaking
-    // once all of our data has been read
+    // once all of our data has been __read
     if (!stream->buf && allocate_buffer(stream) != EXIT_SUCCESS)
         return EXIT_FAILURE;
 
@@ -244,7 +244,7 @@ fread(void *ptr, size_t size, FILE *stream)
     if (stream->bufsize >= size) {
         buffered = MIN(size, stream->bufsize);
 
-        memcpy(ptr_, &stream->buf[stream->bufpos], buffered);
+        __memcpy(ptr_, &stream->buf[stream->bufpos], buffered);
         stream->bufsize -= buffered;
         stream->bufpos = stream->bufsize ? stream->bufpos + buffered : 0;
         ret += buffered;
@@ -254,7 +254,7 @@ fread(void *ptr, size_t size, FILE *stream)
 }
 
 ssize_t
-fread_until(void *ptr, unsigned char delim, size_t size, FILE *stream)
+fread_until(void *ptr, unsigned char delim, size_t size, __FILE *stream)
 {
     ssize_t ret = 0;
     size_t buffered, bytes_rx;
@@ -265,7 +265,7 @@ fread_until(void *ptr, unsigned char delim, size_t size, FILE *stream)
         return EXIT_FAILURE;
 
     // Read the remainder, attempting to overread to fill buffer but breaking
-    // once all of our data has been read
+    // once all of our data has been __read
     if (!stream->buf && allocate_buffer(stream) != EXIT_SUCCESS)
         return EXIT_FAILURE;
 
@@ -278,7 +278,7 @@ fread_until(void *ptr, unsigned char delim, size_t size, FILE *stream)
 
             buffered = MIN(size - 1, buffered);
 
-            memcpy(ptr_, &stream->buf[stream->bufpos], buffered);
+            __memcpy(ptr_, &stream->buf[stream->bufpos], buffered);
             stream->bufsize -= buffered;
             stream->bufpos = stream->bufsize ? stream->bufpos + buffered : 0;
             size -= buffered;
@@ -303,7 +303,7 @@ fread_until(void *ptr, unsigned char delim, size_t size, FILE *stream)
 }
 
 ssize_t
-fwrite(const void *ptr, size_t size, FILE *stream)
+__fwrite(const void *ptr, size_t size, __FILE *stream)
 {
     ssize_t ret = 0;
     size_t bytes_tx, buffered, whole_chunks;
@@ -319,7 +319,7 @@ fwrite(const void *ptr, size_t size, FILE *stream)
     if (stream->buf) {
         buffered = MIN(size, PAGE_SIZE - stream->bufpos - stream->bufsize);
 
-        memcpy(&stream->buf[stream->bufpos + stream->bufsize], ptr_, buffered);
+        __memcpy(&stream->buf[stream->bufpos + stream->bufsize], ptr_, buffered);
         stream->bufsize += buffered;
         size -= buffered;
         ptr_ += buffered;
@@ -355,7 +355,7 @@ fwrite(const void *ptr, size_t size, FILE *stream)
     if (!stream->buf && allocate_buffer(stream) != EXIT_SUCCESS)
         return EXIT_FAILURE;
 
-    memcpy(stream->buf, ptr_, size);
+    __memcpy(stream->buf, ptr_, size);
     stream->bufsize = size;
     ret += size;
 
@@ -363,23 +363,23 @@ fwrite(const void *ptr, size_t size, FILE *stream)
 }
 
 int
-fgetc(FILE *stream)
+fgetc(__FILE *stream)
 {
     char c;
-    ssize_t read;
+    ssize_t __read;
 
     if (stream->bufsize)
-        read = fread(&c, 1, stream);
+        __read = __fread(&c, 1, stream);
     else
-        read = read_all(stream->fd, &c, 1);
+        __read = read_all(stream->fd, &c, 1);
 
-    return read < 0 ? read : c;
+    return __read < 0 ? __read : c;
 }
 
 int
-fputc(int character, FILE *stream)
+fputc(int character, __FILE *stream)
 {
-    return fwrite(&character, 1, stream);
+    return __fwrite(&character, 1, stream);
 }
 
 static int
@@ -426,13 +426,13 @@ printf_core(const char *format, void (*printfn)(char c, void *data),
                 break;
             case 'x':
             case 'X':
-                if (utostr(va_arg(args, unsigned int), 16, isupper(f), buf, sizeof(buf)) != EXIT_SUCCESS)
+                if (utostr(va_arg(args, unsigned int), 16, __isupper(f), buf, sizeof(buf)) != EXIT_SUCCESS)
                     return EXIT_FAILURE;
 
                 // Pad out with 8 zeros
-                if ((buflen = strlen(buf)) < 2 * sizeof(unsigned int)) {
+                if ((buflen = __strlen(buf)) < 2 * sizeof(unsigned int)) {
                     memmove(buf + (2 * sizeof(unsigned int) - buflen), buf, buflen + 1);
-                    memset(buf, '0', 2 * sizeof(unsigned int) - buflen);
+                    __memset(buf, '0', 2 * sizeof(unsigned int) - buflen);
                 }
 
                 s = buf;
@@ -459,7 +459,7 @@ file_printer(char c, void *data)
     fputc(c, data);
 
     if (c == '\n')
-        fflush(data);
+        __fflush(data);
 }
 
 struct string_printer_ctx {
@@ -476,7 +476,7 @@ string_printer(char c, void *data)
 }
 
 int
-vfprintf(FILE *stream, const char *format, va_list args)
+__vfprintf(__FILE *stream, const char *format, va_list args)
 {
     return printf_core(format, file_printer, stream, args);
 }
@@ -484,7 +484,7 @@ vfprintf(FILE *stream, const char *format, va_list args)
 int
 vprintf(const char *format, va_list args) 
 {
-    return vfprintf(stdout, format, args);
+    return __vfprintf(stdout, format, args);
 }
 
 int
@@ -495,24 +495,24 @@ vsnprintf(char *s, size_t num, const char *format, va_list args)
 }
 
 int
-vsprintf(char *s, const char *format, va_list args)
+__vsprintf(char *s, const char *format, va_list args)
 {
     return vsnprintf(s, (size_t)SIZE_MAX, format, args);
 }
 
 int
-fprintf(FILE *stream, const char *format, ...)
+fprintf(__FILE *stream, const char *format, ...)
 {
     int ret;
     va_list args;
     va_start(args, format);
-    ret = vfprintf(stream, format, args);
+    ret = __vfprintf(stream, format, args);
     va_end(args);
     return ret;
 }
 
 int
-printf(const char *format, ...)
+__printf(const char *format, ...)
 {
     int ret;
     va_list args;
@@ -534,12 +534,12 @@ snprintf(char *s, size_t num, const char *format, ...)
 }
 
 int
-sprintf(char *s, const char *format, ...)
+__sprintf(char *s, const char *format, ...)
 {
     int ret;
     va_list args;
     va_start(args, format);
-    ret = vsprintf(s, format, args);
+    ret = __vsprintf(s, format, args);
     va_end(args);
     return ret;
 }

@@ -4,7 +4,7 @@ Author: James Connor (jymbo@cromulence.co)
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -30,7 +30,7 @@ THE SOFTWARE.
 #define USER 		0x55
 #define DIRECTORY 	0x44
 #define LINK 		0x4c
-#define FILE 		0x46
+#define __FILE 		0x46
 #define READ 		0x01
 #define WRITE 		0x02
 #define EXECUTE 	0x04
@@ -89,7 +89,7 @@ typedef struct Node_s {
 	//interesting bug would allow changing type without changing pointer
 	struct Node_s *next;
 	struct Node_s *prev;
-	//type is directory, link (pointer to existing node), or file
+	//type is directory, __link (pointer to existing node), or file
 	//if type is directory, element is node
 	char type;
 	unsigned int linkCount;

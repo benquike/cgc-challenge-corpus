@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.co>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -44,7 +44,7 @@ int CreateCanvas(Canvas **can, uint16_t y_size, uint16_t x_size, uint8_t layers)
   if (allocate(sizeof(Canvas), 0, (void **)&c) != 0) {
     _terminate(-1);
   }
-  memset(c, 0, sizeof(Canvas));
+  __memset(c, 0, sizeof(Canvas));
   c->y_size = y_size;
   c->x_size = x_size;
 
@@ -54,7 +54,7 @@ int CreateCanvas(Canvas **can, uint16_t y_size, uint16_t x_size, uint8_t layers)
       _terminate(-1);
     }
     // Initialize with default color
-    memset(c->layers[i], CANVAS_DEFAULT_COLOR, y_size * x_size);
+    __memset(c->layers[i], CANVAS_DEFAULT_COLOR, y_size * x_size);
   }
   c->num_layers = layers;
   *can = c;

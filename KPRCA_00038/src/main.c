@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,11 +35,11 @@ int main()
     if (program_parse(&p))
     {
         if (!program_run(&p, &io))
-            printf("RUNTIME ERROR\n");
+            __printf("RUNTIME ERROR\n");
     }
     else
     {
-        printf("PARSE ERROR\n");
+        __printf("PARSE ERROR\n");
     }
 
     return 0;

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -101,7 +101,7 @@ uint32_t trail_disembark(Trail *t) {
  */
 int32_t trail_new(Trail **t, uint32_t settings[5]) {
 
-	Trail *new = calloc(sizeof(Trail));
+	Trail *new = __calloc(sizeof(Trail));
 	MALLOC_OK(new);
 
 	new->id = settings[0];
@@ -116,7 +116,7 @@ int32_t trail_new(Trail **t, uint32_t settings[5]) {
 	if ((new->length == 0) ||
 		(new->start_decider == new->end_decider) ||
 		(new->difficulty == 0)) {
-		free(new);
+		__free(new);
 		return -1;
 	}
 
@@ -148,7 +148,7 @@ void trail_destroy(Trail **t, Rider **riders) {
 	Trail *this = *t;
 	// return all riders
 	rider_append(riders, this->riders);
-	free(*t);
+	__free(*t);
 	*t = NULL;
 }
 

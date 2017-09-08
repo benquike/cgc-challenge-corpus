@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -30,11 +30,11 @@ extern "C" {
 AsciiArt::AsciiArt(void *_header, void *data, char *_filename)
 : File(sizeof(AsciiArtHeader), find_data_size(_header), _filename)
 {
-    memcpy(&header, _header, sizeof(AsciiArtHeader));
+    __memcpy(&header, _header, sizeof(AsciiArtHeader));
     raw_header = (void *)&header;
 
     raw_data = new char[get_data_size() + 1];
-    memcpy(raw_data, data, get_data_size());
+    __memcpy(raw_data, data, get_data_size());
     raw_data[get_data_size()] = '\0';
 
     if (!is_ascii((char *) data)) {
@@ -43,7 +43,7 @@ AsciiArt::AsciiArt(void *_header, void *data, char *_filename)
 
         if (raw_data)
             delete[] (raw_data);
-        raw_data = NULL;
+        raw_data = nullptr;
         clear_data_size();
     }
 }
@@ -52,7 +52,7 @@ AsciiArt::~AsciiArt()
 {
     if (raw_data)
         delete[] raw_data;
-    raw_data = NULL;
+    raw_data = nullptr;
     clear_data_size();
 }
 
@@ -63,13 +63,13 @@ unsigned int AsciiArt::get_magic()
 
 bool AsciiArt::is_ascii(char *stream)
 {
-    char *line = NULL;
-    char *_stream = new char[strlen(stream) + 1];
-    strcpy(_stream, stream);
+    char *line = nullptr;
+    char *_stream = new char[__strlen(stream) + 1];
+    __strcpy(_stream, stream);
     int num_lines = 0;
     size_t len, i;
     while ((line = strsep(&_stream, "\n")) && num_lines < header.num_lines) {
-        len = strlen(line) + 1;
+        len = __strlen(line) + 1;
         if (len != header.line_width) {
             return false;
         } else {
@@ -106,12 +106,12 @@ void AsciiArt::print_asciiart()
 {
     if (raw_data && get_data_size()) {
         if(!is_ascii(raw_data)) {
-            printf("-------------------------------\n");
-            printf("--Ascii Art file is corrupted--\n");
-            printf("-------------------------------\n");
+            __printf("-------------------------------\n");
+            __printf("--Ascii Art file is corrupted--\n");
+            __printf("-------------------------------\n");
             return;
         } else {
-            printf("%s\n", raw_data);
+            __printf("%s\n", raw_data);
         }
     }
 }

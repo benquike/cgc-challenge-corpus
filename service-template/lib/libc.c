@@ -1,10 +1,10 @@
 #include <libcgc.h>
 #include "libc.h"
 
-void bzero(char *buf, int n);
+void __bzero(char *buf, int n);
 void ready(int fd);
 
-void bzero(char *buf, int n) {
+void __bzero(char *buf, int n) {
     for (int i = 0; i < n; i++) {
         buf[i] = 0;
     }
@@ -16,7 +16,7 @@ void ready(int fd) {
     int ready_fd;
     struct timeval tv;
 
-    bzero((char *)&write_fds, sizeof(write_fds));
+    __bzero((char *)&write_fds, sizeof(write_fds));
     FD_SET(fd, &write_fds);
 
     tv.tv_sec = 10;

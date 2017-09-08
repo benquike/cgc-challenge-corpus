@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -27,10 +27,10 @@
 
 xpk_ctx_t* xpk_init(size_t size)
 {
-    xpk_ctx_t *ctx = (xpk_ctx_t *) malloc(sizeof(xpk_ctx_t));
+    xpk_ctx_t *ctx = (xpk_ctx_t *) __malloc(sizeof(xpk_ctx_t));
     if (size == 0)
         size = 1024;
-    ctx->buf = malloc(sizeof(char) * size);
+    ctx->buf = __malloc(sizeof(char) * size);
     ctx->idx = 0;
     ctx->len = size;
     return ctx;
@@ -42,7 +42,7 @@ int _xpk_resize(xpk_ctx_t *ctx, size_t size)
         return 0;
     if (size <= MAX_BUF_LEN)
     {
-        ctx->buf = realloc(ctx->buf, size);
+        ctx->buf = __realloc(ctx->buf, size);
         ctx->len = size;
         return 0;
     }
@@ -53,7 +53,7 @@ void xpk_reset(xpk_ctx_t *ctx, size_t size)
 {
     if (_xpk_resize(ctx, size) == 0)
     {
-        memset(ctx->buf, 0, ctx->len);
+        __memset(ctx->buf, 0, ctx->len);
         ctx->idx = 0;
     }
 }
@@ -216,7 +216,7 @@ xpk_err xpk_write(xpk_ctx_t *ctx, const char *in, size_t len)
 {
     if (ctx->idx + len <= ctx->len || _xpk_resize(ctx, ctx->len * 2) == 0)
     {
-        memcpy(&ctx->buf[ctx->idx], in, len);
+        __memcpy(&ctx->buf[ctx->idx], in, len);
         ctx->idx += len;
         return XPK_ERR_NONE;
     }
@@ -227,7 +227,7 @@ xpk_err xpk_read(xpk_ctx_t *ctx, char *out, size_t len)
 {
     if (ctx->idx + len <= ctx->len)
     {
-        memcpy(out, &ctx->buf[ctx->idx], len);
+        __memcpy(out, &ctx->buf[ctx->idx], len);
         ctx->idx += len;
         return XPK_ERR_NONE;
     }
@@ -238,7 +238,7 @@ xpk_err xpk_peek(xpk_ctx_t *ctx, char *out, size_t len)
 {
     if (ctx->idx + len > ctx->len)
         return XPK_ERR_INTERNAL;
-    memcpy(out, &ctx->buf[ctx->idx], len);
+    __memcpy(out, &ctx->buf[ctx->idx], len);
     return XPK_ERR_NONE;
 }
 
@@ -325,7 +325,7 @@ xpk_err xpk_pack_str(xpk_ctx_t *ctx, const char *str)
 {
     xpk_err err = XPK_ERR_NONE;
 
-    size_t len_b, len = strlen(str);
+    size_t len_b, len = __strlen(str);
     if (len <= 0x1F)
     {
         uint8_t val = XPK_FIXSTRING | len;

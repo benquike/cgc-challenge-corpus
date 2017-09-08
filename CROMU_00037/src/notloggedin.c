@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.co>
 
 Copyright (c) 2014-2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -45,7 +45,7 @@ void CreateUser(void) {
 	}
 
 	// did we get one?
-	if (strlen(buf) == 0) {
+	if (__strlen(buf) == 0) {
 		// nope
 		return;
 	}
@@ -91,7 +91,7 @@ void Login(void) {
 	}
 
 	// did we get one?
-	if (strlen(buf) == 0) {
+	if (__strlen(buf) == 0) {
 		// nope
 		return;
 	}

@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -66,7 +66,7 @@ private:
 	// Messages waiting to be sent (next tick)
 	CUtil::DLL_LIST( CLANMessage, m_lanbusLink ) m_oSentList;
 
-	// Messages read (current tick)
+	// Messages __read (current tick)
 	CUtil::DLL_LIST( CLANMessage, m_lanbusLink ) m_oReceiveList;
 };
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -36,9 +36,9 @@
   int name##_list_append(name##_list *list, data_type value) {  \
     if (list == NULL)                                           \
       return -1;                                                \
-    name##_list *n = malloc(sizeof(name##_list));               \
+    name##_list *n = __malloc(sizeof(name##_list));               \
     if (n == NULL)                                              \
-      exit(1);                                                  \
+      __exit(1);                                                  \
     while (list->next != NULL)                                  \
       list = list->next;                                        \
     list->next = n;                                             \

@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -49,43 +49,43 @@ void TestFS( CNORFlash *pNORFlash )
 	int32_t test2FD = oFS.OpenFile( "test2.txt", OPEN_MODE_WRITE );
 	int32_t test3FD = oFS.OpenFile( "test3.txt", OPEN_MODE_WRITE );
 
-	printf( "Test1 FD is: $d\n", test1FD );
-	printf( "Test2 FD is: $d\n", test2FD );
-	printf( "Test3 FD is: $d\n", test3FD );
+	__printf( "Test1 FD is: $d\n", test1FD );
+	__printf( "Test2 FD is: $d\n", test2FD );
+	__printf( "Test3 FD is: $d\n", test3FD );
 
 	int32_t retValue = oFS.WriteFile( test1FD, (uint8_t*)"blah", 4 );
 
-	printf( "Ret value is: $d\n", retValue );
+	__printf( "Ret value is: $d\n", retValue );
 
 	uint8_t testData[2048];
 	uint8_t testData2[2048];
 	
 	retValue = oFS.WriteFile( test1FD, testData, 1792 );
 
-	printf( "Ret value is: $d\n", retValue );
+	__printf( "Ret value is: $d\n", retValue );
 
 	retValue = oFS.CloseFile( test1FD );
 
-	printf( "Close ret: $d\n", retValue );
+	__printf( "Close ret: $d\n", retValue );
 
 	test1FD = oFS.OpenFile( "test.txt", OPEN_MODE_READ );
 
-	printf( "Open read FD is: $d\n", test1FD );
+	__printf( "Open __read FD is: $d\n", test1FD );
 
 	uint8_t readBlahBuffer[6];
 	retValue = oFS.ReadFile( test1FD, readBlahBuffer, 4 );
 
-	printf( "Read return is: $d\n", retValue );
+	__printf( "Read return is: $d\n", retValue );
 	readBlahBuffer[5] = '\0';
-	printf( "Read blah buffer is: $s\n", readBlahBuffer );
+	__printf( "Read blah buffer is: $s\n", readBlahBuffer );
 
 	retValue = oFS.DeleteFile( "test.txt" );
 
-	printf( "Delete test.txt ret: $d\n", retValue );
+	__printf( "Delete test.txt ret: $d\n", retValue );
 
 	retValue = oFS.ReadFile( test1FD, readBlahBuffer, 4 );
 		
-	printf( "Read from FD=1 is: $d\n", retValue );
+	__printf( "Read from FD=1 is: $d\n", retValue );
 }
 	
 typedef struct TEST_COMMAND_RESPONSE
@@ -312,7 +312,7 @@ void SetupDevice( int secret_page_i, CFlashFS *pFS, CNORFlash *pNORFlash )
 
 	pFS->Init( pNORFlash );
 
-	printf( "Starting test for device ($d, $d, $d):\n", blockSize, blocksPerSector, sectorCount );
+	__printf( "Starting test for device ($d, $d, $d):\n", blockSize, blocksPerSector, sectorCount );
 }
 
 void RunTestSystem( CFlashFS *pFS )
@@ -350,12 +350,12 @@ void RunTestSystem( CFlashFS *pFS )
 			break;
 
 		case 5:
-			printf("Stop simulation\n" );
+			__printf("Stop simulation\n" );
 			bDone = true;
 			break;
 
 		default:
-			printf( "Invalid command\n" );
+			__printf( "Invalid command\n" );
 			bDone = true;
 			// Invalid command
 			break;
@@ -377,7 +377,7 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
 
 	oFlash.Init( 512, 16, 128 );
 
-	printf( "$08X\n", secret_page_i );
+	__printf( "$08X\n", secret_page_i );
 
 	TestFS( &oFlash );
 

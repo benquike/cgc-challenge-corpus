@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -100,7 +100,7 @@ ignore:
             continue;
         }
 
-        newdata = realloc(data, len);
+        newdata = __realloc(data, len);
         if (newdata == NULL)
             goto ignore;
         data = newdata;
@@ -111,22 +111,22 @@ ignore:
         handle_msg(id, data, len);
     }
 
-    free(data);
+    __free(data);
     return 0;
 }
 
 int handle_msg_ping(void *data, unsigned int n)
 {
     uint8_t hdr[6];
-    *(uint16_t *)&hdr[0] = htobe16(PROTOCOL_PING);
+    *(uint16_t *)&hdr[0] = __htobe16(PROTOCOL_PING);
     if (n < 0x8000)
     {
-        *(uint16_t *)&hdr[2] = htobe16(n);
+        *(uint16_t *)&hdr[2] = __htobe16(n);
         write_bytes(hdr, 4);
     }
     else
     {
-        *(uint32_t *)&hdr[2] = htobe32(n | 0x80000000);
+        *(uint32_t *)&hdr[2] = __htobe32(n | 0x80000000);
         write_bytes(hdr, 6);
     }
 

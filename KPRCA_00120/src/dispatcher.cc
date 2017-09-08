@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -117,15 +117,15 @@ void Dispatcher::ViewTickets(STATUS status)
 void Dispatcher::RecordFinished(Support* worker)
 {
   char buf[MAX_DESC + 1];
-  memcpy(buf, worker->CurrentTicket()->description(), MAX_DESC);
+  __memcpy(buf, worker->CurrentTicket()->description(), MAX_DESC);
   Ticket::DeleteTicket(worker->RemoveTicket());
 
-  printf("Ticket Finished\n");
-  printf("%d\n", worker->id());
+  __printf("Ticket Finished\n");
+  __printf("%d\n", worker->id());
 #ifdef PATCHED_1
-  printf("%s", buf);
+  __printf("%s", buf);
 #else
-  printf(buf);
+  __printf(buf);
 #endif
 }
 

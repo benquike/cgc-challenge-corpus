@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -82,11 +82,11 @@ static int enlarge_tbl(dict_t *dict, unsigned int new_size)
     if (dict->length >= new_size)
         return 1;
 
-    new_tbl = realloc(dict->tbl, new_size * sizeof(_record_t *));
+    new_tbl = __realloc(dict->tbl, new_size * sizeof(_record_t *));
     if (new_tbl == NULL)
         return 0;
 
-    memset(new_tbl, 0, new_size * sizeof(_record_t *));
+    __memset(new_tbl, 0, new_size * sizeof(_record_t *));
     dict->tbl = new_tbl;
     dict->length = new_size;
 
@@ -126,7 +126,7 @@ void dict_free(dict_t *dict)
         n = r->next;
 
         dict->free_fn(r);
-        free(r);
+        __free(r);
     }
 }
 
@@ -135,7 +135,7 @@ void *dict_get(dict_t *dict, const char *name)
     _record_t *r = dict->tbl[do_hash(dict, name)];
 
     for (; r != NULL; r = r->next)
-        if (strcmp(r->name, name) == 0)
+        if (__strcmp(r->name, name) == 0)
             return r;
 
     return NULL;
@@ -149,7 +149,7 @@ int dict_add(dict_t *dict, const char *name, void *value)
         if ((dict->count + 1) >= dict->length * 0.7)
             if (!enlarge_tbl(dict, dict->length * 2))
                 return 0;
-        r->name = strdup(name);
+        r->name = __strdup(name);
         if (r->name == NULL)
             return 0;
         do_insert(dict, r);
@@ -161,7 +161,7 @@ int dict_add(dict_t *dict, const char *name, void *value)
 
         do_unlink(dict, old);
         dict->free_fn(old);
-        free(old);
+        __free(old);
 
         do_insert(dict, r);
     }

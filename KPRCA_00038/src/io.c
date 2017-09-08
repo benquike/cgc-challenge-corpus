@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -31,7 +31,7 @@
 void io_init_fd(io_t *io, int fd)
 {
     io->fd = fd;
-    io->buf = malloc(BUFFER_SIZE);
+    io->buf = __malloc(BUFFER_SIZE);
     io->pos = 0;
     io->length = 0;
     io->mark = -1;
@@ -48,7 +48,7 @@ void io_init_bytes(io_t *io, const char *str, unsigned int length)
 
 void io_init_string(io_t *io, const char *str)
 {
-    io_init_bytes(io, str, strlen(str));
+    io_init_bytes(io, str, __strlen(str));
 }
 
 void io_mark(io_t *io)

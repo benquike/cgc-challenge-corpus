@@ -1,7 +1,7 @@
 /*
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,7 +35,7 @@ size_t receiveIt( void *data, size_t length )
 
 	while ( 0 < length ) {
 		if ( receive( 0, tdata + bread, length, &count ) != 0 ) {
-			printf("[ERROR] Failed to receive\n");
+			__printf("[ERROR] Failed to receive\n");
 			return 0;
 		}
 
@@ -47,7 +47,7 @@ size_t receiveIt( void *data, size_t length )
 }
 
 /**
- * This function provides the ability to read in the size of the video stream followed by the specified number of bytes for the image data. The maximum size for a video is 4096 bytes and the minimum is 8
+ * This function provides the ability to __read in the size of the video stream followed by the specified number of bytes for the image data. The maximum size for a video is 4096 bytes and the minimum is 8
  * @return Returns a readable bitstream of the newly received data.
  **/
 pBitStream readImageData( void )
@@ -57,7 +57,7 @@ pBitStream readImageData( void )
 	pBitStream npbs = NULL;
 	char *newData = NULL;
 
-	printf("----------------Stream Me Your Video----------------\n");
+	__printf("----------------Stream Me Your Video----------------\n");
 
 	bytes_read = receiveIt( &length, 4 );
 
@@ -66,27 +66,27 @@ pBitStream readImageData( void )
 	}
 
 	if ( length > 4096 ) {
-		printf("[ERROR] Image must be smaller than 4096 bytes\n");
+		__printf("[ERROR] Image must be smaller than 4096 bytes\n");
 		return NULL;
 	}
 
 	if ( length < 8 ) {
-		printf("[ERROR] Image must be greater than 8 bytes\n");
+		__printf("[ERROR] Image must be greater than 8 bytes\n");
 		return NULL;
 	}
 
-	newData = malloc( length );
+	newData = __malloc( length );
 
 	if ( newData == NULL ) {
 		return NULL;
 	}
 
-	memset( newData, 0, length );	
+	__memset( newData, 0, length );	
 
 	bytes_read = receiveIt( newData, length );
 
 	if ( bytes_read != length ) {
-		free( newData );
+		__free( newData );
 		return NULL;
 	}
 
@@ -94,8 +94,8 @@ pBitStream readImageData( void )
 	/// into that new buffer without freeing the data buffer
 	npbs = initStream( newData, length );
 
-	/// We no longer need the old data so free the buffer.
-	free( newData );
+	/// We no longer need the old data so __free the buffer.
+	__free( newData );
 	newData = NULL;
 
 	return npbs;

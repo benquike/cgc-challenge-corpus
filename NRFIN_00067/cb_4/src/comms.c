@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -45,7 +45,7 @@ static void cmd_seat_customers_at_table(void) {
 
 	for (unsigned char cnt = 0; cnt < to_seat; cnt++) {
 		DBG("creating Customer\n");
-		c = malloc(sizeof(Customer));
+		c = __malloc(sizeof(Customer));
 		MALLOC_OK(c);
 		// recv customer id
 		DBG("recv'ing Customer ID\n");
@@ -137,9 +137,9 @@ static void cmd_deliver_orders(void) {
 
 	// recv_orders
 	while (0 < o_count) {
-		o = malloc(sizeof(Order));
+		o = __malloc(sizeof(Order));
 		MALLOC_OK(o);
-		memset(o, '\x00', sizeof(Order));
+		__memset(o, '\x00', sizeof(Order));
 
 		o->t_id = TABLE_ID;
 		// recv c->id
@@ -153,9 +153,9 @@ static void cmd_deliver_orders(void) {
 		// recv food content
 		switch (o->ftype) {
 			case APP_TYPE:
-				app = malloc(sizeof(Appetizer));
+				app = __malloc(sizeof(Appetizer));
 				MALLOC_OK(app);
-				memset(app, '\x00', sizeof(Appetizer));
+				__memset(app, '\x00', sizeof(Appetizer));
 				app->ftype = o->ftype;
 				DBG("receiving appetizer\n");
 				RECV(T_STDIN, (char *)app->name, APP_NAME_SZ);
@@ -164,9 +164,9 @@ static void cmd_deliver_orders(void) {
 				o->item = (void *)app;
 				break;
 			case MEAL_TYPE:
-				meal = malloc(sizeof(Meal));
+				meal = __malloc(sizeof(Meal));
 				MALLOC_OK(meal);
-				memset(meal, '\x00', sizeof(Meal));
+				__memset(meal, '\x00', sizeof(Meal));
 				meal->ftype = o->ftype;
 				DBG("receiving meal\n");
 				RECV(T_STDIN, (char *)meal->name, MEAL_NAME_SZ + MEAL_MAIN_SZ + MEAL_VEG_SZ + MEAL_SIDE_SZ);
@@ -175,9 +175,9 @@ static void cmd_deliver_orders(void) {
 				o->item = (void *)meal;
 				break;
 			case DES_TYPE:
-				des = malloc(sizeof(Dessert));
+				des = __malloc(sizeof(Dessert));
 				MALLOC_OK(des);
-				memset(des, '\x00', sizeof(Dessert));
+				__memset(des, '\x00', sizeof(Dessert));
 				des->ftype = o->ftype;
 				DBG("receiving dessert\n");
 				RECV(T_STDIN, (char *)des->name, DES_NAME_SZ);
@@ -187,7 +187,7 @@ static void cmd_deliver_orders(void) {
 				break;
 			default:
 				DBG("invalid Order ftype\n");
-				free(o);
+				__free(o);
 				ret++;
 		}
 		append_order_to_list(&o_list, o);
@@ -254,19 +254,19 @@ short process_cmd(void) {
     DBG("recving cmd on fd: %U.\n", T_STDIN);
     RECV(T_STDIN, cmd, sizeof(cmd)-1);
     DBG("recv'd cmd: %S\n", cmd);
-    if (0 == memcmp((void *)T_CMD_SEAT_CUST, cmd, sizeof(T_CMD_SEAT_CUST))) {
+    if (0 == __memcmp((void *)T_CMD_SEAT_CUST, cmd, sizeof(T_CMD_SEAT_CUST))) {
     	cmd_seat_customers_at_table();
-    } else if (0 == memcmp((void *)T_CMD_TAKE_ORDER, cmd, sizeof(T_CMD_TAKE_ORDER))) {
+    } else if (0 == __memcmp((void *)T_CMD_TAKE_ORDER, cmd, sizeof(T_CMD_TAKE_ORDER))) {
     	cmd_take_orders();
-    } else if (0 == memcmp((void *)T_CMD_DELIVER_ORDER, cmd, sizeof(T_CMD_DELIVER_ORDER))) {
+    } else if (0 == __memcmp((void *)T_CMD_DELIVER_ORDER, cmd, sizeof(T_CMD_DELIVER_ORDER))) {
     	cmd_deliver_orders();
-    } else if (0 == memcmp((void *)T_CMD_TABLE_SIZE, cmd, sizeof(T_CMD_TABLE_SIZE))) {
+    } else if (0 == __memcmp((void *)T_CMD_TABLE_SIZE, cmd, sizeof(T_CMD_TABLE_SIZE))) {
     	cmd_get_seat_count_at_table();
-    } else if (0 == memcmp((void *)T_CMD_TABLE_STATUS, cmd, sizeof(T_CMD_TABLE_STATUS))) {
+    } else if (0 == __memcmp((void *)T_CMD_TABLE_STATUS, cmd, sizeof(T_CMD_TABLE_STATUS))) {
     	cmd_get_table_status();
-    } else if (0 == memcmp((void *)T_CMD_TABLE_CLEAN_SET, cmd, sizeof(T_CMD_TABLE_CLEAN_SET))) {
+    } else if (0 == __memcmp((void *)T_CMD_TABLE_CLEAN_SET, cmd, sizeof(T_CMD_TABLE_CLEAN_SET))) {
     	cmd_clean_and_set_table();
-    } else if (0 == memcmp((void *)T_CMD_QUIT, cmd, sizeof(T_CMD_QUIT))) {
+    } else if (0 == __memcmp((void *)T_CMD_QUIT, cmd, sizeof(T_CMD_QUIT))) {
     	cmd_quit();
     	ret = -2;
     }

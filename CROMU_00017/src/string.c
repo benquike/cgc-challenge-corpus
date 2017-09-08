@@ -4,7 +4,7 @@ Author: James Nuttall (james@cromulence.co)
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -28,7 +28,7 @@ THE SOFTWARE.
 #include "stdlib.h"
 #include "math_lib.h"
 
-// strlen 
+// __strlen 
 // return length of str (defined as '\n', or '\0')
 int get_str_end(char *str)
 {
@@ -116,7 +116,7 @@ int stoi(char *str, int *moved)
 	int len = 0;
 	while (str[len] <= '9' && str[len] >= '0')
 	{
-		//printf("char to find len: %c\n", str[len]);
+		//__printf("char to find len: %c\n", str[len]);
 		len++;
 	}
 	*moved = len;
@@ -125,7 +125,7 @@ int stoi(char *str, int *moved)
 	{
 		num = num * 10 + (str[i] - '0');
 	}
-	//printf("stoi: @offset %d: %c to %d\n", len, *str, num);
+	//__printf("stoi: @offset %d: %c to %d\n", len, *str, num);
 
 	return num;
 }

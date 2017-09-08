@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -47,7 +47,7 @@ int setMap(Map **map, char* key, int value)
 	Map *map_ptr=NULL, *prev_map_ptr=NULL;
 
 	for(map_ptr=*map;map_ptr!=NULL;map_ptr=map_ptr->next) {
-		if(!strcmp(key, map_ptr->key)) {
+		if(!__strcmp(key, map_ptr->key)) {
 			break;
 		}
 		prev_map_ptr = map_ptr;
@@ -68,7 +68,7 @@ int setMap(Map **map, char* key, int value)
 	}
 
 	if(*map_ptr->key == 0) {
-		strcpy(map_ptr->key, key); // Possible Vuln: key not null terminated
+		__strcpy(map_ptr->key, key); // Possible Vuln: key not null terminated
 	}
 
 	map_ptr->value = value;
@@ -79,7 +79,7 @@ int setMap(Map **map, char* key, int value)
 int getValue(Map* map, char* key) {
 	Map* map_ptr;
 	for(map_ptr=map; map_ptr!=NULL; map_ptr=map_ptr->next) {
-		if(map_ptr->key && !strcmp(key, map_ptr->key)) { // Possible vuln: remove map->key check
+		if(!__strcmp(key, map_ptr->key)) { // Possible vuln: remove map->key check
 			return map_ptr->value;
 		} 
 	}
@@ -110,7 +110,7 @@ void removeMap(Map **map, char* key) {
 	Map *map_ptr=NULL, *prev_map_ptr=NULL;
 
 	for(map_ptr=*map;map_ptr!=NULL && *map_ptr->key != 0;map_ptr=map_ptr->next) {
-		if(!strcmp(key, map_ptr->key)) {
+		if(!__strcmp(key, map_ptr->key)) {
 			break;
 		}
 		prev_map_ptr = map_ptr;
@@ -124,7 +124,7 @@ void removeMap(Map **map, char* key) {
 	else
 		prev_map_ptr->next = map_ptr->next;
 
-	memset(map_ptr->key, 0, MAX_KEY_SIZE+1);
+	__memset(map_ptr->key, 0, MAX_KEY_SIZE+1);
 	map_ptr->value = 0;
 	map_ptr->next = 0;
 

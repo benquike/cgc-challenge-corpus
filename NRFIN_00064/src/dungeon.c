@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -42,7 +42,7 @@ void addRoom(Object* (*room)[ROOM_HEIGHT][ROOM_WIDTH], const char room_string[RO
 */
 void sendKillMessage(const char* message) {
 
-	if(transmit_all(STDOUT, message, strlen(message)))
+	if(transmit_all(STDOUT, message, __strlen(message)))
 		_terminate(TRANSMIT_ERROR);
 
 }
@@ -63,13 +63,13 @@ void sendKillMessage(const char* message) {
 Object* makeObject(char symbol, unsigned int id, unsigned int y, unsigned int x, unsigned int y_dir, unsigned x_dir, int moveNum) {
 	Object* object=NULL;
 
-	if(!(object = malloc(sizeof(Object))))
+	if(!(object = __malloc(sizeof(Object))))
 		_terminate(ALLOCATE_ERROR);
 
-	if(!(object->position = malloc(sizeof(Coordinate))))
+	if(!(object->position = __malloc(sizeof(Coordinate))))
 		_terminate(ALLOCATE_ERROR);
 
-	if(!(object->direction = malloc(sizeof(Coordinate))))
+	if(!(object->direction = __malloc(sizeof(Coordinate))))
 		_terminate(ALLOCATE_ERROR);
 
 	object->symbol = symbol;
@@ -87,19 +87,19 @@ Object* makeObject(char symbol, unsigned int id, unsigned int y, unsigned int x,
 /**
 * Destroy an Object
 * 
-* @param object The address of the object to free
+* @param object The address of the object to __free
 *
 * @return None
 */
 void destroyObject(Object* object) {
 
-	if(!(object = malloc(sizeof(Object))))
+	if(!(object = __malloc(sizeof(Object))))
 		_terminate(ALLOCATE_ERROR);
 
-	if(!(object->position = malloc(sizeof(Coordinate))))
+	if(!(object->position = __malloc(sizeof(Coordinate))))
 		_terminate(ALLOCATE_ERROR);
 
-	if(!(object->direction = malloc(sizeof(Coordinate))))
+	if(!(object->direction = __malloc(sizeof(Coordinate))))
 		_terminate(ALLOCATE_ERROR);
 
 	object->symbol = 0;
@@ -110,11 +110,11 @@ void destroyObject(Object* object) {
 	object->direction->y = 0;
 	object->moves = 0;
 
-	free(object->position);
+	__free(object->position);
 	object->position = NULL;
-	free(object->direction);
+	__free(object->direction);
 	object->direction = NULL;
-	free(object);
+	__free(object);
 
 }
 
@@ -153,7 +153,7 @@ void extendDungeon(Dungeon *dungeon, int dungeon_idx, char last_move, int moveNu
 
 	cornerStone.y=0;
 	cornerStone.x= (dungeon_idx*ROOM_WIDTH);
-	if(!(new_room = malloc(sizeof(Room))))
+	if(!(new_room = __malloc(sizeof(Room))))
 		_terminate(ALLOCATE_ERROR);
 	addRoom(&new_room->contents, room_string[room_idx], cornerStone, moveNum);
 
@@ -191,35 +191,35 @@ void addMove(Dungeon *dungeon, Object* player, int move) {
 			dungeon_idx = player->moves / EXTEND_MOVE;
 			old_list = dungeon->moveList;
 #ifdef PATCHED_1
-			if(!(dungeon->moveList = malloc((dungeon_idx+2)*EXTEND_MOVE*4+1)))
+			if(!(dungeon->moveList = __malloc((dungeon_idx+2)*EXTEND_MOVE*4+1)))
 				_terminate(ALLOCATE_ERROR);
-			bzero(dungeon->moveList, (dungeon_idx+2)*EXTEND_MOVE*4+1);
+			__bzero(dungeon->moveList, (dungeon_idx+2)*EXTEND_MOVE*4+1);
 #else
-			if(!(dungeon->moveList = malloc((dungeon_idx+1)*EXTEND_MOVE*4)))
+			if(!(dungeon->moveList = __malloc((dungeon_idx+1)*EXTEND_MOVE*4)))
 				_terminate(ALLOCATE_ERROR);
-			bzero(dungeon->moveList, (dungeon_idx+1)*EXTEND_MOVE*4);
+			__bzero(dungeon->moveList, (dungeon_idx+1)*EXTEND_MOVE*4);
 #endif
 
 			// Copy old list to new space
-			len = strlen(old_list);
-			memcpy(dungeon->moveList, old_list, len);
-			bzero(old_list, len);
+			len = __strlen(old_list);
+			__memcpy(dungeon->moveList, old_list, len);
+			__bzero(old_list, len);
 
 			// If there is dungeon left to build
 			last_move = move;
 			extendDungeon(dungeon, dungeon_idx, last_move, player->moves);
 
 			if(!flag_buf) {
-				if(!(flag_buf = malloc(512)))
+				if(!(flag_buf = __malloc(512)))
 					_terminate(ALLOCATE_ERROR);
-				bzero(flag_buf, 512);
+				__bzero(flag_buf, 512);
 
 				for (unsigned int i = 0; i < 10; i++) {
-					sprintf(&flag_buf[i*4], "!H", (unsigned char) *flag++);
+					__sprintf(&flag_buf[i*4], "!H", (unsigned char) *flag++);
 				}
 			}
 
-			free(old_list);
+			__free(old_list);
 
 		}
 
@@ -330,14 +330,14 @@ void playerDied(Dungeon dungeon) {
 	Object* player;
 	size_t len;
 
-	bzero(buffer, 1024);
+	__bzero(buffer, 1024);
 	if(!(player = getObjectById(dungeon.start, PLAYER_NUM)))
 		_terminate(OBJECT_NOT_FOUND_ERROR);
 
-	sprintf(buffer, " at position x:!U y:!U after !U moves\n",
+	__sprintf(buffer, " at position x:!U y:!U after !U moves\n",
 		player->position->x, player->position->y, player->moves);
 
-	len = strlen(buffer);
+	len = __strlen(buffer);
 	if(transmit_all(STDOUT, buffer, len))
 		_terminate(TRANSMIT_ERROR);
 
@@ -355,19 +355,19 @@ char* getName() {
 	char *name;
 	size_t len, bytes;
 
-	bzero(buffer, MAX_NAME_SIZE+1);
-	if(transmit_all(STDOUT, HIGHSCORE_MSG, strlen(HIGHSCORE_MSG)))
+	__bzero(buffer, MAX_NAME_SIZE+1);
+	if(transmit_all(STDOUT, HIGHSCORE_MSG, __strlen(HIGHSCORE_MSG)))
 		_terminate(TRANSMIT_ERROR);
 
 	if(read_until_delim_or_n(STDOUT, buffer, '\n', MAX_NAME_SIZE, &bytes))
 		_terminate(READ_ERROR);
 
-	len = strlen(buffer);
-	if(!(name = malloc(len+1)))
+	len = __strlen(buffer);
+	if(!(name = __malloc(len+1)))
 		_terminate(ALLOCATE_ERROR);
 
-	bzero(name, len+1);
-	memcpy(name, buffer, len);
+	__bzero(name, len+1);
+	__memcpy(name, buffer, len);
 
 	return name;
 
@@ -414,9 +414,9 @@ Score* insertNewScore(Score* highScores, Score* newScore) {
 void addHighScore(Dungeon* dungeon, int moves) {
 	Score* newScore;
 
-	if(!(newScore = malloc(sizeof(Score)))) 
+	if(!(newScore = __malloc(sizeof(Score)))) 
 		_terminate(ALLOCATE_ERROR);
-	bzero((char*)newScore, sizeof(Score));
+	__bzero((char*)newScore, sizeof(Score));
 	newScore->name = getName();
 	newScore->score = moves;
 	newScore->next = NULL;
@@ -437,33 +437,33 @@ void playerWon(Dungeon* dungeon) {
 	Object* player;
 	size_t len;
 
-	bzero(buffer, 1024);
+	__bzero(buffer, 1024);
 	if(!(player = getObjectById(dungeon->start, PLAYER_NUM)))
 		_terminate(OBJECT_NOT_FOUND_ERROR);
 
-	sprintf(buffer, "You found the treasure at position x:!U y:!U after !U moves\n",
+	__sprintf(buffer, "You found the treasure at position x:!U y:!U after !U moves\n",
 		player->position->x, player->position->y, player->moves);
 
-	len = strlen(buffer);
+	len = __strlen(buffer);
 	if(transmit_all(STDOUT, buffer, len))
 		_terminate(TRANSMIT_ERROR);
 
-	len = strlen(MOVELIST_HDR);
-	len += strlen(dungeon->moveList);
-	len += strlen("\n");
+	len = __strlen(MOVELIST_HDR);
+	len += __strlen(dungeon->moveList);
+	len += __strlen("\n");
 
-	if(!(ml_buffer = malloc(len+1))) {
+	if(!(ml_buffer = __malloc(len+1))) {
 		_terminate(ALLOCATE_ERROR);
 	}
 
-	bzero(ml_buffer, len+1);
-	sprintf(ml_buffer, "!X!X\n", MOVELIST_HDR, dungeon->moveList);
+	__bzero(ml_buffer, len+1);
+	__sprintf(ml_buffer, "!X!X\n", MOVELIST_HDR, dungeon->moveList);
 
 	if(transmit_all(STDOUT, ml_buffer, len))
 		_terminate(TRANSMIT_ERROR);
 
-	bzero(ml_buffer, len+1);
-	free(ml_buffer);
+	__bzero(ml_buffer, len+1);
+	__free(ml_buffer);
 
 	addHighScore(dungeon, player->moves);
 }
@@ -1018,12 +1018,12 @@ int makeMove(Dungeon* dungeon, char move) {
 	int len;
 
 	if(!dungeon->moveList) {
-		dungeon->moveList = malloc(EXTEND_MOVE*4+1);
-		bzero(dungeon->moveList, EXTEND_MOVE*4+1);
+		dungeon->moveList = __malloc(EXTEND_MOVE*4+1);
+		__bzero(dungeon->moveList, EXTEND_MOVE*4+1);
 	}
 
-	len = strlen(dungeon->moveList);
-	sprintf(&dungeon->moveList[len], "!H", (unsigned char) move);
+	len = __strlen(dungeon->moveList);
+	__sprintf(&dungeon->moveList[len], "!H", (unsigned char) move);
 
 	if(!(player = getObjectById(dungeon->start, PLAYER_NUM)))
 		_terminate(OBJECT_NOT_FOUND_ERROR);
@@ -1096,7 +1096,7 @@ void sendCurrentDungeonView(Room* start) {
 
 	int i;
 	for(i=height_diff*(-1); i<=height_diff; i++) {
-		bzero(view, VIEW_WIDTH);
+		__bzero(view, VIEW_WIDTH);
 		for(int j=width_diff*(-1); j<=width_diff; j++) {
 			if(i+center_y < ROOM_HEIGHT && i+center_y >= 0) {
 
@@ -1133,7 +1133,7 @@ void sendCurrentDungeonView(Room* start) {
 			_terminate(TRANSMIT_ERROR);
 
 
-		if(transmit_all(STDOUT, "\n", strlen("\n")))
+		if(transmit_all(STDOUT, "\n", __strlen("\n")))
 			_terminate(TRANSMIT_ERROR);
 #endif
 	}
@@ -1186,7 +1186,7 @@ void addRoom(Object* (*room)[ROOM_HEIGHT][ROOM_WIDTH], const char room_string[RO
 }
 
 /**
-* Destroy a room and free all memory
+* Destroy a room and __free all memory
 * 
 * @param room A pointer to the room array to destroy
 *
@@ -1215,8 +1215,8 @@ void buildDungeon(Dungeon* dungeon) {
 	cornerStone.y = 0;
 	cornerStone.x = 0;
 
-	bzero(move_buf,10);
-	if(!(dungeon->start = malloc(sizeof(Room))))
+	__bzero(move_buf,10);
+	if(!(dungeon->start = __malloc(sizeof(Room))))
 		_terminate(ALLOCATE_ERROR);
 
 	addRoom(&dungeon->start->contents, first_room_string, cornerStone, 0);
@@ -1226,7 +1226,7 @@ void buildDungeon(Dungeon* dungeon) {
 
 	int in, im;
 	unsigned char is_used['~'-'#'];
-	bzero((char*)is_used, '~'-'#');
+	__bzero((char*)is_used, '~'-'#');
 
 	im = 0;
 	for (in = '~' - 10; in < '~' && im < 10; ++in) {
@@ -1270,7 +1270,7 @@ void buildDungeon(Dungeon* dungeon) {
 }
 
 /**
-* Destroy the dungeon and free all memory
+* Destroy the dungeon and __free all memory
 * 
 * @param dungeon A pointer to the dungeon structure
 *
@@ -1279,11 +1279,11 @@ void buildDungeon(Dungeon* dungeon) {
 void destroyDungeon(Dungeon* dungeon) {
 	size_t len;
 
-	bzero((char *)&dungeon->moveTypes, sizeof(Moves));
+	__bzero((char *)&dungeon->moveTypes, sizeof(Moves));
 	if(dungeon->moveList) {
-		len = strlen(dungeon->moveList);
-		bzero(dungeon->moveList, len);
-		free(dungeon->moveList);		
+		len = __strlen(dungeon->moveList);
+		__bzero(dungeon->moveList, len);
+		__free(dungeon->moveList);		
 	}
 	dungeon->moveList = NULL;
 
@@ -1291,7 +1291,7 @@ void destroyDungeon(Dungeon* dungeon) {
 	for(Room* room=dungeon->start; room!=NULL; room=nextRoom) {
 		nextRoom = (Room *)room->next;
 		destroyRoom(&room->contents);
-		free(room);
+		__free(room);
 	}
 
 }

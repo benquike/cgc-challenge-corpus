@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -38,7 +38,7 @@ int fdprintf(int fd, const char *fmt, ...);
   #define DBG(s, ...) fdprintf(STDERR, "DEBUG %s:%d:\t" s "\n", __FILE__, __LINE__, ##__VA_ARGS__)
 #endif
 
-#define ERR(s, ...) printf("ERROR: " s "\n",##__VA_ARGS__)
+#define ERR(s, ...) __printf("ERROR: " s "\n",##__VA_ARGS__)
 
 const char *tag_class_names[5] = {
   "UNIVERSAL",
@@ -115,7 +115,7 @@ static int parse_length(uint8_t *b, element *e)
   size_t num_bytes, i;
   unsigned length;
   if (b[0] < 128) {
-    DBG("parsed short form length: length = %d, num_bytes = 1, read = 1", *b);
+    DBG("parsed short form length: length = %d, num_bytes = 1, __read = 1", *b);
     e->length = b[0];
     return 1;
   }
@@ -151,9 +151,9 @@ static void free_element(element *e)
         free_element(e->subs[i]);
 
   if (e && e->subs)
-    free(e->subs);
+    __free(e->subs);
   if (e)
-    free(e);
+    __free(e);
 }
 
 static int append_sub(element *e, element *sub)
@@ -165,7 +165,7 @@ static int append_sub(element *e, element *sub)
       return -1;
     }
 
-    e->subs = realloc(e->subs, sizeof(element *) * new_cap);
+    e->subs = __realloc(e->subs, sizeof(element *) * new_cap);
     if (e->subs == NULL) {
       return -1;
     }
@@ -198,11 +198,11 @@ element *_decode(uint8_t *b, unsigned depth, unsigned st, unsigned sp)
     return NULL;
   }
 
-  element *e = malloc(sizeof(element));
+  element *e = __malloc(sizeof(element));
   if (e == NULL)
     goto ERROR;
   e->sub_cap = DEFAULT_SUB_CAP;
-  e->subs = calloc(sizeof(element *), e->sub_cap);
+  e->subs = __calloc(sizeof(element *), e->sub_cap);
   if (e->subs == NULL)
     goto ERROR;
   e->nsubs = 0;
@@ -301,7 +301,7 @@ static void print_indent(unsigned depth)
 {
   unsigned i;
   for (i = 0; i < depth; i++)
-    printf("    ");
+    __printf("    ");
 }
 
 static void print_time(element *e, int utc)
@@ -311,51 +311,51 @@ static void print_time(element *e, int utc)
   unsigned i;
 
   if (e->length < req_len) {
-    printf("INVALID TIME");
+    __printf("INVALID TIME");
     return;
   }
 
   for (i = 0; i < req_len; i++)
-    if (!isdigit(d[i])) {
-      printf("INVALID TIME");
+    if (!__isdigit(d[i])) {
+      __printf("INVALID TIME");
       return;
     }
 
   if (utc) {
-    printf("%c%c/%c%c/", d[4], d[5], d[2], d[3]);
+    __printf("%c%c/%c%c/", d[4], d[5], d[2], d[3]);
     if (e->data[0] < '6')
-      printf("%s", "20");
+      __printf("%s", "20");
     else
-      printf("%s", "19");
-    printf("%c%c", d[0], d[1]);
+      __printf("%s", "19");
+    __printf("%c%c", d[0], d[1]);
   } else {
-    printf("%c%c/%c%c/%c%c%c%c",
+    __printf("%c%c/%c%c/%c%c%c%c",
         d[6], d[7], d[4], d[5],
         d[0], d[1], d[2], d[3]);
     d += 2;
   }
 
-  printf(" %c%c:%c%c:%c%c GMT", d[6], d[7], d[8], d[9], d[10], d[11]);
+  __printf(" %c%c:%c%c:%c%c GMT", d[6], d[7], d[8], d[9], d[10], d[11]);
 }
 
 static void print_hex(element *e)
 {
   unsigned i;
   if (e->length > 16) {
-    printf("\n");
+    __printf("\n");
     print_indent(e->depth + 1);
     for (i = 0; i < e->length; i++) {
-      printf("%02X", e->data[i]);
+      __printf("%02X", e->data[i]);
       if (i % 32 == 31) {
-        printf("\n");
+        __printf("\n");
         print_indent(e->depth + 1);
       } else {
-        printf(" ");
+        __printf(" ");
       }
     }
   } else {
     for (i = 0; i < e->length; i++) {
-      printf("%02X ", e->data[i]);
+      __printf("%02X ", e->data[i]);
     }
   }
 }
@@ -397,11 +397,11 @@ static void print_oid(element *e)
         return;
 
       if (v < 80) {
-        printf("%u", v / 40);
-        printf(".%u", v % 40);
+        __printf("%u", v / 40);
+        __printf(".%u", v % 40);
       } else {
-        printf("2");
-        printf(".%u", v - 80);
+        __printf("2");
+        __printf(".%u", v - 80);
       }
     }
 
@@ -421,7 +421,7 @@ static void print_oid(element *e)
       return;
 #endif
 
-    printf(".%u", v);
+    __printf(".%u", v);
   }
 }
 
@@ -430,21 +430,21 @@ static void print_tag(element *e)
   switch (e->cls) {
   case UNIVERSAL:
     if (e->tag < 0 || e->tag >= sizeof(utag_names) / sizeof(char *))
-      printf("UNIVERSAL_%d ", e->tag);
+      __printf("UNIVERSAL_%d ", e->tag);
     else
-      printf("UNIVERSAL %s ", utag_names[e->tag]);
+      __printf("UNIVERSAL %s ", utag_names[e->tag]);
     break;
   case APPLICATION:
-    printf("APPLICATION_%d ", e->tag);
+    __printf("APPLICATION_%d ", e->tag);
     break;
   case CONTEXT:
-    printf("[%d] ", e->tag);
+    __printf("[%d] ", e->tag);
     break;
   case PRIVATE:
-    printf("PRIVATE_%d ", e->tag);
+    __printf("PRIVATE_%d ", e->tag);
     break;
   default:
-    printf("UNKNOWN_%d ", e->tag);
+    __printf("UNKNOWN_%d ", e->tag);
     break;
   }
 }
@@ -453,10 +453,10 @@ static void print_string(element *e)
 {
   unsigned i;
   for (i = 0; i < e->length; i++)
-    if (isalnum(e->data[i]))
-      printf("%c", e->data[i]);
+    if (__isalnum(e->data[i]))
+      __printf("%c", e->data[i]);
     else
-      printf("\\x%x", e->data[i]);
+      __printf("\\x%x", e->data[i]);
 }
 
 static void print_primitive(element *e)
@@ -465,7 +465,7 @@ static void print_primitive(element *e)
   case UNIVERSAL:
     switch(e->tag) {
     case BOOLEAN:
-      printf("%s", e->data[0] == 0 ? "False" : "True");
+      __printf("%s", e->data[0] == 0 ? "False" : "True");
       return;
     case INTEGER:
     case BITSTR:
@@ -497,7 +497,7 @@ static void print_primitive(element *e)
     break;
   }
 
-  printf("UNPRINTABLE");
+  __printf("UNPRINTABLE");
 }
 
 void pprint(element *e)
@@ -508,9 +508,9 @@ void pprint(element *e)
 
   if (e->primitive) {
     print_primitive(e);
-    printf("\n");
+    __printf("\n");
   } else {
-    printf("\n");
+    __printf("\n");
     for (i = 0; i < e->nsubs; i++)
       pprint(e->subs[i]);
   }

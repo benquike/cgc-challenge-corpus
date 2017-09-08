@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -64,10 +64,10 @@ DefineFunction(Monster, void, copy, Monster *other)
 DefineFunction(Monster, void, set_name, const char *name)
 {
 #if PATCHED
-    if (strlen(name)+1 > MONSTER_NAME_LEN)
+    if (__strlen(name)+1 > MONSTER_NAME_LEN)
         raise(EXC_BAD_STATE);
 #endif
-    strcpy(this->m_name, name);
+    __strcpy(this->m_name, name);
 }
 
 DefineFunction(Monster, void, level_up)
@@ -119,7 +119,7 @@ DefineFunction(Monster, void, deserialize, Buffer *buf)
 
     name = $(buf, read_string);
     $(this, set_name, name);
-    free(name);
+    __free(name);
 
     kind_id = $(buf, read_number);
     ASSERT_OR_RAISE(kind_id < NUM_BUILTIN_KINDS, EXC_BAD_STATE);

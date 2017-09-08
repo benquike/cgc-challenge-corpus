@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include "shell.h"
 
 Filesystem FS[MAX_FILES];
-FILE FH[MAX_FILES];
+__FILE FH[MAX_FILES];
 
 extern environment ENV;
 
@@ -43,37 +43,37 @@ void InitFilesystem(void) {
 	uint8_t i;
         const char *rand_page = (const char *)0x4347C000;
 
-	bzero(FS, sizeof(FS));
-	bzero(FH, sizeof(FH));
+	__bzero(FS, sizeof(FS));
+	__bzero(FH, sizeof(FH));
 
 	// generate a random root password
-	bzero(root_passwd, 32);
+	__bzero(root_passwd, 32);
 	for (i = 0; i < 10; i++) {
 		root_passwd[i] = (char)random_in_range(65,122);
 	}
 	root_passwd[i] = '\0';
 
 	// generate a random secure user password
-	bzero(secure_passwd, 32);
+	__bzero(secure_passwd, 32);
 	for (i = 0; i < 31; i++) {
 		secure_passwd[i] = (char)random_in_range(65,122);
 	}
 	secure_passwd[i] = '\0';
 
 	// passwd file
-	strcpy(FS[0].Filename, "passwd");
-	strcpy(FS[0].Owner, "root");
-	strcpy(FS[0].Group, "root");
+	__strcpy(FS[0].Filename, "passwd");
+	__strcpy(FS[0].Owner, "root");
+	__strcpy(FS[0].Group, "root");
 	FS[0].Perms = 0x700;
 	sprintf(FS[0].Data, "$s:secure:secure\ncrs:crs:crs\n$s:root:root", secure_passwd, root_passwd);
-	FS[0].Size = strlen(FS[0].Data);
+	FS[0].Size = __strlen(FS[0].Data);
 
 	// confidential data file
-	strcpy(FS[1].Filename, "confidential");
-	strcpy(FS[1].Owner, "secure");
-	strcpy(FS[1].Group, "secure");
+	__strcpy(FS[1].Filename, "confidential");
+	__strcpy(FS[1].Owner, "secure");
+	__strcpy(FS[1].Group, "secure");
 	FS[1].Perms = 0x700;
-	// read starting at 4th byte since we already used the first 4 to seed the prng
+	// __read starting at 4th byte since we already used the first 4 to seed the prng
 	// but don't use any 4-byte chunks that have NULL's or newlines
 	rand_page+=4;
 	i = 0;
@@ -93,14 +93,14 @@ void InitFilesystem(void) {
 void ListFiles(void) {
 	uint8_t i;
 
-	puts("Directory listing");
-	printf("$-32s $-32s $-32s $5s\n\r", "Filename", "Owner", "Group", "Size");
+	__puts("Directory listing");
+	__printf("$-32s $-32s $-32s $5s\n\r", "Filename", "Owner", "Group", "Size");
 	for (i = 0; i < MAX_FILES; i++) {
 		if (FS[i].Filename[0] == '\0'){
 			continue;
 		}
 
-		printf("$-32s $-32s $-32s $5d\n\r", FS[i].Filename, FS[i].Owner, FS[i].Group, FS[i].Size);
+		__printf("$-32s $-32s $-32s $5d\n\r", FS[i].Filename, FS[i].Owner, FS[i].Group, FS[i].Size);
 	}
 }
 
@@ -116,7 +116,7 @@ uint16_t Mode2Perms(char *Mode) {
 	return(Perms);
 }
  
-pFILE fopen(char *Filename, char *Mode, uint8_t Suid) {
+pFILE __fopen(char *Filename, char *Mode, uint8_t Suid) {
 	uint8_t i;
 	uint16_t Perms;
 	pFilesystem FirstAvailableFS = NULL;
@@ -126,12 +126,12 @@ pFILE fopen(char *Filename, char *Mode, uint8_t Suid) {
 		return(NULL);
 	}
 
-	if (strlen(Filename) > 31) {
+	if (__strlen(Filename) > 31) {
 		return(NULL);
 	}
 
 	// make sure we only have 'r' or 'w' in Mode
-	if (strlen(Mode) > 1) {
+	if (__strlen(Mode) > 1) {
 		return(NULL);
 	}
 	if (Mode[0] != 'r' && Mode[0] != 'w') {
@@ -146,7 +146,7 @@ pFILE fopen(char *Filename, char *Mode, uint8_t Suid) {
 			FirstAvailableFS = &FS[inode];
 		}
 
-		if (strcmp(Filename, FS[inode].Filename) == 0) {
+		if (__strcmp(Filename, FS[inode].Filename) == 0) {
 			break;
 		}
 	}
@@ -159,12 +159,12 @@ pFILE fopen(char *Filename, char *Mode, uint8_t Suid) {
 	}
 
 	// if called from a 'setuid root' function
-	if (Suid || !strcmp(ENV.User, "root")) {
+	if (Suid || !__strcmp(ENV.User, "root")) {
 		goto success;
 	}
 
 	// verify user permissions
-	if (!strcmp(FS[inode].Owner, ENV.User)) {
+	if (!__strcmp(FS[inode].Owner, ENV.User)) {
 		Perms = (FS[inode].Perms & 0xF00) >> 8;
 		if ((Perms & Mode2Perms(Mode)) == 0) {
 			return(NULL);
@@ -174,7 +174,7 @@ pFILE fopen(char *Filename, char *Mode, uint8_t Suid) {
 	}
 
 	// verify group permissions
-	if (!strcmp(FS[inode].Group, ENV.Group)) {
+	if (!__strcmp(FS[inode].Group, ENV.Group)) {
 		Perms = (FS[inode].Perms & 0xF0) >> 4;
 		if ((Perms & Mode2Perms(Mode)) == 0) {
 			return(NULL);
@@ -207,11 +207,11 @@ success:
 				return(NULL);
 			}
 			// create a new file
-			strcpy(FirstAvailableFS->Filename, Filename);
-			strcpy(FirstAvailableFS->Owner, ENV.User);
-			strcpy(FirstAvailableFS->Group, ENV.Group);
+			__strcpy(FirstAvailableFS->Filename, Filename);
+			__strcpy(FirstAvailableFS->Owner, ENV.User);
+			__strcpy(FirstAvailableFS->Group, ENV.Group);
 			FirstAvailableFS->Perms = 0x700;
-			bzero(FirstAvailableFS->Data, MAX_FILE_SIZE);
+			__bzero(FirstAvailableFS->Data, MAX_FILE_SIZE);
 			FirstAvailableFS->Size = 0;
 			FH[i].fp = FirstAvailableFS;
 			FH[i].mode = PERMS_WRITE;
@@ -219,7 +219,7 @@ success:
 			// open the existing file
 			FH[i].fp = &FS[inode];
 			FH[i].mode = PERMS_WRITE;
-			bzero(FH[i].fp->Data, MAX_FILE_SIZE);
+			__bzero(FH[i].fp->Data, MAX_FILE_SIZE);
 			FH[i].fp->Size = 0;
 		}
 	} else {
@@ -260,7 +260,7 @@ char *fgets(char *str, uint32_t size, pFILE stream) {
 	return(str);
 }
 
-uint8_t fclose(pFILE stream) {
+uint8_t __fclose(pFILE stream) {
 
 	if (!stream) {
 		return(0);
@@ -273,7 +273,7 @@ uint8_t fclose(pFILE stream) {
 
 }
 
-size_t fread(void *restrict ptr, size_t size, size_t nitems, FILE *restrict stream) {
+size_t __fread(void *restrict ptr, size_t size, size_t nitems, __FILE *restrict stream) {
 
 	if (!ptr || !stream || size == 0 || nitems == 0) {
 		return(0);
@@ -284,16 +284,16 @@ size_t fread(void *restrict ptr, size_t size, size_t nitems, FILE *restrict stre
 	}
 
 	if (size*nitems > stream->fp->Size) {
-		memcpy(ptr, stream->fp->Data, stream->fp->Size);
+		__memcpy(ptr, stream->fp->Data, stream->fp->Size);
 		return(stream->fp->Size);
 	} else {
-		memcpy(ptr, stream->fp->Data, size*nitems);
+		__memcpy(ptr, stream->fp->Data, size*nitems);
 		return(size*nitems);
 	}
 
 }	
 
-size_t fwrite(const void *restrict ptr, size_t size, size_t nitems, FILE *restrict stream) {
+size_t __fwrite(const void *restrict ptr, size_t size, size_t nitems, __FILE *restrict stream) {
 
 	if (!ptr || !stream) {
 		return(0);
@@ -303,7 +303,7 @@ size_t fwrite(const void *restrict ptr, size_t size, size_t nitems, FILE *restri
 		return(0);
 	}
 
-	memcpy(stream->CurrPosition, ptr, size*nitems);
+	__memcpy(stream->CurrPosition, ptr, size*nitems);
 	stream->fp->Size += size*nitems;
 
 	return(size*nitems);
@@ -311,23 +311,23 @@ size_t fwrite(const void *restrict ptr, size_t size, size_t nitems, FILE *restri
 }
 
 uint8_t Dump(char *filename) {
-	FILE *stream;
+	__FILE *stream;
 	char buf[1024];
 
 	if (!filename) {
 		return(0);
 	}
 
-	if ((stream = fopen(filename, "r", 0)) == NULL) {
-		printf("Unable to open file '$s'\n\r", filename);
+	if ((stream = __fopen(filename, "r", 0)) == NULL) {
+		__printf("Unable to open file '$s'\n\r", filename);
 		return(0);
 	}
 
 	while (fgets(buf, 1024, stream)) {
-		puts(buf);
+		__puts(buf);
 	}
 
-	fclose(stream);
+	__fclose(stream);
 
 	return(1);
 

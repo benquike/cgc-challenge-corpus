@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -30,7 +30,7 @@ typedef unsigned char char_set[CHAR_SET_SIZE];
 static void
 init_char_set(char_set set)
 {
-    memset(set, '\0', CHAR_SET_SIZE);
+    __memset(set, '\0', CHAR_SET_SIZE);
 }
 
 static void
@@ -134,12 +134,12 @@ greedy_match_one(char *line, struct regex_element *element, int is_first, char *
         while (**next && get_bit(element->set, **next))
             (*next)++;
 
-        return !element->end_anchor || strlen(*next) == 0;
+        return !element->end_anchor || __strlen(*next) == 0;
     }
 
     if (*line && get_bit(element->set, *line)) {
         (*next)++;
-        return !element->end_anchor || strlen(*next) == 0;
+        return !element->end_anchor || __strlen(*next) == 0;
     }
 
     return 0;
@@ -186,18 +186,18 @@ regex_match(char *regex, char *line, char **begin, char **end)
     char *c = regex;
     struct regex_element element, **elements = NULL;
 
-    if (strlen(regex) > MAX_REGEX_LENGTH)
+    if (__strlen(regex) > MAX_REGEX_LENGTH)
         goto out;
 
     while (parse_regex_element(c, &element, &c) == EXIT_SUCCESS)
         count++;
 
-    if ((elements = calloc((count + 1) * sizeof(struct regex_element *))) == NULL)
+    if ((elements = __calloc((count + 1) * sizeof(struct regex_element *))) == NULL)
         goto out;
 
     c = regex;
     for (i = 0; i < count; i++) {
-        if ((elements[i] = calloc(sizeof(struct regex_element))) == NULL)
+        if ((elements[i] = __calloc(sizeof(struct regex_element))) == NULL)
             goto out;
 
         if (parse_regex_element(c, elements[i], &c) != EXIT_SUCCESS)
@@ -221,9 +221,9 @@ regex_match(char *regex, char *line, char **begin, char **end)
 out:
     if (elements)
         for (i = 0; i < count; i++)
-            free(elements[i]);
+            __free(elements[i]);
 
-    free(elements);
+    __free(elements);
 
     return ret;
 }

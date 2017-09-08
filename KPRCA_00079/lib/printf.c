@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -74,7 +74,7 @@ static void _convert_signed(char *buf, int x, int base, int upper)
     _convert_unsigned(buf, x, base, upper);
 }
 
-static int _vsfprintf(const char *fmt, va_list ap, FILE *stream, char *buf, size_t buf_size)
+static int _vsfprintf(const char *fmt, va_list ap, __FILE *stream, char *buf, size_t buf_size)
 {
     char ch;
     unsigned int num_size, field_size;
@@ -89,7 +89,7 @@ static int _vsfprintf(const char *fmt, va_list ap, FILE *stream, char *buf, size
             break; \
         } \
         char __ch = _ch; \
-        if (stream) fwrite(&__ch, 1, stream); \
+        if (stream) __fwrite(&__ch, 1, stream); \
         if (buf) buf[count] = __ch; \
         count++; \
     } while (0)
@@ -103,8 +103,8 @@ static int _vsfprintf(const char *fmt, va_list ap, FILE *stream, char *buf, size
         } \
         size_t cnt = buf_size - count; \
         if (cnt > sz) cnt = sz; \
-        if (stream) fwrite(str, cnt, stream); \
-        if (buf) memcpy(buf + count, str, cnt); \
+        if (stream) __fwrite(str, cnt, stream); \
+        if (buf) __memcpy(buf + count, str, cnt); \
         if ((size_t)(count + sz) < (count)) _terminate(1); \
         count += sz; \
     } while (0)
@@ -146,7 +146,7 @@ static int _vsfprintf(const char *fmt, va_list ap, FILE *stream, char *buf, size
 
         /* field width */
         if (*fmt >= '0' && *fmt <= '9')
-            field_size = strtoul(fmt, (char **)&fmt, 10);
+            field_size = __strtoul(fmt, (char **)&fmt, 10);
 
         /* modifiers */
         switch ((ch = *fmt++))
@@ -211,7 +211,7 @@ static int _vsfprintf(const char *fmt, va_list ap, FILE *stream, char *buf, size
                 _convert_unsigned(numbuf, uintarg, ch == 'u' ? 10 : 16, ch == 'X');
             }
 
-            numbuflen = strlen(numbuf);
+            numbuflen = __strlen(numbuf);
             if (numbuflen < field_size)
             {
                 field_size -= numbuflen;
@@ -228,7 +228,7 @@ static int _vsfprintf(const char *fmt, va_list ap, FILE *stream, char *buf, size
             break;
         case 's':
             strarg = va_arg(ap, const char *);
-            OUTPUT_STRING(strarg, strlen(strarg));
+            OUTPUT_STRING(strarg, __strlen(strarg));
             break;
 #ifdef PRINTF_N_CHAR
         case PRINTF_N_CHAR:
@@ -251,7 +251,7 @@ done:
     return (int)count;
 }
 
-int printf(const char *fmt, ...)
+int __printf(const char *fmt, ...)
 {
     int ret;
     va_list ap;
@@ -263,7 +263,7 @@ int printf(const char *fmt, ...)
     return ret;
 }
 
-int fprintf(FILE *stream, const char *fmt, ...)
+int fprintf(__FILE *stream, const char *fmt, ...)
 {
     int ret;
     va_list ap;
@@ -292,7 +292,7 @@ int vprintf(const char *fmt, va_list ap)
     return vfprintf(stdout, fmt, ap);
 }
 
-int vfprintf(FILE *stream, const char *fmt, va_list ap)
+int vfprintf(__FILE *stream, const char *fmt, va_list ap)
 {
     int retval, buffered = 1;
     // switch to buffered mode temporarily

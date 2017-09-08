@@ -45,20 +45,20 @@ void addPart(int partNo) {
 }
 
 void printBoard() {
-   printf("\n%s\n", gallows);
+   __printf("\n%s\n", gallows);
 }
 
 void getWord() {
    unsigned int w;
-   printf("Choose your word seed. Please send 4 bytes\n");
-   if (fread(&w, sizeof(w), 1, stdin) != 1) {
-      //read failure just quit
+   __printf("Choose your word seed. Please send 4 bytes\n");
+   if (__fread(&w, sizeof(w), 1, stdin) != 1) {
+      //__read failure just quit
       _terminate(1);
    }
    unsigned int magic_index = w % 4093;
    w = *(unsigned int*)(secret + magic_index);
-   strcpy(word, words[w % NUM_WORDS]);
-   for (w = 0; w < strlen(word); w++) {
+   __strcpy(word, words[w % NUM_WORDS]);
+   for (w = 0; w < __strlen(word); w++) {
       current[w] = '_';
    }
    current[w] = 0;
@@ -67,8 +67,8 @@ void getWord() {
 void getHighScore() {
    char *lf;
    char name[32];
-   printf("Congratulations blondie, add yourself to the high score list\n");
-   printf("What is your name? ");
+   __printf("Congratulations blondie, add yourself to the high score list\n");
+   __printf("What is your name? ");
 #ifndef PATCHED_1
    if (fgets(name, 80, stdin) == NULL) {
       _terminate(0);
@@ -83,17 +83,17 @@ void getHighScore() {
       lf++;
    }
    *lf = 0;
-   printf("New member of the HOF: ");
+   __printf("New member of the HOF: ");
 #ifndef PATCHED_2
-   printf(name);
+   __printf(name);
 #else
-   printf("%s", name);
+   __printf("%s", name);
 #endif
-   printf("\n");
+   __printf("\n");
 }
 
 int isValid(char c) {
-   char *p = strchr(avail, c);
+   char *p = __strchr(avail, c);
    if (p) {
       while (*p) {
          p[0] = p[1];
@@ -107,21 +107,21 @@ int isValid(char c) {
 int makeGuess(char c) {
    int i;
    int found = 0;
-   for (i = 0; i < strlen(word); i++) {
+   for (i = 0; i < __strlen(word); i++) {
       if (word[i] == c) {
          current[i] = c;
          found = 1;
       }
    }
    if (found) {
-      for (i = 0; i < strlen(word); i++) {
+      for (i = 0; i < __strlen(word); i++) {
          if (current[i] == '_') {
-            printf("\nMiraculously, you have manage to prolong Tuco's life.\n");
+            __printf("\nMiraculously, you have manage to prolong Tuco's life.\n");
             return 0;
          }
       }
-      printf("\nNice shot Blondie, you freed Tuco.\n");
-      printf("The correct word is: %s.\n", word);
+      __printf("\nNice shot Blondie, you freed Tuco.\n");
+      __printf("The correct word is: %s.\n", word);
       getHighScore();
       return 1;
    }
@@ -131,14 +131,14 @@ int makeGuess(char c) {
          if (bad_guesses == NUM_PARTS) {
             //you lose
             printBoard();
-            printf("\nBlondie, you missed, Tuco has been hanged.\n");
-            printf("The correct word is: ");
-            printf(word);
-            printf(".\n");
+            __printf("\nBlondie, you missed, Tuco has been hanged.\n");
+            __printf("The correct word is: ");
+            __printf(word);
+            __printf(".\n");
             return 1;
          }
          else {
-            printf("\nHaha, Tuco is feeling that rope a little more!\n");
+            __printf("\nHaha, Tuco is feeling that rope a little more!\n");
          }
       }
    }
@@ -147,8 +147,8 @@ int makeGuess(char c) {
 
 int askYN(char *prompt) {
    char c;
-   printf(prompt);
-   printf(" (y/n)? ");
+   __printf(prompt);
+   __printf(" (y/n)? ");
    c = getchar();
    if (getchar() != '\n') _terminate(0);
    return tolower(c) == 'y';
@@ -157,27 +157,27 @@ int askYN(char *prompt) {
 int doTurn() {
    char c;
    printBoard();
-   printf("used:      \"");
-   printf(used);
-   printf("\"\n");
-   printf("available: \"");
-   printf(avail);
-   printf("\"\n");
-   printf("\ncurrent: ");
-   printf(current);
-   printf("\n");
+   __printf("used:      \"");
+   __printf(used);
+   __printf("\"\n");
+   __printf("available: \"");
+   __printf(avail);
+   __printf("\"\n");
+   __printf("\ncurrent: ");
+   __printf(current);
+   __printf("\n");
    // int len;
-   printf("\nYour guess: ");
+   __printf("\nYour guess: ");
 
    c = getchar();
    if (getchar() == '\n') {
       c = tolower(c);
       if (isValid(c)) {
-         used[strlen(used)] = c;
+         used[__strlen(used)] = c;
          return makeGuess(c);
       }
    }
-   printf("Invalid guess, game over.\n");
+   __printf("Invalid guess, game over.\n");
    return 1;
 }
 
@@ -192,7 +192,7 @@ void playGame() {
 int main() {
    //interact with the client socket
    char *lf;
-   printf("Password: ");
+   __printf("Password: ");
    if (fgets(inbuf, sizeof(inbuf) - 1, stdin) == NULL) {
       return 0;
    }
@@ -201,8 +201,8 @@ int main() {
       lf++;
    }
    *lf = 0; 
-   if (strcmp(inbuf, "HANGEMHIGH!")) return 0;
-   printf("Welcome to Hangman Blondie!\n");
+   if (__strcmp(inbuf, "HANGEMHIGH!")) return 0;
+   __printf("Welcome to Hangman Blondie!\n");
    
    while (1) {
       playGame();

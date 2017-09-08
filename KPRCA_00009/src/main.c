@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -42,7 +42,7 @@
 
 static void usage(char *progname)
 {
-    printf("Usage: %s rom-file\n", progname);
+    __printf("Usage: %s rom-file\n", progname);
 }
 
 static int recvall(int fd, uint8_t *buf, size_t cnt)
@@ -155,7 +155,7 @@ static void draw_screen(gb_t *gb)
         for (x = 0; x < 160; x += 2)
         {
             char *ch = block_6px_char(&gb->screen[y * 160 + x], 160);
-            transmit(STDOUT, ch, strlen(ch), &bytes);
+            transmit(STDOUT, ch, __strlen(ch), &bytes);
         }
         transmit(STDOUT, "\n", 1, &bytes);
     }
@@ -260,20 +260,20 @@ int main()
     if (gb == NULL)
     {
         ERR("Unable to allocate memory.");
-        exit(1);
+        __exit(1);
     }
 
     // clear the screen
-    printf("\x1B[2J");
+    __printf("\x1B[2J");
 
     if (!load_rom(gb))
     {
         ERR("Unable to load ROM.");
-        exit(2);
+        __exit(2);
     }
 
     // hide the cursor
-    printf("\x1B[?25l");
+    __printf("\x1B[?25l");
 
     gb_reset(gb);
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -203,7 +203,7 @@ parse(struct token *tokens, size_t n, struct ast *out)
         if ((cur_node = pool_alloc(&out->pool)) == NULL)
             return EXIT_FAILURE;
 
-        memset(cur_node, '\0', sizeof(struct ast_node));
+        __memset(cur_node, '\0', sizeof(struct ast_node));
 
         switch (tokens[i].type) {
         case TOK_CONSTANT:
@@ -213,8 +213,8 @@ parse(struct token *tokens, size_t n, struct ast *out)
             break;
         case TOK_VARIABLE:
             cur_node->type = AST_VARIABLE;
-            memset(cur_node->expr.variable, '\0', 4);
-            strncpy(cur_node->expr.variable, tokens[i].val.s, 4);
+            __memset(cur_node->expr.variable, '\0', 4);
+            __strncpy(cur_node->expr.variable, tokens[i].val.s, 4);
             push_ast_node(&output_stack, cur_node);
             break;
         case TOK_ASSIGNMENT:

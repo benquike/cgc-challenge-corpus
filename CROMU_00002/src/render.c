@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -112,24 +112,24 @@ void display_render_grid( void )
     uint32_t grid_x, grid_y;
 
     for ( grid_y = 0; grid_y < RENDER_GRID_Y_SIZE; grid_y++ )
-        printf( "-" );
+        __printf( "-" );
 
-    printf( "\n" );
+    __printf( "\n" );
     for ( grid_y = RENDER_GRID_Y_SIZE; grid_y > 0; grid_y-- )
     {
         for ( grid_x = 0; grid_x < RENDER_GRID_X_SIZE; grid_x++ )
         {
             uint32_t grid_position = (grid_x * RENDER_GRID_X_SIZE) + (grid_y-1);
 
-            printf( "@d", g_renderGrid[grid_position].particles_in_grid );
+            __printf( "@d", g_renderGrid[grid_position].particles_in_grid );
         }
 
-        printf( "\n" );
+        __printf( "\n" );
     }
 
     for ( grid_x = 0; grid_x < RENDER_GRID_X_SIZE; grid_x++ )
-        printf( "-" );
+        __printf( "-" );
 
-    printf( "\n" );
+    __printf( "\n" );
 }
 

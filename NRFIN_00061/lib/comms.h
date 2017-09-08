@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -38,33 +38,33 @@ typedef struct {
 } File;
 
 /**
-* Read from the socket until either a delimeter is ditected or n bytes are read
+* Read from the socket until either a delimeter is ditected or n bytes are __read
 * 
-* @param socket The file descripter to read from
-* @param buffer The buffer to store the read bytes in
+* @param socket The file descripter to __read from
+* @param buffer The buffer to store the __read bytes in
 * @param delim The delimiter to detect 
-* @param size The maximum number of bytes to read
-* @param read The number of total bytes read
-* @return 0 if successful, -1 if the receive call returns an error, -2 if the receive call does not read a byte
+* @param size The maximum number of bytes to __read
+* @param __read The number of total bytes __read
+* @return 0 if successful, -1 if the receive call returns an error, -2 if the receive call does not __read a byte
 */
-int read_until_delim_or_n(unsigned int socket, char* buffer, char delim, size_t size, size_t* read);
+int read_until_delim_or_n(unsigned int socket, char* buffer, char delim, size_t size, size_t* __read);
 
 /**
 * Read exactly n bytes from the socket
 * 
-* @param socket The file descripter to read from
-* @param buffer The buffer to store the read bytes in
-* @param size The maximum number of bytes to read
-* @param read The number of total bytes read
-* @return 0 if successful, -1 if the receive call returns an error, -2 if the receive call does not read a byte
+* @param socket The file descripter to __read from
+* @param buffer The buffer to store the __read bytes in
+* @param size The maximum number of bytes to __read
+* @param __read The number of total bytes __read
+* @return 0 if successful, -1 if the receive call returns an error, -2 if the receive call does not __read a byte
 */
-int read_n_bytes(unsigned int socket, char* buffer, size_t size, size_t* read);
+int read_n_bytes(unsigned int socket, char* buffer, size_t size, size_t* __read);
 
 /**
 * Send size bytes to the socket
 * 
 * @param socket The file descripter to send to
-* @param buffer The buffer to store the read bytes in
+* @param buffer The buffer to store the __read bytes in
 * @param size The maximum number of bytes to send
 * @return 0 if successful, -1 if the transmit call returns an error
 */

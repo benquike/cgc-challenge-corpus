@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -44,7 +44,7 @@ int main(void)
   while (1) {
     print_prompt(&af86, with_title, done);
     with_title = 0;
-    memset(line_buf, 0, LINE_SIZE);
+    __memset(line_buf, 0, LINE_SIZE);
     if (read_line(line_buf) < 0)
       break;
 

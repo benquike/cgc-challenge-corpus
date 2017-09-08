@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -212,7 +212,7 @@ DefineFunction(Player, void, name_change_menu)
         do {
             if ($($io, receive, &c, 1) == 0)
                 goto done;
-            if (isalnum(c) || ispunct(c))
+            if (__isalnum(c) || ispunct(c))
                 $(buf, write_u8, c);
             else
                 break;

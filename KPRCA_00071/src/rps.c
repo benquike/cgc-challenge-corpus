@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,70 +35,70 @@ int play_rps()
     int max_input = 256;
     unsigned char computer_choice = secret[idx++] % 3;
     unsigned char human_choice = BAD_CHOICE;
-    char *input = malloc(max_input);
+    char *input = __malloc(max_input);
 
     while (human_choice == BAD_CHOICE) {
-        printf("Choose [HAMMER, SHEET, SHEERS]: ");
+        __printf("Choose [HAMMER, SHEET, SHEERS]: ");
         if (freaduntil(input, max_input, '\n', stdin) == -1)
             continue;
-        if (strcmp(input, "HAMMER") == 0)
+        if (__strcmp(input, "HAMMER") == 0)
             human_choice = HAMMER;
-        else if (strcmp(input, "SHEET") == 0)
+        else if (__strcmp(input, "SHEET") == 0)
             human_choice = SHEET;
-        else if (strcmp(input, "SHEERS") == 0)
+        else if (__strcmp(input, "SHEERS") == 0)
             human_choice = SHEERS;
         else
             human_choice = BAD_CHOICE;
     }
-    free(input);
+    __free(input);
 
     switch(human_choice) {
     case HAMMER:
-        printf("HAMMER v ");
+        __printf("HAMMER v ");
         switch(computer_choice) {
         case HAMMER:
-            printf("HAMMER\n");
-            printf("It's a tie!\n");
+            __printf("HAMMER\n");
+            __printf("It's a tie!\n");
             return 0;
         case SHEET:
-            printf("SHEET\n");
-            printf("You Lose.\n");
+            __printf("SHEET\n");
+            __printf("You Lose.\n");
             return 0;
         case SHEERS:
-            printf("SHEERS\n");
-            printf("You Win!\n");
+            __printf("SHEERS\n");
+            __printf("You Win!\n");
             return 1000;
         }
     case SHEET:
-        printf("SHEET v ");
+        __printf("SHEET v ");
         switch(computer_choice) {
         case HAMMER:
-            printf("HAMMER\n");
-            printf("You Win!\n");
+            __printf("HAMMER\n");
+            __printf("You Win!\n");
             return 1000;
         case SHEET:
-            printf("SHEET\n");
-            printf("It's a tie!\n");
+            __printf("SHEET\n");
+            __printf("It's a tie!\n");
             return 0;
         case SHEERS:
-            printf("SHEERS\n");
-            printf("You Lose.\n");
+            __printf("SHEERS\n");
+            __printf("You Lose.\n");
             return 0;
         }
     case SHEERS:
-        printf("SHEERS v ");
+        __printf("SHEERS v ");
         switch(computer_choice) {
         case HAMMER:
-            printf("HAMMER\n");
-            printf("You Lose.\n");
+            __printf("HAMMER\n");
+            __printf("You Lose.\n");
             return 0;
         case SHEET:
-            printf("SHEET\n");
-            printf("You Win!\n");
+            __printf("SHEET\n");
+            __printf("You Win!\n");
             return 1000;
         case SHEERS:
-            printf("SHEERS\n");
-            printf("It's a tie!\n");
+            __printf("SHEERS\n");
+            __printf("It's a tie!\n");
             return 0;
         }
     }

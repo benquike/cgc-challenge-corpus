@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -52,7 +52,7 @@ int send_cards(struct card *cards[], uint8_t qty) {
 	char *buf = NULL;
 	int ret = 0;
 
-	buf = calloc(bytes_needed);
+	buf = __calloc(bytes_needed);
 
 	if (0 >= (bytes_written = gen_xml_cards(buf, cards, qty))) {
 		ret = bytes_written;
@@ -66,7 +66,7 @@ int send_cards(struct card *cards[], uint8_t qty) {
 	send(buf, bytes_written);
 
 bail:
-	free(buf);
+	__free(buf);
 
 	return ret;
 }
@@ -76,7 +76,7 @@ int recv_cards(struct card *r_cards[], uint8_t qty) {
 	int ret = 0;
 
 	// VULN:
-	// Need to allow enough data to be read in to reach
+	// Need to allow enough data to be __read in to reach
 	// the vuln in parse_xml_cards. need min 5004 bytes
 	// because r_cards gets allocated adjacent to other
 	// heap allocations and can hold 624 card pointers
@@ -89,7 +89,7 @@ int recv_cards(struct card *r_cards[], uint8_t qty) {
 #endif
 	char *buf = NULL;
 
-	buf = calloc(bytes_needed);
+	buf = __calloc(bytes_needed);
 
 	if (0 > (bytes_read = recv_until_delim(STDIN, buf, bytes_needed, FIN))) {
 		ret = bytes_read;
@@ -114,7 +114,7 @@ int recv_cards(struct card *r_cards[], uint8_t qty) {
 	}
 
 bail:
-	free(buf);
+	__free(buf);
 	return ret;
 }
 
@@ -180,7 +180,7 @@ int recv_and_match_cards(struct card *cards[], uint8_t qty) {
 		sz = sizeof(struct card *);
 	}
 
-	r_cards = calloc(sz);
+	r_cards = __calloc(sz);
 
 	if (qty != (ret = recv_cards(r_cards, qty))) {
 		ret = FALSE;
@@ -188,7 +188,7 @@ int recv_and_match_cards(struct card *cards[], uint8_t qty) {
 		ret = is_set_equal(r_cards, cards, qty);
 	}
 
-	free(r_cards);
+	__free(r_cards);
 
 	return ret;
 }

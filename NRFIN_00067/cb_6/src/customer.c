@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -78,7 +78,7 @@ void clear_customer_list(Customer **c_list) {
 	while (NULL != cur) {
 		prev = cur;
 		cur = pop_customer_from_list(c_list);
-		free(prev);
+		__free(prev);
 	}
 }
 
@@ -149,7 +149,7 @@ char __attribute__((regparm(2))) inspect_dessert(void *d, unsigned int cid) {
 }
 
 void accept_food(void *food, void *buf, unsigned int bufsz) {
-	memcpy(buf, (const void *)food, bufsz);
+	__memcpy(buf, (const void *)food, bufsz);
 }
 
 void print_customer(Customer *c) {

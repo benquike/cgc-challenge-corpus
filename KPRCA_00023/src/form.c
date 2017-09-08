@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -45,9 +45,9 @@ static int handler_index(form_t *form, char *buf)
     p++;
 
   for (i = 0; i < NUM_CMDS; i++) {
-    memcpy(cmd_buf, p, strlen(cmd_lbls[i]));
-    cmd_buf[strlen(cmd_lbls[i])] = '\0';
-    if (strncasecmp(cmd_buf, cmd_lbls[i], strlen(cmd_lbls[i])) == 0)
+    __memcpy(cmd_buf, p, __strlen(cmd_lbls[i]));
+    cmd_buf[__strlen(cmd_lbls[i])] = '\0';
+    if (strncasecmp(cmd_buf, cmd_lbls[i], __strlen(cmd_lbls[i])) == 0)
       return i;
   }
 
@@ -80,20 +80,20 @@ static int page_complete(form_t *form)
 static void print_title(form_t *form)
 {
   if (strncmp(form->cur_page->title, "Fin", 3) == 0)
-    printf("\nFinal Questions\n");
+    __printf("\nFinal Questions\n");
   else
-    printf("\n%s Form\n", form->cur_page->title);
+    __printf("\n%s Form\n", form->cur_page->title);
 }
 
 
 static int handle_cmd(form_t *form, char *buf)
 {
-  char *arg = malloc(strlen(buf) + 1);
+  char *arg = __malloc(__strlen(buf) + 1);
   int ret;
   if (arg == NULL)
     return -1;
-  strcpy(arg, buf);
-  arg[strlen(buf)] = '\0';
+  __strcpy(arg, buf);
+  arg[__strlen(buf)] = '\0';
   char *cmd = strsep(&arg, " ");
   int i = handler_index(form, cmd);
   if (i < 0) {
@@ -104,7 +104,7 @@ static int handle_cmd(form_t *form, char *buf)
   ret = form->handlers[i](form, arg);
 out:
   if (cmd != NULL) {
-    free(cmd);
+    __free(cmd);
   }
   return ret;
 }
@@ -115,14 +115,14 @@ static int handle_answer(form_t *form, char *input)
     return 1;
 
   if (form->cur_question->answer != NULL) {
-    free(form->cur_question->answer);
+    __free(form->cur_question->answer);
   }
 
-  form->cur_question->answer = malloc(strlen(input) + 1);
+  form->cur_question->answer = __malloc(__strlen(input) + 1);
   if (form->cur_question->answer == NULL)
     return -1;
 
-  strcpy(form->cur_question->answer, input);
+  __strcpy(form->cur_question->answer, input);
   return 0;
 }
 
@@ -143,24 +143,24 @@ static void print_page(form_t *form)
 {
   question_t *cur = form->cur_page->questions;
   if (strncmp(form->cur_page->title, "Edu", 3) == 0)
-    printf("\n*********Highest %s:*********\n", form->cur_page->title);
+    __printf("\n*********Highest %s:*********\n", form->cur_page->title);
   else if (strncmp(form->cur_page->title, "Emp", 3) == 0)
-    printf("\n*********Most Recent Employer:*********\n", form->cur_page->title);
+    __printf("\n*********Most Recent Employer:*********\n", form->cur_page->title);
   else if (strncmp(form->cur_page->title, "Fin", 3) == 0)
-    printf("\n*********Final Screening:*********\n", form->cur_page->title);
+    __printf("\n*********Final Screening:*********\n", form->cur_page->title);
   else
-    printf("\n*********%s:*********\n", form->cur_page->title);
+    __printf("\n*********%s:*********\n", form->cur_page->title);
 
   for (; cur != NULL; cur = cur->next)
     if (cur->answer != NULL)
-      printf("%s=%s\n", cur->title, cur->answer);
+      __printf("%s=%s\n", cur->title, cur->answer);
     else
-      printf("%s=\n", cur->title);
+      __printf("%s=\n", cur->title);
 }
 
 static void prompt_next(void)
 {
-  printf("\nType **next to continue\n");
+  __printf("\nType **next to continue\n");
 }
 
 
@@ -181,19 +181,19 @@ static void print_next_title(form_t *form)
 {
 
   if (form->cur_page->next->title == NULL)
-    printf("%s", form->ending);
+    __printf("%s", form->ending);
   else if (strncmp(form->cur_page->next->title, "Fin", 3) == 0)
-    printf("\nFinal Questions\n");
+    __printf("\nFinal Questions\n");
   else
-    printf("\n%s Form\n", form->cur_page->next->title);
+    __printf("\n%s Form\n", form->cur_page->next->title);
 }
 
 static void prompt_q(question_t *q)
 {
   if (q->hint != NULL)
-    printf("%s%s: ", q->title, q->hint);
+    __printf("%s%s: ", q->title, q->hint);
   else
-    printf("%s: ", q->title);
+    __printf("%s: ", q->title);
 }
 
 int handle_next(form_t *form, char *arg)
@@ -206,7 +206,7 @@ int handle_next(form_t *form, char *arg)
 
   if (!form->cur_page->completed) {
     print_next_title(form);
-    printf("You must complete the previous page before proceeding to this page\n");
+    __printf("You must complete the previous page before proceeding to this page\n");
     return 1;
   }
 
@@ -226,14 +226,14 @@ int handle_next(form_t *form, char *arg)
 
 int handle_exit(form_t *form, char *arg)
 {
-  printf("Thank you!\n");
-  exit(0);
+  __printf("Thank you!\n");
+  __exit(0);
   return 0;
 }
 
 int handle_help(form_t *form, char *arg)
 {
-  printf("%s", form->help);
+  __printf("%s", form->help);
   return 1;
 }
 
@@ -259,7 +259,7 @@ int handle_update(form_t *form, char *arg)
   char *input_buf;
 
   if (!form->cur_page->completed) {
-    printf("Cannot update field until all fields are inputted\n");
+    __printf("Cannot update field until all fields are inputted\n");
     return 1;
   }
 
@@ -268,16 +268,16 @@ int handle_update(form_t *form, char *arg)
 
   cur = form->cur_page->questions;
   for(; cur != NULL; cur = cur->next)
-    if (strncmp(cur->title, arg, strlen(cur->title)) == 0)
+    if (strncmp(cur->title, arg, __strlen(cur->title)) == 0)
       break;
 
   if (cur == NULL) {
-    printf("Could not find specified field\n");
-    printf("Update Unsuccessful\n");
+    __printf("Could not find specified field\n");
+    __printf("Update Unsuccessful\n");
     return 1;
   }
 
-  input_buf = malloc(LINE_SIZE);
+  input_buf = __malloc(LINE_SIZE);
   if (input_buf == NULL)
     return -1;
 
@@ -285,13 +285,13 @@ int handle_update(form_t *form, char *arg)
   if (read_line(input_buf) < 0)
     return -1;
 
-  if ((strlen(input_buf) == 0) && cur->optional) {
+  if ((__strlen(input_buf) == 0) && cur->optional) {
     if (input_buf != NULL) {
-      free(input_buf);
+      __free(input_buf);
     }
 
     if (cur->answer != NULL) {
-      free(cur->answer);
+      __free(cur->answer);
     }
 
     cur->answer = NULL;
@@ -300,25 +300,25 @@ int handle_update(form_t *form, char *arg)
 
   if (!cur->validator(input_buf)) {
     if (input_buf != NULL) {
-      free(input_buf);
+      __free(input_buf);
     }
 
-    printf("Bad input.\n");
-    printf("Update Unsuccessful\n");
+    __printf("Bad input.\n");
+    __printf("Update Unsuccessful\n");
     return 1;
   }
 
   if (cur->answer == NULL) {
     cur->answer = input_buf;
 #ifdef PATCHED
-  } else if (strncmp(cur->answer, input_buf, strlen(input_buf)) == 0) {
+  } else if (strncmp(cur->answer, input_buf, __strlen(input_buf)) == 0) {
 #else
-  } else if (strncmp(cur->answer, input_buf, strlen(cur->answer)) == 0) {
+  } else if (strncmp(cur->answer, input_buf, __strlen(cur->answer)) == 0) {
 #endif
-    strcpy(cur->answer, input_buf);
-    free(input_buf);
+    __strcpy(cur->answer, input_buf);
+    __free(input_buf);
   } else {
-    free(cur->answer);
+    __free(cur->answer);
     cur->answer = input_buf;
   }
 
@@ -329,7 +329,7 @@ void print_prompt(form_t *form, int with_title, int done)
 {
 
   if (form->cur_page->title == NULL) {
-    printf("%s", form->ending);
+    __printf("%s", form->ending);
     return;
   }
 
@@ -356,7 +356,7 @@ int handle_line(form_t *form, char *buf)
     return 1;
   }
 
-  if (strlen(buf) == 0) {
+  if (__strlen(buf) == 0) {
     if (!form->cur_question->optional)
       return 0;
   } else {
@@ -377,5 +377,5 @@ int handle_line(form_t *form, char *buf)
 
 void print_greeting(form_t *form)
 {
-  printf("%s", form->greeting);
+  __printf("%s", form->greeting);
 }

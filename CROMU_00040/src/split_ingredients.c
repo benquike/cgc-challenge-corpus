@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -39,9 +39,9 @@ int i;
 	tmp = input;
 	i = 0;
 
-	bzero(buffer, BUFF_SIZE);
+	__bzero(buffer, BUFF_SIZE);
 
-	while (tmp[i] != ' ' && i < BUFF_SIZE-1 && i < strlen(tmp)) {
+	while (tmp[i] != ' ' && i < BUFF_SIZE-1 && i < __strlen(tmp)) {
 
 		buffer[i] = tmp[i];
 		++i;
@@ -52,11 +52,11 @@ int i;
 	tmp = input+i+1;
 
 	// first validate that the first term is a measurement value
-	for (i=0; i < strlen(buffer); ++i) {
+	for (i=0; i < __strlen(buffer); ++i) {
 
-		if (!isdigit(buffer[i]) && buffer[i]!='.' && buffer[i]!='/') {
+		if (!__isdigit(buffer[i]) && buffer[i]!='.' && buffer[i]!='/') {
 
-			strcpy(ingredient, input);
+			__strcpy(ingredient, input);
 			measure[0] = 0;
 
 			return 0;
@@ -64,12 +64,12 @@ int i;
 
 	}
 
-	strcpy(measure, buffer);
+	__strcpy(measure, buffer);
 
-	bzero(buffer, BUFF_SIZE);
+	__bzero(buffer, BUFF_SIZE);
 	i = 0;
 
-	while (tmp[i] != ' ' && i < BUFF_SIZE-1 && i < strlen(tmp)) {
+	while (tmp[i] != ' ' && i < BUFF_SIZE-1 && i < __strlen(tmp)) {
 
 		buffer[i] = tmp[i];
 		++i;
@@ -77,16 +77,16 @@ int i;
 
 	buffer[i]=0;
 
-	if (strcmp(buffer, "tsp") == 0 || strcmp(buffer, "tbsp") == 0 || strcmp(buffer, "cup") == 0 
-		|| strcmp(buffer, "cups") ==0 || strcmp(buffer, "oz")== 0 ) {
+	if (__strcmp(buffer, "tsp") == 0 || __strcmp(buffer, "tbsp") == 0 || __strcmp(buffer, "cup") == 0 
+		|| __strcmp(buffer, "cups") ==0 || __strcmp(buffer, "oz")== 0 ) {
 
-		strcat(measure, " ");
-		strcat(measure, buffer);
+		__strcat(measure, " ");
+		__strcat(measure, buffer);
 
 		tmp = tmp + i + 1;
 	}
 
-	strcpy(ingredient, tmp);
+	__strcpy(ingredient, tmp);
 
 	return 0;
 

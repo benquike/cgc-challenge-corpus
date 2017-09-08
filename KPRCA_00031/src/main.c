@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -43,7 +43,7 @@ struct cmd {
 
 int hello_cmd(const char *s)
 {
-  printf("case > Hello, you.\n");
+  __printf("case > Hello, you.\n");
   return 0;
 }
 
@@ -55,19 +55,19 @@ int int_cmd(const char *s)
     i += len_list(it->d);
 
   size_t n = num_nodes(ct);
-  printf("case > I have an intelligence rating of: %u / %u\n", i, (n * 8));
+  __printf("case > I have an intelligence rating of: %u / %u\n", i, (n * 8));
   return 0;
 }
 
 int rev_cmd(const char *s)
 {
-  char *r = calloc(1, strlen(s) + 1);
-  strcpy(r, s);
-  if (!strchr(r, '\0'))
+  char *r = __calloc(1, __strlen(s) + 1);
+  __strcpy(r, s);
+  if (!__strchr(r, '\0'))
     return -1;
 
   char *start = r;
-  char *end = strchr(r, '\0') - 1;
+  char *end = __strchr(r, '\0') - 1;
   while (start < end) {
     *start ^= *end;
     *end ^= *start;
@@ -75,8 +75,8 @@ int rev_cmd(const char *s)
     start++, end--;
   }
 
-  printf("case > %s\n", r);
-  free(r);
+  __printf("case > %s\n", r);
+  __free(r);
   return 0;
 }
 
@@ -121,7 +121,7 @@ int pont_cmd(const char *s)
     return -1;
 
   free_string(resp);
-  printf("molly > %s\n", ret->d);
+  __printf("molly > %s\n", ret->d);
   free_string(ret);
   free_list(passed, 0);
   return 0;
@@ -129,8 +129,8 @@ int pont_cmd(const char *s)
 
 int part_cmd(const char *s)
 {
-  printf("BYE!\n");
-  exit(0);
+  __printf("BYE!\n");
+  __exit(0);
   return 0;
 }
 
@@ -170,12 +170,12 @@ int is_command(const char *s, list *cmds)
   if (!s)
     return 0;
 
-  if (!strlen(s))
+  if (!__strlen(s))
     return 0;
 
   for (list *it = cmds; it; it = it->n) {
     cmd *x = (cmd *)it->d;
-    if (!strncmp(s, x->keyword, strlen(x->keyword)))
+    if (!strncmp(s, x->keyword, __strlen(x->keyword)))
       return 1;
   }
 
@@ -189,7 +189,7 @@ cmd *get_command(const char *s, list *cmds)
 
   for (list *it = cmds; it; it = it->n) {
     cmd *x = (cmd *)it->d;
-    if (!strncmp(s, x->keyword, strlen(x->keyword)))
+    if (!strncmp(s, x->keyword, __strlen(x->keyword)))
       return x;
   }
 
@@ -297,10 +297,10 @@ int tick_common(const char *s, list *cmds, const char *botname, unsigned ctyn)
     if (!c)
       error(ECMD);
 
-    if (strchr(s, ' '))
-        s = strchr(s, ' ') + 1;
+    if (__strchr(s, ' '))
+        s = __strchr(s, ' ') + 1;
     else
-        s = s + strlen(c->keyword);
+        s = s + __strlen(c->keyword);
 
     c->fp(s);
     return 0;
@@ -313,7 +313,7 @@ int tick_common(const char *s, list *cmds, const char *botname, unsigned ctyn)
   list *gm = gen_msg(lists);
   string *res = wordlist_to_string(gm);
   if (res && will_chat(ctyn))
-    printf("%s > %s\n", botname, res->d);
+    __printf("%s > %s\n", botname, res->d);
 
   crosstalk = res;
 
@@ -335,7 +335,7 @@ int tick_buddy_bot(const char *s)
 
 void print_prompt(void)
 {
-  printf("%s", "you > ");
+  __printf("%s", "you > ");
 }
 
 void load_corpus(void)
@@ -371,7 +371,7 @@ void init(void)
     "The bots here love to talk, but they are shy...\n"
     "You need to get the ball rolling.\n";
 
-  printf("%s", welcome);
+  __printf("%s", welcome);
 }
 
 int main(void)
@@ -383,32 +383,32 @@ int main(void)
   init();
 
   while (1) {
-    buf = calloc(1, BUF_SIZE + 1);
+    buf = __calloc(1, BUF_SIZE + 1);
     if (!buf)
       error(EALLOC);
 
     print_prompt();
 
-    memset(buf, '\0', BUF_SIZE + 1);
+    __memset(buf, '\0', BUF_SIZE + 1);
     if ((readline(1, buf, BUF_SIZE, &rx) < 0) || rx == (size_t)NULL) {
-      free(buf);
+      __free(buf);
       continue;
     }
     buf[rx] = '\0';
 
     if (tick_main_bot((const char *)buf) < 0) {
-      free(buf);
+      __free(buf);
       break;
     }
 
     if (!crosstalk || !crosstalk->d) {
-      free(buf);
+      __free(buf);
       continue;
     }
 
     tick_buddy_bot(crosstalk->d);
     crosstalk = NULL;
-    free(buf);
+    __free(buf);
   }
 
   return 0;

@@ -4,7 +4,7 @@ Author: Dustin Fraze (df@cromulence.co)
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -53,7 +53,7 @@ typedef struct _contact {
 contact *head = NULL;
 
 void put(char *str) {
-	transmit(1, str, strlen(str), 0);
+	transmit(1, str, __strlen(str), 0);
 }
 
 int validateName(char *name)
@@ -96,33 +96,33 @@ int validatePhone(char *phonenumber)
 contact *createContact(char *first, char *last, char *phone, unsigned short officenum, char gender, char hacker)
 {
 	contact *ret = NULL;
-	ret = (contact *)calloc(1, sizeof(contact));
+	ret = (contact *)__calloc(1, sizeof(contact));
 	if(ret == NULL)
 	{
-		puts("Couldn't allocate contact.  Something's wrong.");
+		__puts("Couldn't allocate contact.  Something's wrong.");
 		_terminate(-1);
 	}
 	if(validateName(first)) {
-		memcpy(ret->first, first, strlen(first));
+		__memcpy(ret->first, first, __strlen(first));
 	} else {
-		puts("Invalid first name.  Must begin with a capital letter.");
-		free(ret);
+		__puts("Invalid first name.  Must begin with a capital letter.");
+		__free(ret);
 		ret = NULL;
 		return NULL;
 	}
 	if(validateName(last)) {
-		memcpy(ret->last, last, strlen(last));
+		__memcpy(ret->last, last, __strlen(last));
 	} else {
-		puts("Invalid last name.  Must begin with a capital letter.");
-		free(ret);
+		__puts("Invalid last name.  Must begin with a capital letter.");
+		__free(ret);
 		ret = NULL;
 		return NULL;
 	}
 	if(validatePhone(phone)) {
-		memcpy(ret->phone, phone, strlen(phone));
+		__memcpy(ret->phone, phone, __strlen(phone));
 	} else {
-		puts("Invalid phone number...must look like (nnn)nnn-nnnn");
-		free(ret);
+		__puts("Invalid phone number...must look like (nnn)nnn-nnnn");
+		__free(ret);
 		ret = NULL;
 		return NULL;
 	}
@@ -180,41 +180,41 @@ void printGender(char gender)
 	switch(gender)
 	{
 		case 'M':
-			puts("Male");
+			__puts("Male");
 			break;
 		case 'F':
-			puts("Female");
+			__puts("Female");
 			break;
 		case 'T':
-			puts("Trans-Gender");
+			__puts("Trans-Gender");
 			break;
 		default:
-			puts("Other");
+			__puts("Other");
 	}
 }
 
 void printContact(contact *toPrint)
 {
 	put("First Name: \t");
-	puts(toPrint->first);
+	__puts(toPrint->first);
 	put("Last Name: \t");
-	puts(toPrint->last);
+	__puts(toPrint->last);
 	put("Phone Number: \t");
-	puts(toPrint->phone);
+	__puts(toPrint->phone);
 }
 
 void printList() {
 	contact *ptr;
 	ptr = head;
 	if(head == NULL)
-		puts("Empty yolodex.");
+		__puts("Empty yolodex.");
 	while(ptr != NULL)
 	{
-		puts("========================================");
+		__puts("========================================");
 		printContact(ptr);
 		ptr = ptr->next;
 	}
-	puts("========================================");
+	__puts("========================================");
 }
 
 void sortYolodex() {
@@ -306,8 +306,8 @@ void promptAdd() {
 	char tmp[2];
 
 	contact *ptr;
-	memset(phone, 0, 16);
-	memset(officetmp, 0, 8);
+	__memset(phone, 0, 16);
+	__memset(officetmp, 0, 8);
 	ptr = NULL;
 	while(ptr == NULL) {
 		put("First: ");
@@ -317,9 +317,9 @@ void promptAdd() {
 		put("Phone Number: ");
 		recvUntil(phone, 14, '\n');
 		put("Office Number: ");
-		memset(officetmp, 0, 8);
+		__memset(officetmp, 0, 8);
 		recvUntil(officetmp, 6, '\n');
-		officenum = (unsigned short)atoi(officetmp);
+		officenum = (unsigned short)__atoi(officetmp);
 		put("Gender: ");
 		recvUntil(tmp, 2, '\n');
 		gender = tmp[0];
@@ -331,13 +331,13 @@ void promptAdd() {
 			if(tmp[0] == 'n' || tmp[0] == 'y')
 				hacker = tmp[0];
 			else
-				puts("Please enter y or n for hacker.");
+				__puts("Please enter y or n for hacker.");
 		}
 		ptr = createContact(first, last, phone, officenum, gender, hacker);
 	}
 	if(ptr->cookie != cookie)
 	{
-		puts("Contact corruption detected.");
+		__puts("Contact corruption detected.");
 		_terminate(-1);
 	}
 	insert(ptr);
@@ -355,8 +355,8 @@ contact *findContact() {
 
 	ptr = head;
 	while(ptr != NULL) {
-		if(strcmp(first, ptr->first) == 0) {
-			if(strcmp(last, ptr->last) == 0) {
+		if(__strcmp(first, ptr->first) == 0) {
+			if(__strcmp(last, ptr->last) == 0) {
 				ret = ptr;
 				break;
 			}
@@ -372,10 +372,10 @@ void promptDel() {
 	ptr = findContact();
 	if(ptr != NULL) {
 		ptr = remove(ptr);
-		free(ptr);
-		puts("Contact removed.");
+		__free(ptr);
+		__puts("Contact removed.");
 	} else {
-		puts("No such contact found.");
+		__puts("No such contact found.");
 	}
 }
 
@@ -384,19 +384,19 @@ void editUser(contact *ptr) {
 	char number[8];
 
 	if(ptr != NULL) {
-		puts("Updating fields.  Send just a newline to keep old data.");
+		__puts("Updating fields.  Send just a newline to keep old data.");
 		put("New first name: ");
 		recvUntil(data, 32, '\n');
 		if(data[0] && validateName(data) == 0){
-			puts("Not a legal first name.  Stopping edit.");
+			__puts("Not a legal first name.  Stopping edit.");
 			return;
 		}
 #ifdef PATCHED
 		data[31] = 0;
 #endif
 		if(data[0] != 0) {
-			memset(ptr->first, 0, 32);
-			memcpy(ptr->first, data, strlen(data));
+			__memset(ptr->first, 0, 32);
+			__memcpy(ptr->first, data, __strlen(data));
 		}
 		put("New last name: ");
 		recvUntil(data, 32, '\n');
@@ -405,12 +405,12 @@ void editUser(contact *ptr) {
 #endif
 
 		if(data[0] && validateName(data) == 0) {
-			puts("Not a legal last name.  Stopping edit.");
+			__puts("Not a legal last name.  Stopping edit.");
 			return;
 		}
 		if(data[0] != 0){
-			memset(ptr->last, 0, 32);
-			memcpy(ptr->last, data, strlen(data));
+			__memset(ptr->last, 0, 32);
+			__memcpy(ptr->last, data, __strlen(data));
 		}
 		put("New phone number: ");
 		recvUntil(data, 14, '\n');
@@ -418,18 +418,18 @@ void editUser(contact *ptr) {
 		data[13] = 0;
 #endif
 		if(data[0] && validatePhone(data) == 0) {
-			puts("Not a legal phone number.  Stopping edit.");
+			__puts("Not a legal phone number.  Stopping edit.");
 			return;
 		}
 		if(data[0] != 0) {
-			memset(ptr->phone, 0, 16);
-			memcpy(ptr->phone, data, strlen(data));
+			__memset(ptr->phone, 0, 16);
+			__memcpy(ptr->phone, data, __strlen(data));
 		}
 		put("New office number: ");
 		recvUntil(data, 6, '\n');
 		if(data[0]) {
-			memcpy(number, data, 5);
-			ptr->officenum = atoi(number);
+			__memcpy(number, data, 5);
+			ptr->officenum = __atoi(number);
 		}
 		put("New gender: ");
 		recvUntil(data, 2, '\n');
@@ -442,7 +442,7 @@ void editUser(contact *ptr) {
 	}
 	if(ptr->cookie != cookie)
 	{
-		puts("Contact corruption detected.");
+		__puts("Contact corruption detected.");
 		_terminate(-1);
 	}
 
@@ -453,10 +453,10 @@ void promptEdit() {
 	char data[32];
 	char number[8];
 
-	memset(number, 0, 8);
+	__memset(number, 0, 8);
 	ptr = findContact();
 	if(ptr == NULL) {
-		puts("No such contact.");
+		__puts("No such contact.");
 		return;
 	}
 	editUser(ptr);
@@ -469,30 +469,30 @@ void promptShow() {
 
 	ptr = findContact();
 	if(ptr == NULL) {
-		puts("No such contact.");
+		__puts("No such contact.");
 		return;
 	}
-	memset(useraction, 0, 2);
+	__memset(useraction, 0, 2);
 	useraction[0] = 's';
 	while(useraction[0] != 'q') {
-		memset(office, 0, 6);
-		puts("****************************************");
+		__memset(office, 0, 6);
+		__puts("****************************************");
 		put("First name:\t");
-		puts(ptr->first);
+		__puts(ptr->first);
 		put("Last name:\t");
-		puts(ptr->last);
+		__puts(ptr->last);
 		put("Phone num:\t");
-		puts(ptr->phone);
-		itoa(office, ptr->officenum, 6);
+		__puts(ptr->phone);
+		__itoa(office, ptr->officenum, 6);
 		put("Office Number:\t");
-		puts(office);
+		__puts(office);
 		put("Gender:\t\t");
 		printGender(ptr->gender);
 		if(ptr->hacker == 'y')
 		{
-			puts("[\x1B[31m!\x1B[0m]This user known to be a hacker[\x1B[31m!\x1B[0m]");
+			__puts("[\x1B[31m!\x1B[0m]This user known to be a hacker[\x1B[31m!\x1B[0m]");
 		}
-		puts("****************************************");
+		__puts("****************************************");
 		recvUntil(useraction, 2, '\n');
 		switch(useraction[0]) {
 			case 'q':
@@ -500,7 +500,7 @@ void promptShow() {
 			case 'd':
 				if(ptr->next == NULL && ptr->prev == NULL) {
 					remove(ptr);
-					puts("No more contacts.  Leaving detail view.");
+					__puts("No more contacts.  Leaving detail view.");
 					useraction[0]='q';
 				} else if (ptr->next == NULL) {
 					ptr = ptr->prev;
@@ -517,13 +517,13 @@ void promptShow() {
 				if(ptr->next != NULL)
 					ptr = ptr->next;
 				else
-					puts("No next contact.");
+					__puts("No next contact.");
 				break;
 			case 'p':
 				if(ptr->prev != NULL)
 					ptr = ptr->prev;
 				else
-					puts("No previous contact.");
+					__puts("No previous contact.");
 		}
 	}
 }
@@ -538,7 +538,7 @@ void initCookies() {
 	random(&cookie, 4, &bytes);
 	if(bytes != 4)
 	{
-		puts("Couldn't get 4 random bytes.  Panic!");
+		__puts("Couldn't get 4 random bytes.  Panic!");
 		_terminate(-1);
 	}
 	cookie |= 0x10204080;
@@ -548,7 +548,7 @@ void inputLoop() {
 	char action[2];
 	while(1)
 	{
-		memset(action, 0, 2);
+		__memset(action, 0, 2);
 		recvUntil(action, 2, '\n');
 		switch(action[0])
 		{
@@ -562,7 +562,7 @@ void inputLoop() {
 				promptEdit();
 				break;
 			case YOLO_EXIT:
-				puts("Thank you for using the yolodex.");
+				__puts("Thank you for using the yolodex.");
 				_terminate(0);
 			case YOLO_LIST:
 				printList();
@@ -574,7 +574,7 @@ void inputLoop() {
 				promptShow();
 				break;
 			default:
-				puts("Unrecognized Command.");
+				__puts("Unrecognized Command.");
 		}
 	}
 }
@@ -582,7 +582,7 @@ void inputLoop() {
 int main(void)
 {
 	initCookies();
-	puts("Welcome to the yolodex.");
+	__puts("Welcome to the yolodex.");
 	initYolodex();
 	inputLoop();
 	_terminate(0);

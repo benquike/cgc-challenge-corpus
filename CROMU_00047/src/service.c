@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -43,7 +43,7 @@ void init_prng( void )
 
 	if ( random( (void*)randomData, sizeof(uint32_t)*8, &random_bytes_populated ) != 0 )
 	{
-		printf( "[[ERROR RANDOM FAILED]]\n" );
+		__printf( "[[ERROR RANDOM FAILED]]\n" );
 		_terminate(1);
 	}
 
@@ -61,7 +61,7 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
 
 	ts += 1452975630;
 
-	printf( "[[RECEIVER STARTED -- TIMESTAMP: $d]]\n", ts );
+	__printf( "[[RECEIVER STARTED -- TIMESTAMP: $d]]\n", ts );
 
 	// Initialize random number generator
 	init_prng();
@@ -81,14 +81,14 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
         	if ( receive( STDIN, rx_sample, 256, &rx_count) != 0) 
 		{
 			// Failed ??
-			printf( "[[CONNECTION CLOSED EARLY]]\n" );
+			__printf( "[[CONNECTION CLOSED EARLY]]\n" );
             		_terminate(1);
         	}
 
 		if ( rx_count < 1 )
 		{
 			// Failed ??
-			printf( "[[RECEIVE ERROR]]\n" );
+			__printf( "[[RECEIVE ERROR]]\n" );
             		_terminate(1);
 		}
 

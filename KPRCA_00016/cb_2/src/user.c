@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -58,7 +58,7 @@ user_t* find_user(user_list_t list, char *username)
   {
     for (user_t *u = list; u != NULL; u = u->next)
     {
-      if (strcmp(username, u->username) == 0)
+      if (__strcmp(username, u->username) == 0)
       {
         ret = u;
         break;

@@ -141,7 +141,7 @@ void *__malloc( size_t alloc_size )
                     _terminate( -3 );
                 }
 
-                // Fix top link (if we need to)
+                // Fix top __link (if we need to)
                 if ( g_memManager.pFreeList == pFreeCur )
                 {
                     g_memManager.pFreeList = (void *)pNewChunkHeader;
@@ -164,7 +164,7 @@ void *__malloc( size_t alloc_size )
             }
             else
             {
-                // Fix link (if we need to)
+                // Fix __link (if we need to)
                 if ( g_memManager.pFreeList == pFreeCur )
                 {
                     g_memManager.pFreeList = (void *)pFreeCurFooter->pNext;
@@ -256,7 +256,7 @@ void __free( void *pItem )
         }
     }
 
-    // No coalesce possible, just link it to the top of the list
+    // No coalesce possible, just __link it to the top of the list
     CLEAR_BIT( pItemHdr->alloc_size, MALLOC_INUSE_FLAG_BIT );
 
     tMallocAllocFtr *pItemFtr = ((tMallocAllocFtr *)((void *)pItemHdr + (pItemHdr->alloc_size & ~0x3)-sizeof(tMallocAllocHdr)));

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -33,7 +33,7 @@
 
 static rop_t *init_rop(int op, int extra)
 {
-    rop_t *rop = calloc(1, sizeof(rop_t) + extra);
+    rop_t *rop = __calloc(1, sizeof(rop_t) + extra);
     if (rop == NULL)
         return NULL;
     rop->op = op;
@@ -41,7 +41,7 @@ static rop_t *init_rop(int op, int extra)
 }
 
 // convert repititions to loops
-// link children to next
+// __link children to next
 static int simplify(rop_t **head, rop_t *parent)
 {
     unsigned int cnt = 0, ret;
@@ -300,8 +300,8 @@ fail:
 
 int regexp_init(regexp_t *r, const char *str)
 {
-    memset(r, 0, sizeof(regexp_t));
-    r->input = strdup(str);
+    __memset(r, 0, sizeof(regexp_t));
+    r->input = __strdup(str);
     if (r->input == NULL)
         goto fail;
 
@@ -338,12 +338,12 @@ void _recursive_free(rop_t *r)
 
     _recursive_free(r->next);
 
-    free(r);
+    __free(r);
 }
 
 int regexp_free(regexp_t *r)
 {
-    free(r->input);
+    __free(r->input);
     _recursive_free(r->tree);
     return 1;
 }
@@ -462,13 +462,13 @@ int regexp_match(regexp_t *r, const char *input)
 
     states1 = states2 = r->prev_states = NULL;
 
-    states1 = calloc(r->max_states, sizeof(rop_t *));
+    states1 = __calloc(r->max_states, sizeof(rop_t *));
     if (states1 == NULL)
         goto done;
-    states2 = calloc(r->max_states, sizeof(rop_t *));
+    states2 = __calloc(r->max_states, sizeof(rop_t *));
     if (states2 == NULL)
         goto done;
-    r->prev_states = calloc(r->max_states, sizeof(rop_t *));
+    r->prev_states = __calloc(r->max_states, sizeof(rop_t *));
     if (r->prev_states == NULL)
         goto done;
 
@@ -512,9 +512,9 @@ int regexp_match(regexp_t *r, const char *input)
     result = 0;
 
 done:
-    free(states1);
-    free(states2);
-    free(r->prev_states);
+    __free(states1);
+    __free(states2);
+    __free(r->prev_states);
     r->states = r->prev_states = NULL;
     return result;
 }

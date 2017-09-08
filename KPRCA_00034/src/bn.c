@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,7 +35,7 @@ void bn_init(bn_t *bn)
 
 void bn_destroy(bn_t *bn)
 {
-    free(bn->data);
+    __free(bn->data);
     bn->data = NULL;
     bn->length = 0;
 }
@@ -53,7 +53,7 @@ int bn_init_bits(bn_t *bn, unsigned int bits)
 {
     unsigned int bytes = (bits + 7) / 8;
     unsigned int length = (bytes + sizeof(uint32_t) - 1) / sizeof(uint32_t);
-    bn->data = calloc(length, sizeof(uint32_t));
+    bn->data = __calloc(length, sizeof(uint32_t));
     if (bn->data == NULL)
         return FAILURE;
     bn->length = length;
@@ -91,7 +91,7 @@ int bn_copy(bn_t *bn, const bn_t *src)
     if (bn_init_bits(bn, src->length * sizeof(uint32_t) * 8) != SUCCESS)
         return FAILURE;
 
-    memcpy(bn->data, src->data, src->length * sizeof(uint32_t));
+    __memcpy(bn->data, src->data, src->length * sizeof(uint32_t));
     bn->length = src->length;
     return SUCCESS;
 }

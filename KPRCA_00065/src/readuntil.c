@@ -10,5 +10,5 @@ int read_until(int fd, char *buf, size_t len, char delim)
 int read_n(int fd, char *buf, size_t len)
 {
     fflush(stdout);
-    return fread(buf, len, stdin);
+    return __fread(buf, len, stdin);
 }

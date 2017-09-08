@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -51,7 +51,7 @@ static int readopt(int fd) {
     if (i == MAX_INPUT)
         return 0;
 
-    return strtol(&opt[0], NULL, 10);
+    return __strtol(&opt[0], NULL, 10);
 }
 
 int main()
@@ -71,29 +71,29 @@ int main()
     int exited = 0;
 
     while (!exited) {
-        printf("File Comparer ver 1.0\n");
-        printf("---------------------\n");
-        printf("Select an option:\n");
-        printf("1. Load File 1\n");
-        printf("2. Load File 2\n");
+        __printf("File Comparer ver 1.0\n");
+        __printf("---------------------\n");
+        __printf("Select an option:\n");
+        __printf("1. Load File 1\n");
+        __printf("2. Load File 2\n");
         if (!ignore_ws)
-            printf("3. Enable Ignore Whitespace\n");
+            __printf("3. Enable Ignore Whitespace\n");
         else
-            printf("3. Disable Ignore Whitespace\n");
+            __printf("3. Disable Ignore Whitespace\n");
         if (!treat_as_ascii)
-            printf("4. Treat Files as Ascii\n");
+            __printf("4. Treat Files as Ascii\n");
         else
-            printf("4. Use Native File Type\n");
-        printf("5. Compare files\n");
-        printf("6. Quit\n\n");
+            __printf("4. Use Native File Type\n");
+        __printf("5. Compare files\n");
+        __printf("6. Quit\n\n");
 
-        printf("File 1: %s <> File 2: %s\n", lfilename, rfilename);
-        printf("        Options:\n");
+        __printf("File 1: %s <> File 2: %s\n", lfilename, rfilename);
+        __printf("        Options:\n");
         option_set = ignore_ws ? ENABLED : DISABLED;
-        printf("Ignore Whitespace=%s\n", option_set);
+        __printf("Ignore Whitespace=%s\n", option_set);
         option_set = treat_as_ascii ? ENABLED : DISABLED;
-        printf("Ignore File Type, Treat as Ascii=%s\n", option_set);
-        printf("::-> ");
+        __printf("Ignore File Type, Treat as Ascii=%s\n", option_set);
+        __printf("::-> ");
 
         option = readopt(STDIN);
         switch(option) {
@@ -104,10 +104,10 @@ int main()
 
             lfile = open_sfile();
             if (lfile) {
-                printf("Successfully Loaded File\n");
+                __printf("Successfully Loaded File\n");
                 lfilename = lfile->name;
             } else {
-                printf("Error Loading File\n");
+                __printf("Error Loading File\n");
                 lfilename = NOT_LOADED;
             }
             break;
@@ -118,10 +118,10 @@ int main()
 
             rfile = open_sfile();
             if (rfile) {
-                printf("Successfully Loaded File\n");
+                __printf("Successfully Loaded File\n");
                 rfilename = rfile->name;
             } else {
-                printf("Error Loading File\n");
+                __printf("Error Loading File\n");
                 rfilename = NOT_LOADED;
             }
             break;
@@ -139,11 +139,11 @@ int main()
             exited = 1;
             break;
         default:
-            printf("Bad selection\n");
+            __printf("Bad selection\n");
         }
-        printf("\n");
+        __printf("\n");
     }
 
-    printf("Exiting...\n");
+    __printf("Exiting...\n");
     return 0;
 }

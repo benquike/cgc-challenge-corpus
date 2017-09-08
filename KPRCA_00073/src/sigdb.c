@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -45,13 +45,13 @@ int InitializeSignature(signature* Signature, int Severity, trie_unit* Data, siz
   Signature->Severity = Severity;
 
   Signature->Data = xcalloc(DataSize + 1, sizeof(trie_unit));
-  memcpy(Signature->Data, Data, DataSize * sizeof(trie_unit));
+  __memcpy(Signature->Data, Data, DataSize * sizeof(trie_unit));
   Signature->DataSize = DataSize * sizeof(trie_unit);
   fprintf(stderr, "(%s)\n", Signature->Data);
 
   Signature->PathSize = PathSize;
   Signature->Path = xcalloc(sizeof(char), PathSize + 1);
-  memcpy(Signature->Path, Path, PathSize);
+  __memcpy(Signature->Path, Path, PathSize);
 
   return 0;
 }
@@ -62,17 +62,17 @@ void FreeSignature(signature* Signature)
   {
     if (Signature->Data)
     {
-      free(Signature->Data);
+      __free(Signature->Data);
       Signature->Data = NULL;
     }
 
     if (Signature->Path)
     {
-      free(Signature->Path);
+      __free(Signature->Path);
       Signature->Path = NULL;
     }
 
-    free(Signature);
+    __free(Signature);
   }
 }
 
@@ -108,7 +108,7 @@ char* SeverityString(unsigned Severity)
   }
 }
 
-void PrintSignature(FILE* Stream, signature* Signature)
+void PrintSignature(__FILE* Stream, signature* Signature)
 {
   fprintf(Stream, "%s - %s - %x\n",
       Signature->Path,
@@ -125,7 +125,7 @@ int InitializeSignatureDatabase(signature_db* SignatureDatabase)
     return -1;
 
   SignatureDatabase->SignatureCount = 0;
-  memset(SignatureDatabase->Signatures, 0, sizeof(signature *) * MAX_SIGNATURES);
+  __memset(SignatureDatabase->Signatures, 0, sizeof(signature *) * MAX_SIGNATURES);
 
   SignatureDatabase->Trie = NULL;
   SignatureDatabase->SearchMachine = xcalloc(1, sizeof(search_machine));
@@ -157,7 +157,7 @@ void FreeSignatureDatabase(signature_db* SignatureDatabase)
       FreeSearchMachine(SignatureDatabase->SearchMachine);
     }
 
-    free(SignatureDatabase);
+    __free(SignatureDatabase);
   }
 }
 

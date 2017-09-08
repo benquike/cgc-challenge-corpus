@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -41,17 +41,17 @@ void CUserManager::Run( void )
     String sAction;
 
     // Print banner
-    printf( "User Manager Console:\n" );
+    __printf( "User Manager Console:\n" );
 
     // Enter command loop
     bool bRunning = true;
     do
     {
         // Main console
-        printf( "1) Create User\n" );
-        printf( "2) User Login\n" );
-        printf( "3) Admin Login\n" );
-        printf( "4) Exit\n" );
+        __printf( "1) Create User\n" );
+        __printf( "2) User Login\n" );
+        __printf( "3) Admin Login\n" );
+        __printf( "4) Exit\n" );
 
         // Get user input
         ReadLine( sAction );
@@ -82,13 +82,13 @@ void CUserManager::Run( void )
             break;
 
         default:    // Invalid entry
-            printf( "Invalid choice\n" );
+            __printf( "Invalid choice\n" );
             break;
         }
     } while ( bRunning );
 
     // Exit banner
-    printf( "Exiting\n" );
+    __printf( "Exiting\n" );
 }
 
 bool CUserManager::RunCreateUser( void )
@@ -99,13 +99,13 @@ bool CUserManager::RunCreateUser( void )
     bool bGoodUserName = true;
     do
     {
-        printf( "Username: " );
+        __printf( "Username: " );
 
         ReadLine( sUserName );
 
         if ( sUserName.length() > MAX_USERNAME_LENGTH )
         {
-            printf( "Username too long, only @d characters allowed.\n", MAX_USERNAME_LENGTH );
+            __printf( "Username too long, only @d characters allowed.\n", MAX_USERNAME_LENGTH );
             bGoodUserName = false;
         }
         else
@@ -116,12 +116,12 @@ bool CUserManager::RunCreateUser( void )
     bool bGoodPassword = false;
     do
     {
-        printf( "Password: " );
+        __printf( "Password: " );
         ReadLine( sPassword );
 
         if ( sPassword.length() > MAX_PASSWORD_LENGTH )
         {
-            printf( "Password too long, only @d characters allowed.\n", MAX_PASSWORD_LENGTH );
+            __printf( "Password too long, only @d characters allowed.\n", MAX_PASSWORD_LENGTH );
             bGoodPassword = false;
         }
         else
@@ -130,9 +130,9 @@ bool CUserManager::RunCreateUser( void )
     } while ( !bGoodPassword );
 
     if ( !m_userDB.CreateUser( sUserName, sPassword ) )
-        printf( "Failed to create user -- user already exists.\n" );
+        __printf( "Failed to create user -- user already exists.\n" );
     else
-        printf( "User created successfully.\n" );
+        __printf( "User created successfully.\n" );
 
     // True -- indicates continue running command loop
     return (true);
@@ -144,11 +144,11 @@ bool CUserManager::RunUserLogin( void )
     String sPassword;
     String sAction;
 
-    printf( "Enter Username: " );
+    __printf( "Enter Username: " );
 
     ReadLine( sUserName );
 
-    printf( "Enter Password: " );
+    __printf( "Enter Password: " );
 
     ReadLine( sPassword );
 
@@ -157,27 +157,27 @@ bool CUserManager::RunUserLogin( void )
 
     if ( !pUserData )
     {
-        printf( "Login failed. Invalid username or password.\n" );
+        __printf( "Login failed. Invalid username or password.\n" );
         return (true);
     }
 
     if ( pUserData->GetPassword() != sPassword )
     {
-        printf( "Login failed. Invalid username or password.\n" );
+        __printf( "Login failed. Invalid username or password.\n" );
         return (true);
     }
 
-    printf( "Login success.\n" );
+    __printf( "Login success.\n" );
 
     bool bUserLoggedIn = true;
     do
     {
-        printf( "1) Send Message\n" );
-        printf( "2) Read Message\n" );
-        printf( "3) List Messages\n" );
-        printf( "4) Delete Message\n" );
-        printf( "5) Logout\n" );
-        printf( "6) Exit\n" );
+        __printf( "1) Send Message\n" );
+        __printf( "2) Read Message\n" );
+        __printf( "3) List Messages\n" );
+        __printf( "4) Delete Message\n" );
+        __printf( "5) Logout\n" );
+        __printf( "6) Exit\n" );
 
         ReadLine( sAction );
 
@@ -215,13 +215,13 @@ bool CUserManager::RunUserLogin( void )
             break;
 
         default:
-            printf( "Invalid command\n" );
+            __printf( "Invalid command\n" );
             break;
         }
 
     } while ( bUserLoggedIn );
 
-    printf( "Logged out.\n" );
+    __printf( "Logged out.\n" );
 
     // True -- indicates continue running command loop
     return (true);
@@ -232,24 +232,24 @@ bool CUserManager::RunAdminLogin( void )
     String sAction;
     String sAdminPassword;
 
-    printf( "Admin Password: " );
+    __printf( "Admin Password: " );
 
     ReadLine( sAdminPassword );
 
     if ( sAdminPassword != m_sAdminPassword )
     {
-        printf( "Invalid Password.\n" );
+        __printf( "Invalid Password.\n" );
         return (true);
     }
 
     bool bExitAdmin = false;
     do
     {
-        printf( "Admin Commands:\n" );
-        printf( "1) List Users\n" );
-        printf( "2) Delete User\n" );
-        printf( "3) Change User Password\n" );
-        printf( "4) Logout\n" );
+        __printf( "Admin Commands:\n" );
+        __printf( "1) List Users\n" );
+        __printf( "2) Delete User\n" );
+        __printf( "3) Change User Password\n" );
+        __printf( "4) Logout\n" );
 
         // Get user input
         ReadLine( sAction );
@@ -276,7 +276,7 @@ bool CUserManager::RunAdminLogin( void )
             break;
 
         case 4:
-            printf( "Logging out\n" );
+            __printf( "Logging out\n" );
             bExitAdmin = true;
             break;
         }
@@ -288,7 +288,7 @@ bool CUserManager::RunAdminLogin( void )
 
 void CUserManager::DoAdminListUsers( void )
 {
-    printf( "Listing users in database:\n" );
+    __printf( "Listing users in database:\n" );
 
     uint32_t userIdx;
     uint32_t userCount = m_userDB.GetUserCount();
@@ -297,7 +297,7 @@ void CUserManager::DoAdminListUsers( void )
     {
         CUserEntry *pUserData = m_userDB.GetUserForIndex( userIdx );
 
-        printf( "@d: @s\n", userIdx, pUserData->GetUserName().c_str() );
+        __printf( "@d: @s\n", userIdx, pUserData->GetUserName().c_str() );
     }
 }
 
@@ -305,14 +305,14 @@ void CUserManager::DoAdminDeleteUser( void )
 {
     String sUserName;
 
-    printf( "Username to delete: " );
+    __printf( "Username to delete: " );
 
     ReadLine( sUserName );
 
     if ( m_userDB.DeleteUserByName( sUserName ) )
-        printf( "User deleted.\n" );
+        __printf( "User deleted.\n" );
     else
-        printf( "User not found, failed to delete.\n" );
+        __printf( "User not found, failed to delete.\n" );
 }
 
 void CUserManager::DoAdminChangePassword( void )
@@ -320,7 +320,7 @@ void CUserManager::DoAdminChangePassword( void )
     String sUserName;
     String sPassword;
 
-    printf( "Username to change password: " );
+    __printf( "Username to change password: " );
 
     ReadLine( sUserName );
 
@@ -328,24 +328,24 @@ void CUserManager::DoAdminChangePassword( void )
 
     if ( pUserData == NULL )
     {
-        printf( "User not found in database.\n" );
+        __printf( "User not found in database.\n" );
         return;
     }
 
-    printf( "New password: " );
+    __printf( "New password: " );
 
     ReadLine( sPassword );
 
     if ( sPassword.length() > MAX_PASSWORD_LENGTH )
     {
-        printf( "Password too long. Failed to change password.\n" );
+        __printf( "Password too long. Failed to change password.\n" );
         return;
     }
 
     // Now set users password
     pUserData->SetPassword( sPassword );
 
-    printf( "Password set for user.\n" );
+    __printf( "Password set for user.\n" );
 
     return;
 }
@@ -356,7 +356,7 @@ void CUserManager::DoUserSendMessage( CUserEntry *pUser )
     String sUserName;
     String sMessage;
 
-    printf( "Username to send to: " );
+    __printf( "Username to send to: " );
 
     ReadLine( sUserName );
 
@@ -364,31 +364,31 @@ void CUserManager::DoUserSendMessage( CUserEntry *pUser )
 
     if ( pUserData == NULL )
     {
-        printf( "User not found.\n" );
+        __printf( "User not found.\n" );
         return;
     }
 
-    printf( "Enter Message: " );
+    __printf( "Enter Message: " );
 
     ReadLine( sMessage );
 
     if ( sMessage.length() > 128 )
     {
-        printf( "Message too long, truncating.\n" );
+        __printf( "Message too long, truncating.\n" );
         sMessage.Trim( 128 );
     }
 
     if ( !pUserData->AddMessage( new CUserMessage( pUser->GetUserName(), sMessage ) ) )
-        printf( "Message not sent.\n" );
+        __printf( "Message not sent.\n" );
     else
-        printf( "Message sent.\n" );
+        __printf( "Message sent.\n" );
 }
 
 void CUserManager::DoUserReadMessages( CUserEntry *pUser )
 {
     if ( pUser->GetMessageCount() == 0 )
     {
-        printf( "No messages.\n" );
+        __printf( "No messages.\n" );
         return;
     }
 
@@ -397,18 +397,18 @@ void CUserManager::DoUserReadMessages( CUserEntry *pUser )
     {
         CUserMessage *pCur;
 
-        printf( "@d unread messages available. Last unread message:\n", pUser->GetUnreadMessageCount() );
+        __printf( "@d unread messages available. Last unread message:\n", pUser->GetUnreadMessageCount() );
 
         // Display last unread message
         pCur = pUser->GetLastUnreadMessage();
 
-        printf( "From: @s\n", pCur->GetFrom().c_str() );
-        printf( "Message: @s\n", pCur->GetMessage().c_str() );
+        __printf( "From: @s\n", pCur->GetFrom().c_str() );
+        __printf( "Message: @s\n", pCur->GetMessage().c_str() );
 
         pUser->ClearUnreadMessages( );
     }
 
-    printf( "@d total messages available, enter number to read: ", pUser->GetMessageCount() );
+    __printf( "@d total messages available, enter number to __read: ", pUser->GetMessageCount() );
 
     String sAction;
 
@@ -418,13 +418,13 @@ void CUserManager::DoUserReadMessages( CUserEntry *pUser )
 
     if ( !sAction.ToInteger( messageNumber ) )
     {
-        printf( "Invalid message number.\n" );
+        __printf( "Invalid message number.\n" );
         return;
     }
 
     if ( messageNumber < 0 || messageNumber >= pUser->GetMessageCount() )
     {
-        printf( "Invalid message number.\n" );
+        __printf( "Invalid message number.\n" );
         return;
     }
 
@@ -433,9 +433,9 @@ void CUserManager::DoUserReadMessages( CUserEntry *pUser )
     if ( !pCurMessage )
         return;
 
-    printf( "Message @d:\n", messageNumber );
-    printf( "From: @s\n", pCurMessage->GetFrom().c_str() );
-    printf( "Message: @s\n", pCurMessage->GetMessage().c_str() );
+    __printf( "Message @d:\n", messageNumber );
+    __printf( "From: @s\n", pCurMessage->GetFrom().c_str() );
+    __printf( "Message: @s\n", pCurMessage->GetMessage().c_str() );
 
     return;
 }
@@ -444,18 +444,18 @@ void CUserManager::DoUserListMessages( CUserEntry *pUser )
 {
     if ( pUser->GetMessageCount() == 0 )
     {
-        printf( "No messages.\n" );
+        __printf( "No messages.\n" );
         return;
     }
 
-    printf( "Listing @d messages:\n", pUser->GetMessageCount() );
+    __printf( "Listing @d messages:\n", pUser->GetMessageCount() );
 
     uint32_t idx = 0;
     for ( CUserMessage *pCur = pUser->GetFirstMessage(); pCur; pCur = pUser->GetNextMessage( pCur ) )
     {
-        printf( "Message @d:\n", idx );
-        printf( "From: @s\n", pCur->GetFrom().c_str() );
-        printf( "Message: @s\n", pCur->GetMessage().c_str() );
+        __printf( "Message @d:\n", idx );
+        __printf( "From: @s\n", pCur->GetFrom().c_str() );
+        __printf( "Message: @s\n", pCur->GetMessage().c_str() );
 
         idx++;
     }
@@ -465,11 +465,11 @@ void CUserManager::DoUserDeleteMessage( CUserEntry *pUser )
 {
     if ( pUser->GetMessageCount() == 0 )
     {
-        printf( "No messages to delete.\n" );
+        __printf( "No messages to delete.\n" );
         return;
     }
 
-    printf( "@d messages available. Enter number to delete: ", pUser->GetMessageCount() );
+    __printf( "@d messages available. Enter number to delete: ", pUser->GetMessageCount() );
 
     String sAction;
 
@@ -479,20 +479,20 @@ void CUserManager::DoUserDeleteMessage( CUserEntry *pUser )
 
     if ( !sAction.ToInteger( messageNumber ) )
     {
-        printf( "Invalid message number.\n" );
+        __printf( "Invalid message number.\n" );
         return;
     }
 
     if ( messageNumber < 0 || messageNumber >= pUser->GetMessageCount() )
     {
-        printf( "Invalid message number.\n" );
+        __printf( "Invalid message number.\n" );
         return;
     }
 
     CUserMessage *pCurMessage = pUser->GetMessageByIndex( messageNumber );
 
     if ( !pUser->DeleteMessage( pCurMessage ) )
-        printf( "Failed to delete message.\n" );
+        __printf( "Failed to delete message.\n" );
     else
-        printf( "Message deleted.\n" );
+        __printf( "Message deleted.\n" );
 }

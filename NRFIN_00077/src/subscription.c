@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -34,23 +34,23 @@ Subscription* newSubscription(char* name, unsigned index, char* deliveryType) {
 	Subscription* subscription;
 	size_t channelNameLength;
 
-	if(!(subscription = malloc(sizeof(Subscription))))
+	if(!(subscription = __malloc(sizeof(Subscription))))
 		return NULL;
 
 	if(setDeliveryType(&subscription, deliveryType)) {
-		free(subscription);
+		__free(subscription);
 		return NULL;
 	}
 
-	channelNameLength  = strlen(name);
-	if(!(subscription->name = malloc(channelNameLength+1))) {
-		free(subscription->deliveryType);
-		free(subscription);
+	channelNameLength  = __strlen(name);
+	if(!(subscription->name = __malloc(channelNameLength+1))) {
+		__free(subscription->deliveryType);
+		__free(subscription);
 		return NULL;
 	}
 
-	memset(subscription->name, 0, channelNameLength+1);
-	strncpy(subscription->name, name, channelNameLength);
+	__memset(subscription->name, 0, channelNameLength+1);
+	__strncpy(subscription->name, name, channelNameLength);
 	subscription->index = index;
 	subscription->next = NULL;
 
@@ -66,7 +66,7 @@ Subscription* newSubscription(char* name, unsigned index, char* deliveryType) {
  */
 Channel* getChannel(Channel* channelList, char* channelName) {
 	for(Channel* channel=channelList; channel!=NULL; channel=channel->next) {
-		if(!strcmp(channel->name, channelName)) 
+		if(!__strcmp(channel->name, channelName)) 
 			return channel;
 	}
 
@@ -82,7 +82,7 @@ Channel* getChannel(Channel* channelList, char* channelName) {
  */
 Subscription* getSubscription(Subscription* subscriptions, char* subscriptionName) {
 	for(Subscription* subscription=subscriptions; subscription!=NULL; subscription=subscription->next) {
-		if(!strcmp(subscription->name, subscriptionName)) 
+		if(!__strcmp(subscription->name, subscriptionName)) 
 			return subscription;
 	}
 
@@ -100,23 +100,23 @@ int setDeliveryType(Subscription** subscriptionPtr, char* deliveryType) {
 
 	subscription = *subscriptionPtr;
 
-	if(!strcmp(GUARANTEED_DELIVERY, deliveryType) ||
-	   !strcmp(FRESH_DELIVERY, deliveryType) ||
-	   !strcmp(PRIORITY_HIGH_DELIVERY, deliveryType) ||
-	   !strcmp(PRIORITY_MEDIUM_DELIVERY, deliveryType) ||
-	   !strcmp(PRIORITY_LOW_DELIVERY, deliveryType)) {
+	if(!__strcmp(GUARANTEED_DELIVERY, deliveryType) ||
+	   !__strcmp(FRESH_DELIVERY, deliveryType) ||
+	   !__strcmp(PRIORITY_HIGH_DELIVERY, deliveryType) ||
+	   !__strcmp(PRIORITY_MEDIUM_DELIVERY, deliveryType) ||
+	   !__strcmp(PRIORITY_LOW_DELIVERY, deliveryType)) {
 
-		if(!(subscription->deliveryType = malloc(strlen(deliveryType)+1)))
+		if(!(subscription->deliveryType = __malloc(__strlen(deliveryType)+1)))
 			return 1;
 
-		memset(subscription->deliveryType, 0, strlen(deliveryType)+1);
-		strcpy(subscription->deliveryType, deliveryType);
-	} else if(atoi(deliveryType) > 0) {
-		if(!(subscription->deliveryType = malloc(strlen(deliveryType)+1)))
+		__memset(subscription->deliveryType, 0, __strlen(deliveryType)+1);
+		__strcpy(subscription->deliveryType, deliveryType);
+	} else if(__atoi(deliveryType) > 0) {
+		if(!(subscription->deliveryType = __malloc(__strlen(deliveryType)+1)))
 			return 1;
 
-		memset(subscription->deliveryType, 0, strlen(deliveryType)+1);
-		strcpy(subscription->deliveryType, deliveryType);			
+		__memset(subscription->deliveryType, 0, __strlen(deliveryType)+1);
+		__strcpy(subscription->deliveryType, deliveryType);			
 	} else {
 		return 1;
 	}
@@ -193,16 +193,16 @@ Channel* newChannel(char* name) {
 	Channel* channel;
 	size_t nameSize;
 
-	if(!(channel = malloc(sizeof(Channel))))
+	if(!(channel = __malloc(sizeof(Channel))))
 		return NULL;
 
-	nameSize = strlen(name);
-	if(!(channel->name = malloc(nameSize))) {
-		free(channel);
+	nameSize = __strlen(name);
+	if(!(channel->name = __malloc(nameSize))) {
+		__free(channel);
 		return NULL;
 	}
-	memset(channel->name, 0, nameSize);
-	strcpy(channel->name, name);
+	__memset(channel->name, 0, nameSize);
+	__strcpy(channel->name, name);
 	channel->head = 0;
 	channel->tail = 0;
 	channel->subscriptions = NULL;

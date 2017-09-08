@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -32,7 +32,7 @@ THE SOFTWARE.
 // 5 digits of precision
 #define F32_PRECISION       0.00001
 
-int putc( int c )
+int __putc( int c )
 {
     size_t tx_count;
 
@@ -114,17 +114,17 @@ void float_to_str( double val, char *buf, int precision )
     if ( buf == NULL )
         return;
 
-    if ( isnan( val ) )
+    if ( __isnan( val ) )
     {
-        strcpy( buf, "nan" );
+        __strcpy( buf, "nan" );
     }
-    else if ( isinf( val ) )
+    else if ( __isinf( val ) )
     {
-        strcpy( buf, "inf" );
+        __strcpy( buf, "inf" );
     }
     else if ( val == 0.0 )
     {
-        strcpy( buf, "0.00000" );
+        __strcpy( buf, "0.00000" );
     }
     else
     {
@@ -160,7 +160,7 @@ void float_to_str( double val, char *buf, int precision )
         while ( val > F32_PRECISION || m >= 0 )
         {
             double weight = pow( 10.0, m );
-            if ( weight > 0 && !isinf(weight) )
+            if ( weight > 0 && !__isinf(weight) )
             {
                 digit = floor( val / weight );
                 val -= (digit * weight);
@@ -217,7 +217,7 @@ int vprintf( const char *fmt, va_list arg )
             // We handle width, precision, and justification (but not for floats yet)
             if (*fmt == '@') {
 
-                putc('@');
+                __putc('@');
                 fmt++;
                 character_count++;
                 continue;
@@ -229,7 +229,7 @@ int vprintf( const char *fmt, va_list arg )
                 ++fmt;
             }
 
-            if (isdigit(*fmt)) {
+            if (__isdigit(*fmt)) {
 
                 if (*fmt == '0') {
 
@@ -237,12 +237,12 @@ int vprintf( const char *fmt, va_list arg )
                     fmt++;
                 }
 
-                if (isdigit(*fmt)) {
+                if (__isdigit(*fmt)) {
 
-                    width = atoi(fmt);
+                    width = __atoi(fmt);
 
                     // skip past the width specification
-                    while (isdigit(*fmt))
+                    while (__isdigit(*fmt))
                         fmt++;
                 }
             }
@@ -252,10 +252,10 @@ int vprintf( const char *fmt, va_list arg )
                 // skip over the '.'
                 fmt++;
 
-                precision=atoi(fmt);
+                precision=__atoi(fmt);
 
                 // now skip past the integer precision value
-                while (isdigit(*fmt))
+                while (__isdigit(*fmt))
                     fmt++;
 
             }
@@ -272,16 +272,16 @@ int vprintf( const char *fmt, va_list arg )
                     for (i=0; i< pad_len; ++i) {
 
                         if (zero_padding)
-                            putc('0');
+                            __putc('0');
                         else
-                            putc(' ');
+                            __putc(' ');
 
                         character_count++;
                     }
                 }
 
                 // output the char itself
-                putc(c);
+                __putc(c);
                 character_count++;
 
                 // justify to the left
@@ -289,7 +289,7 @@ int vprintf( const char *fmt, va_list arg )
                     for (i=0; i< pad_len; ++i) {
 
                         // the option to pad with 0 is ignored when left justified
-                        putc(' ');
+                        __putc(' ');
                         character_count++;
                     }
                 }
@@ -307,16 +307,16 @@ int vprintf( const char *fmt, va_list arg )
                 int_to_str( int_arg, temp_buf );
 
                 // is the output string shorter than the desired width?
-                pad_len = width - strlen(temp_buf);
+                pad_len = width - __strlen(temp_buf);
 
                 // right justification
                 if (!left_justification) {
                     for (i=0; i< pad_len; ++i) {
 
                         if (zero_padding)
-                            putc('0');
+                            __putc('0');
                         else
-                            putc(' ');
+                            __putc(' ');
 
                         character_count++;
                     }
@@ -326,7 +326,7 @@ int vprintf( const char *fmt, va_list arg )
                 c = temp_buf;
                 while ( *c )
                 {
-                    putc( *c );
+                    __putc( *c );
                     character_count++;
                     c++;
                 }
@@ -336,7 +336,7 @@ int vprintf( const char *fmt, va_list arg )
                     for (i=0; i< pad_len; ++i) {
 
                         // the option to pad with 0 is ignored when left justified
-                        putc(' ');
+                        __putc(' ');
                         character_count++;
                     }
                 }
@@ -355,16 +355,16 @@ int vprintf( const char *fmt, va_list arg )
                 int_to_hex( int_arg, temp_buf );
 
                 // is the output string shorter than the desired width?
-                pad_len = width - strlen(temp_buf);
+                pad_len = width - __strlen(temp_buf);
 
                 // right justification
                 if (!left_justification) {
                     for (i=0; i< pad_len; ++i) {
 
                         if (zero_padding)
-                            putc('0');
+                            __putc('0');
                         else
-                            putc(' ');
+                            __putc(' ');
 
                         character_count++;
                     }
@@ -374,7 +374,7 @@ int vprintf( const char *fmt, va_list arg )
                 c = temp_buf;
                 while ( *c )
                 {
-                    putc( *c );
+                    __putc( *c );
                     character_count++;
                     c++;
                 }
@@ -384,7 +384,7 @@ int vprintf( const char *fmt, va_list arg )
                     for (i=0; i< pad_len; ++i) {
 
                         // the option to pad with 0 is ignored when left justified
-                        putc(' ');
+                        __putc(' ');
                         character_count++;
                     }
                 }
@@ -405,16 +405,16 @@ int vprintf( const char *fmt, va_list arg )
                 float_to_str( float_arg, temp_buf, precision);
 
                 // is the output string shorter than the desired width?
-                pad_len = width - strlen(temp_buf);
+                pad_len = width - __strlen(temp_buf);
 
                 // pad the output with spaces or zeros
                 if (!left_justification) {
                     for (i=0; i< pad_len; ++i) {
 
                         if (zero_padding)
-                            putc('0');
+                            __putc('0');
                         else
-                            putc(' ');
+                            __putc(' ');
 
                         character_count++;
                     }
@@ -424,7 +424,7 @@ int vprintf( const char *fmt, va_list arg )
                 c = temp_buf;
                 while ( *c )
                 {
-                    putc( *c );
+                    __putc( *c );
                     character_count++;
                     c++;
                 }
@@ -437,11 +437,11 @@ int vprintf( const char *fmt, va_list arg )
                 char *string_arg = va_arg( arg, char * );
                 int output_strlen;
 
-                if (precision > 0 && precision < strlen(string_arg))
+                if (precision > 0 && precision < __strlen(string_arg))
 
                     output_strlen = precision;
                 else
-                    output_strlen = strlen(string_arg);
+                    output_strlen = __strlen(string_arg);
 
 
                 pad_len = width - output_strlen;
@@ -452,9 +452,9 @@ int vprintf( const char *fmt, va_list arg )
                     for (i=0; i< pad_len; ++i) {
 
                         if (zero_padding)
-                            putc('0');
+                            __putc('0');
                         else
-                            putc(' ');
+                            __putc(' ');
 
                         character_count++;
                     }
@@ -462,7 +462,7 @@ int vprintf( const char *fmt, va_list arg )
 
                 while ( *string_arg && output_strlen > 0 )
                 {
-                    putc( *string_arg );
+                    __putc( *string_arg );
                     character_count++;
                     string_arg++;
                     --output_strlen;
@@ -473,7 +473,7 @@ int vprintf( const char *fmt, va_list arg )
                     for (i=0; i< pad_len; ++i) {
 
                         // the option to pad with 0 is ignored when left justified
-                        putc(' ');
+                        __putc(' ');
                         character_count++;
                     }
                 }
@@ -486,7 +486,7 @@ int vprintf( const char *fmt, va_list arg )
         }
         else
         {
-            putc( *fmt );
+            __putc( *fmt );
             fmt++;
 
             character_count++;
@@ -537,7 +537,7 @@ int vsprintf( char *str, const char *fmt, va_list arg )
                 ++fmt;
             }
 
-            if (isdigit(*fmt)) {
+            if (__isdigit(*fmt)) {
 
                 if (*fmt == '0') {
 
@@ -545,11 +545,11 @@ int vsprintf( char *str, const char *fmt, va_list arg )
                     fmt++;
                 }
 
-                if (isdigit(*fmt)) {
+                if (__isdigit(*fmt)) {
 
-                    width = atoi(fmt);
+                    width = __atoi(fmt);
 
-                    while (isdigit(*fmt))
+                    while (__isdigit(*fmt))
                         fmt++;
                 }
             }
@@ -559,10 +559,10 @@ int vsprintf( char *str, const char *fmt, va_list arg )
                 // skip over the '.'
                 fmt++;
 
-                precision=atoi(fmt);
+                precision=__atoi(fmt);
 
                 // now skip past the integer precision value
-                while (isdigit(*fmt))
+                while (__isdigit(*fmt))
                     fmt++;
 
             }
@@ -613,7 +613,7 @@ int vsprintf( char *str, const char *fmt, va_list arg )
                 int_to_str( int_arg, temp_buf );
 
                 // is the output string shorter than the desired width?
-                pad_len = width - strlen(temp_buf);
+                pad_len = width - __strlen(temp_buf);
 
                 // right justification
                 if (!left_justification) {
@@ -661,7 +661,7 @@ int vsprintf( char *str, const char *fmt, va_list arg )
                 int_to_hex( int_arg, temp_buf );
 
                 // is the output string shorter than the desired width?
-                pad_len = width - strlen(temp_buf);
+                pad_len = width - __strlen(temp_buf);
 
                 // right justification
                 if (!left_justification) {
@@ -709,7 +709,7 @@ int vsprintf( char *str, const char *fmt, va_list arg )
                 float_to_str( float_arg, temp_buf, precision);
 
                 // is the output string shorter than the desired width?
-                pad_len = width - strlen(temp_buf);
+                pad_len = width - __strlen(temp_buf);
 
                 // pad the output with spaces or zeros
                 if (!left_justification) {
@@ -741,11 +741,11 @@ int vsprintf( char *str, const char *fmt, va_list arg )
                 char *string_arg = va_arg( arg, char * );
                 int output_strlen;
 
-                if (precision > 0 && precision < strlen(string_arg))
+                if (precision > 0 && precision < __strlen(string_arg))
 
                     output_strlen = precision;
                 else
-                    output_strlen = strlen(string_arg);
+                    output_strlen = __strlen(string_arg);
 
 
                 pad_len = width - output_strlen;
@@ -799,7 +799,7 @@ int vsprintf( char *str, const char *fmt, va_list arg )
     return (character_count);
 }
 
-int printf( const char *fmt, ... )
+int __printf( const char *fmt, ... )
 {
     va_list arg;
     int done;

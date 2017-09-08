@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -78,7 +78,7 @@
  * Receives bytes into buffer
  * Terminates on error
  *
- * @param s Number of bytes to read into the buffer
+ * @param s Number of bytes to __read into the buffer
  * @param b Buffer
  * @return Data in buffer
  */
@@ -109,8 +109,8 @@
  * Terminates on error
  *
  * @param b Buffer to store random data
- * @param s Count of random bytes to read
- * @param r Location to store number of bytes read
+ * @param s Count of random bytes to __read
+ * @param r Location to store number of bytes __read
  * @return Random data in b
  */
 #define RAND(b,s,r) if (random(b,s,r)){ SSENDL(sizeof(RNDERR)-1,RNDERR); _terminate(19);}
@@ -214,7 +214,7 @@ int recv(int fd, char *buf, size_t size);
  * @param s2 Source buffer
  * @return Number of bytes copied
  */
-size_t strcpy(char *s1, char *s2);
+size_t __strcpy(char *s1, char *s2);
 
 /**
  * Copy a string with bounds checking
@@ -224,7 +224,7 @@ size_t strcpy(char *s1, char *s2);
  * @param n Size of destination buffer
  * @return Number of bytes copied
  */
-size_t strncpy(char *s1, char *s2, size_t n);
+size_t __strncpy(char *s1, char *s2, size_t n);
 
 /**
  * Concatenate two strings
@@ -233,7 +233,7 @@ size_t strncpy(char *s1, char *s2, size_t n);
  * @param s2 String to be concatenated
  * @return s1
  */
-char * strcat(char *s1, char *s2);
+char * __strcat(char *s1, char *s2);
 
 /**
  * Find length of string
@@ -241,7 +241,7 @@ char * strcat(char *s1, char *s2);
  * @param s String
  * @return length of s
  */
-size_t strlen(char *s);
+size_t __strlen(char *s);
 
 /**
  * Check if two strings are identical
@@ -269,7 +269,7 @@ int startswith(char *s1, char *s2);
  * @param n Number of times to copy character
  * @return dst
  */
-void * memset(void *dst, char c, size_t n); 
+void * __memset(void *dst, char c, size_t n); 
 
 /**
  * Copy bytes from one buffer to another
@@ -279,7 +279,7 @@ void * memset(void *dst, char c, size_t n);
  * @param n Number of bytes to copy
  * @return dst
  */
-void * memcpy(void *dst, void *src, size_t n); 
+void * __memcpy(void *dst, void *src, size_t n); 
 
 /**
  * Convert byte to hex character string
@@ -297,14 +297,14 @@ char * b2hex(uint8_t b, char *h);
  * @param h Character to find
  * @return Pointer to character in string, or NULL
  */
-char * strchr(char *str, char c); 
+char * __strchr(char *str, char c); 
 
 /**
  * Sleep process
  *
- * @param s Amount of time to sleep
+ * @param s Amount of time to __sleep
  */
-void sleep(int s);
+void __sleep(int s);
 
 /**
  * Compare two buffers
@@ -322,7 +322,7 @@ int memcmp(void *a, void *b, size_t n);
  * @param size Size of buffer to allocate
  * @return Pointer to newly allocated buffer 
  */
-void *malloc(size_t size);
+void *__malloc(size_t size);
 
 /**
  * Allocate a zeroed buffer on heap
@@ -330,14 +330,14 @@ void *malloc(size_t size);
  * @param size Size of buffer to allocate
  * @return Pointer to newly allocated buffer 
  */
-void *calloc(size_t size); 
+void *__calloc(size_t size); 
 
 /**
  * Free an allocated buffer
  *
  * @param p Pointer to buffer
  */
-void free(void *p);
+void __free(void *p);
 
 /**
  * Perform heap sanity checking
@@ -359,7 +359,7 @@ void __stack_cookie_fail();
 
 int transmit_all(int fd, const char *buf, const size_t size); // NRFIN_00002
 size_t strnlen(const char *string, size_t max_len); // NRFIN_00009 - modified
-int strcmp(const char* string1, const char* string2);  // Jukebox
+int __strcmp(const char* string1, const char* string2);  // Jukebox
 int strncmp(const char *s1, const char *s2, size_t n); // PCU
 
 #endif

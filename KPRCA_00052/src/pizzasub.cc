@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -114,6 +114,6 @@ void PizzaSub::print_pizza()
     else if (bread_type == WHEAT)
         pizza_bread = "Wheat";
 
-    printf("Pizza Sub, Size: %s %s\n", pizza_size, pizza_bread);
+    __printf("Pizza Sub, Size: %s %s\n", pizza_size, pizza_bread);
     Pizza::print_pizza();
 }

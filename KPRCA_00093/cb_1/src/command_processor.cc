@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -261,25 +261,25 @@ BrcResponse *ServiceCommand(BrcCommand *brc_cmd) {
     char *cmd_id = (char *)NULL;
     PARSE_PARAM(cmd, cmd_id, cmd_id_len);
 
-    if (memcmp(cmd_id, BrcGlobals::register_code(), cmd_id_len) == 0) {
+    if (__memcmp(cmd_id, BrcGlobals::register_code(), cmd_id_len) == 0) {
         resp = RegisterUser(cmd);
-    } else if (memcmp(cmd_id, BrcGlobals::check_user_code(), cmd_id_len) == 0) {
+    } else if (__memcmp(cmd_id, BrcGlobals::check_user_code(), cmd_id_len) == 0) {
         resp = CheckIfUserExists(cmd);
-    } else if (memcmp(cmd_id, BrcGlobals::verify_password_code(), cmd_id_len) == 0) {
+    } else if (__memcmp(cmd_id, BrcGlobals::verify_password_code(), cmd_id_len) == 0) {
         resp = VerifyPassword(cmd);
-    } else if (memcmp(cmd_id, BrcGlobals::delete_user_code(), cmd_id_len) == 0) {
+    } else if (__memcmp(cmd_id, BrcGlobals::delete_user_code(), cmd_id_len) == 0) {
         resp = DeleteUser(cmd);
-    } else if (memcmp(cmd_id, BrcGlobals::join_channel_code(), cmd_id_len) == 0) {
+    } else if (__memcmp(cmd_id, BrcGlobals::join_channel_code(), cmd_id_len) == 0) {
         resp = JoinChannel(cmd);
-    } else if (memcmp(cmd_id, BrcGlobals::check_channel_code(), cmd_id_len) == 0) {
+    } else if (__memcmp(cmd_id, BrcGlobals::check_channel_code(), cmd_id_len) == 0) {
         resp = CheckIfChannelExists(cmd);
-    } else if (memcmp(cmd_id, BrcGlobals::part_channel_code(), cmd_id_len) == 0) {
+    } else if (__memcmp(cmd_id, BrcGlobals::part_channel_code(), cmd_id_len) == 0) {
         resp = PartChannel(cmd);
-    } else if (memcmp(cmd_id, BrcGlobals::delete_channel_code(), cmd_id_len) == 0) {
+    } else if (__memcmp(cmd_id, BrcGlobals::delete_channel_code(), cmd_id_len) == 0) {
         resp = DeleteChannel(cmd);
-    } else if (memcmp(cmd_id, BrcGlobals::server_exit_code(), cmd_id_len) == 0) {
+    } else if (__memcmp(cmd_id, BrcGlobals::server_exit_code(), cmd_id_len) == 0) {
         resp = ExitServer(cmd);
-    } else if (memcmp(cmd_id, BrcGlobals::remote_admin_token_request_code(), cmd_id_len) == 0) {
+    } else if (__memcmp(cmd_id, BrcGlobals::remote_admin_token_request_code(), cmd_id_len) == 0) {
         resp = RemoteAdminTokenRequest(cmd);
     }
 

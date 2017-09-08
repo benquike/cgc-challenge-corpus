@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -34,7 +34,7 @@ THE SOFTWARE.
 int main(void)
 {
   // Setup server state
-  SERVER_STATE *state = calloc(sizeof(SERVER_STATE));
+  SERVER_STATE *state = __calloc(sizeof(SERVER_STATE));
 
   state->functions =  msls_get_sls_functions();
   state->functions->set_cookie(state);
@@ -87,10 +87,10 @@ int main(void)
       default:
         break;
     }
-    free(msg->message);
-    free(msg);
+    __free(msg->message);
+    __free(msg);
   }
   state->functions->cleanup(state);
-  free(state);
+  __free(state);
   return 0;
 }

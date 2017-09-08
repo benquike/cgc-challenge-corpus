@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -26,9 +26,9 @@
 
 #include "convert.h"
 
-double atof(char *str, size_t size, int *bad_conversion)
+double __atof(char *str, size_t size, int *bad_conversion)
 {
-    if (str == NULL || strlen(str) >= size || strlen(str) == 0)
+    if (str == NULL || __strlen(str) >= size || __strlen(str) == 0)
         goto error;
 
     double val = 0.0, exp = 0.0, dec_multiplier = 1.0;

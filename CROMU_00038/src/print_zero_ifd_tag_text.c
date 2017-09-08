@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,167 +35,167 @@ void print_tag_text(unsigned short tag) {
 
         case 0x100:
 
-            printf("ImageWidth");
+            __printf("ImageWidth");
             break;
         
         case 0x101:
 
-            printf("ImageLength");
+            __printf("ImageLength");
             break;
 
         case 0x102:
 
-            printf("BitsPerSample");
+            __printf("BitsPerSample");
             break;
 
         case 0x103:
 
-            printf("Compression");
+            __printf("Compression");
             break;
 
         case 0x106:
 
-            printf("PhotometricInterpretation");
+            __printf("PhotometricInterpretation");
             break;
 
         case 0x112:
 
-            printf("Orientation");
+            __printf("Orientation");
             break;
 
         case 0x115:
 
-            printf("SamplesPerPixel");
+            __printf("SamplesPerPixel");
             break;
 
         case 0x11c:
 
-            printf("PlanarConfiguration");
+            __printf("PlanarConfiguration");
             break;
 
         case 0x212:
 
-            printf("YCbCrSubSampling");
+            __printf("YCbCrSubSampling");
             break;
 
         case 0x213:
 
-            printf("YCbCrPositioning");
+            __printf("YCbCrPositioning");
             break;
 
         case 0x11a:
 
-            printf("XResolution");
+            __printf("XResolution");
             break;
 
         case 0x11b:
 
-            printf("YResolution");
+            __printf("YResolution");
             break;
 
         case 0x128:
 
-            printf("ResolutionUnit");
+            __printf("ResolutionUnit");
             break;
 
         case 0x111:
 
-            printf("StripOffsets");
+            __printf("StripOffsets");
             break;
 
         case 0x116:
 
-            printf("RowsPerStrip");
+            __printf("RowsPerStrip");
             break;
 
         case 0x117:
 
-            printf("StripByteCounts");
+            __printf("StripByteCounts");
             break;
 
         case 0x201:
 
-            printf("InterchangeFormat");
+            __printf("InterchangeFormat");
             break;
 
         case 0x202:
 
-            printf("InterchangeFormatLength");
+            __printf("InterchangeFormatLength");
             break;
 
         case 0x12d:
 
-            printf("TransferFunction");
+            __printf("TransferFunction");
             break;
 
         case 0x13e:
 
-            printf("WhitePoint");
+            __printf("WhitePoint");
             break;
 
         case 0x13f:
 
-            printf("PrimaryChromaticities");
+            __printf("PrimaryChromaticities");
             break;
 
         case 0x211:
 
-            printf("YCbCrCoefficients");
+            __printf("YCbCrCoefficients");
             break;
 
         case 0x214:
 
-            printf("ReferenceBlackWhite");
+            __printf("ReferenceBlackWhite");
             break;
 
         case 0x132:
 
-            printf("DateTime");
+            __printf("DateTime");
             break;
 
         case 0x10e:
 
-            printf("ImageDescription");
+            __printf("ImageDescription");
             break;
 
         case 0x10f:
 
-            printf("Make");
+            __printf("Make");
             break;
 
         case 0x110:
 
-            printf("Model");
+            __printf("Model");
             break;
 
         case 0x131:
 
-            printf("Software");
+            __printf("Software");
             break;
 
         case 0x13b:
 
-            printf("Artist");
+            __printf("Artist");
             break;
 
         case 0x8298:
 
-            printf("Copyright");
+            __printf("Copyright");
             break;
 
         case 0x8825:
 
-            printf("GPS Info");
+            __printf("GPS Info");
             break;
 
         case 0x8769:
 
-            printf("EXIF IFD Pointer");
+            __printf("EXIF IFD Pointer");
             break;
 
         case 0xc4a5:
 
-            printf("");
+            __printf("");
             break;
 
     }

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -40,7 +40,7 @@ Map* newMap(Coordinate bottomLeft, Coordinate topRight) {
 	minY = bottomLeft.y;
 	maxY = topRight.y;
 
-	if(!(map = malloc(sizeof(Map))))
+	if(!(map = __malloc(sizeof(Map))))
 		_terminate(ALLOCATE_ERROR);
 
 	map->bottomLeft = bottomLeft;
@@ -49,7 +49,7 @@ Map* newMap(Coordinate bottomLeft, Coordinate topRight) {
 	xWidth = maxX - minX + 1;
 	yWidth = maxY - minY + 1;
 
-	if(!(map->data = malloc(xWidth * yWidth * sizeof(unsigned int)))) 
+	if(!(map->data = __malloc(xWidth * yWidth * sizeof(unsigned int)))) 
 		_terminate(ALLOCATE_ERROR);
 
 	for(int c=0; c<=xWidth; c++) {
@@ -74,13 +74,13 @@ void freeMap(Map **map_ptr) {
 	map = *map_ptr;
 	map->columns = 0;
 	map->rows = 0;
-	free(map->data);
+	__free(map->data);
 	map->data = NULL;
 	map->topRight.x = 0;
 	map->topRight.y = 0;
 	map->bottomLeft.x = 0;
 	map->bottomLeft.y = 0;
-	free(map);
+	__free(map);
 	map = NULL;
 }
 
@@ -170,7 +170,7 @@ void addCoordinate(Map** map_ptr, int x, int y) {
 
 /**
  * Set the value of a Coordinate
- * Note: If the coordinate does not exit in the Map, the coordinate will be added
+ * Note: If the coordinate does not __exit in the Map, the coordinate will be added
  * @param map_ptr The address of the Map containing the Coordinate
  * @param x       The X-coordinate of the coordinate to set
  * @param y       The Y-coordinate of the coordinate to set

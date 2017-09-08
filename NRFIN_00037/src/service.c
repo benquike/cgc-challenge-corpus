@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -42,7 +42,7 @@ int inst_decode(uint8_t *bytes, uint16_t len, inst_t *inst) {
     if (inst->opcode & INST_MASK_OP1) { inst_len += INST_OFF_SZ; } else { inst_len += INST_IMM_SZ; }
     if (inst->opcode & INST_MASK_OP2) { inst_len += INST_OFF_SZ; } else { inst_len += INST_IMM_SZ; }
 
-    // If we would read off the end of the bytecode, bail.
+    // If we would __read off the end of the bytecode, bail.
     if (inst_len > len) {
 #ifdef DEBUG
         fprintf(stderr, 

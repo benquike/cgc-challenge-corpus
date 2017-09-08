@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -70,9 +70,9 @@ int packet_recv(packet_t *req) {
             rx_buf_cursor, sizeof(packet_t));
     }
 
-    // If we've read all the packets in the recv buffer, then:
+    // If we've __read all the packets in the recv buffer, then:
     if (rx_buf_cursor == &rx_buf[BUF_RX_SZ]) {
-        // In this case, we need to read more off the wire...
+        // In this case, we need to __read more off the wire...
         CHK_SUCCESS(
             recv_bytes(STDIN, (char *)&rx_buf, BUF_RX_SZ), 
             "failed to recv additional bytes\n");
@@ -80,8 +80,8 @@ int packet_recv(packet_t *req) {
         rx_buf_cursor = rx_buf;
     }
 
-    // We have at least one more packet_t to read out of the recv buffer.
-    memcpy(req, rx_buf_cursor, sizeof(packet_t));
+    // We have at least one more packet_t to __read out of the recv buffer.
+    __memcpy(req, rx_buf_cursor, sizeof(packet_t));
     rx_buf_cursor += sizeof(packet_t);
 
 bail:
@@ -115,7 +115,7 @@ int do_normal(packet_t *req, packet_t *resp) {
                 (byte_t *)req->inst.src, 
                 FLAG_PAGE_BGN, 
                 FLAG_PAGE_END)) {
-            dbg("attempt to read from FLAG page; returning error packet\n");
+            dbg("attempt to __read from FLAG page; returning error packet\n");
             resp->status = S_ERROR;
             goto bail;
         }
@@ -139,7 +139,7 @@ int do_normal(packet_t *req, packet_t *resp) {
                 (byte_t *)req->inst.dst,
                 TEXT_BGN,
                 TEXT_END) 
-#ifndef PATCHED_1 // Data section write access only allowed on unpatched.
+#ifndef PATCHED_1 // Data section __write access only allowed on unpatched.
             &&
             FALSE == access_check( // ...and it's not in the data section...
                 (byte_t *)req->inst.dst,
@@ -352,7 +352,7 @@ int main(void) {
             goto bail; 
         }
 
-        memset((void *)&resp, 0, sizeof(packet_t));
+        __memset((void *)&resp, 0, sizeof(packet_t));
         resp.seq = req.seq;
 
         // Generic validation

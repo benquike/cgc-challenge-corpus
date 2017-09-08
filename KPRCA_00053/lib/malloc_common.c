@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -60,7 +60,7 @@ int get_size_class(size_t size)
 void insert_into_flist(struct blk_t *blk)
 {
   int sc_i = get_size_class(blk->size);
-  blk->free = 1;
+  blk->__free = 1;
 
   if (free_lists[sc_i] == NULL) {
     free_lists[sc_i] = blk;
@@ -88,13 +88,13 @@ void remove_from_flist(struct blk_t *blk)
 
   blk->fsucc = NULL;
   blk->fpred = NULL;
-  blk->free = 0;
+  blk->__free = 0;
 }
 
 void coalesce(struct blk_t *blk)
 {
-  /* prev and next are free */
-  if (blk->prev && blk->prev->free && blk->next && blk->next->free) {
+  /* prev and next are __free */
+  if (blk->prev && blk->prev->__free && blk->next && blk->next->__free) {
     remove_from_flist(blk->prev);
     remove_from_flist(blk->next);
     remove_from_flist(blk);
@@ -105,8 +105,8 @@ void coalesce(struct blk_t *blk)
 
     remove_from_blist(blk->next);
     remove_from_blist(blk);
-  /* Just prev is free */
-  } else if (blk->prev && blk->prev->free && blk->next && !blk->next->free) {
+  /* Just prev is __free */
+  } else if (blk->prev && blk->prev->__free && blk->next && !blk->next->__free) {
     remove_from_flist(blk->prev);
     remove_from_flist(blk);
 
@@ -114,8 +114,8 @@ void coalesce(struct blk_t *blk)
     insert_into_flist(blk->prev);
 
     remove_from_blist(blk);
-  /* Just next is free */
-  } else if (blk->prev && !blk->prev->free && blk->next && blk->next->free) {
+  /* Just next is __free */
+  } else if (blk->prev && !blk->prev->__free && blk->next && blk->next->__free) {
     remove_from_flist(blk->next);
     remove_from_flist(blk);
 

@@ -12,15 +12,15 @@ int read_until(int fd, size_t n, char terminator, char* buf);
 int transmit_string(int fd, char* buf);
 
 #ifdef DEBUG
-  #define dbg(s, ...) fdprintf(STDERR, "DEBUG %s:%d:\t" s "\n", __FILE__, __LINE__, ##__VA_ARGS__)
+  #define dbg(s, ...) __fdprintf(STDERR, "DEBUG %s:%d:\t" s "\n", __FILE__, __LINE__, ##__VA_ARGS__)
 #else
   #define dbg(s, ...)
 #endif
 
 #define err(s, ...) \
 ({ \
-  fdprintf(STDERR, "ERROR %s:%d:\t" s "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
-  exit(1); \
+  __fdprintf(STDERR, "ERROR %s:%d:\t" s "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
+  __exit(1); \
 })
 
 #endif

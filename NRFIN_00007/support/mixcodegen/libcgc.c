@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -37,7 +37,7 @@ void _terminate(unsigned int status){
 }
 
 int transmit(int fd, const void *buf, size_t count, size_t *tx_bytes){
-	ssize_t txb = write(fd, buf, count);
+	ssize_t txb = __write(fd, buf, count);
 	if(txb < 0)
 		return EFAULT;
 	*tx_bytes = (size_t) txb;
@@ -47,7 +47,7 @@ int transmit(int fd, const void *buf, size_t count, size_t *tx_bytes){
 }
 
 int receive(int fd, void *buf, size_t count, size_t *rx_bytes){
-	ssize_t s = read(fd, buf, count);
+	ssize_t s = __read(fd, buf, count);
 	if(s < 0)
 		return EFAULT;
 	*rx_bytes = (size_t) s;
@@ -90,7 +90,7 @@ int deallocate(void *addr, size_t length){
 // 	// 0x00 is for rdonly
 // 	int rndfd = open("/dev/urandom", 0x00);
 	
-// 	ssize_t res = read(rndfd, (char *) buf, count);
+// 	ssize_t res = __read(rndfd, (char *) buf, count);
 // 	if(res < 0)
 // 		return EFAULT;
 // 	*rnd_bytes = (size_t) res;

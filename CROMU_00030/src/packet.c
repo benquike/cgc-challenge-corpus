@@ -4,7 +4,7 @@ Author: James Nuttall (james@cromulence.co)
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -33,16 +33,16 @@ int populate_packet(Packet *pkt, char* data, int len)
 {
 	if (len != sizeof(Packet))
 	{
-		printf("not proper packet length: got @d, should be @d\n", len, sizeof(Packet));
+		__printf("not proper packet length: got @d, should be @d\n", len, sizeof(Packet));
 		return FAIL;
 	}
 
-	memcpy(pkt, data, len);
+	__memcpy(pkt, data, len);
 
 	int content_len = pkt->length - '0';
 	if (content_len > MAX_CONTENT || content_len < 0)
 	{
-		printf("length field outside valid range\n");
+		__printf("length field outside valid range\n");
 		return FAIL;
 	}
 
@@ -57,7 +57,7 @@ int validate_packet(Packet *pkt)
 	// check TYPE
 	if (pkt->type < CONTROL && pkt->type > DATA)
 	{
-		printf("type is out of range (@c)\n", pkt->type);
+		__printf("type is out of range (@c)\n", pkt->type);
 		ret = FAIL;
 	}
 
@@ -66,7 +66,7 @@ int validate_packet(Packet *pkt)
 	{
 		if (pkt->subtype > NACK || pkt->subtype < ASSREQ)
 		{
-			printf("subtype is out of range (@c)\n", pkt->subtype);
+			__printf("subtype is out of range (@c)\n", pkt->subtype);
 			ret = FAIL;
 		}
 	}
@@ -74,7 +74,7 @@ int validate_packet(Packet *pkt)
 	{
 		if (pkt->subtype > PLCPCE || pkt->subtype < DCDPCE)
 		{
-			printf("data subtype is out of range (@c)\n", pkt->subtype);
+			__printf("data subtype is out of range (@c)\n", pkt->subtype);
 			ret = FAIL;
 		}
 	}
@@ -82,7 +82,7 @@ int validate_packet(Packet *pkt)
 	// validate length
 	if (len > MAX_CONTENT || len < 0)
 	{
-		printf("length is out of range (@c)\n", pkt->length);
+		__printf("length is out of range (@c)\n", pkt->length);
 		ret = FAIL;
 	}
 
@@ -91,7 +91,7 @@ int validate_packet(Packet *pkt)
 		// verify connection number
 		if ((pkt->conn_number - '0') != current_connection_number)
 		{
-			printf("connection number not valid: @c vs @c\n", pkt->conn_number, current_connection_number+'0');
+			__printf("connection number not valid: @c vs @c\n", pkt->conn_number, current_connection_number+'0');
 			ret = FAIL;
 		}
 	}
@@ -99,8 +99,8 @@ int validate_packet(Packet *pkt)
 	char checksum = get_checksum(pkt);
 	if (pkt->checksum != checksum)
 	{
-		printf("checksum does not match @c vs @d", checksum, pkt->checksum);
-		printf("@s\n", (char*)pkt);
+		__printf("checksum does not match @c vs @d", checksum, pkt->checksum);
+		__printf("@s\n", (char*)pkt);
 		ret = FAIL;
 	}
 
@@ -150,7 +150,7 @@ int packet_handler(Packet* pkt)//, Game *game)
 		{
 			if (handle_disass_req(pkt->content[0]) == FAIL) // disass reason
 			{
-				printf("Failed disass\n");
+				__printf("Failed disass\n");
 				return 2; // quit the program
 			}
 			return SUCCESS;
@@ -158,14 +158,14 @@ int packet_handler(Packet* pkt)//, Game *game)
 		else if (pkt->subtype == DISRESP)
 		{
 			// we should not receive this type of packet
-			printf("Dissasociation response received\n");
+			__printf("Dissasociation response received\n");
 			return FAIL;
 		}
 		else if (pkt->subtype == DEAUTHREQ)
 		{
 			if (handle_deauth_req(pkt->content[0]) == FAIL) // deauth reason
 			{
-				printf("failed deauth...leaving\n");
+				__printf("failed deauth...leaving\n");
 				return 2; // quit the program
 			}
 			return SUCCESS;
@@ -173,7 +173,7 @@ int packet_handler(Packet* pkt)//, Game *game)
 		else if (pkt->subtype == DEAUTHRESP)
 		{
 			// we should not receive this type of packet
-			printf("Dissasociation response received\n");
+			__printf("Dissasociation response received\n");
 			return FAIL;
 		}
 	}
@@ -183,7 +183,7 @@ int packet_handler(Packet* pkt)//, Game *game)
 
 		if (pkt->packet_number - '0' != current_packet_count_recvd+1)
 		{
-			printf("packet number incorrect: @c vs @c\n", pkt->packet_number, current_packet_count_recvd+1+'0');
+			__printf("packet number incorrect: @c vs @c\n", pkt->packet_number, current_packet_count_recvd+1+'0');
 			send_nack(pkt->packet_number, ERR_OUT_OF_SEQUENCE);
 			return FAIL;
 		}
@@ -207,9 +207,9 @@ int packet_handler(Packet* pkt)//, Game *game)
 						// stack is full. game over
 						tmp_pkt.type = DATA;
 						tmp_pkt.subtype = NXTPCE;
-						strncpy(tmp_pkt.content, t, strlen(t));
+						__strncpy(tmp_pkt.content, t, __strlen(t));
 
-						send_packet_new(&tmp_pkt, strlen(t));
+						send_packet_new(&tmp_pkt, __strlen(t));
 						return SUCCESS;
 					}
 					else if (rtn == 22)
@@ -218,7 +218,7 @@ int packet_handler(Packet* pkt)//, Game *game)
 						Packet tmp;
 						tmp.type = DATA;
 						tmp.subtype = NXTPCE;
-						strncpy(tmp.content, "nusetop", 7);
+						__strncpy(tmp.content, "nusetop", 7);
 
 						send_packet_new(&tmp, 7);
 						return SUCCESS;
@@ -230,7 +230,7 @@ int packet_handler(Packet* pkt)//, Game *game)
 						Packet tmp;
 						tmp.type = DATA;
 						tmp.subtype = NXTPCE;
-						strncpy(tmp.content, "nconfused", 9);
+						__strncpy(tmp.content, "nconfused", 9);
 
 						send_packet_new(&tmp, 9);
 						return SUCCESS;
@@ -244,7 +244,7 @@ int packet_handler(Packet* pkt)//, Game *game)
 
 					tmp_pkt.type = DATA;
 					tmp_pkt.subtype = NXTPCE;
-					memcpy(tmp_pkt.content, ss, 9);
+					__memcpy(tmp_pkt.content, ss, 9);
 					tmp_pkt.content[9] = '0';
 
 					encrypt_data(tmp_pkt.content, 10, current_encryption);
@@ -285,7 +285,7 @@ int packet_handler(Packet* pkt)//, Game *game)
 					// error, must get another piece first
 					tmp_pkt.type = DATA;
 					tmp_pkt.subtype = PLCPCE;
-					memcpy(tmp_pkt.content, ss, 6);
+					__memcpy(tmp_pkt.content, ss, 6);
 
 					send_packet_new(&tmp_pkt, 6);
 					return SUCCESS;
@@ -297,13 +297,13 @@ int packet_handler(Packet* pkt)//, Game *game)
 				int indexA = get_piece(pkt->content[0] - '0');
 				if (indexA == -1)
 				{
-					printf("Out of bounds piece requested A: @d vs @d...\n", pkt->content[0] - '0', game_stack.top_element);
+					__printf("Out of bounds piece requested A: @d vs @d...\n", pkt->content[0] - '0', game_stack.top_element);
 					return FAIL;
 				}
 				int indexB = get_piece(pkt->content[3] - '0');
 				if (indexB == -1)
 				{
-					printf("Out of bounds piece requested B: @d vs @d...\n", pkt->content[3] - '0', game_stack.top_element);
+					__printf("Out of bounds piece requested B: @d vs @d...\n", pkt->content[3] - '0', game_stack.top_element);
 					return FAIL;
 				}
 				if (connect_pieces(&game_stack.stack[indexA], sideA - '0', &game_stack.stack[indexB], sideB - '0') == FAIL)
@@ -314,7 +314,7 @@ int packet_handler(Packet* pkt)//, Game *game)
 					Packet tmp;
 					tmp.type = DATA;
 					tmp.subtype = PLCPCE;
-					memcpy(tmp.content, ss, 8);
+					__memcpy(tmp.content, ss, 8);
 
 					send_packet_new(&tmp, 8);
 					return SUCCESS;
@@ -359,7 +359,7 @@ int packet_handler(Packet* pkt)//, Game *game)
 				{
 					tmp_pkt.type = DATA;
 					tmp_pkt.subtype = DCDPCE;
-					strncpy(tmp_pkt.content, "nplaced", 7);
+					__strncpy(tmp_pkt.content, "nplaced", 7);
 
 					send_packet_new(&tmp_pkt, 7);
 					return SUCCESS;
@@ -417,7 +417,7 @@ void send_assoc_response(char req_conn)
 		tmp.content[0] = '1';
 		
 		send_packet_new(&tmp, 1);
-		printf("SUCCESSFUL association\n");
+		__printf("SUCCESSFUL association\n");
 	}
 	else 
 	{
@@ -447,8 +447,8 @@ void send_auth_response(char* req_enc)
 	else
 	{
 		// unsuccessful association
-		printf("AUTH RESP sent: fail\n");
-		printf("requested: @s, next: @c\n", req_enc);
+		__printf("AUTH RESP sent: fail\n");
+		__printf("requested: @s, next: @c\n", req_enc);
 	}
 }
 
@@ -469,12 +469,12 @@ void send_auth_challenge(int enc)
 	Packet tmp;
 	tmp.type = MGMT;
 	tmp.subtype = AUTHCHALREQ;
-	memcpy(tmp.content, chall_val, 5);
+	__memcpy(tmp.content, chall_val, 5);
 	
 	send_packet_new(&tmp, 5);
 
 	encrypt_data(chall_val, 5, enc);
-	memcpy(enc_chal.answer, chall_val, 5);
+	__memcpy(enc_chal.answer, chall_val, 5);
 }
 
 int handle_auth_challenge_resp(char *answer)
@@ -506,7 +506,7 @@ int handle_auth_challenge_resp(char *answer)
 			}
 			else
 			{
-				printf("failed to match (@s)", enc_chal.answer);
+				__printf("failed to match (@s)", enc_chal.answer);
 				Packet tmp;
 				tmp.type = MGMT;
 				tmp.subtype = AUTHRESP;
@@ -541,7 +541,7 @@ int handle_auth_challenge_resp(char *answer)
 			}
 			else
 			{
-				printf("failed to match (@s)", enc_chal.answer);
+				__printf("failed to match (@s)", enc_chal.answer);
 				Packet tmp;
 				tmp.type = MGMT;
 				tmp.subtype = AUTHRESP;
@@ -559,11 +559,11 @@ int handle_auth_challenge_resp(char *answer)
 
 int handle_disass_req(char reason)
 {
-	//printf("@c @c", current_encryption, encryption_confirmed);
+	//__printf("@c @c", current_encryption, encryption_confirmed);
 	// if the user hasn't deauthenticated, then this is out of order, stop everything
 	if (current_encryption != UNINITIALIZED || encryption_confirmed != FALSE)
 	{
-		printf("FAILED1\n");
+		__printf("FAILED1\n");
 		return FAIL;
 	}
 
@@ -609,7 +609,7 @@ int handle_deauth_req(char reason)
 		tmp.content[0] = '0'; // Failed deauthentication
 
 		send_packet_new(&tmp, 1);
-		return FAIL; // exit
+		return FAIL; // __exit
 	}
 	else
 	{
@@ -630,8 +630,8 @@ int handle_deauth_req(char reason)
 // len is the number of characters being used in the content field
 void send_packet(Packet *pkt)
 {
-	write((char*)pkt, sizeof(Packet));
-	printf("\n");
+	__write((char*)pkt, sizeof(Packet));
+	__printf("\n");
 }
 
 // pkt is a pointer to a Packet struct containing the type/subtype for this packet
@@ -654,8 +654,8 @@ void send_packet_new(Packet *pkt, int len)
 	pkt->length = len + '0';
 
 	set_checksum(pkt);
-	write((char*)pkt, sizeof(Packet));
-	printf("\n");
+	__write((char*)pkt, sizeof(Packet));
+	__printf("\n");
 }
 
 char calculateCS(char *bytes, int len)
@@ -837,14 +837,14 @@ int check_win(int goal)
 	char buff[5];
 	if (get_max_road_len() >= goal)
 	{
-		printf("YOU WIN, what is your name?\n");
+		__printf("YOU WIN, what is your name?\n");
 		#ifndef PATCHED
-		int len = receive_until(buff, '\n', 25);
+		int len = __receive_until(buff, '\n', 25);
 		#else
-		int len = receive_until(buff, '\n', 5);
+		int len = __receive_until(buff, '\n', 5);
 		#endif
 		buff[len] = 0x00;
-		printf("Well done, @s\n", buff);
+		__printf("Well done, @s\n", buff);
 		return 1;
 	}
 	return 0;

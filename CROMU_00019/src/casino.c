@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.co>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -72,18 +72,18 @@ player_info *lookup_by_number(int number, player_info *root_player)
 // Requests a player number from the user and returns the associated player info struct.
 player_info *login_player_by_number(player_info *root_player)
 {
-    printf("Enter Player Number:");
+    __printf("Enter Player Number:");
     char numbuf[12] = "";
     receive_fixed_input(numbuf, '\n', sizeof(numbuf) - 1);
-    int number = atoi(numbuf);
+    int number = __atoi(numbuf);
     player_info *player = lookup_by_number(number, root_player);
     if (player == 0)
     {
-        printf("Player not found\n");
+        __printf("Player not found\n");
     }
     else
     {
-        printf("Hello, @s!\n", player->name);
+        __printf("Hello, @s!\n", player->name);
     }
     return player;
 }
@@ -93,16 +93,16 @@ void print_player_info(player_info *player)
 {
     if (player == 0)
     {
-        printf("Player does not exist\n");
+        __printf("Player does not exist\n");
         return;
     }
-    printf("Player Name: @s\n", player->name);
-    printf("Player Number: @d\n", player->number);
-    printf("Blackjack Score: @d\n", player->blackjack_score);
-    printf("Poker Score: @d\n", player->poker_score);
-    printf("Slots Score: @d\n", player->slots_score);
-    printf("Player Wallet Balance: @d\n", player->wallet);
-    printf("\n");
+    __printf("Player Name: @s\n", player->name);
+    __printf("Player Number: @d\n", player->number);
+    __printf("Blackjack Score: @d\n", player->blackjack_score);
+    __printf("Poker Score: @d\n", player->poker_score);
+    __printf("Slots Score: @d\n", player->slots_score);
+    __printf("Player Wallet Balance: @d\n", player->wallet);
+    __printf("\n");
 }
 
 // Registers a new player and adds new player to the beginning of the linked list of players. 
@@ -112,21 +112,21 @@ player_info *register_player(player_info *root_player)
     player_info *new_player;
     if (allocate(sizeof(player_info), 0, (void **)&new_player) != 0)
     {
-        printf("Error allocating memory for new player\n");
+        __printf("Error allocating memory for new player\n");
         return root_player;
     }
-    memset(new_player, 0, sizeof(player_info));
+    __memset(new_player, 0, sizeof(player_info));
     do
     {
         new_player->number = prng() & 0x7fffffff; // positive numbers only
     } while (lookup_by_number(new_player->number, root_player) != 0);
     
-    printf("Enter your name:");
+    __printf("Enter your name:");
     receive_fixed_input(new_player->name, '\n', sizeof(new_player->name) - 1);
-    printf("How much cash do you want to spend?:");
+    __printf("How much cash do you want to spend?:");
     char input[12] = "";
     receive_fixed_input(input, '\n', sizeof(input) - 1);
-    new_player->wallet = atoi(input);
+    new_player->wallet = __atoi(input);
     if ((new_player->wallet > 1000) || (new_player->wallet < 0))
     {
         new_player->wallet = 1000;
@@ -192,7 +192,7 @@ int lookup(char byte)
 
 // Decodes a string of ascii characters into binary data.
 // Invalid input will terminate the program. 
-// Can write up to size bytes to *decoded.
+// Can __write up to size bytes to *decoded.
 void decode(char *encoded, char *decoded, size_t size)
 {
     char *inp = encoded;
@@ -265,7 +265,7 @@ void programming_interface()
     decode(config_data, (char *)new_payouts, config_size);
 
     // Update payouts
-    memcpy(&payouts, &new_payouts, sizeof(payouts));
+    __memcpy(&payouts, &new_payouts, sizeof(payouts));
 
     deallocate(config_data, config_size);
 }
@@ -281,22 +281,22 @@ int main(void) {
     // Get player name
     int ret;
     size_t bytes_read;
-    printf("Enter your name:");
+    __printf("Enter your name:");
     ret = receive(STDIN, name, 83, &bytes_read);
     if ((ret != 0) || (bytes_read == 0))
     {
         _terminate(2);
     }
     name[bytes_read] = 0;
-    if (name[strlen(name)-1] == '\n')
+    if (name[__strlen(name)-1] == '\n')
     {
-        name[strlen(name)-1] = '\0';
+        name[__strlen(name)-1] = '\0';
     }
-    printf("Hello, @s!\n", name);
+    __printf("Hello, @s!\n", name);
 
     // Seed the PRNG
     uint64_t seed = 0;
-    for (int i = 0; i<strlen(name); i++)
+    for (int i = 0; i<__strlen(name); i++)
     {
         seed = (seed << 8) | (((seed >> 56) ^ name[i]));
     }
@@ -305,7 +305,7 @@ int main(void) {
     // Grant access to programming interface when name is "71db10261c"
     if (seed == 0x6462313032360652LL)
     {
-        printf("Access Granted\n");
+        __printf("Access Granted\n");
         programming_interface();
     }
 
@@ -317,16 +317,16 @@ int main(void) {
     while( (current_player == 0) || 
         (current_player->wallet <= BREAK_THE_BANK) )
     {
-        printf("\n");
-        printf("1. Play Blackjack\n");
-        printf("2. Play Poker\n");
-        printf("3. Play Slots\n");
-        printf("4. Enter a Players Club Number\n");
-        printf("5. Register a new Player\n");
-        printf("6. Show Player Status\n");
-        printf("7. Show All Players\n");
-        printf("8. Exit\n");
-        printf("Select a number:");
+        __printf("\n");
+        __printf("1. Play Blackjack\n");
+        __printf("2. Play Poker\n");
+        __printf("3. Play Slots\n");
+        __printf("4. Enter a Players Club Number\n");
+        __printf("5. Register a new Player\n");
+        __printf("6. Show Player Status\n");
+        __printf("7. Show All Players\n");
+        __printf("8. Exit\n");
+        __printf("Select a number:");
 
         char input;
         receive_fixed_input(&input, '\n', sizeof(input));
@@ -334,15 +334,15 @@ int main(void) {
         switch(input)
         {
             case '1':
-                printf("Play Blackjack\n");
+                __printf("Play Blackjack\n");
                 blackjack(current_player);
                 break;
             case '2':
-                printf("Play Poker\n");
+                __printf("Play Poker\n");
                 poker(current_player);
                 break;
             case '3':
-                printf("Play Slots\n");
+                __printf("Play Slots\n");
                 slots(current_player);
                 break;
             case '4':
@@ -350,7 +350,7 @@ int main(void) {
                 current_player = login_player_by_number(root_player);
                 break;
             case '5':
-                printf("Register a new Player\n");
+                __printf("Register a new Player\n");
                 root_player = register_player(root_player);
                 break;
             case '6':
@@ -358,37 +358,37 @@ int main(void) {
                 print_player_info(current_player);
                 break;
             case '7':
-                printf("Show All Players\n");
+                __printf("Show All Players\n");
                 print_all_players(root_player);
                 break;
             case '8':
-                printf("you don't really want to leave do you?\n");
+                __printf("you don't really want to leave do you?\n");
                 receive_fixed_input(&input, '\n', sizeof(input));
                 if (input == 'y')
                 {
                     if (current_player == 0)
                     {
-                        printf("Goodbye, stranger\n");
+                        __printf("Goodbye, stranger\n");
                         _terminate(0);
                     }
                     if (current_player->blackjack_score == 0)
                     {
-                        printf("But you didn't even play blackjack :(\n");
+                        __printf("But you didn't even play blackjack :(\n");
                         _terminate(0);
                     }
                     else if (current_player->poker_score == 0)
                     {
-                        printf("But you didn't even play poker :(\n");
+                        __printf("But you didn't even play poker :(\n");
                         _terminate(0);
                     }
                     else if (current_player->slots_score == 0)
                     {
-                        printf("But you didn't even play slots :(\n");
+                        __printf("But you didn't even play slots :(\n");
                         _terminate(0);
                     }
                     else
                     {
-                        printf("Okay, you've had enough ;)\n");
+                        __printf("Okay, you've had enough ;)\n");
                         goto finish;
                     }
                 }
@@ -399,10 +399,10 @@ int main(void) {
 
     }
 
-    printf("You broke the bank!\n");
+    __printf("You broke the bank!\n");
 
     // End of game
     finish:
-        printf("Goodbye\n");
+        __printf("Goodbye\n");
 
 }

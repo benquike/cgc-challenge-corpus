@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -77,7 +77,7 @@ void pushElement(Stack *stack, void* element) {
         _terminate(19);
 	}
 	stack->top++;
-	memcpy(&stack->elements[stack->elementSize*stack->top], element, stack->elementSize);
+	__memcpy(&stack->elements[stack->elementSize*stack->top], element, stack->elementSize);
 }
 
 void* popElement(Stack *stack) {

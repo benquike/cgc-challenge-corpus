@@ -4,7 +4,7 @@ Copyright (c) 2015 Cromulence LLC
 
 Authors: Cromulence <cgc@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -36,8 +36,8 @@ void srand( unsigned int seed );
 int cromu_atoi( const char *pStr );
 double cromu_atof( char *pStr );
  
-char *strcpy( char *pDest, const char *pSource );
-char *strncpy( char *pDest, const char *pSource, size_t maxlen );
-void *memcpy( void *pDest, const void *pSrc, size_t nbytes );
+char *__strcpy( char *pDest, const char *pSource );
+char *__strncpy( char *pDest, const char *pSource, size_t maxlen );
+void *__memcpy( void *pDest, const void *pSrc, size_t nbytes );
 
 #endif // STDLIB_H__

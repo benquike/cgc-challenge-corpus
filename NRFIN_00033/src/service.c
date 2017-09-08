@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -75,23 +75,23 @@ void auth_failure(char* resource) {
 	int ret;
 	size_t message_size; 
 
-	message_size = strlen(resource)+sizeof(FAILED_AUTH_STR)+sizeof(EOL);
+	message_size = __strlen(resource)+sizeof(FAILED_AUTH_STR)+sizeof(EOL);
 
 	if(message_buf == NULL) {
-		message_buf = malloc(message_size);
+		message_buf = __malloc(message_size);
 		if(message_buf == NULL)
 			_terminate(ALLOCATE_ERROR);
-		memset(message_buf, 0, message_size);
+		__memset(message_buf, 0, message_size);
 	}
 
-	strcat(message_buf, FAILED_AUTH_STR);
-	strcat(message_buf, resource);
-	strcat(message_buf, EOL);
+	__strcat(message_buf, FAILED_AUTH_STR);
+	__strcat(message_buf, resource);
+	__strcat(message_buf, EOL);
 
-	reportMessage(message_buf, strlen(message_buf));
+	reportMessage(message_buf, __strlen(message_buf));
 
 #ifdef PATCHED
-	free(message_buf);
+	__free(message_buf);
 #else
 #endif
 
@@ -109,28 +109,28 @@ unsigned long auth_success(char* resource) {
 	int zero = 0; // Null terminates token
 	unsigned long token[] = {0,0};
 
-	message_size = sizeof(ACCESS_STR) + strlen(resource)+sizeof(SUCCESS_AUTH_STR)+sizeof(token)+sizeof(EOL);
+	message_size = sizeof(ACCESS_STR) + __strlen(resource)+sizeof(SUCCESS_AUTH_STR)+sizeof(token)+sizeof(EOL);
 
 	// Vuln 1: Bypass check due to unititialized buffer
 	if(message_buf == NULL) {
-		message_buf = malloc(message_size);
+		message_buf = __malloc(message_size);
 		if(message_buf == NULL)
 			_terminate(ALLOCATE_ERROR);
 	}
 
 	token[0] = getAuthVal();
 	// Vuln 1: Overflow buffer that is < message_size
-	memset(message_buf, 0, message_size);
-	strcat(message_buf, ACCESS_STR);
-	strcat(message_buf, resource);
-	strcat(message_buf, SUCCESS_AUTH_STR);
-	strcat(message_buf, (char *)token);
-	strcat(message_buf, EOL);
+	__memset(message_buf, 0, message_size);
+	__strcat(message_buf, ACCESS_STR);
+	__strcat(message_buf, resource);
+	__strcat(message_buf, SUCCESS_AUTH_STR);
+	__strcat(message_buf, (char *)token);
+	__strcat(message_buf, EOL);
 
-	reportMessage(message_buf, strlen(message_buf));
+	reportMessage(message_buf, __strlen(message_buf));
 
 #ifdef PATCHED
-	free(message_buf);
+	__free(message_buf);
 #else
 #endif
 
@@ -149,8 +149,8 @@ int do_auth(unsigned long val, unsigned long auth_attempt, char* res)
 	{
 		//Vuln 0: Copies message + auth_val for mem_leak
 		char resource[RESOURCE_SIZE];
-		memset(resource, 0, RESOURCE_SIZE);
-		memcpy(resource, res, strnlen(res, RESOURCE_SIZE));
+		__memset(resource, 0, RESOURCE_SIZE);
+		__memcpy(resource, res, strnlen(res, RESOURCE_SIZE));
 		auth_failure(resource);
 		return AUTH_FAIL;
 	} else {
@@ -162,7 +162,7 @@ unsigned long getResourceToken(Resource* resourceList, char* resource) {
 
 	Resource* resource_ptr;
 	for(resource_ptr=resourceList; resource_ptr!= NULL; resource_ptr=resource_ptr->next) {
-		if(resource_ptr->name && strncmp(resource_ptr->name, resource, RESOURCE_SIZE) == 0)
+		if(strncmp(resource_ptr->name, resource, RESOURCE_SIZE) == 0)
 			return resource_ptr->token;
 	}
 
@@ -173,18 +173,18 @@ void addResource(User** user, unsigned long token, char* resource) {
 
 	Resource* resource_ptr;
 	for(resource_ptr=(*user)->resourceList; resource_ptr!= NULL; resource_ptr=resource_ptr->next) {
-		if(resource_ptr->name && strncmp(resource_ptr->name, resource, RESOURCE_SIZE) == 0) {
+		if(strncmp(resource_ptr->name, resource, RESOURCE_SIZE) == 0) {
 			resource_ptr->token = token;
 			return;
 		}
 	}
 
 	Resource* newResource;
-	newResource = (Resource *) malloc(sizeof(Resource));
+	newResource = (Resource *) __malloc(sizeof(Resource));
 	if(!newResource)
 		_terminate(ALLOCATE_ERROR);
 
-	memcpy(newResource->name, resource, RESOURCE_SIZE);
+	__memcpy(newResource->name, resource, RESOURCE_SIZE);
 	newResource->token = token;
 	newResource->next = (*user)->resourceList;
 	(*user)->resourceList = newResource;
@@ -192,7 +192,7 @@ void addResource(User** user, unsigned long token, char* resource) {
 
 User* createNewUser(User** userList, unsigned long token, unsigned long id) {
 	User* newUser;
-	newUser = (User *) malloc(sizeof(User));
+	newUser = (User *) __malloc(sizeof(User));
 	if(!newUser)
 		_terminate(ALLOCATE_ERROR);
 
@@ -219,7 +219,7 @@ User* getUser(User* userList, unsigned long id) {
 void revokeResource(User** user, unsigned long resourceToken, char* resourceName) {
 	Resource* resource_ptr;
 	for(resource_ptr=(*user)->resourceList; resource_ptr!= NULL; resource_ptr=resource_ptr->next) {
-		if(resource_ptr->name && (strncmp(resource_ptr->name, resourceName, RESOURCE_SIZE) == 0)) {
+		if((strncmp(resource_ptr->name, resourceName, RESOURCE_SIZE) == 0)) {
 			if(resource_ptr->token == resourceToken){
 				resource_ptr->token = ACCESS_REVOKED;		
 				reportMessage(RES_REVOKED_STR, sizeof(RES_REVOKED_STR)-1);
@@ -246,14 +246,14 @@ int logoutUser(User** userList, unsigned long id) {
 			resource_ptr=user_ptr->resourceList;
 			while(resource_ptr!=NULL) {
 				next_ptr = resource_ptr->next;
-				free(resource_ptr);
+				__free(resource_ptr);
 				resource_ptr=next_ptr;
 			}
 			if(user_ptr != *userList)
 				user_prev->next = user_ptr->next;
 			else
 				*userList = user_ptr->next;
-			free(user_ptr);
+			__free(user_ptr);
 			return 0;
 		}
 		user_prev = user_ptr;
@@ -272,12 +272,12 @@ int main(void) {
 
 	while(1) {
 		User* user=NULL;
-		memset(command.input, 0, MAX_ARGS_SIZE);
+		__memset(command.input, 0, MAX_ARGS_SIZE);
 		receiveCommand(&command);
 
 		user = getUser(userList, command.id);
 
-		if(strcmp(AUTH_CMD, command.type) == 0) {
+		if(__strcmp(AUTH_CMD, command.type) == 0) {
 			unsigned long result;
 			unsigned long resource_val;
 
@@ -302,7 +302,7 @@ int main(void) {
 
 		}
 
-		if(strcmp(LOGOUT_CMD, command.type) == 0) {
+		if(__strcmp(LOGOUT_CMD, command.type) == 0) {
 			logoutUser(&userList, command.id);
 			reportMessage(LOGGED_OUT_STR, sizeof(LOGGED_OUT_STR)-1);
 			
@@ -312,7 +312,7 @@ int main(void) {
 				continue;
 		}
 
-		if(strcmp(REQUEST_CMD, command.type) == 0) {
+		if(__strcmp(REQUEST_CMD, command.type) == 0) {
 			unsigned long result=0;
 			unsigned long resource_val = 0;
 
@@ -334,7 +334,7 @@ int main(void) {
 
 		}
 
-		if(strcmp(REVOKE_RESOURCE_CMD, command.type) == 0) {
+		if(__strcmp(REVOKE_RESOURCE_CMD, command.type) == 0) {
 			revokeResource(&user, command.token, command.input);
 			continue;
 		}

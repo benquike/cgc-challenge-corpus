@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -31,7 +31,7 @@
 #define DEFINE_CLASS(cls, clsctx) \
 void run##cls() \
 { \
-    FILE *__fp = fopen(__##cls##_fd + 1, 0); \
+    __FILE *__fp = __fopen(__##cls##_fd + 1, 0); \
     while (true) \
     { \
         int __id; \
@@ -41,15 +41,15 @@ void run##cls() \
         unsigned char __nargs; \
         clsctx *ctx; \
         proxy_argument __args[MAX_ARGUMENTS]; \
-        fread(&__id, sizeof(int), __fp); \
-        fread(&__selector, sizeof(int), __fp); \
-        fread(&__nargs, 1, __fp); \
-        fread(&__next.d_fd, sizeof(int), __fp); \
-        fread(&__next.d_id, sizeof(int), __fp); \
-        fread(&__next_selector, sizeof(int), __fp); \
+        __fread(&__id, sizeof(int), __fp); \
+        __fread(&__selector, sizeof(int), __fp); \
+        __fread(&__nargs, 1, __fp); \
+        __fread(&__next.d_fd, sizeof(int), __fp); \
+        __fread(&__next.d_id, sizeof(int), __fp); \
+        __fread(&__next_selector, sizeof(int), __fp); \
         for (int i = 0; i < __nargs; i++) \
         { \
-            __args[i] = proxy_argument::read(__fp); \
+            __args[i] = proxy_argument::__read(__fp); \
         } \
         ctx = (clsctx *)__id; \
         object self(__##cls##_fd, __id); \
@@ -107,7 +107,7 @@ public:
     const_string(const char *buf, unsigned int length) : d_buf(buf), d_length(length) {}
     const_string(const char *buf) : d_buf(buf)
     {
-        d_length = strlen(buf);
+        d_length = __strlen(buf);
     }
     const_string(const string& s)
     {
@@ -167,63 +167,63 @@ public:
     operator object () { return d_value.obj; }
     operator const_string () { return d_value.string; }
 
-    void send(FILE *f)
+    void send(__FILE *f)
     {
-        fwrite(&d_type, 1, f);
+        __fwrite(&d_type, 1, f);
         switch (d_type)
         {
         case type::None:
             break;
         case type::Integer:
-            fwrite(&d_value.integer, sizeof(int), f);
+            __fwrite(&d_value.integer, sizeof(int), f);
             break;
         case type::Float:
-            fwrite(&d_value.fp, sizeof(float), f);
+            __fwrite(&d_value.fp, sizeof(float), f);
             break;
         case type::String: {
                 unsigned int len = d_value.string.length();
-                fwrite(&len, sizeof(len), f);
-                fwrite(d_value.string.buffer(), len, f);
+                __fwrite(&len, sizeof(len), f);
+                __fwrite(d_value.string.buffer(), len, f);
             }
             break;
         case type::Object:
-            fwrite(&d_value.obj.d_fd, sizeof(int), f);
-            fwrite(&d_value.obj.d_id, sizeof(int), f);
+            __fwrite(&d_value.obj.d_fd, sizeof(int), f);
+            __fwrite(&d_value.obj.d_id, sizeof(int), f);
             break;
         }
     }
 
-    static proxy_argument read(FILE *f)
+    static proxy_argument __read(__FILE *f)
     {
         unsigned char t;
-        fread(&t, 1, f);
+        __fread(&t, 1, f);
         switch ((type)t)
         {
         case type::None:
             return proxy_argument();
         case type::Integer: {
                 int x;
-                fread(&x, sizeof(int), f);
+                __fread(&x, sizeof(int), f);
                 return x;
             }
         case type::Float: {
                 float x;
-                fread(&x, sizeof(float), f);
+                __fread(&x, sizeof(float), f);
                 return x;
             }
         case type::String: {
                 unsigned int len;
                 char *s;
-                fread(&len, sizeof(len), f);
+                __fread(&len, sizeof(len), f);
                 s = new char [len];
-                fread(s, len, f);
+                __fread(s, len, f);
                 return const_string(s, len);
             }
         case type::Object: {
                 int fd;
                 int id;
-                fread(&fd, sizeof(int), f);
-                fread(&id, sizeof(id), f);
+                __fread(&fd, sizeof(int), f);
+                __fread(&id, sizeof(id), f);
                 return object(fd, id);
             }
         }

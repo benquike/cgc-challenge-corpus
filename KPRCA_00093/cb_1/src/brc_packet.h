@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -27,7 +27,7 @@
 
 class BrcPacket {
   public:
-    BrcPacket(FILE *fd_in, FILE *fd_out);
+    BrcPacket(__FILE *fd_in, __FILE *fd_out);
     ~BrcPacket();
 
     int Recv();
@@ -44,8 +44,8 @@ class BrcPacket {
     unsigned int CalcChecksum() const;
     BrcProtocol *MatchRecvdProtocol() const;
 
-    FILE *fd_in_;
-    FILE *fd_out_;
+    __FILE *fd_in_;
+    __FILE *fd_out_;
     unsigned short protocol_id_;
     unsigned short length_;
     BrcProtocol *brc_msg_;

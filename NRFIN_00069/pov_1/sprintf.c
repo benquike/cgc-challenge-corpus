@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -38,7 +38,7 @@ unsigned int num;		/* the 1-byte value to convert */
 *F*/
 {
 	char tmp[2];
-	bzero(tmp, 0);
+	__bzero(tmp, 0);
 
 	if (num > 0xff) {
 		buf[0] = '|';
@@ -83,7 +83,7 @@ int num;		/* the number to convert */
 *F*/
 {
 	char tmp[13];
-	bzero(tmp, 13);
+	__bzero(tmp, 13);
 
 	if (num == 0) {
 		buf[0] = '0';
@@ -129,7 +129,7 @@ unsigned int num;		/* the number to convert */
 *F*/
 {
 	char tmp[12];
-	bzero(tmp, 12);
+	__bzero(tmp, 12);
 
 	if (num == 0) {
 		buf[0] = '0';
@@ -167,7 +167,7 @@ double num;		/* the number to convert */
 *F*/
 {
 	char tmp[40];
-	bzero(tmp, 40);
+	__bzero(tmp, 40);
 
 	if (num == 0) {
 		buf[0] = '0';
@@ -204,7 +204,7 @@ double num;		/* the number to convert */
 /*F*************************/
 
 int
-vsprintf(buf, fmt, args)
+__vsprintf(buf, fmt, args)
 
 char *buf;				/* buffer to hold formatted string */
 const char *fmt;        /* format of string */
@@ -241,7 +241,7 @@ va_list args;			/* list of arguments */
 			case 'X': 			// null-terminated string
 				x = va_arg(args, char *);
 				if (!x) x = "|BAD|";
-				len = strlen(x);
+				len = __strlen(x);
 				for(i = len; i > 0; i--) 
 					str[d++] = x[len-i];
 				continue; 
@@ -284,13 +284,13 @@ va_list args;			/* list of arguments */
 }
 
 int
-sprintf(char *buf, const char* fmt, ...)
+__sprintf(char *buf, const char* fmt, ...)
 {
 	int n;
 	va_list ap;
 
 	va_start(ap, fmt);
-	n = vsprintf (buf, fmt, ap);
+	n = __vsprintf (buf, fmt, ap);
 	va_end(ap);
 	return (n);
 }

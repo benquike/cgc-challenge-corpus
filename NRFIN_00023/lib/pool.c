@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -55,7 +55,7 @@ pool_destroy(struct pool *pool)
             LIST_PUSH_FRONT(&pagelist, list, cur);
         }
 
-    // Need to safely traverse and free without use after free
+    // Need to safely traverse and __free without use after __free
     cur = pagelist.head;
     while (cur != NULL) {
         kill = cur;

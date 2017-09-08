@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -23,7 +23,7 @@
 #include <string.h>
 #include "stdio_private.h"
 
-static int _refill(FILE *stream)
+static int _refill(__FILE *stream)
 {
     size_t rx;
 
@@ -42,7 +42,7 @@ static int _refill(FILE *stream)
     return rx;
 }
 
-ssize_t fread(void *ptr, size_t size, FILE *stream)
+ssize_t __fread(void *ptr, size_t size, __FILE *stream)
 {
     char *buf = ptr;
     size_t idx = 0, rx;
@@ -57,7 +57,7 @@ ssize_t fread(void *ptr, size_t size, FILE *stream)
         if (rx > size)
             rx = size;
 
-        memcpy(buf, stream->buffer + stream->idx, rx);
+        __memcpy(buf, stream->buffer + stream->idx, rx);
         idx += rx;
         stream->idx += rx;
 
@@ -65,7 +65,7 @@ ssize_t fread(void *ptr, size_t size, FILE *stream)
             stream->idx = stream->length = 0;
     }
 
-    /* read in the remaining bytes as quickly as possible */
+    /* __read in the remaining bytes as quickly as possible */
     for (; idx < size; idx += rx)
     {
         if (receive(stream->fd, buf + idx, size - idx, &rx) != 0 || rx == 0)
@@ -76,14 +76,14 @@ ssize_t fread(void *ptr, size_t size, FILE *stream)
     return idx;
 }
 
-static int _getc(FILE *stream)
+static int _getc(__FILE *stream)
 {
     char ch;
     size_t rx;
 
     if (stream->idx == INVALID_IDX)
     {
-        /* unbuffered read */
+        /* unbuffered __read */
         if (receive(stream->fd, &ch, 1, &rx) != 0 || rx == 0)
             return -1;
         xlat(stream->xlat_map_inv, &ch, 1);
@@ -91,7 +91,7 @@ static int _getc(FILE *stream)
     }
     else
     {
-        /* buffered read */
+        /* buffered __read */
         if (stream->idx == stream->length)
         {
             if (_refill(stream) < 0)
@@ -102,7 +102,7 @@ static int _getc(FILE *stream)
     }
 }
 
-ssize_t freaduntil(char *str, size_t size, char term, FILE *stream)
+ssize_t freaduntil(char *str, size_t size, char term, __FILE *stream)
 {
     size_t idx;
 

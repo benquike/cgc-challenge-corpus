@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -38,7 +38,7 @@ int enqueue(queue_t **queue, char *data)
     if (data == NULL)
         return -1;
 
-    queue_t *back = malloc(sizeof(queue_t));
+    queue_t *back = __malloc(sizeof(queue_t));
     back->data = data;
     back->next = NULL;
 
@@ -60,13 +60,13 @@ int enqueue_copy(queue_t **queue, char *data, size_t size)
     if (data == NULL)
         return -1;
 
-    int data_len = strlen(data) + 1;
+    int data_len = __strlen(data) + 1;
     if (data_len > size)
         return -1;
 
-    queue_t *back = malloc(sizeof(queue_t));
-    back->data = malloc(data_len);
-    memcpy(back->data, data, data_len);
+    queue_t *back = __malloc(sizeof(queue_t));
+    back->data = __malloc(data_len);
+    __memcpy(back->data, data, data_len);
     back->next = NULL;
 
     if(*queue == NULL) {
@@ -90,7 +90,7 @@ char *dequeue_copy(queue_t **queue)
     queue_t *front = *queue;
     char *popped_data = front->data;
     *queue = front->next;
-    free(front);
+    __free(front);
 
     return popped_data;
 }
@@ -103,12 +103,12 @@ void clear_queue(queue_t **queue)
 
     queue_t *front = *queue, *old_front;
     while(front->next != NULL) {
-        free(front->data);
+        __free(front->data);
         old_front = front;
         front = front->next;
-        free(old_front);
+        __free(old_front);
     }
-    free(front->data);
-    free(front);
+    __free(front->data);
+    __free(front);
     *queue = NULL;
 }

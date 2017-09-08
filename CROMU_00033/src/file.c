@@ -1,7 +1,7 @@
 /*
  Copyright (c) 2014 Cromulence LLC
  
- Permission is hereby granted, free of charge, to any person obtaining a copy
+ Permission is hereby granted, __free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -88,7 +88,7 @@ int bubble_sort( pfile parent )
         total_count = outer_index+1;
         
         while ( total_count < parent->length ) {
-            result = strcmp( list[outer_index]->name, list[total_count]->name);
+            result = __strcmp( list[outer_index]->name, list[total_count]->name);
             
             if ( result > 0 ) {
                 nl = list[total_count];
@@ -128,10 +128,10 @@ int remove_sub_file( pfile parent, char *name )
             continue;
         }
         
-        if ( strcmp( t->name, name ) == 0 ) {
+        if ( __strcmp( t->name, name ) == 0 ) {
             
             if ( t->type == DIR ) {
-                printf("[ERROR] Cannot delete a directory\n");
+                __printf("[ERROR] Cannot delete a directory\n");
                 return 0;
             }
             
@@ -161,12 +161,12 @@ int delete_file( char *name )
     /// Handle base case
     if ( name[0] != '/' ) {
         if ( does_sub_file_exist( base, name ) == 0 ) {
-            printf("[ERROR] Could not locate $s\n", name);
+            __printf("[ERROR] Could not locate $s\n", name);
             return 0;
         }
         
         if ( remove_sub_file( base, name ) != 0 ) {
-            printf("[INFO] $s removed\n", name );
+            __printf("[INFO] $s removed\n", name );
             return 1;
         } else {
             return 0;
@@ -174,34 +174,34 @@ int delete_file( char *name )
     }
     
     start = 1;
-    max = strlen(name);
+    max = __strlen(name);
    
     if ( max > 256 ) {
-        printf("[ERROR] Name too long\n");
+        __printf("[ERROR] Name too long\n");
         return 0;
     }
  
     while ( end != -1 ) {
         end = find_next_slash( name, start, max );
         
-        memset(nm, 0, 256);
+        __memset(nm, 0, 256);
         
         if ( end == -1 ) {
 
 	    if ( (max - start) > 256 ) {
-               printf("[ERROR] Size calculation failed\n");
+               __printf("[ERROR] Size calculation failed\n");
                return 0;
 	    }
 
-            memcpy( nm, name+start, max-start);
+            __memcpy( nm, name+start, max-start);
             
             if ( does_sub_file_exist( base, nm ) == 0 ) {
-                printf("[ERROR] Could not locate $s\n", name );
+                __printf("[ERROR] Could not locate $s\n", name );
                 return 0;
             }
             
             if ( remove_sub_file( base, nm ) != 0 ) {
-                printf("[INFO] $s removed\n", nm );
+                __printf("[INFO] $s removed\n", nm );
                 return 1;
             } else {
                 return 0;
@@ -209,15 +209,15 @@ int delete_file( char *name )
         }
        
         if ( (end-start) > 256 ) {
-            printf("[ERROR] Size calculation failed\n");
+            __printf("[ERROR] Size calculation failed\n");
             return 0;
         }
  
-        memcpy( nm, name+start, end-start);
+        __memcpy( nm, name+start, end-start);
         base = retrieve_sub( base, nm );
         
         if ( base == NULL ) {
-            printf("[ERROR] Failed to locate directory $s\n", nm);
+            __printf("[ERROR] Failed to locate directory $s\n", nm);
             return 0;
         }
 
@@ -256,7 +256,7 @@ pfile retrieve_sub( pfile pf, char *name )
             continue;
         }
         
-        if ( strcmp( t->name, name ) == 0 ) {
+        if ( __strcmp( t->name, name ) == 0 ) {
             return t;
         }
         
@@ -299,29 +299,29 @@ int fixup_dir_length( pfile d )
         d->length = 1;
         
         /// 8 is used because it is rounded up anyway
-        d->data = malloc( 8 );
+        d->data = __malloc( 8 );
         
         if ( d->data == NULL ) {
-            printf("[ERROR] Failed to fixup dir data\n");
+            __printf("[ERROR] Failed to fixup dir data\n");
             d->length = 0;
             return 0;
         }
         
-        memset(d->data, 0, 8);
+        __memset(d->data, 0, 8);
     } else {
         /// Increment it by 1
         d->length += 1;
         
-        nd = malloc( d->length * sizeof(pfile));
+        nd = __malloc( d->length * sizeof(pfile));
         
         if ( nd == NULL ) {
             d->length--;
             return 0;
         }
         
-        memset(nd, 0, d->length * sizeof(pfile));
-        memcpy(nd, d->data, (d->length-1)*sizeof(pfile));
-        free(d->data);
+        __memset(nd, 0, d->length * sizeof(pfile));
+        __memcpy(nd, d->data, (d->length-1)*sizeof(pfile));
+        __free(d->data);
         d->data = nd;
     }
     
@@ -350,29 +350,29 @@ pfile get_file( char *name )
     }
     
     start = 1;
-    max = strlen(name);
+    max = __strlen(name);
     
     while ( end != -1 ) {
         end = find_next_slash( name, start, max );
         
         if ( end == -1 ) {
-            memset( sdir, 0, 256 );
-            memcpy( sdir, name+start, max-start);
+            __memset( sdir, 0, 256 );
+            __memcpy( sdir, name+start, max-start);
             
             rv = retrieve_sub( cbase, sdir );
             
             return rv;
         }
         
-        memset( sdir, 0, 256 );
-        memcpy( sdir, name+start, end-start);
+        __memset( sdir, 0, 256 );
+        __memcpy( sdir, name+start, end-start);
         
         cbase = retrieve_sub( cbase, sdir );
         
         start = end + 1;
         if ( cbase ) {
             if (cbase->type != DIR ) {
-                printf("[ERROR] $s is not a directory\n", sdir );
+                __printf("[ERROR] $s is not a directory\n", sdir );
                 return NULL;
             }
         } else {
@@ -399,7 +399,7 @@ int does_sub_file_exist( pfile pf, char *name)
             continue;
         }
         
-        if ( strcmp( t->name, name ) == 0 ) {
+        if ( __strcmp( t->name, name ) == 0 ) {
             return 1;
         }
         
@@ -442,7 +442,7 @@ int add_file( pfile nf )
     // It is possible to have '/' in the name but it won't affect it
     if ( nf->name[0] != '/' ) {
         if ( add_file_to_dir( cbase_dir, nf ) == 0 ) {
-            printf("[ERROR] Failed to add file to root\n");
+            __printf("[ERROR] Failed to add file to root\n");
             return 0;
         }
         
@@ -450,11 +450,11 @@ int add_file( pfile nf )
     }
     
     start = 1;
-    max = strlen(nf->name);
+    max = __strlen(nf->name);
     
     /// Handle the case where the name is just '/'
     if ( max == 1 ) {
-        printf("[ERROR] You cannot add '/'\n");
+        __printf("[ERROR] You cannot add '/'\n");
         return 0;
     }
     
@@ -463,35 +463,35 @@ int add_file( pfile nf )
         
         /// If this is the end then copy out the name and add it in
         if ( end == -1 ) {
-            memset(base, 0, 256);
-            memcpy( base, nf->name+start, max-start );
-            memset( nf->name, 0, 256);
-            memcpy( nf->name, base, max - start );
+            __memset(base, 0, 256);
+            __memcpy( base, nf->name+start, max-start );
+            __memset( nf->name, 0, 256);
+            __memcpy( nf->name, base, max - start );
             
             if ( does_sub_file_exist( cbase_dir, nf->name) == 1) {
-                printf("[ERROR] File already exists\n");
+                __printf("[ERROR] File already exists\n");
                 return 0;
             }
             
             if ( add_file_to_dir( cbase_dir, nf) == 0 ) {
-                printf("[ERROR] Failed to add file to $s\n", cbase_dir->name);
+                __printf("[ERROR] Failed to add file to $s\n", cbase_dir->name);
                 return 0;
             }
             
             return 1;
         } else {
-            memset( base, 0, 256);
+            __memset( base, 0, 256);
             
             /// Copy the dir name and determine if it is valid
-            memcpy( base, nf->name+start, end-start);
+            __memcpy( base, nf->name+start, end-start);
             
             temp = retrieve_sub( cbase_dir, base );
             
             if ( temp == NULL ) {
-                printf("[ERROR] Directory $s does not exist.\n", base);
+                __printf("[ERROR] Directory $s does not exist.\n", base);
                 return 0;
             } else if ( temp->type != DIR ) {
-                printf("[ERROR] $s is not a directory\n", base );
+                __printf("[ERROR] $s is not a directory\n", base );
                 return 0;
             } else {
                 cbase_dir = temp;
@@ -511,10 +511,10 @@ void free_file( pfile f )
     }
     
     if ( f->data != NULL ) {
-        free(f->data);
+        __free(f->data);
     }
     
-    free(f);
+    __free(f);
     
     return;
 }
@@ -523,13 +523,13 @@ pfile init_file( void )
 {
 	pfile new_file = NULL;
 
-	new_file = malloc( sizeof(file) );
+	new_file = __malloc( sizeof(file) );
 
 	if ( new_file == NULL ) {
 		return new_file;
 	}
 
-	memset( new_file, 0, sizeof(file) );
+	__memset( new_file, 0, sizeof(file) );
 
 	return new_file;
 }
@@ -546,13 +546,13 @@ int set_name( pfile pf, char *name)
         return 0;
     }
     
-    length = strlen( name );
+    length = __strlen( name );
     
     if ( length > 255 ) {
         return 0;
     }
     
-    memcpy( pf->name, name, length );
+    __memcpy( pf->name, name, length );
     
     return length;
 }
@@ -563,7 +563,7 @@ int set_type( pfile pf, int type )
         return 0;
     }
     
-    if ( type != FILE && type != DIR ) {
+    if ( type != __FILE && type != DIR ) {
         return 0;
     }
     
@@ -588,13 +588,13 @@ int set_data( pfile pf, int length, char *data )
         return 0;
     }
     
-    tn = malloc( length + 1 );
+    tn = __malloc( length + 1 );
     
     if ( tn == NULL ) {
         return 0;
     }
     
-    memcpy( tn, data, length + 1 );
+    __memcpy( tn, data, length + 1 );
     
     pf->length = length;
     pf->data = tn;

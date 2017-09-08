@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -33,21 +33,21 @@ bool Date::SetDate( const char* pszInStr )
     if ( pszInStr == NULL )
         return (false);
 
-    while ( isspace( *pszInStr ) )
+    while ( __isspace( *pszInStr ) )
         pszInStr++;
 
     tempMonth = 0;
     tempDay = 0;
     tempYear = 0;
 
-    if ( isdigit( *pszInStr ) )
+    if ( __isdigit( *pszInStr ) )
         tempMonth = (*pszInStr - '0');
     else
         return (false);
 
     pszInStr++;
 
-    if ( isdigit( *pszInStr ) )
+    if ( __isdigit( *pszInStr ) )
     {
         tempMonth *= 10;
         tempMonth += (*pszInStr - '0');
@@ -64,14 +64,14 @@ bool Date::SetDate( const char* pszInStr )
     pszInStr++;
 
     // Parse day format
-    if ( isdigit( *pszInStr ) )
+    if ( __isdigit( *pszInStr ) )
         tempDay = (*pszInStr - '0');
     else
         return (false);
 
     pszInStr++;
 
-    if ( isdigit( *pszInStr ) )
+    if ( __isdigit( *pszInStr ) )
     {
         tempDay *= 10;
         tempDay += (*pszInStr - '0');
@@ -89,14 +89,14 @@ bool Date::SetDate( const char* pszInStr )
     pszInStr++;
 
     // Parse year
-    if ( isdigit( *pszInStr ) )
+    if ( __isdigit( *pszInStr ) )
         tempYear = (*pszInStr - '0');
     else
         return (false);
 
     pszInStr++;
 
-    if ( isdigit( *pszInStr ) )
+    if ( __isdigit( *pszInStr ) )
     {
         tempYear *= 10;
         tempYear += (*pszInStr - '0');
@@ -106,7 +106,7 @@ bool Date::SetDate( const char* pszInStr )
     else
         return (false);
 
-    if ( isdigit( *pszInStr ) )
+    if ( __isdigit( *pszInStr ) )
     {
         tempYear *= 10;
         tempYear += (*pszInStr - '0');
@@ -128,7 +128,7 @@ bool Date::SetDate( const char* pszInStr )
     }
 
     // 4 Character date
-    if ( isdigit( *pszInStr ) )
+    if ( __isdigit( *pszInStr ) )
     {
         tempYear *= 10;
         tempYear += (*pszInStr - '0');
@@ -211,17 +211,17 @@ bool Time::SetTime( const char *pszInStr )
     if ( pszInStr == NULL )
         return (false);
 
-    while ( isspace( *pszInStr ) )
+    while ( __isspace( *pszInStr ) )
         pszInStr++;
 
-    if ( isdigit( *pszInStr ) )
+    if ( __isdigit( *pszInStr ) )
         tempHour = (*pszInStr - '0');
     else
         return (false);
 
     pszInStr++;
 
-    if ( isdigit( *pszInStr ) )
+    if ( __isdigit( *pszInStr ) )
     {
         tempHour *= 10;
         tempHour += (*pszInStr - '0');
@@ -236,14 +236,14 @@ bool Time::SetTime( const char *pszInStr )
     if ( tempHour >= 24 )
         return (false);
 
-    if ( isdigit( *pszInStr ) )
+    if ( __isdigit( *pszInStr ) )
         tempMinute = (*pszInStr - '0');
     else
         return (false);
 
     pszInStr++;
 
-    if ( isdigit( *pszInStr ) )
+    if ( __isdigit( *pszInStr ) )
     {
         tempMinute *= 10;
         tempMinute += (*pszInStr - '0');
@@ -258,14 +258,14 @@ bool Time::SetTime( const char *pszInStr )
     if ( tempMinute >= 60 )
         return (false);
 
-    if ( isdigit( *pszInStr ) )
+    if ( __isdigit( *pszInStr ) )
         tempSecond = (*pszInStr - '0');
     else
         return (false);
 
     pszInStr++;
 
-    if ( isdigit( *pszInStr ) )
+    if ( __isdigit( *pszInStr ) )
     {
         tempSecond *= 10;
         tempSecond += (*pszInStr - '0');

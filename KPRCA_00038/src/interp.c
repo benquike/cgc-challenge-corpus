@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -61,7 +61,7 @@ static int eval_expression(interp_t *interp, expr_t *expr);
 
 static var_t *new_number(unsigned int value)
 {
-    var_t *var = calloc(1, sizeof(var_t));
+    var_t *var = __calloc(1, sizeof(var_t));
     if (var == NULL)
         return NULL;
     var->type = VAR_NUMBER;
@@ -74,7 +74,7 @@ static var_t *new_string(char *value)
     if (value == NULL)
         return NULL;
 
-    var_t *var = calloc(1, sizeof(var_t));
+    var_t *var = __calloc(1, sizeof(var_t));
     if (var == NULL)
         return NULL;
 
@@ -89,15 +89,15 @@ static void free_var(void *v)
     switch (var->type)
     {
     case VAR_NUMBER:
-        free(var->v_number.strvalue);
+        __free(var->v_number.strvalue);
         break;
     case VAR_STRING:
-        //free(var->v_string.value);
+        //__free(var->v_string.value);
         break;
 #if 0
     case VAR_ARRAY:
         dict_free(var->v_array.value);
-        free(var->v_array.value);
+        __free(var->v_array.value);
         break;
 #endif
     }
@@ -115,7 +115,7 @@ static int copy_var(var_t *dst, var_t *src)
         dst->v_number.strvalue = NULL;
         break;
     case VAR_STRING:
-        if ((s = strdup(src->v_string.value)) == NULL)
+        if ((s = __strdup(src->v_string.value)) == NULL)
             return 0;
         dst->v_string.value = s;
         break;
@@ -149,7 +149,7 @@ static char *to_string(unsigned int value)
 {
     char tmp[20];
     sprintf(tmp, "%d", value);
-    return strdup(tmp);
+    return __strdup(tmp);
 }
 
 static var_t *get_var(interp_t *interp, const char *name)
@@ -160,13 +160,13 @@ static var_t *get_var(interp_t *interp, const char *name)
     if (var == NULL)
     {
         // initialize as null variable
-        var = malloc(sizeof(var_t));
+        var = __malloc(sizeof(var_t));
         if (var == NULL)
             return NULL;
         var->type = VAR_NULL;
         if (!dict_add(&interp->vars, name, var))
         {
-            free(var);
+            __free(var);
             return NULL;
         }
     }
@@ -208,7 +208,7 @@ static int coerce_number(interp_t *interp, var_t *var)
     if (var->type == VAR_NUMBER)
         return var->v_number.value;
     if (var->type == VAR_STRING)
-        return strtol(var->v_string.value, NULL, 0);
+        return __strtol(var->v_string.value, NULL, 0);
     return 0;
 }
 
@@ -243,7 +243,7 @@ static int read_record(interp_t *interp)
     if (rs == NULL)
         goto fail;
 
-    min = strlen(rs);
+    min = __strlen(rs);
     if (min == 0)
     {
         rs = "\n";
@@ -273,7 +273,7 @@ static int read_record(interp_t *interp)
             }
         }
         interp->buf[i] = 0;
-    } while (ignore_blank && strlen(interp->buf) == 0);
+    } while (ignore_blank && __strlen(interp->buf) == 0);
 
     return 1;
 
@@ -287,8 +287,8 @@ static void free_fields(interp_t *interp)
     if (interp->fields)
     {
         for (i = 0; i < interp->num_fields; i++)
-            free(interp->fields[i]);
-        free(interp->fields);
+            __free(interp->fields[i]);
+        __free(interp->fields);
     }
     interp->fields = NULL;
     interp->num_fields = 0;
@@ -303,7 +303,7 @@ static int read_fields(interp_t *interp)
     if (fs == NULL)
         goto fail;
 
-    min = strlen(fs);
+    min = __strlen(fs);
 
     free_fields(interp);
     interp->field0 = interp->buf;
@@ -328,7 +328,7 @@ static int read_fields(interp_t *interp)
         goto fail;
 
     interp->num_fields = cnt + 1;
-    interp->fields = calloc(sizeof(char *), interp->num_fields);
+    interp->fields = __calloc(sizeof(char *), interp->num_fields);
     if (interp->fields == NULL)
         goto fail;
 
@@ -337,10 +337,10 @@ static int read_fields(interp_t *interp)
     {
         if (min != 0 && strncmp(&interp->buf[i], fs, min) != 0)
             continue;
-        s = malloc(i - last + 1);
+        s = __malloc(i - last + 1);
         if (s == NULL)
             goto fail;
-        memcpy(s, &interp->buf[last], i - last);
+        __memcpy(s, &interp->buf[last], i - last);
         s[i - last] = 0;
         interp->fields[cnt++] = s;
 
@@ -352,10 +352,10 @@ static int read_fields(interp_t *interp)
         last = i + 1;
     }
 
-    s = malloc(i - last + 1);
+    s = __malloc(i - last + 1);
     if (s == NULL)
         goto fail;
-    memcpy(s, &interp->buf[last], i - last);
+    __memcpy(s, &interp->buf[last], i - last);
     s[i - last] = 0;
     interp->fields[cnt++] = s;
     return 1;
@@ -369,11 +369,11 @@ static int combine_fields(interp_t *interp)
 {
     unsigned int cnt, i, ofs_len;
     const char *ofs = get_string(interp, "OFS");
-    ofs_len = strlen(ofs);
+    ofs_len = __strlen(ofs);
 
     for (cnt = 0, i = 0; i < interp->num_fields; i++)
     {
-        unsigned int len = interp->fields[i] == NULL ? 0 : strlen(interp->fields[i]);
+        unsigned int len = interp->fields[i] == NULL ? 0 : __strlen(interp->fields[i]);
         if (cnt + len + ofs_len >= BUF_SIZE - 1)
             return 0;
         if (i)
@@ -383,13 +383,13 @@ static int combine_fields(interp_t *interp)
 
     for (cnt = 0, i = 0; i < interp->num_fields; i++)
     {
-        unsigned int len = interp->fields[i] == NULL ? 0 : strlen(interp->fields[i]);
+        unsigned int len = interp->fields[i] == NULL ? 0 : __strlen(interp->fields[i]);
         if (i)
         {
-            memcpy(&interp->buf[cnt], ofs, ofs_len);
+            __memcpy(&interp->buf[cnt], ofs, ofs_len);
             cnt += ofs_len;
         }
-        memcpy(&interp->buf[cnt], interp->fields[i], len);
+        __memcpy(&interp->buf[cnt], interp->fields[i], len);
         cnt += len;
     }
     interp->buf[cnt] = 0;
@@ -437,25 +437,25 @@ static int set_field(interp_t *interp, unsigned int num, const char *value)
 
     if (num > interp->num_fields)
     {
-        fields = realloc(interp->fields, num * sizeof(char *));
+        fields = __realloc(interp->fields, num * sizeof(char *));
         if (fields == NULL)
             return 0;
         interp->fields = fields;
-        memset(&interp->fields[interp->num_fields], 0, sizeof(char *) * (num - interp->num_fields));
+        __memset(&interp->fields[interp->num_fields], 0, sizeof(char *) * (num - interp->num_fields));
         interp->num_fields = num;
     }
 
     if (num == 0)
     {
-        if (strlen(value) >= BUF_SIZE - 1)
+        if (__strlen(value) >= BUF_SIZE - 1)
             return 0;
-        strcpy(interp->buf, value);
+        __strcpy(interp->buf, value);
         free_fields(interp);
         interp->field0 = interp->buf;
     }
     else
     {
-        copy = strdup(value);
+        copy = __strdup(value);
         if (copy == NULL)
             return 0;
 
@@ -493,7 +493,7 @@ static int set_result_var(interp_t *interp, var_t *var)
     }
     else if (var->type == VAR_STRING)
     {
-        char *s = strdup(var->v_string.value);
+        char *s = __strdup(var->v_string.value);
         if (s == NULL)
             return 0;
         interp->result.v_string.value = s;
@@ -531,7 +531,7 @@ static int assign_result(interp_t *interp, expr_t *expr)
     {
         var_t *var = NULL;
         if (interp->result.type == VAR_STRING)
-            var = new_string(strdup(interp->result.v_string.value));
+            var = new_string(__strdup(interp->result.v_string.value));
         else
             var = new_number(interp->result.v_number.value);
         if (var == NULL)
@@ -549,27 +549,27 @@ static int compare_value(var_t *lhs, var_t *rhs)
     char tmp[20];
 
     if (lhs->type == VAR_STRING && rhs->type == VAR_STRING)
-        return strcmp(lhs->v_string.value, rhs->v_string.value);
+        return __strcmp(lhs->v_string.value, rhs->v_string.value);
 
     if (lhs->type == VAR_STRING && rhs->type == VAR_NUMBER)
     {
         to_string_buf(rhs->v_number.value, tmp);
-        return strcmp(lhs->v_string.value, tmp);
+        return __strcmp(lhs->v_string.value, tmp);
     }
 
     if (lhs->type == VAR_NUMBER && rhs->type == VAR_STRING)
     {
         sprintf(tmp, "%d", lhs->v_number.value);
-        return strcmp(tmp, rhs->v_string.value);
+        return __strcmp(tmp, rhs->v_string.value);
     }
 
     if (lhs->type == VAR_NUMBER && rhs->type == VAR_NUMBER)
         return lhs->v_number.value - rhs->v_number.value;
 
     if (lhs->type == VAR_NULL && rhs->type == VAR_STRING)
-        return strcmp("", rhs->v_string.value);
+        return __strcmp("", rhs->v_string.value);
     if (rhs->type == VAR_NULL && lhs->type == VAR_STRING)
-        return strcmp(rhs->v_string.value, "");
+        return __strcmp(rhs->v_string.value, "");
 
     if (lhs->type == VAR_NULL && rhs->type == VAR_NUMBER)
         return 0 - rhs->v_number.value;
@@ -599,20 +599,20 @@ static int do_concat(interp_t *interp, expr_t *e1, expr_t *e2)
     move_var(&v2, &interp->result);
 
     if (v1.type == VAR_STRING)
-        len += strlen(v1.v_string.value) + 1;
+        len += __strlen(v1.v_string.value) + 1;
     else if (v1.type == VAR_NUMBER || v1.type == VAR_NULL)
         len += 20;
     else
         goto fail;
 
     if (v2.type == VAR_STRING)
-        len += strlen(v2.v_string.value) + 1;
+        len += __strlen(v2.v_string.value) + 1;
     else if (v2.type == VAR_NUMBER || v2.type == VAR_NULL)
         len += 20;
     else
         goto fail;
 
-    out = malloc(len);
+    out = __malloc(len);
     if (out == NULL)
         goto fail;
 
@@ -624,9 +624,9 @@ static int do_concat(interp_t *interp, expr_t *e1, expr_t *e2)
         out[0] = 0;
 
     if (v2.type == VAR_STRING)
-        sprintf(out + strlen(out), "%s", v2.v_string.value);
+        sprintf(out + __strlen(out), "%s", v2.v_string.value);
     else if (v2.type == VAR_NUMBER)
-        sprintf(out + strlen(out), "%d", v2.type == VAR_NUMBER ? v2.v_number.value : 0);
+        sprintf(out + __strlen(out), "%d", v2.type == VAR_NUMBER ? v2.v_number.value : 0);
 
     result = set_result_string(interp, out);
 
@@ -712,7 +712,7 @@ static int eval_expression(interp_t *interp, expr_t *expr)
     switch(expr->op)
     {
     case OP_CONST_STRING:
-        if (!set_result_string(interp, strdup(expr->e_cstring.value)))
+        if (!set_result_string(interp, __strdup(expr->e_cstring.value)))
             return 0;
         break;
     case OP_CONST_INT:
@@ -723,7 +723,7 @@ static int eval_expression(interp_t *interp, expr_t *expr)
         s = get_field(interp, expr->e_cint.value);
         if (s == NULL)
             return 0;
-        if (!set_result_string(interp, strdup(s)))
+        if (!set_result_string(interp, __strdup(s)))
             return 0;
         break;
     case OP_FIELD_VAR:
@@ -732,7 +732,7 @@ static int eval_expression(interp_t *interp, expr_t *expr)
         s = get_field(interp, i);
         if (s == NULL)
             return 0;
-        if (!set_result_string(interp, strdup(s)))
+        if (!set_result_string(interp, __strdup(s)))
             return 0;
         break;
     case OP_VAR:
@@ -982,7 +982,7 @@ static int do_print(interp_t *interp, stmt_t *stmt)
     move_var(&fmt, &interp->result);
     for (cnt = 0, e = stmt->s_print.expr; e != NULL; e = e->next)
         cnt++;
-    args = calloc(sizeof(var_t), cnt);
+    args = __calloc(sizeof(var_t), cnt);
     if (args == NULL)
         goto done;
     for (i = 0, e = stmt->s_print.expr; e != NULL; e = e->next, i++)
@@ -1085,7 +1085,7 @@ int program_run(program_t *prog, io_t *io)
 {
     int result = EVAL_ERROR;
     interp_t interp;
-    memset(&interp, 0, sizeof(interp_t));
+    __memset(&interp, 0, sizeof(interp_t));
 
     interp.io = io;
     interp.prog = prog;
@@ -1093,19 +1093,19 @@ int program_run(program_t *prog, io_t *io)
     if (!dict_init(&interp.vars, free_var))
         return 0;
 
-    if ((interp.buf = malloc(BUF_SIZE)) == NULL)
+    if ((interp.buf = __malloc(BUF_SIZE)) == NULL)
         goto done;
 
-    if (!dict_add(&interp.vars, "RS", new_string(strdup("\n"))))
+    if (!dict_add(&interp.vars, "RS", new_string(__strdup("\n"))))
         goto done;
 
-    if (!dict_add(&interp.vars, "ORS", new_string(strdup("\n"))))
+    if (!dict_add(&interp.vars, "ORS", new_string(__strdup("\n"))))
         goto done;
 
-    if (!dict_add(&interp.vars, "FS", new_string(strdup(" "))))
+    if (!dict_add(&interp.vars, "FS", new_string(__strdup(" "))))
         goto done;
 
-    if (!dict_add(&interp.vars, "OFS", new_string(strdup(" "))))
+    if (!dict_add(&interp.vars, "OFS", new_string(__strdup(" "))))
         goto done;
 
     while (1)
@@ -1163,7 +1163,7 @@ next:
 
 done:
     free_fields(&interp);
-    free(interp.buf);
+    __free(interp.buf);
     dict_free(&interp.vars);
     return result != EVAL_ERROR;
 }

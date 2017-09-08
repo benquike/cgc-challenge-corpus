@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -33,24 +33,24 @@ int repl(char *expr);
 
 int main(void)
 {
-  printf("Welcome to the SLUR REPL. Type an expression to evaluate it.\n");
-  char *buf = malloc(MAX_EXPRESSION_LENGTH + 1);
+  __printf("Welcome to the SLUR REPL. Type an expression to evaluate it.\n");
+  char *buf = __malloc(MAX_EXPRESSION_LENGTH + 1);
 
   if (buf == NULL)
-    exit(1);
+    __exit(1);
 
   for (;;) {
-    memset(buf, '\0', MAX_EXPRESSION_LENGTH + 1);
+    __memset(buf, '\0', MAX_EXPRESSION_LENGTH + 1);
 
-    printf("> ");
+    __printf("> ");
     if (read_balanced_expression(STDIN, buf, MAX_EXPRESSION_LENGTH) != 0) {
-      printf("Expression too long or unbalanced, try again.\n");
+      __printf("Expression too long or unbalanced, try again.\n");
       continue;
     }
 
     // Maybe unbounded print here on hard to acheive error.
     if (repl(buf) != 0)
-      printf("Error evaluating expression.\n");
+      __printf("Error evaluating expression.\n");
 
     return 0;
   }

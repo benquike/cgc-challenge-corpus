@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -39,7 +39,7 @@ extern uint8_t Pwdgen_Offset;
 
 // Init the L2 CAM
 void L2_InitCAM(void) {
-	bzero(CAM, sizeof(CAM));
+	__bzero(CAM, sizeof(CAM));
 }
 
 // Populate L2 CAM
@@ -68,7 +68,7 @@ uint8_t L2_PopulateCAM(uint16_t Addr, int fd, uint8_t Vlan) {
 
 	// nope, create an entry
 	if (FreeEntry == MAX_L2_CAM_ENTRIES) {
-		// no free space
+		// no __free space
 		return(0);
 	}
 	
@@ -121,7 +121,7 @@ uint8_t L2_VerifyChecksum(unsigned char *Frame) {
 
 	sum = L2_CalculateChecksum(Frame);
 
-	memcpy(&FrameChksum, Frame+sizeof(L2Hdr)+((pL2->Len)-4), 4);
+	__memcpy(&FrameChksum, Frame+sizeof(L2Hdr)+((pL2->Len)-4), 4);
 	if (sum == FrameChksum) {
 		return(1);
 	}
@@ -146,7 +146,7 @@ uint8_t L2_RxFrame(int fd, unsigned char *Frame) {
 	}
 
 	// we were told to terminate
-	if (!strcmp((char *)Frame, "diedie!")) {
+	if (!__strcmp((char *)Frame, "diedie!")) {
 		_terminate(0);
 	}
 
@@ -202,7 +202,7 @@ uint8_t L2_RxFrame(int fd, unsigned char *Frame) {
 
 	// Update the checksum since we changed the Vlan tag
 	FrameChksum = L2_CalculateChecksum(Frame);
-	memcpy(Frame+sizeof(L2Hdr)+pL2->Len-4, &FrameChksum, 4);
+	__memcpy(Frame+sizeof(L2Hdr)+pL2->Len-4, &FrameChksum, 4);
 	
 	// populate the CAM
 	L2_PopulateCAM(pL2->Src, fd, pL2->Vlan);
@@ -250,7 +250,7 @@ uint8_t L2_ForwardFrame(unsigned char *Frame) {
 			// remove the VLAN tag
 			pL2->Vlan = 0;
 			FrameChksum = L2_CalculateChecksum(Frame);
-			memcpy(Frame+sizeof(L2Hdr)+pL2->Len-4, &FrameChksum, 4);
+			__memcpy(Frame+sizeof(L2Hdr)+pL2->Len-4, &FrameChksum, 4);
 
 			if (SendBytes(FD_CRS+1, Len, Frame) != Len) {
 				return(0);
@@ -261,7 +261,7 @@ uint8_t L2_ForwardFrame(unsigned char *Frame) {
 			// remove the VLAN tag
 			pL2->Vlan = 0;
 			FrameChksum = L2_CalculateChecksum(Frame);
-			memcpy(Frame+sizeof(L2Hdr)+pL2->Len-4, &FrameChksum, 4);
+			__memcpy(Frame+sizeof(L2Hdr)+pL2->Len-4, &FrameChksum, 4);
 			
 			if (SendBytes(FD_CB3, Len, Frame) != Len) {
 				return(0);
@@ -276,7 +276,7 @@ uint8_t L2_ForwardFrame(unsigned char *Frame) {
 	if (Dst_CAM->L2Port == FD_CRS) {
 		pL2->Vlan = 0;
 		FrameChksum = L2_CalculateChecksum(Frame);
-		memcpy(Frame+sizeof(L2Hdr)+pL2->Len-4, &FrameChksum, 4);
+		__memcpy(Frame+sizeof(L2Hdr)+pL2->Len-4, &FrameChksum, 4);
 
 		// also handle the difference in which FD we use for the CRS
 		// versus the rest of the CB's
@@ -288,7 +288,7 @@ uint8_t L2_ForwardFrame(unsigned char *Frame) {
 	} else if (Dst_CAM->L2Port == FD_CB3) {
 		pL2->Vlan = 0;
 		FrameChksum = L2_CalculateChecksum(Frame);
-		memcpy(Frame+sizeof(L2Hdr)+pL2->Len-4, &FrameChksum, 4);
+		__memcpy(Frame+sizeof(L2Hdr)+pL2->Len-4, &FrameChksum, 4);
 	}
 
 	if (SendBytes(Dst_CAM->L2Port, Len, Frame) != Len) {

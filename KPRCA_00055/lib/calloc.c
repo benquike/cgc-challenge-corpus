@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -23,7 +23,7 @@
 #include <string.h>
 #include "malloc_private.h"
 
-void *calloc(size_t count, size_t size)
+void *__calloc(size_t count, size_t size)
 {
     size_t n = count * size;
     void *ptr;
@@ -35,6 +35,6 @@ void *calloc(size_t count, size_t size)
     if (ptr == NULL)
         return NULL;
 
-    memset(ptr, 0, n);
+    __memset(ptr, 0, n);
     return ptr;
 }

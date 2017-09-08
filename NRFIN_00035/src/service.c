@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -39,7 +39,7 @@ int main(void) {
         if (SUCCESS != (ret = update_drain_factors(t))) {goto bail;}
         if (SUCCESS != (ret = rxtx(t))) {goto bail;}
 
-        sleep(SLEEP_INT_SEC, SLEEP_INT_USEC);
+        __sleep(SLEEP_INT_SEC, SLEEP_INT_USEC);
 
         if (SUCCESS != (ret = update_water_levels(t))) {goto bail;}
         if (SUCCESS != (ret = check_levels(t))) {goto bail;}

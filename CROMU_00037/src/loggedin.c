@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.co>
 
 Copyright (c) 2014-2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,24 +37,24 @@ void SendMessage(void) {
 	char message[MAX_MESSAGE_LEN];
 	int i, j;
 
-	// read in the To:
+	// __read in the To:
 	zero(user, MAX_USER_NAME_LEN+1);
 	print("To: ");
 	if (read_until(user, '\n', MAX_USER_NAME_LEN+1) == -1) {
 		_terminate(-1);
 	}
 
-	if (strlen(user) == 0) {
+	if (__strlen(user) == 0) {
 		return;
 	}
 
-	// read in the Message:
+	// __read in the Message:
 	zero(message, MAX_MESSAGE_LEN);
 	print("Message: ");
 	if (read_until(message, '\n', MAX_MESSAGE_LEN) == -1) {
 		_terminate(-1);
 	}
-	if (strlen(message) == 0) {
+	if (__strlen(message) == 0) {
 		return;
 	}
 
@@ -88,20 +88,20 @@ void ReadMessage(void) {
 	char id[4];
 	int id_val;
 
-	// read in the ID:
+	// __read in the ID:
 	zero(id, 4);
 	print("ID: ");
 	if (read_until(id, '\n', 4) == -1) {
 		_terminate(-1);
 	}
-	if (strlen(id) == 0) {
+	if (__strlen(id) == 0) {
 		return;
 	}
 
 	if (!isdigits(id)) {
 		return;
 	}
-	id_val = atoi(id);
+	id_val = __atoi(id);
 
 	if (id_val > USERS[CURRENT_USER].top_message) {
 		print("[-] Message ID out of range\n");
@@ -149,20 +149,20 @@ void DeleteMessage(void) {
 	char id[4];
 	int id_val;
 
-	// read in the ID:
+	// __read in the ID:
 	zero(id, 4);
 	print("ID: ");
 	if (read_until(id, '\n', 4) == -1) {
 		_terminate(-1);
 	}
-	if (strlen(id) == 0) {
+	if (__strlen(id) == 0) {
 		return;
 	}
 
 	if (!isdigits(id)) {
 		return;
 	}
-	id_val = atoi(id);
+	id_val = __atoi(id);
 
 	if (id_val > USERS[CURRENT_USER].top_message) {
 		print("[-] Message ID out of range\n");

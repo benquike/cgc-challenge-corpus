@@ -155,14 +155,14 @@ testit:
 	@echo $(BINS)
 
 prep:
-	@mkdir -p $(BUILD_DIR)/$(PATCHED_DIR)/lib $(BUILD_DIR)/$(PATCHED_DIR)/src $(BUILD_DIR)/$(PATCHED_DIR)/$(BIN_DIR)
-	@mkdir -p $(BUILD_DIR)/$(RELEASE_DIR)/lib $(BUILD_DIR)/$(RELEASE_DIR)/src $(BUILD_DIR)/$(RELEASE_DIR)/$(BIN_DIR)
-	@mkdir -p $(BUILD_DIR)/$(POV_DIR)
-	@mkdir -p $(PCAP_DIR) $(BIN_DIR) $(POV_DIR)
-	@mkdir -p $(BUILD_DIR)/poller/for-testing $(BUILD_DIR)/poller/for-release
-	@mkdir -p $(BUILD_DIR)/$(PATCHED_DIR)/so $(BUILD_POV_DIRS)
+	@__mkdir -p $(BUILD_DIR)/$(PATCHED_DIR)/lib $(BUILD_DIR)/$(PATCHED_DIR)/src $(BUILD_DIR)/$(PATCHED_DIR)/$(BIN_DIR)
+	@__mkdir -p $(BUILD_DIR)/$(RELEASE_DIR)/lib $(BUILD_DIR)/$(RELEASE_DIR)/src $(BUILD_DIR)/$(RELEASE_DIR)/$(BIN_DIR)
+	@__mkdir -p $(BUILD_DIR)/$(POV_DIR)
+	@__mkdir -p $(PCAP_DIR) $(BIN_DIR) $(POV_DIR)
+	@__mkdir -p $(BUILD_DIR)/poller/for-testing $(BUILD_DIR)/poller/for-release
+	@__mkdir -p $(BUILD_DIR)/$(PATCHED_DIR)/so $(BUILD_POV_DIRS)
 ifneq ($(strip $(PARTIAL_ID)), )
-	@mkdir -p $(BUILD_DIR)/$(PARTIAL_DIR)/lib $(BUILD_DIR)/$(PARTIAL_DIR)/src $(BUILD_DIR)/$(PARTIAL_DIR)/$(BIN_DIR)
+	@__mkdir -p $(BUILD_DIR)/$(PARTIAL_DIR)/lib $(BUILD_DIR)/$(PARTIAL_DIR)/src $(BUILD_DIR)/$(PARTIAL_DIR)/$(BIN_DIR)
 endif
 
 my-prep:
@@ -330,7 +330,7 @@ clean: clean-test clean-binaries
 	-rm -f poller/for-release/machine.pyc
 	-rm -f poller/for-testing/machine.pyc
 	-rm -f $(POV_DIR)/*.pov
-	-if [ -d $(POV_DIR) ]; then rmdir --ignore-fail-on-non-empty $(POV_DIR); fi
+	-if [ -d $(POV_DIR) ]; then __rmdir --ignore-fail-on-non-empty $(POV_DIR); fi
 
 ifeq ($(strip $(BINS)),)
 build-orig: prep release patched pov build-partial

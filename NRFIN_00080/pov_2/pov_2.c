@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -69,10 +69,10 @@ int main(void) {
    **/
 
    unsigned int  read_buf_len = 148;
-   unsigned char *read_buf = (unsigned char*)malloc(read_buf_len);
+   unsigned char *read_buf = (unsigned char*)__malloc(read_buf_len);
 
    unsigned int pwd_len = 12;
-   unsigned char *pwd = (unsigned char*)malloc(pwd_len);
+   unsigned char *pwd = (unsigned char*)__malloc(pwd_len);
 
    // Create Account
    static unsigned char write_00000[] = 
@@ -123,13 +123,13 @@ int main(void) {
    static unsigned int write_00000_len = 694;
    transmit_all(1, write_00000, write_00000_len);
 
-   // read s_key
+   // __read s_key
    length_read(0, read_buf, 12);
 
-   // read pwd 
+   // __read pwd 
    length_read(0, pwd, pwd_len);
 
-   // read the rest
+   // __read the rest
    length_read(0, read_buf, 8+128-12);
 
 
@@ -291,7 +291,7 @@ int main(void) {
 
    // should segfault here...
 
-   // tax submitted read
+   // tax submitted __read
    length_read(0, read_buf, read_buf_len);
    
 }

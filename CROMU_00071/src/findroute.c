@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -56,7 +56,7 @@ int results;
 	// make sure the command line is semi formatted properly by having enough fields
 	delimiter_count = 0;
 
-	for (i=0; i < strlen(command); ++i) {
+	for (i=0; i < __strlen(command); ++i) {
 
 		if (command[i] == '/')
 			++delimiter_count;
@@ -73,7 +73,7 @@ int results;
 
 	++offset;
 
-	strncpy(fromAirport, command+offset, 3);
+	__strncpy(fromAirport, command+offset, 3);
 
 	fromAirport[3] = 0;
 
@@ -87,7 +87,7 @@ int results;
 
 	++offset;
 
-	strncpy(destAirport, command+offset, 3);
+	__strncpy(destAirport, command+offset, 3);
 
 	destAirport[3] = 0;
 
@@ -98,7 +98,7 @@ int results;
 
 	while(srcAirport!= 0) {
 
-		if (strcmp(srcAirport->code, fromAirport) == 0)
+		if (__strcmp(srcAirport->code, fromAirport) == 0)
 			break;
 
 		srcAirport = srcAirport->next;
@@ -118,11 +118,11 @@ int results;
 
 		// first see if the connecting airport is actually the desired destination (direct flight)
 
-		if (strcmp(tmpConnectingAirport->destCode, destAirport) == 0) {
+		if (__strcmp(tmpConnectingAirport->destCode, destAirport) == 0) {
 
 			results = 1;
 
-			printf("@s - @s: (@d, @d)\n", fromAirport, destAirport, cost, duration);
+			__printf("@s - @s: (@d, @d)\n", fromAirport, destAirport, cost, duration);
 
 			tmpConnectingAirport = tmpConnectingAirport->next;
 			continue;
@@ -134,7 +134,7 @@ int results;
 
 		while (connectionAirport !=0 ) {
 
-			if (strcmp(tmpConnectingAirport->destCode, connectionAirport->code)==0)
+			if (__strcmp(tmpConnectingAirport->destCode, connectionAirport->code)==0)
 				break;
 
 			connectionAirport = connectionAirport->next;
@@ -149,12 +149,12 @@ int results;
 
 		while (nextHopAirport != 0) {
 
-			if (strcmp(nextHopAirport->destCode, destAirport) == 0) {
+			if (__strcmp(nextHopAirport->destCode, destAirport) == 0) {
 
 
 				results = 1;
 
-				printf("@s - @s - @s: (@d, @d)\n", fromAirport, tmpConnectingAirport->destCode, destAirport,
+				__printf("@s - @s - @s: (@d, @d)\n", fromAirport, tmpConnectingAirport->destCode, destAirport,
 													cost+nextHopAirport->cost, duration+nextHopAirport->time);
 				break;
 
@@ -169,7 +169,7 @@ int results;
 
 	}
 
-	printf("\n");
+	__printf("\n");
 
 	if (results)
 		return COMMAND_OK;

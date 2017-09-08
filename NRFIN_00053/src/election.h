@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -51,7 +51,7 @@ struct e_conf {
 	unsigned int  next_candidate_id;// ID to assing to next new candidate
 	unsigned char num_winners;		// number of winners desired
 	unsigned char max_candidates;	// max number of candidates
-	unsigned char write_in_ok;		// allow write-in candidates?
+	unsigned char write_in_ok;		// allow __write-in candidates?
 	unsigned char bogus;			// pad to 4 bytes, maybe use later?
 };
 typedef struct {

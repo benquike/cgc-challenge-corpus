@@ -5,7 +5,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -44,15 +44,15 @@ int method;
 
 	if (i == MAX_PLAYERS) {
 
-		printf("Too many players\n");
+		__printf("Too many players\n");
 		return -1;
 	}
 
-	printf("Enter player name\n");
-	if(receive_until( buffer, '\n', sizeof(buffer) ) == 0)
+	__printf("Enter player name\n");
+	if(__receive_until( buffer, '\n', sizeof(buffer) ) == 0)
 		return -1;
 
-	strcpy(playerList[i].player_name, buffer);
+	__strcpy(playerList[i].player_name, buffer);
 
 	playerList[i].funds = 500;
 	playerList[i].computerPlayer = 0;
@@ -60,21 +60,21 @@ int method;
 	playerList[i].losses = 0;
 	playerList[i].useHints = 0;
 
-	printf("Computer player? (y/n)\n");
+	__printf("Computer player? (y/n)\n");
 
-	if(receive_until( buffer, '\n', sizeof(buffer) ) == 0)
+	if(__receive_until( buffer, '\n', sizeof(buffer) ) == 0)
 		return -1;
 
 	if (buffer[0] == 'y' || buffer[0] == 'Y') {
 
 		playerList[i].computerPlayer = 1;
 
-		printf("Method 1-4:\n");
+		__printf("Method 1-4:\n");
 
-		if(receive_until( buffer, '\n', sizeof(buffer) ) == 0)
+		if(__receive_until( buffer, '\n', sizeof(buffer) ) == 0)
 			return -1;
 
-		method = atoi(buffer);
+		method = __atoi(buffer);
 
 		playerList[i].computerMethod = method;
 
@@ -110,22 +110,22 @@ int method;
 	}
 	else {
 
-		printf("Would you like to enable hints?\n");
+		__printf("Would you like to enable hints?\n");
 
 
-		if(receive_until( buffer, '\n', sizeof(buffer) ) == 0)
+		if(__receive_until( buffer, '\n', sizeof(buffer) ) == 0)
 		return -1;
 
 		if (buffer[0] == 'y' || buffer[0] == 'Y') {
 
 			playerList[i].useHints = 1;
 
-			printf("Method 1-4:\n");
+			__printf("Method 1-4:\n");
 
-			if(receive_until( buffer, '\n', sizeof(buffer) ) == 0)
+			if(__receive_until( buffer, '\n', sizeof(buffer) ) == 0)
 				return -1;
 
-			method = atoi(buffer);
+			method = __atoi(buffer);
 
 			playerList[i].hintsMethod = method;
 
@@ -171,10 +171,10 @@ int i;
 
 		if (playerList[i].player_name[0] != 0 ) {
 
-			printf("Player name: $s\n", playerList[i].player_name);
-			printf("       Wins: $d\n", playerList[i].wins);
-			printf("     Losses: $d\n", playerList[i].losses);
-			printf("      Funds: $d\n", playerList[i].funds);
+			__printf("Player name: $s\n", playerList[i].player_name);
+			__printf("       Wins: $d\n", playerList[i].wins);
+			__printf("     Losses: $d\n", playerList[i].losses);
+			__printf("      Funds: $d\n", playerList[i].funds);
 		}
 
 		++i;
@@ -199,7 +199,7 @@ char buffer[20];
 
 		if (playerList[i].player_name[0] != 0 ) {
 
-			printf("$d) $s\n", x, playerList[i].player_name);
+			__printf("$d) $s\n", x, playerList[i].player_name);
 			x++;
 		}
 
@@ -208,16 +208,16 @@ char buffer[20];
 
 	if (x == 1) {
 
-		printf("No players\n");
+		__printf("No players\n");
 		return -1;
 	}
 
-	printf("Player to delete (1-$d):\n", x-1);
+	__printf("Player to delete (1-$d):\n", x-1);
 
-	if(receive_until( buffer, '\n', sizeof(buffer) ) == 0)
+	if(__receive_until( buffer, '\n', sizeof(buffer) ) == 0)
 		return -1;
 
-	delete_num = atoi(buffer);
+	delete_num = __atoi(buffer);
 
 
 	if ( delete_num >= x)

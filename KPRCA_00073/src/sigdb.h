@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -62,7 +62,7 @@ int InitializeSignatureDatabase(signature_db* SignatureDatabase);
 int InitializeSignature(signature* Signature, int Severity, trie_unit* Data, size_t DataSize, char* Path, size_t PathSize);
 void FreeSignature(signature* Signature);
 char* SeverityString(unsigned Severity);
-void PrintSignature(FILE* Stream, signature* Signature);
+void PrintSignature(__FILE* Stream, signature* Signature);
 unsigned long BytesToUnsigned(unsigned char *Data, size_t DataSize);
 void FreeSignatureDatabase(signature_db* SignatureDatabase);
 int AddSignatureToSignatureDatabase(signature_db* SignatureDatabase, signature* Signature);

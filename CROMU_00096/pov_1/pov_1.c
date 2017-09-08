@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -96,7 +96,7 @@ int main(void) {
   WriteCString(sl_file, sizeof(sl_file));
 
   ReadPrompt();
-  //upload a link that references the shared library
+  //upload a __link that references the shared library
   SendToCB(upload_command, sizeof(upload_command));
   WriteCString(link_filename, sizeof(link_filename));
   SendToCB("\xf4", 1);

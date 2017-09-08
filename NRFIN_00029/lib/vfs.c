@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -28,7 +28,7 @@
 int
 vfs_init(struct vfs *vfs)
 {
-    return (vfs->root = calloc(sizeof(struct directory))) ? 0 : -1;
+    return (vfs->root = __calloc(sizeof(struct directory))) ? 0 : -1;
 }
 
 static void
@@ -38,14 +38,14 @@ directory_destroy(struct directory *dir)
     struct directory *cur_dir, *n_dir;
 
     list_for_each_entry_safe(struct file, list, &dir->files, n_file, cur_file) {
-        free(cur_file->contents);
-        free(cur_file);
+        __free(cur_file->contents);
+        __free(cur_file);
     }
 
     list_for_each_entry_safe(struct directory, list, &dir->subdirectories, n_dir, cur_dir)
         directory_destroy(cur_dir);
 
-    free(dir);
+    __free(dir);
 }
 
 void
@@ -83,22 +83,22 @@ lookup_dir(const struct vfs *vfs, const utf8char *path)
     while (*path == '/')
         path++;
 
-    path_len = strlen(path);
+    path_len = __strlen(path);
     if (path_len == 0)
         return vfs->root;
 
-    if ((path_dup = calloc(path_len + 1)) == NULL)
+    if ((path_dup = __calloc(path_len + 1)) == NULL)
         return NULL;
 
-    strncpy(path_dup, path, path_len);
-    for (cur = strtok(path_dup, '/'), next = strtok(NULL, '/');
+    __strncpy(path_dup, path, path_len);
+    for (cur = __strtok(path_dup, '/'), next = __strtok(NULL, '/');
             dir && next != NULL;
-            cur = next, next = strtok(NULL, '/'))
+            cur = next, next = __strtok(NULL, '/'))
     {
-        if (strcmp(cur, ".") == 0)
+        if (__strcmp(cur, ".") == 0)
             continue;
 
-        if (strcmp(cur, "..") == 0) {
+        if (__strcmp(cur, "..") == 0) {
             dir = dir->parent;
             continue;
         }
@@ -112,7 +112,7 @@ lookup_dir(const struct vfs *vfs, const utf8char *path)
     ret = list_find_entry(struct directory, list, &dir->subdirectories, dir_eq, (void *)cur);
 
 free_path:
-    free(path_dup);
+    __free(path_dup);
     return ret;
 }
 
@@ -124,14 +124,14 @@ lookup_file(const struct vfs *vfs, const utf8char *path)
     size_t path_len;
     utf8char *path_dup, *name;
 
-    path_len = strlen(path);
+    path_len = __strlen(path);
     if (path[path_len - 1] == '/')
         return NULL;
 
-    if ((path_dup = calloc(path_len + 1)) == NULL)
+    if ((path_dup = __calloc(path_len + 1)) == NULL)
         return NULL;
 
-    strncpy(path_dup, path, path_len + 1);
+    __strncpy(path_dup, path, path_len + 1);
 
     if ((name = strrchr(path_dup, '/')) != NULL) {
         *name++ = '\0';
@@ -143,7 +143,7 @@ lookup_file(const struct vfs *vfs, const utf8char *path)
     if (dir != NULL)
         ret = list_find_entry(struct file, list, &dir->files, file_eq, (void *)name);
 
-    free(path_dup);
+    __free(path_dup);
     return ret;
 }
 
@@ -155,11 +155,11 @@ create_dir(struct vfs *vfs, const utf8char *path)
     size_t path_len;
     utf8char *path_dup, *name;
 
-    path_len = strlen(path);
-    if ((path_dup = calloc(path_len + 1)) == NULL)
+    path_len = __strlen(path);
+    if ((path_dup = __calloc(path_len + 1)) == NULL)
         return NULL;
 
-    strncpy(path_dup, path, path_len + 1);
+    __strncpy(path_dup, path, path_len + 1);
     while (path_dup[path_len - 1] == '/')
         path_dup[(path_len--) - 1] = '\0';
 
@@ -173,7 +173,7 @@ create_dir(struct vfs *vfs, const utf8char *path)
     if (dir != NULL)
         ret = create_dir_in_dir(vfs, dir, name);
 
-    free(path_dup);
+    __free(path_dup);
     return ret;
 }
 
@@ -195,8 +195,8 @@ create_dir_in_dir(struct vfs *vfs, struct directory *dir, const utf8char *name)
         return ret;
     }
 
-    if ((ret = calloc(sizeof(struct directory))) != NULL) {
-        strncpy(ret->name, name, MAX_FILE_NAME_LENGTH);
+    if ((ret = __calloc(sizeof(struct directory))) != NULL) {
+        __strncpy(ret->name, name, MAX_FILE_NAME_LENGTH);
         ret->parent = dir;
         list_push_entry_front(struct directory, list, &dir->subdirectories, ret);
     }
@@ -212,14 +212,14 @@ create_file(struct vfs *vfs, const utf8char *path)
     size_t path_len;
     utf8char *path_dup, *name;
 
-    path_len = strlen(path);
+    path_len = __strlen(path);
     if (path[path_len - 1] == '/')
         return NULL;
 
-    if ((path_dup = calloc(path_len + 1)) == NULL)
+    if ((path_dup = __calloc(path_len + 1)) == NULL)
         return NULL;
 
-    strncpy(path_dup, path, path_len + 1);
+    __strncpy(path_dup, path, path_len + 1);
     if ((name = strrchr(path_dup, '/')) != NULL) {
         *name++ = '\0';
         dir = lookup_dir(vfs, path_dup);
@@ -230,7 +230,7 @@ create_file(struct vfs *vfs, const utf8char *path)
     if (dir != NULL)
         ret = create_file_in_dir(vfs, dir, name);
 
-    free(path_dup);
+    __free(path_dup);
     return ret;
 }
 
@@ -252,8 +252,8 @@ create_file_in_dir(struct vfs *vfs, struct directory *dir, const utf8char *name)
         return ret;
     }
 
-    if ((ret = calloc(sizeof(struct file))) != NULL) {
-        strncpy(ret->name, name, MAX_FILE_NAME_LENGTH);
+    if ((ret = __calloc(sizeof(struct file))) != NULL) {
+        __strncpy(ret->name, name, MAX_FILE_NAME_LENGTH);
         ret->parent = dir;
         list_push_entry_front(struct file, list, &dir->files, ret);
     }
@@ -268,8 +268,8 @@ delete_file(struct vfs *vfs, struct file *file)
     (void)vfs;
 
     list_remove_entry(struct file, list, &file->parent->files, file);
-    free(file->contents);
-    free(file);
+    __free(file->contents);
+    __free(file);
 }
 
 #ifdef DEBUG
@@ -282,22 +282,22 @@ dump_directory(const struct directory *dir, unsigned int level)
 
     list_for_each_entry(struct directory, list, &dir->subdirectories, cur_dir) {
         for (i = 0; i < level; i++)
-            printf("\t");
-        printf("%s/\n", cur_dir->name);
+            __printf("\t");
+        __printf("%s/\n", cur_dir->name);
         dump_directory(cur_dir, level + 1);
     }
 
     list_for_each_entry(struct file, list, &dir->files, cur_file) {
         for (i = 0; i < level; i++)
-            printf("\t");
-        printf("%s\n", cur_file->name);
+            __printf("\t");
+        __printf("%s\n", cur_file->name);
     }
 }
 
 void
 dump_vfs(const struct vfs *vfs)
 {
-    printf("/\n");
+    __printf("/\n");
     dump_directory(vfs->root, 1);
 }
 #endif

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -53,14 +53,14 @@ namespace {
                 return &sauces[i];
         }
 
-        return NULL;
+        return (sauce_lut *) NULL;
     }
 
     void print_list()
     {
         size_t i;
         for (i = 0; i < sizeof(sauces) / sizeof(sauces[0]); i++)
-            printf("%d. %s\n", i + 1, sauces[i].name);
+            __printf("%d. %s\n", i + 1, sauces[i].name);
     }
 }
 
@@ -79,7 +79,7 @@ Sauce *Sauce::pour_sauce(const char *sauce_name)
 {
     sauce_lut *sauce_entry = find_sauce_entry(sauce_name);
     if (!sauce_entry)
-        return NULL;
+      return (Sauce *)NULL;
 
     return new Sauce(sauce_entry->name, sauce_entry->calories, sauce_entry->carbs);
 }

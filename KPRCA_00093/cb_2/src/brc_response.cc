@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,13 +37,13 @@ BrcResponse::BrcResponse(short response_code, char *msg, unsigned short msg_leng
     set_server_addr();
 
     char *pdata = raw_data_ + token_length();
-    memcpy(pdata, &server_addr_, sizeof(server_addr_));
+    __memcpy(pdata, &server_addr_, sizeof(server_addr_));
     pdata += sizeof(server_addr_);
-    memcpy(pdata, &response_code, sizeof(response_code));
+    __memcpy(pdata, &response_code, sizeof(response_code));
     pdata += sizeof(response_code);
-    memcpy(pdata, &msg_length, sizeof(msg_length));
+    __memcpy(pdata, &msg_length, sizeof(msg_length));
     pdata += sizeof(msg_length);
-    memcpy(pdata, msg, msg_length);
+    __memcpy(pdata, msg, msg_length);
 }
 
 BrcResponse::~BrcResponse() {
@@ -52,7 +52,7 @@ BrcResponse::~BrcResponse() {
     msg_length_ = 0;
 }
 
-bool BrcResponse::Recv(FILE *fd_in) {
+bool BrcResponse::Recv(__FILE *fd_in) {
     if (!BrcProtocol::Recv(fd_in))
         return false;
 

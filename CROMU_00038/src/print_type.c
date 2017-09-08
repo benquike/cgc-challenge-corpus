@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,47 +37,47 @@ void print_type(unsigned short type) {
 
 		case 1:
 
-			printf("BYTE");
+			__printf("BYTE");
 			break;
 
 		case 2:
 
-			printf("ASCII");
+			__printf("ASCII");
 			break;
 
 		case 3:
 
-			printf("SHORT");
+			__printf("SHORT");
 			break;
 
 		case 4:
 
-			printf("LONG");
+			__printf("LONG");
 			break;
 
 		case 5:
 
-			printf("RATIONAL");
+			__printf("RATIONAL");
 			break;
 
 		case 7:
 
-			printf("UNDEFINED");
+			__printf("UNDEFINED");
 			break;
 
 		case 9:
 
-			printf("SLONG");
+			__printf("SLONG");
 			break;
 
 		case 10:
 
-			printf("SRATIONAL");
+			__printf("SRATIONAL");
 			break;
 
 		default:
 
-			printf("UNKNOWN");
+			__printf("UNKNOWN");
 
 
 	}  // switch

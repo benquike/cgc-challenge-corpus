@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -25,7 +25,7 @@
 
 int streq(const char *str1, const char *str2, const char term) {
 
-    if (strlen(str1, term) != strlen(str2, term))
+    if (__strlen(str1, term) != __strlen(str2, term))
         return -1;
 
     while(*str1 != term) {
@@ -36,7 +36,7 @@ int streq(const char *str1, const char *str2, const char term) {
     return 0;
 }
 
-int strcmp(const char *str1, const char *str2, const char term) {
+int __strcmp(const char *str1, const char *str2, const char term) {
 
     while ((*str1 != term) && (*str2 != term) && (*str1 == *str2)) {
         str1++;
@@ -52,7 +52,7 @@ int strcmp(const char *str1, const char *str2, const char term) {
     }
 }
 
-unsigned int strlen(const char *str, const char term) {
+unsigned int __strlen(const char *str, const char term) {
 
 	if (NULL == str) {
 		return 0;

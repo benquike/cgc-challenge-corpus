@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -30,14 +30,14 @@ int g_event_id = 0;
 
 event_t *create_event(struct user *owner, char *name, char *desc, duration_t *duration, bool is_all_day)
 {
-    if (!owner || !name || !strlen(name) || !desc || !strlen(desc) || !duration)
+    if (!owner || !name || !__strlen(name) || !desc || !__strlen(desc) || !duration)
         return NULL;
 
-    event_t *event = malloc(sizeof(event_t));
+    event_t *event = __malloc(sizeof(event_t));
     event->id = g_event_id++;
     event->owner = owner;
-    strcpy(event->name, name);
-    strcpy(event->desc, desc);
+    __strcpy(event->name, name);
+    __strcpy(event->desc, desc);
     event->duration = *duration;
     event->is_all_day = is_all_day;
 
@@ -49,7 +49,7 @@ bool delete_event(event_t **event)
 {
     if (!*event)
         return false;
-    free(*event);
+    __free(*event);
     *event = NULL;
     return true;
 }
@@ -95,11 +95,11 @@ event_t *find_event_from_list(char *buf, size_t buflen, int *recv_status, event_
         return NULL;
 
     if (*recv_status != SUCCESS) {
-        free(event_id);
+        __free(event_id);
         return NULL;
     } else {
-        temp_event.id = strtol(event_id, NULL, 10);
-        free(event_id);
+        temp_event.id = __strtol(event_id, NULL, 10);
+        __free(event_id);
         return find((list_t *)list, &temp_event, &compare_events);
     }
 }
@@ -109,20 +109,20 @@ void print_event(event_t *event)
     char date_str[16];
     char time_str[8];
 
-    printf("Event ID: %d - %s\n", event->id, event->name);
-    printf("About the event: %s\n", event->desc);
+    __printf("Event ID: %d - %s\n", event->id, event->name);
+    __printf("About the event: %s\n", event->desc);
     if (event->is_all_day) {
         get_date_str(date_str, &event->duration.start.date);
-        printf("Starts %s\n", date_str);
+        __printf("Starts %s\n", date_str);
         get_date_str(date_str, &event->duration.end.date);
-        printf("Ends %s\n", date_str);
+        __printf("Ends %s\n", date_str);
     } else {
         get_date_str(date_str, &event->duration.start.date);
         get_time_str(time_str, &event->duration.start.time);
-        printf("Starts %s @ %s\n", date_str, time_str);
+        __printf("Starts %s @ %s\n", date_str, time_str);
         get_date_str(date_str, &event->duration.end.date);
         get_time_str(time_str, &event->duration.end.time);
-        printf("Ends %s @ %s\n", date_str, time_str);
+        __printf("Ends %s @ %s\n", date_str, time_str);
     }
 }
 

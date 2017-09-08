@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -61,7 +61,7 @@ int output_number_printf(int fd, unsigned int x, int base, int min, unsigned int
     return n + 1;
 }
 
-int fdprintf(int fd, const char *fmt, ...)
+int __fdprintf(int fd, const char *fmt, ...)
 {
     char *astring;
     int aint, i, n = 0, flags = 0, min = 0;
@@ -91,7 +91,7 @@ int fdprintf(int fd, const char *fmt, ...)
                 case '7':
                 case '8':
                 case '9':
-                    min = strtol(fmt-1, (char**)&fmt, 10);
+                    min = __strtol(fmt-1, (char**)&fmt, 10);
                     continue;
                 }
                 break;
@@ -103,7 +103,7 @@ int fdprintf(int fd, const char *fmt, ...)
                 break;
             case 's':
                 astring = va_arg(ap, char *);
-                for (i = 0; i < strlen(astring); i++)
+                for (i = 0; i < __strlen(astring); i++)
                     OUTPUT_BYTE(astring[i]);
                 break;
             case 'd':
@@ -170,7 +170,7 @@ void output_number_sprintf(int *n, char **s, unsigned int x, int base, int min, 
         OUTPUT_BYTE(n, s, NUM_TO_LOWER(x))
 }
 
-int sprintf(char *str, const char *fmt, ...)
+int __sprintf(char *str, const char *fmt, ...)
 {
     char *astring;
     int aint, i, n = 0, flags = 0, min = 0;
@@ -200,7 +200,7 @@ int sprintf(char *str, const char *fmt, ...)
                 case '7':
                 case '8':
                 case '9':
-                    min = strtol(fmt-1, (char**)&fmt, 10);
+                    min = __strtol(fmt-1, (char**)&fmt, 10);
                     continue;
                 }
                 break;
@@ -212,7 +212,7 @@ int sprintf(char *str, const char *fmt, ...)
                 break;
             case 's':
                 astring = va_arg(ap, char *);
-                for (i = 0; i < strlen(astring); i++)
+                for (i = 0; i < __strlen(astring); i++)
                     OUTPUT_BYTE(&n, &str, astring[i]);
                 break;
             case 'd':

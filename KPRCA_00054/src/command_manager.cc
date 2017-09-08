@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -49,7 +49,7 @@ void CommandManager::UninstallCommand(const char* name)
   for (i = 0; i < commands->length(); ++i)
   {
     Command *cmd = commands->get(i);
-    if (strcmp(cmd->GetName(), name) == 0)
+    if (__strcmp(cmd->GetName(), name) == 0)
     {
       commands->remove(cmd);
       delete cmd;
@@ -64,7 +64,7 @@ int CommandManager::ExecuteCommand(const char* name, int argc, char** argv)
   for (i = 0; i < commands->length(); ++i)
   {
     Command *cmd = commands->get(i);
-    if (strcmp(cmd->GetName(), name) == 0 || strcmp(cmd->GetAlias(), name) == 0)
+    if (__strcmp(cmd->GetName(), name) == 0 || __strcmp(cmd->GetAlias(), name) == 0)
     {
       if (cmd->GetType() == Command::CT_HELP)
         cmd->Execute((FileManager *) this, argc, argv); 	// HACKZ

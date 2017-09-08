@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -228,7 +228,7 @@ int write_syllable_to_buf(int note_id, char *syllable_buf) {
 
 /*
  * Loop through syllables in syllables_buf, convert them to notes and
- *  write them to notes_buf.
+ *  __write them to notes_buf.
  *
  * Processing will stop when either an invalid syllable is found,
  * or bytes_count syllables have been processed.
@@ -273,7 +273,7 @@ int process_syllables(uint32_t bytes_count, char *syllables_buf, char *notes_buf
 
 /*
  * Loop through notes in notes_buf, convert them to syllables and
- *  write them to syllables_buf.
+ *  __write them to syllables_buf.
  *
  * Processing will stop when either an invalid note is found,
  * or bytes_count notes have been processed.

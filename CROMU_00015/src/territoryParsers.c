@@ -4,7 +4,7 @@ Author: John Berry <hj@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -40,36 +40,36 @@ int territoryMenu( pTerritory ty )
 	}
 
 	while( 1 ) {
-		printf("\nTerritory: @s\n", ty->name);
-		printf("1) Display Territory Info\n");
-		printf("2) Set Founder\n");
-		printf("3) Set Population\n");
-		printf("4) Set Established\n");
-		printf("5) Add Border\n");
-		printf("6) Add County\n");
-		printf("7) Select County\n");
-		printf("8) Delete County and Exit Menu\n");
-		printf("9) Exit Menu\n");
+		__printf("\nTerritory: @s\n", ty->name);
+		__printf("1) Display Territory Info\n");
+		__printf("2) Set Founder\n");
+		__printf("3) Set Population\n");
+		__printf("4) Set Established\n");
+		__printf("5) Add Border\n");
+		__printf("6) Add County\n");
+		__printf("7) Select County\n");
+		__printf("8) Delete County and Exit Menu\n");
+		__printf("9) Exit Menu\n");
 
-		bzero( selection, 4 );
-		printf("Selection: ");
-		receive_until( selection, '\n', 3);
+		__bzero( selection, 4 );
+		__printf("Selection: ");
+		__receive_until( selection, '\n', 3);
 
-		choice = atoi( selection );
+		choice = __atoi( selection );
 
-		bzero(selection, 30);
+		__bzero(selection, 30);
 
 		switch (choice) {
 			case 1:
 				printTerritoryInfo( ty );
 				break;
 			case 2:
-				printf("\n-> ");
-				receive_until( selection, '\n', 29);
+				__printf("\n-> ");
+				__receive_until( selection, '\n', 29);
 
 				/// Copy as long as the data is alpha numeric
 				choice = 0;
-				while ( isalnum( selection[choice] ) || selection[choice] == ' ' ) {
+				while ( __isalnum( selection[choice] ) || selection[choice] == ' ' ) {
 					ty->founder[choice] = selection[choice];
 					choice++;
 				}
@@ -77,20 +77,20 @@ int territoryMenu( pTerritory ty )
 
 				break;
 			case 3:
-				printf("\n-> ");
-				receive_until( selection, '\n', 29);
+				__printf("\n-> ");
+				__receive_until( selection, '\n', 29);
 
-				ty->population = atoi(selection);
+				ty->population = __atoi(selection);
 				break;
 			case 4:
-				printf("\n-> ");
-				receive_until( selection, '\n', 29);
+				__printf("\n-> ");
+				__receive_until( selection, '\n', 29);
 
-				ty->established = atoi( selection );
+				ty->established = __atoi( selection );
 				break;
 			case 5:
                         	if ( ty->border_count >= TERRITORYBORDERMAX) {
-                                	printf("!!Max borders reached\n");
+                                	__printf("!!Max borders reached\n");
                                 	continue;
                         	}
 
@@ -99,25 +99,25 @@ int territoryMenu( pTerritory ty )
                                 	continue;
                         	}
 
-	                        printf("Lat Start: ");
-        	                bzero(selection, 30 );
-				receive_until( selection, '\n', 19 );
-                        	pb->latStart = atof(selection);
+	                        __printf("Lat Start: ");
+        	                __bzero(selection, 30 );
+				__receive_until( selection, '\n', 19 );
+                        	pb->latStart = __atof(selection);
 
-             	           	printf("Long Start: ");
-                	        bzero(selection, 30 );
-				receive_until( selection, '\n', 19 );
-                        	pb->lngStart = atof(selection);
+             	           	__printf("Long Start: ");
+                	        __bzero(selection, 30 );
+				__receive_until( selection, '\n', 19 );
+                        	pb->lngStart = __atof(selection);
 
-	                        printf("Lat End: ");
-        	                bzero(selection, 30 );
-				receive_until( selection, '\n', 19 );
-                        	pb->latEnd = atof(selection);
+	                        __printf("Lat End: ");
+        	                __bzero(selection, 30 );
+				__receive_until( selection, '\n', 19 );
+                        	pb->latEnd = __atof(selection);
 
-                        	printf("Long End: ");
-                        	bzero(selection, 30 );
-				receive_until( selection, '\n', 19 );
-                        	pb->lngEnd = atof(selection);
+                        	__printf("Long End: ");
+                        	__bzero(selection, 30 );
+				__receive_until( selection, '\n', 19 );
+                        	pb->lngEnd = __atof(selection);
 
                     	    	ty->borders[ ty->border_count ] = pb;
                         	ty->border_count++;
@@ -134,12 +134,12 @@ int territoryMenu( pTerritory ty )
 				}
 
 				if ( choice == TERRITORYCOUNTYMAX ) {
-					printf("!!Max counties reached\n");
+					__printf("!!Max counties reached\n");
 					continue;
 				}
 
-				printf("\nNew County Name: ");
-				receive_until( selection, '\n', 19 );
+				__printf("\nNew County Name: ");
+				__receive_until( selection, '\n', 19 );
 		
 				if ( allocate( sizeof(County), 0, (void**)&pc) != 0 ) {
 					pc = NULL;
@@ -151,7 +151,7 @@ int territoryMenu( pTerritory ty )
 				ty->counties[choice] = pc;
 	
 				choice = 0;
-				while ( isalnum( selection[choice]) ) {
+				while ( __isalnum( selection[choice]) ) {
 					pc->name[choice] = selection[choice];
 					choice++;
 				}
@@ -162,21 +162,21 @@ int territoryMenu( pTerritory ty )
 			case 7:
 				for ( choice = 0; choice < TERRITORYCOUNTYMAX; choice++) {
 					if ( ty->counties[choice] != NULL ) {
-						printf("@d) @s\n", choice+1, ty->counties[choice]->name);
+						__printf("@d) @s\n", choice+1, ty->counties[choice]->name);
 					}
 				}
 
-				printf("\n-> ");
-				receive_until( selection, '\n', 19);
-				choice = atoi( selection );
+				__printf("\n-> ");
+				__receive_until( selection, '\n', 19);
+				choice = __atoi( selection );
 
 				if ( choice < 1 || choice > TERRITORYCOUNTYMAX ) {
-					printf("Invalid choice...\n");
+					__printf("Invalid choice...\n");
 					continue;
 				}
 
 				if ( ty->counties[choice-1] == NULL ) {
-					printf("Invalid choice...\n");
+					__printf("Invalid choice...\n");
 					continue;
 				}
 
@@ -193,7 +193,7 @@ int territoryMenu( pTerritory ty )
 				return 1;
 				break;
 			default:
-				printf("Invalid\n");
+				__printf("Invalid\n");
 				break;
 		};
 
@@ -216,25 +216,25 @@ void printTerritoryInfo( pTerritory ty )
 		return;
 	}
 	
-	printf("\t\tTerritory: ");
+	__printf("\t\tTerritory: ");
 
 	if ( ty->name[0] == '\x00' ) {
-		printf("Unknown\n");
+		__printf("Unknown\n");
 	} else {
-		printf("@s\n", ty->name);
+		__printf("@s\n", ty->name);
 	}
 
 	if ( ty->population >= 0 ) {
-		printf("\t\t\tPopulation: @d\n", ty->population);
+		__printf("\t\t\tPopulation: @d\n", ty->population);
 	}
 
-	printf("\t\t\tEstablished: @d\n", ty->established);
+	__printf("\t\t\tEstablished: @d\n", ty->established);
 	
-	printf("\t\t\tFounder: ");
+	__printf("\t\t\tFounder: ");
 	if ( ty->founder[0] == '\x00' ) {
-		printf("Unknown\n");
+		__printf("Unknown\n");
 	} else {
-		printf("@s\n", ty->founder);
+		__printf("@s\n", ty->founder);
 	}
 
 	index = 0;
@@ -242,7 +242,7 @@ void printTerritoryInfo( pTerritory ty )
 	while ( index < ty->border_count ) {
 		b = ty->borders[index];
 		if ( b != NULL ) {
-			printf("\t\t\tBorder: @f @f @f @f\n", b->latStart, b->lngStart, b->latEnd, b->lngEnd);
+			__printf("\t\t\tBorder: @f @f @f @f\n", b->latStart, b->lngStart, b->latEnd, b->lngEnd);
 		}
 		index++;
 	}
@@ -260,7 +260,7 @@ void printTerritoryInfo( pTerritory ty )
 
 /**
  * Frees a Territory structure
- * @param ty Pointer to a territory structure to free
+ * @param ty Pointer to a territory structure to __free
  * @return Returns nothing
  **/
 void freeTerritory( pTerritory ty )
@@ -302,16 +302,16 @@ void initTerritory( pTerritory ty )
 		return;
 	}
 
-	bzero( ty->name, 20 );
-	bzero( ty->founder, 30);
+	__bzero( ty->name, 20 );
+	__bzero( ty->founder, 30);
 
 	ty->population = -1;
 	ty->county_count = 0;
 
 	ty->border_count = 0;
 
-	bzero( ty->borders, sizeof(pBorder) * TERRITORYBORDERMAX);
-	bzero( ty->counties, sizeof(pCounty) * TERRITORYCOUNTYMAX);
+	__bzero( ty->borders, sizeof(pBorder) * TERRITORYBORDERMAX);
+	__bzero( ty->counties, sizeof(pCounty) * TERRITORYCOUNTYMAX);
 
 	return;
 }
@@ -371,13 +371,13 @@ pTerritory territoryTopLevel( pstring str )
 		goto error;
 	}
 
-	if ( strcmp( temp_name, "Territory" ) != 0 ) {
-		printf("!!Territory: Invalid opening element id\n");
-		deallocate( temp_name, strlen(temp_name) + 1 );
+	if ( __strcmp( temp_name, "Territory" ) != 0 ) {
+		__printf("!!Territory: Invalid opening element id\n");
+		deallocate( temp_name, __strlen(temp_name) + 1 );
 		goto error;
 	}
 
-	deallocate(temp_name, strlen(temp_name) + 1 );
+	deallocate(temp_name, __strlen(temp_name) + 1 );
 
 	skipWhiteSpace(str);
 
@@ -394,7 +394,7 @@ pTerritory territoryTopLevel( pstring str )
 	while ( temp_name != NULL ) {
 		el = elementNameToEnum( temp_name );
 
-		deallocate( temp_name, strlen(temp_name) + 1 );
+		deallocate( temp_name, __strlen(temp_name) + 1 );
 
 		switch (el) {
 			case name:
@@ -404,10 +404,10 @@ pTerritory territoryTopLevel( pstring str )
 					goto error;
 				}
 
-				bzero( newTerritory->name, 20 );
-				strncpy( newTerritory->name, temp_name, 19 );
+				__bzero( newTerritory->name, 20 );
+				__strncpy( newTerritory->name, temp_name, 19 );
 
-				deallocate( temp_name, strlen(temp_name)+1);
+				deallocate( temp_name, __strlen(temp_name)+1);
 				temp_name = NULL;
 				break;
 			case founder:
@@ -417,10 +417,10 @@ pTerritory territoryTopLevel( pstring str )
 					goto error;
 				}
 
-				bzero( newTerritory->founder, 30 );
-				strncpy( newTerritory->founder, temp_name, 29 );
+				__bzero( newTerritory->founder, 30 );
+				__strncpy( newTerritory->founder, temp_name, 29 );
 
-				deallocate(temp_name, strlen(temp_name)+1);
+				deallocate(temp_name, __strlen(temp_name)+1);
 				temp_name = NULL;
 				break;
 			case population:
@@ -437,7 +437,7 @@ pTerritory territoryTopLevel( pstring str )
 				break;
 			case border:
 				if ( newTerritory->border_count >= TERRITORYBORDERMAX ) {
-					printf("!!Max territory border count is @d\n", TERRITORYBORDERMAX);
+					__printf("!!Max territory border count is @d\n", TERRITORYBORDERMAX);
 					goto error;
 				}
 
@@ -452,7 +452,7 @@ pTerritory territoryTopLevel( pstring str )
 				break;
 			case county:
 				if ( newTerritory->county_count >= TERRITORYCOUNTYMAX ) {
-					printf("!!Max territory county count is @d\n", TERRITORYCOUNTYMAX);
+					__printf("!!Max territory county count is @d\n", TERRITORYCOUNTYMAX);
 					goto error;
 				}
 	
@@ -466,7 +466,7 @@ pTerritory territoryTopLevel( pstring str )
 
 				break;
 			default:
-				printf("Invalid for territory\n");
+				__printf("Invalid for territory\n");
 				goto error;
 				break;
 		};
@@ -514,12 +514,12 @@ pTerritory territoryTopLevel( pstring str )
 		goto error;
 	}
 
-	if ( strcmp( temp_name, "Territory" ) != 0 ) {
-		deallocate(temp_name, strlen(temp_name) + 1 );
+	if ( __strcmp( temp_name, "Territory" ) != 0 ) {
+		deallocate(temp_name, __strlen(temp_name) + 1 );
 		goto error;
 	}
 
-	deallocate( temp_name, strlen(temp_name) + 1 );
+	deallocate( temp_name, __strlen(temp_name) + 1 );
 
 	skipWhiteSpace( str );
 
@@ -538,7 +538,7 @@ error:
 
 	str->index = lastGood;
 
-	printf("Error at: @s\n", str->buffer + str->index);
+	__printf("Error at: @s\n", str->buffer + str->index);
 
 end:
 	return newTerritory;
@@ -563,13 +563,13 @@ char* extractFounder( pstring str )
 	start = skipWhiteSpace(str);
 
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate opening brace\n");
+		__printf("!!Failed to locate opening brace\n");
 		return NULL;
 	}
 
 	/// Skip past the curly brace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip opening brace\n");
+		__printf("!!Failed to skip opening brace\n");
 		return NULL;
 	}
 
@@ -580,7 +580,7 @@ char* extractFounder( pstring str )
 	end = skipAlpha( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the element id\n");
+		__printf("!!Failed to locate the end of the element id\n");
 		return NULL;
 	}
 
@@ -588,30 +588,30 @@ char* extractFounder( pstring str )
 	temp = copyData( str, start, end );
 
 	if ( temp == NULL ) {
-		printf("!!Copy from @d to @d failed\n", start, end);
+		__printf("!!Copy from @d to @d failed\n", start, end);
 		return NULL;
 	}
 
-	if ( strcmp( temp, "Founder") != 0 ) {
-		deallocate( temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, "Founder") != 0 ) {
+		deallocate( temp, __strlen(temp) + 1 );
 		return NULL;
 	}
 
-	/// The buffer is no longer needed so free it
-	deallocate(temp, strlen(temp) + 1);
+	/// The buffer is no longer needed so __free it
+	deallocate(temp, __strlen(temp) + 1);
 
 	/// Skip to the end of the element id
 	skipWhiteSpace( str );
 
 	/// If it is not a closing brace then this is improperly formatted.
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate initial closing brace\n");
+		__printf("!!Failed to locate initial closing brace\n");
 		return NULL;
 	}
 
 	/// Skip the closing brace as well as any whitespace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip initial closing brace\n");
+		__printf("!!Failed to skip initial closing brace\n");
 		return NULL;
 	}
 
@@ -623,7 +623,7 @@ char* extractFounder( pstring str )
 	}
 	
 	/// Do not copy trailing whitespace
-	while( isspace( str->buffer[end-1] ) ) {
+	while( __isspace( str->buffer[end-1] ) ) {
 		end--;
 	}
 
@@ -638,13 +638,13 @@ char* extractFounder( pstring str )
 
 	/// If this is not an opening curly brace then fail
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate the final opening brace\n");
+		__printf("!!Failed to locate the final opening brace\n");
 		goto error;
 	}
 
 	/// Skip past the brace
 	if ( incChar( str) == -1 ) {
-		printf("!!Failed to skip the final opening brace\n");
+		__printf("!!Failed to skip the final opening brace\n");
 		goto error;
 	}
 	
@@ -652,7 +652,7 @@ char* extractFounder( pstring str )
 
 	/// If this is not a # indicating the closing brace then fail
 	if ( !atChar( str, '#' ) ) {
-		printf("!!Failed to locate the closing mark\n");		
+		__printf("!!Failed to locate the closing mark\n");		
 		goto error;
 	}
 
@@ -660,31 +660,31 @@ char* extractFounder( pstring str )
 	start = skipLength( str, 1 );
 
 	if ( start == -1 ) {
-		printf("!!Failed to skip closing mark\n");
+		__printf("!!Failed to skip closing mark\n");
 		goto error;
 	}
 
 	end = skipAlpha( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the closing element id\n");
+		__printf("!!Failed to locate the end of the closing element id\n");
 		goto error;
 	}
 	
 	temp = copyData( str, start, end );
 
-	if ( strcmp( temp, "Founder") != 0 ) {
-		deallocate(temp, strlen(temp)+1);
+	if ( __strcmp( temp, "Founder") != 0 ) {
+		deallocate(temp, __strlen(temp)+1);
 		goto error;
 	}
 
-	deallocate(temp, strlen(temp)+1);
+	deallocate(temp, __strlen(temp)+1);
 
 	skipWhiteSpace( str );
 
 	/// Check the final curly brace
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate final closing brace\n");
+		__printf("!!Failed to locate final closing brace\n");
 		goto error;
 	}
 
@@ -696,7 +696,7 @@ char* extractFounder( pstring str )
 
 error:
 	if (founder != NULL) {
-		deallocate( founder, strlen(founder) + 1 );
+		deallocate( founder, __strlen(founder) + 1 );
 		founder = NULL;
 	}
 
@@ -727,13 +727,13 @@ int extractEstablished( pstring str )
 	start = skipWhiteSpace(str);
 
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate opening brace\n");
+		__printf("!!Failed to locate opening brace\n");
 		return established;
 	}
 
 	/// Skip past the curly brace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip opening brace\n");
+		__printf("!!Failed to skip opening brace\n");
 		return established;
 	}
 
@@ -744,7 +744,7 @@ int extractEstablished( pstring str )
 	end = skipAlpha( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the element id\n");
+		__printf("!!Failed to locate the end of the element id\n");
 		return established;
 	}
 
@@ -752,33 +752,33 @@ int extractEstablished( pstring str )
 	temp = copyData( str, start, end );
 
 	if ( temp == NULL ) {
-		printf("!!Copy from @d to @d failed\n", start, end);
+		__printf("!!Copy from @d to @d failed\n", start, end);
 		goto error;
 	}
 
 	/// If the element id is not "Established" then this is the wrong function
-	if ( strcmp( temp, "Established") != 0 ) {
-		printf("!!Element id is not \"Established\"\n");
-		deallocate( temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, "Established") != 0 ) {
+		__printf("!!Element id is not \"Established\"\n");
+		deallocate( temp, __strlen(temp) + 1 );
 		temp = NULL;
 		return established;
 	}
 
-	/// The buffer is no longer needed so free it
-	deallocate(temp, strlen(temp) + 1);
+	/// The buffer is no longer needed so __free it
+	deallocate(temp, __strlen(temp) + 1);
 
 	/// Skip to the end of the element id
 	skipWhiteSpace( str );
 
 	/// If it is not a closing brace then this is improperly formatted.
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate initial closing brace\n");
+		__printf("!!Failed to locate initial closing brace\n");
 		goto error;
 	}
 
 	/// Skip the closing brace as well as any whitespace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip initial closing brace\n");
+		__printf("!!Failed to skip initial closing brace\n");
 		return established;
 	}
 
@@ -791,7 +791,7 @@ int extractEstablished( pstring str )
 	ee = skipInt( str );
 
 	if ( ee == -1 ) {
-		printf("!!Failed to locate the end of the established data\n");
+		__printf("!!Failed to locate the end of the established data\n");
 		return established;
 	}
 
@@ -800,13 +800,13 @@ int extractEstablished( pstring str )
 
 	/// If this is not an opening curly brace then fail
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate the final opening brace\n");
+		__printf("!!Failed to locate the final opening brace\n");
 		goto error;
 	}
 
 	/// Skip past the brace
 	if ( incChar( str) == -1 ) {
-		printf("!!Failed to skip the final opening brace\n");
+		__printf("!!Failed to skip the final opening brace\n");
 		return established;
 	}
 	
@@ -814,7 +814,7 @@ int extractEstablished( pstring str )
 
 	/// If this is not a # indicating the closing brace then fail
 	if ( !atChar( str, '#' ) ) {
-		printf("!!Failed to locate the closing mark\n");		
+		__printf("!!Failed to locate the closing mark\n");		
 		goto error;
 	}
 
@@ -822,31 +822,31 @@ int extractEstablished( pstring str )
 	start = skipLength( str, 1 );
 
 	if ( start == -1 ) {
-		printf("!!Failed to skip closing mark\n");
+		__printf("!!Failed to skip closing mark\n");
 		return established;
 	}
 
 	end = skipToNonAlphaNum( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the closing element id\n");
+		__printf("!!Failed to locate the end of the closing element id\n");
 		goto error;
 	}
 	
 	temp = copyData( str, start, end );
 
-	if ( strcmp( temp, "Established") != 0 ) {
-		deallocate(temp, strlen(temp)+1);
+	if ( __strcmp( temp, "Established") != 0 ) {
+		deallocate(temp, __strlen(temp)+1);
 		return established;
 	}
 
-	deallocate(temp, strlen(temp)+1);
+	deallocate(temp, __strlen(temp)+1);
 
 	skipWhiteSpace( str );
 
 	/// Check the final curly brace
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate final closing brace\n");
+		__printf("!!Failed to locate final closing brace\n");
 		goto error;
 	}
 
@@ -857,13 +857,13 @@ int extractEstablished( pstring str )
 	temp = copyData( str, es, ee );
 
 	if ( temp == NULL ) {
-		printf("!!Failed to copy established data\n");
+		__printf("!!Failed to copy established data\n");
 		goto error;
 	}
 
-	established = atoi( temp );
+	established = __atoi( temp );
 
-	deallocate( temp, strlen(temp) + 1 );
+	deallocate( temp, __strlen(temp) + 1 );
 
 	return established;
 

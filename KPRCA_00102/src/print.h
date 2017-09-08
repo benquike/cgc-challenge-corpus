@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -30,7 +30,7 @@
         unsigned char * __array = (unsigned char *)(_array); \
         for (int _i=0; _i < (_size); _i++) \
         { \
-            printf(ESC "c", (__array)[_i]); \
+            __printf(ESC "c", (__array)[_i]); \
         } \
     } while (0)
 
@@ -39,7 +39,7 @@
         unsigned char * __array = (unsigned char *)(_array); \
         for (int _i=0; _i < (_size); _i++) \
         { \
-            printf("\\x" ESC "02x", (__array)[_i]); \
+            __printf("\\x" ESC "02x", (__array)[_i]); \
         } \
     } while (0)
 

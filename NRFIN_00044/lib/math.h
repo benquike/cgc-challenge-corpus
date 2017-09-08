@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -53,7 +53,7 @@ unsigned long long mantissa(double d);
  * @param d The double to examine
  * @return 1 if d is a NaN, 0 otherwise
  */
-int isnan(double d);
+int __isnan(double d);
 
 /**
  * Return 1 if d == +inf, -1 if d == -inf, 0 otherwise
@@ -61,7 +61,7 @@ int isnan(double d);
  * @param d The double to examine
  * @return 1 if d == +inf, -1 if d == -inf, 0 otherwise
  */
-int isinf(double d);
+int __isinf(double d);
 
 /**
  * Return the absolute value of d as calculated by masking off sign bit.

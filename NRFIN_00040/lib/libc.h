@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -55,7 +55,7 @@ int transmit_all(int fd, const void *buf, size_t count, size_t *tx_bytes);
  * @param n Number of times to copy character
  * @return dst
  */
-void * memset(void *dst, char c, size_t n); 
+void * __memset(void *dst, char c, size_t n); 
 
 /**
  * Convert unsigned integer to string
@@ -93,7 +93,7 @@ int str2unt32n(const char* str_buf, uint32_t max_chars, uint64_t max_val, uint32
  * @param n Size of destination buffer
  * @return Number of bytes copied
  */
-size_t strncpy(char *s1, char *s2, size_t n);
+size_t __strncpy(char *s1, char *s2, size_t n);
 
 /**
  * Locate character in string
@@ -105,7 +105,7 @@ size_t strncpy(char *s1, char *s2, size_t n);
 char * strnchr(char *str, char c, uint32_t n); 
 
 // *
-//  * Tokenize string. Loosely based on strtok.
+//  * Tokenize string. Loosely based on __strtok.
 //  *
 //  * @param s String to tokenize, or NULL to continue with previous one
 //  * @param sep Character to sep on
@@ -128,13 +128,13 @@ typedef struct _FILE {
    int fd;
    int state;
    int last;
-} FILE;
+} __FILE;
 
-extern FILE *stdin;
-extern FILE *stdout;
-extern FILE *stderr;
+extern __FILE *stdin;
+extern __FILE *stdout;
+extern __FILE *stderr;
 
-int fprintf(FILE * stream, const char *format, ...);
+int fprintf(__FILE * stream, const char *format, ...);
 
 #endif
 // ^ DEBUG

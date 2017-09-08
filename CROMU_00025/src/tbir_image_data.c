@@ -1,7 +1,7 @@
 /*
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -91,7 +91,7 @@ int tbir_read_pixels( ptbir_image_data tid )
 
 	/// Check boundaries
 	if ( (dword_count * 4) + tid->cbyte > tid->max ) {
-		printf("Dword count too hight: @d @d @d\n", dword_count*4, tid->cbyte, tid->max);
+		__printf("Dword count too hight: @d @d @d\n", dword_count*4, tid->cbyte, tid->max);
 		return 0;
 	}
 
@@ -117,7 +117,7 @@ int tbir_read_pixels( ptbir_image_data tid )
 		return 0;
 	}
 
-	memset( tid->image, ' ', tid->image_length);
+	__memset( tid->image, ' ', tid->image_length);
 	tid->image[ tid->image_length ] = '\x00';
 
 	count = 0;
@@ -246,7 +246,7 @@ int tbir_read_pixels( ptbir_image_data tid )
 				tid->image[index] = seven[pixel];
 				break;
 			default:
-				printf("[ERROR] Invalid pixel type\n");
+				__printf("[ERROR] Invalid pixel type\n");
 				deallocate( tid->image, tid->image_length +1);
 				tid->image = NULL;
 				tid->image_length = 0;
@@ -254,7 +254,7 @@ int tbir_read_pixels( ptbir_image_data tid )
 				break;
 		};
 
-		//printf("Added @c at row @d column: @d type: @d direction: @d\n", tid->image[index], row, column, tid->pixel_type, tid->load_direction);
+		//__printf("Added @c at row @d column: @d type: @d direction: @d\n", tid->image[index], row, column, tid->pixel_type, tid->load_direction);
 
 		count++;
 	}
@@ -278,13 +278,13 @@ int tbir_read_flags( ptbir_image_data tid )
 		return 0;
 	}
 
-	//printf("Pixel type: @d\n", tid->pixel_type);
+	//__printf("Pixel type: @d\n", tid->pixel_type);
 
 	if ( tbir_read_loadd( tid ) == 0 ) {
 		return 0;
 	}
 
-	//printf("Load: @d\n", tid->load_direction);
+	//__printf("Load: @d\n", tid->load_direction);
 
 	tid->flags |= TBIR_FLAGS;
 	return 1;
@@ -307,9 +307,9 @@ int tbir_display_img( ptbir_image_data tid )
 	while ( field != 0 ) {
 		switch ( field ) {
 			case 0xaaaa:
-				//printf("Header\n");
+				//__printf("Header\n");
 				if ( tid->flags & TBIR_HEADER ) {
-					printf("[ERROR] Only one header\n");
+					__printf("[ERROR] Only one header\n");
 					return 0;
 				}
 
@@ -318,9 +318,9 @@ int tbir_display_img( ptbir_image_data tid )
 				}
 				break;
 			case 0xaabb:
-				//printf("Flags\n");
+				//__printf("Flags\n");
 				if ( tid->flags & TBIR_FLAGS ) {
-					printf("[ERROR] Only one flags field\n");
+					__printf("[ERROR] Only one flags field\n");
 					return 0;
 				}
 
@@ -330,7 +330,7 @@ int tbir_display_img( ptbir_image_data tid )
 				break;
 			case 0xaacc:
 				if ( tid->flags & TBIR_PIXELS ) {
-					printf("[ERROR] Only one pixel set\n");
+					__printf("[ERROR] Only one pixel set\n");
 					return 0;
 				}
 
@@ -341,7 +341,7 @@ int tbir_display_img( ptbir_image_data tid )
 				break;
 			case 0xaadd:
 				if ( tid->flags & TBIR_CHKSUM ) {
-					printf("[ERROR] Only one checksum field\n");
+					__printf("[ERROR] Only one checksum field\n");
 					return 0;
 				}
 
@@ -350,23 +350,23 @@ int tbir_display_img( ptbir_image_data tid )
 				}
 				break;
 			case 0xaaee:
-				//printf("End the image\n");
+				//__printf("End the image\n");
 				/// Check to ensure that all fields have been handled
 				if ( (tid->flags & TBIR_HEADER) && (tid->flags & TBIR_FLAGS) && ( tid->flags & TBIR_PIXELS) && (tid->flags & TBIR_CHKSUM)) {
 					for ( int i = 0; i < tid->image_length; i++ ) {
 						if ( i % tid->width == 0 && i != 0 ) {
-							printf("\n");
+							__printf("\n");
 						}
-							printf("@c", tid->image[i]);
+							__printf("@c", tid->image[i]);
 					}
-					printf("\n");
+					__printf("\n");
 					return 1;
 				} else {
-					printf("[ERROR] Missing a required tag\n");
+					__printf("[ERROR] Missing a required tag\n");
 					return 0;
 				}
 			default:
-				printf("invalide field\n");
+				__printf("invalide field\n");
 				return 0;
 		};
 
@@ -394,7 +394,7 @@ int tbir_read_width( ptbir_image_data tid )
 
 	tid->width = width;
 
-	//printf("Width: @d\n", tid->width);
+	//__printf("Width: @d\n", tid->width);
 
 	return 1;
 }
@@ -415,7 +415,7 @@ int tbir_read_height( ptbir_image_data tid )
 		goto end;
 	}
 
-	//printf("Height: @d\n", tid->height);
+	//__printf("Height: @d\n", tid->height);
 
 	retval = 1;
 
@@ -494,7 +494,7 @@ int tbir_read_typef( ptbir_image_data tid )
 	int type;
 
 	if ( tbir_read_nbits( tid, 16, &type) == 0 ) {
-		printf("da bits failed\n");
+		__printf("da bits failed\n");
 		return 0;
 	}
 
@@ -506,11 +506,11 @@ int tbir_read_typef( ptbir_image_data tid )
 		case 0xaaee:
 			return type;
 		default:
-			printf("wrong one\n");
+			__printf("wrong one\n");
 			return 0;
 	};
 
-	printf("fail\n");
+	__printf("fail\n");
 	return 0;
 }
 

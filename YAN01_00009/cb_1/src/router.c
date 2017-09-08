@@ -41,7 +41,7 @@ int findFDs(const char* server, int* pIn, int* pOut)
 
   for (size_t i = 0; (i < MAX_SERVERS) && (gServers[i].server[0] != '\0'); i++)
   {
-    if (strcmp(gServers[i].server, server) == 0)
+    if (__strcmp(gServers[i].server, server) == 0)
     {
       *pIn = gServers[i].in;
       *pOut = gServers[i].out;
@@ -77,7 +77,7 @@ int doGet(const char* page, int in, int out)
   
   msg.type = PROTO_GET;
 
-  msg.msgLen = strlen(page);
+  msg.msgLen = __strlen(page);
 
   sendMsg(out, &msg, sizeof(msg));
 
@@ -121,7 +121,7 @@ int parseAndGetPage(char* buf, char** pStart, char** pEnd, const char* uidStr)
     return (-1);
   }
 
-  start = buf + strlen(uidStr);
+  start = buf + __strlen(uidStr);
   if (strstr(start, gGet1) != start)
   {
     return (-1);
@@ -137,7 +137,7 @@ int parseAndGetPage(char* buf, char** pStart, char** pEnd, const char* uidStr)
   //reset the NULL character so start is the web-address
   *end = '\0';
   //reset the NULL character again so that start is the domain
-  end = strchr(start, '/');
+  end = __strchr(start, '/');
   if (end != NULL)
   {
     *end = '\0';
@@ -152,7 +152,7 @@ int parseAndGetPage(char* buf, char** pStart, char** pEnd, const char* uidStr)
   int outFD = 0;
   if (findFDs(start, &inFD, &outFD) != 0)
   {
-    printf("SERVER [#s] NOT FOUND\n", start);
+    __printf("SERVER [#s] NOT FOUND\n", start);
     return (0);
   } 
 
@@ -199,12 +199,12 @@ int main(void)
           //get a new random uid
           random(&uid, sizeof(uid), NULL); 
           snprintf(uidStr, 24, "#x", uid);
-          printf("#s#s#s#s#s\n", gHelloReply1, name, gHelloReply2, uidStr, gHelloReply3);
+          __printf("#s#s#s#s#s\n", gHelloReply1, name, gHelloReply2, uidStr, gHelloReply3);
           state = CONNECTED_STATE;
         }
         else
         {
-          printf("BAD CMD\n");
+          __printf("BAD CMD\n");
         }
         break;
       }
@@ -216,11 +216,11 @@ int main(void)
         }
         else if (strstr(buf, uidStr) != buf)
         {
-          printf("BAD CMD\n");
+          __printf("BAD CMD\n");
         }
         else if (parseAndGetPage(buf, &start, &end, uidStr) != 0)
         {
-          printf("BAD CMD\n");
+          __printf("BAD CMD\n");
         }
         break;
       }
@@ -231,7 +231,7 @@ int main(void)
     }
   } while (state != GOODBYE_STATE);
           
-  printf("#s\n", gBye);
+  __printf("#s\n", gBye);
   sendGoodbyes();
 
   return (0);

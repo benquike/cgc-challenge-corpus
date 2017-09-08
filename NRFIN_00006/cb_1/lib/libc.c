@@ -363,12 +363,12 @@ struct node * list_remove(struct list *lst, char value) {
   // if we're removing the last element...
   if (lst->tail == needle) { lst->tail = needle->prev; }
 
-  // unlink any adjacent nodes
+  // __unlink any adjacent nodes
   if (needle->prev) { needle->prev->next = needle->next; }
   if (needle->next) { needle->next->prev = needle->prev; }
 
 #ifdef DEBUG_LISTS
-  fprintf(stderr, "K: [D] exit: list_remove, needle: %p\n", needle);
+  fprintf(stderr, "K: [D] __exit: list_remove, needle: %p\n", needle);
   fprintf(stderr, "\t\tremoved node; dump after:\n");
   list_dump(lst);
 #endif
@@ -408,7 +408,7 @@ int node_destroy(struct node *nd) {
   ret = deallocate((void *)nd, PAGE_SZ);
 
 #ifdef DEBUG_LISTS
-  fprintf(stderr, "K: [D] exit: node_destroy; ret = %d\n", ret);
+  fprintf(stderr, "K: [D] __exit: node_destroy; ret = %d\n", ret);
 #endif
 
   return ret;
@@ -418,7 +418,7 @@ int node_destroy(struct node *nd) {
 // NOTE: not POSIX
 // MOD: it works in reverse
 // RETURN: the first argument
-unsigned char * memset(void *b, char c, size_t len) {
+unsigned char * __memset(void *b, char c, size_t len) {
 
   char *ptr = (char *)b; 
   while (len) {
@@ -429,8 +429,8 @@ unsigned char * memset(void *b, char c, size_t len) {
 }
 
 // REUSE: FASTLANE
-// Emulate sleep() via a timeout given to fdwait().
-void pause(size_t seconds) {
+// Emulate __sleep() via a timeout given to fdwait().
+void __pause(size_t seconds) {
 
     struct timeval tv;
 
@@ -473,13 +473,13 @@ typedef __builtin_va_list va_list;
 #define va_end(ap) __builtin_va_end(ap)
 #define va_arg(ap, type) __builtin_va_arg(ap, type)
 
-static FILE std_files[3] = { {0, _FILE_STATE_OPEN}, {1, _FILE_STATE_OPEN}, {2, _FILE_STATE_OPEN} };
+static __FILE std_files[3] = { {0, _FILE_STATE_OPEN}, {1, _FILE_STATE_OPEN}, {2, _FILE_STATE_OPEN} };
 
-FILE *stdin = &std_files[0];
-FILE *stdout = &std_files[1];
-FILE *stderr = &std_files[2];
+__FILE *stdin = &std_files[0];
+__FILE *stdout = &std_files[1];
+__FILE *stderr = &std_files[2];
 
-int vfprintf(FILE *stream, const char *format, va_list ap);
+int __vfprintf(__FILE *stream, const char *format, va_list ap);
 int vdprintf(int fd, const char *format, va_list ap);
 
 #define IS_DIGIT     1
@@ -518,39 +518,39 @@ static unsigned char type_flags[256] = {
      IS_LOWER, IS_LOWER, IS_LOWER, 0, 0, 0, 0, 0,
 };
 
-int isalpha(int c) {
+int __isalpha(int c) {
    return (type_flags[c & 0xff] & IS_ALPHA) != 0;
 }
 
-int isdigit(int c) {
+int __isdigit(int c) {
    return (type_flags[c & 0xff] & IS_DIGIT) != 0;
 }
 
-int isxdigit(int c) {
+int __isxdigit(int c) {
    return (type_flags[c & 0xff] & IS_XDIGIT) != 0;
 }
 
 int toupper(int c) {
-   if (isalpha(c)) {
+   if (__isalpha(c)) {
       return c & ~0x20;
    }
    return c;
 }
 
-size_t strlen(const char *str) {
+size_t __strlen(const char *str) {
    size_t res = 0;
    while (*str++) {res++;}
    return res;
 }
 
-int vfprintf(FILE * stream, const char *format, va_list ap) {
+int __vfprintf(__FILE * stream, const char *format, va_list ap) {
    return vdprintf(stream->fd, format, ap);
 }
 
-int fprintf(FILE * stream, const char *format, ...) {
+int fprintf(__FILE * stream, const char *format, ...) {
    va_list va;
    va_start(va, format);
-   return vfprintf(stream, format, va);
+   return __vfprintf(stream, format, va);
 }
 
 struct _fd_printer {
@@ -651,10 +651,10 @@ static char *r_xtoa(unsigned int val, char *outbuf, int caps) {
 }
 
 static int hex_value_of(char ch) {
-   if (isdigit(ch)) {
+   if (__isdigit(ch)) {
       return ch - '0';
    }
-   else if (isalpha(ch)) {
+   else if (__isalpha(ch)) {
       return toupper(ch) - 'A' + 10;
    }
    return -1;
@@ -757,7 +757,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
             }
             break;
          case STATE_HEX:
-            if (isxdigit(ch) && digit_count < 2) {
+            if (__isxdigit(ch) && digit_count < 2) {
                digit_count++;
                value = value * 16 + hex_value_of(ch);
                if (digit_count == 2) {
@@ -782,11 +782,11 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                state = STATE_FLAGS;
                break;
             }
-            if (isdigit(ch)) {
+            if (__isdigit(ch)) {
                //could be width or could be arg specifier or a 0 flag
                //width and arg values don't start with 0
                width_value = 0;
-               while (isdigit(ch)) {
+               while (__isdigit(ch)) {
                   width_value = width_value * 10 + (ch - '0');
                   ch = *format++;
                }
@@ -840,8 +840,8 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
             if (ch == '*') {
                ch = *format++;
                int width_arg = 0;
-               if (isdigit(ch)) {
-                  while (isdigit(ch)) {
+               if (__isdigit(ch)) {
+                  while (__isdigit(ch)) {
                      width_arg = width_arg * 10 + (ch - '0');
                      ch = *format++;
                   }
@@ -856,9 +856,9 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                }
                width_value = (int)args[width_arg];
             }
-            else if (isdigit(ch)) {
+            else if (__isdigit(ch)) {
                width_value = 0;
-               while (isdigit(ch)) {
+               while (__isdigit(ch)) {
                   width_value = width_value * 10 + (ch - '0');
                   ch = *format++;
                }
@@ -877,8 +877,8 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                if (ch == '*') {
                   ch = *format++;
                   int prec_arg = 0;
-                  if (isdigit(ch)) {
-                     while (isdigit(ch)) {
+                  if (__isdigit(ch)) {
+                     while (__isdigit(ch)) {
                         prec_arg = prec_arg * 10 + (ch - '0');
                         ch = *format++;
                      }
@@ -893,9 +893,9 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                   }
                   prec_value = (int)args[prec_arg];
                }
-               else if (isdigit(ch)) {
+               else if (__isdigit(ch)) {
                   prec_value = 0;
-                  while (isdigit(ch)) {
+                  while (__isdigit(ch)) {
                      prec_value = prec_value * 10 + (ch - '0');
                      ch = *format++;
                   }
@@ -1353,7 +1353,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                }
                case 's': {
                   const char *s_arg = (const char *)args[field_arg];
-                  int len = strlen(s_arg);
+                  int len = __strlen(s_arg);
                   if (width_value == -1) {
                      //by default min length is the entire string
                      width_value = len;

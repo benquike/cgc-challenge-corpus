@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -45,7 +45,7 @@ static unsigned int rng()
 
 static char *random_password()
 {
-    char *pw = malloc(8);
+    char *pw = __malloc(8);
     if (!pw) {
         pw = admin_username;
         return pw;
@@ -78,16 +78,16 @@ static void user_rent_movie()
     list_owned_movies();
 
     if (num_movies == 0) {
-        printf("[ERROR] Movie list is empty. Please try again later.\n");
+        __printf("[ERROR] Movie list is empty. Please try again later.\n");
         return;
     }
 
     while(id == 0 || id > num_movies) {
-        printf("Enter movie id: ");
+        __printf("Enter movie id: ");
         readline(STDIN, line, LINE_SIZE);
-        id = strtol(line, NULL, 10);
+        id = __strtol(line, NULL, 10);
         if (id == 0 || id > num_movies)
-            printf("[ERROR] Invalid movie id. Try again.\n");
+            __printf("[ERROR] Invalid movie id. Try again.\n");
     }
 
     rent_movie(id);
@@ -100,16 +100,16 @@ static void user_return_movie()
     list_rented_movies();
 
     if (num_rented == 0) {
-        printf("[ERROR] All the movies are in our inventory.\n");
+        __printf("[ERROR] All the movies are in our inventory.\n");
         return;
     }
 
     while(id == 0 || id > num_rented) {
-        printf("Enter movie id: ");
+        __printf("Enter movie id: ");
         readline(STDIN, line, LINE_SIZE);
-        id = strtol(line, NULL, 10);
+        id = __strtol(line, NULL, 10);
         if (id == 0 || id > num_rented)
-            printf("[ERROR] Invalid movie id. Try again.\n");
+            __printf("[ERROR] Invalid movie id. Try again.\n");
     }
 
     return_movie(id);
@@ -118,17 +118,17 @@ static void user_return_movie()
 static int admin_login()
 {
     char line[LINE_SIZE];
-    printf("username: ");
+    __printf("username: ");
     readline(STDIN, line, LINE_SIZE);
-    if (strcmp(line, admin_username) != 0) {
-        printf("[ERROR] Permission Denied: Wrong credentials\n");
+    if (__strcmp(line, admin_username) != 0) {
+        __printf("[ERROR] Permission Denied: Wrong credentials\n");
         return -1;
     }
 
-    printf("password: ");
+    __printf("password: ");
     readline(STDIN, line, LINE_SIZE);
-    if (strcmp(line, admin_password) != 0) {
-        printf("[ERROR] Permission Denied: Wrong credentials\n");
+    if (__strcmp(line, admin_password) != 0) {
+        __printf("[ERROR] Permission Denied: Wrong credentials\n");
         return -1;
     }
 
@@ -143,15 +143,15 @@ int run_user_mode(int *user)
     char line[LINE_SIZE];
     int choice;
 
-    printf("1. List movies\n");
-    printf("2. Rent movie\n");
-    printf("3. Return movie\n");
-    printf("4. Admin mode\n");
-    printf("5. Exit\n\n");
-    printf("Choice: ");
+    __printf("1. List movies\n");
+    __printf("2. Rent movie\n");
+    __printf("3. Return movie\n");
+    __printf("4. Admin mode\n");
+    __printf("5. Exit\n\n");
+    __printf("Choice: ");
 
     readline(STDIN, line, LINE_SIZE);
-    choice = strtol(line, NULL, 10);
+    choice = __strtol(line, NULL, 10);
 
     switch(choice) {
     case 1:
@@ -171,7 +171,7 @@ int run_user_mode(int *user)
         return 1;
         break;
     default:
-        printf("[ERROR] Invalid menu. Please select again.\n");
+        __printf("[ERROR] Invalid menu. Please select again.\n");
     }
 
     return 0;

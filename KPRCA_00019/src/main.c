@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -39,11 +39,11 @@ int main();
 
 static void send_data(void *channel, unsigned int type, unsigned int length, unsigned char *data)
 {
-    unsigned char *hdrdata = malloc(length + 1);
+    unsigned char *hdrdata = __malloc(length + 1);
     hdrdata[0] = (10 << 4) | type;
-    memcpy(&hdrdata[1], data, length);
+    __memcpy(&hdrdata[1], data, length);
     session_send(channel, length+1, hdrdata);
-    free(hdrdata);
+    __free(hdrdata);
 }
 
 static void send_handshake(void *channel, unsigned int result)
@@ -78,7 +78,7 @@ static void handle_control_packet(void *channel, unsigned int length, unsigned c
     {
     case 1: // CONTROL
         if (param == 5) // UNPLUG
-            exit(0);
+            __exit(0);
         break;
     case 4: // GET REPORT
         if (param == 1)
@@ -107,7 +107,7 @@ static void handle_control_packet(void *channel, unsigned int length, unsigned c
         else
         {
             if (length > 1)
-                memcpy(g_incoming_report, data+1, length-1 > sizeof(g_incoming_report) ? sizeof(g_incoming_report) : length-1);
+                __memcpy(g_incoming_report, data+1, length-1 > sizeof(g_incoming_report) ? sizeof(g_incoming_report) : length-1);
             send_handshake(channel, 0);
             g_incoming_report_type = -1;
         }

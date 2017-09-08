@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -36,11 +36,11 @@ typedef struct _FILE {
    int fd;
    int state;
    int last;
-} FILE;
+} __FILE;
 
-extern FILE *stdin;
-extern FILE *stdout;
-extern FILE *stderr;
+extern __FILE *stdin;
+extern __FILE *stdout;
+extern __FILE *stderr;
 
 typedef __builtin_va_list va_list;
 #define va_start(ap, param) __builtin_va_start(ap, param)
@@ -83,17 +83,17 @@ static unsigned char type_flags[256] = {
      IS_LOWER, IS_LOWER, IS_LOWER, 0, 0, 0, 0, 0,
 };
 
-int isalpha(int c);
+int __isalpha(int c);
 
-int isdigit(int c);
+int __isdigit(int c);
 
-int isxdigit(int c);
+int __isxdigit(int c);
 
 int toupper(int c);
 
-int vfprintf(FILE * stream, const char *format, va_list ap);
+int __vfprintf(__FILE * stream, const char *format, va_list ap);
 
-int fprintf(FILE * stream, const char *format, ...);
+int fprintf(__FILE * stream, const char *format, ...);
 
 struct _fd_printer {
    int fd;

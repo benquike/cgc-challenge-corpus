@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -42,11 +42,11 @@ size_t size;
 
 	if (*book == 0) {
 
-		*book = malloc(sizeof(Recipe_Type));
+		*book = __malloc(sizeof(Recipe_Type));
 
 		if (*book==0) {
 
-			printf("Failed to allocate memory\n");
+			__printf("Failed to allocate memory\n");
 			_terminate(-1);
 
 		}
@@ -60,11 +60,11 @@ size_t size;
 		while(recipe->next != 0) 
 			recipe = recipe->next;
 
-		recipe->next = malloc(sizeof(Recipe_Type));
+		recipe->next = __malloc(sizeof(Recipe_Type));
 
 		if (recipe->next == 0) {
 
-			printf("Failed to allocate memory\n");
+			__printf("Failed to allocate memory\n");
 			_terminate(-1);
 
 		}
@@ -76,7 +76,7 @@ size_t size;
 	recipe->Tagged = 0;
 	recipe->next = 0;
 
-	printf("Enter Title: ");
+	__printf("Enter Title: ");
 
 	size=getline(buffer, sizeof(buffer));
 
@@ -87,7 +87,7 @@ size_t size;
 			*book = 0;
 		}
 
-		free(recipe);
+		__free(recipe);
 
 		if (previous)
 			previous->next = 0;
@@ -96,7 +96,7 @@ size_t size;
 	}
 	else {
 
-		strncpy(recipe->Title, buffer, BUFF_SIZE);
+		__strncpy(recipe->Title, buffer, BUFF_SIZE);
 
 	}
 
@@ -107,7 +107,7 @@ size_t size;
 			*book = 0;
 		}
 
-		free(recipe);
+		__free(recipe);
 
 		if (previous) 
 			previous->next = 0;

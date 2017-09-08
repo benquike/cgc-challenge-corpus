@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -58,7 +58,7 @@ int malloc_init(){
 
 
 int buf_is_numeric(char *buf){
-    for(int i = 0; i < strlen(buf); ++i){
+    for(int i = 0; i < __strlen(buf); ++i){
         if((buf[i] < '0' || buf[i] > '9') && buf[i] != '-'){
             return 0;
         }
@@ -66,14 +66,14 @@ int buf_is_numeric(char *buf){
     return 1;
 }
 
-int atoi(char *buf){
+int __atoi(char *buf){
     int dir = 1;
     int start = 0;
     if(buf[start] == '-')
         dir = -1;
 
     int final = 0;
-    for(int i = start; i < strlen(buf); ++i ){
+    for(int i = start; i < __strlen(buf); ++i ){
         final = final * 10 + buf[i] - '0';
     }
     final *= dir;
@@ -109,13 +109,13 @@ size_t read_ascii_line(int fd, char *data, size_t len){
 
 char *STRTOK = "";
 
-char *strtok(char *str, const char delim){
+char *__strtok(char *str, const char delim){
     if(str == NULL){
         str = STRTOK;
     }else{
         STRTOK = "";
     }
-    int sl = strlen(str);
+    int sl = __strlen(str);
     if(sl == 0){
 
         return NULL;
@@ -136,12 +136,12 @@ char *strtok(char *str, const char delim){
 }
 
 
-void * calloc(size_t nmemb, size_t s){
+void * __calloc(size_t nmemb, size_t s){
     size_t sz = nmemb * s;
 
 
 
-    char *x = (char *) malloc(sz);
+    char *x = (char *) __malloc(sz);
     if(x == NULL){
 
         return NULL;
@@ -189,7 +189,7 @@ int transmit_all(int fd, const char *buf, const size_t size) {
     return 0;
 }
 
-size_t strlen(const char *s){
+size_t __strlen(const char *s){
     int i = 0;
     const char *p;
     for(p = s; *p; ++p){
@@ -202,19 +202,19 @@ size_t strlen(const char *s){
 #ifdef DEBUG
 void err(char *m){
 
-    transmit_all(STDOUT, m, strlen(m)); 
-    transmit_all(STDOUT, "\n", strlen("\n"));      
+    transmit_all(STDOUT, m, __strlen(m)); 
+    transmit_all(STDOUT, "\n", __strlen("\n"));      
 }
 #endif
 
-char *strcat(char * s1, char *s2){
-    size_t n = strlen(s1);
-    memcpy(&(s1[n]), s2, strlen(s2));
+char *__strcat(char * s1, char *s2){
+    size_t n = __strlen(s1);
+    __memcpy(&(s1[n]), s2, __strlen(s2));
 
     return s1;
 }
 
-void * malloc(size_t s){
+void * __malloc(size_t s){
     // todo check size incoming and limit it.
 
     for(int i = 0; i < MAX_ALLOCATIONS; i++){
@@ -245,11 +245,11 @@ void * malloc(size_t s){
     return NULL;
 }
 
-void free(void *p){
+void __free(void *p){
     // traverse from the rear just to throw off identification
     if(p == NULL){
 #ifdef DEBUG
-        err("Can't free null!");
+        err("Can't __free null!");
 #endif
         return;
 
@@ -274,7 +274,7 @@ void free(void *p){
 #endif
 }
 
-void memcpy(void *d, const void *s, size_t size){
+void __memcpy(void *d, const void *s, size_t size){
     char *dc = (char *)d;
     char *sc = (char *)s;
 
@@ -299,13 +299,13 @@ int memcmp(void *d, const void *s, size_t size){
 
 char * itoaB10(int value){
     int max_width = 12;
-    char *s = malloc(max_width); // max len of 2**32 + negative to be paranoid
+    char *s = __malloc(max_width); // max len of 2**32 + negative to be paranoid
     if(s == NULL)
         return NULL;
     int tmp = value;
     
     if(value == 0){
-        memcpy(s, "0\x00", 2);
+        __memcpy(s, "0\x00", 2);
         return s;
     }
     int neg = 0;
@@ -326,12 +326,12 @@ char * itoaB10(int value){
     if(neg == 1)
         s[i+1] = '-';
 
-    char *f = malloc(max_width);
-    int final_len = strlen(s);
+    char *f = __malloc(max_width);
+    int final_len = __strlen(s);
     for(int j =0; j < final_len; ++j){
         f[j] = s[final_len-j-1];
     }
-    free(s);
+    __free(s);
     return f;
 }
 

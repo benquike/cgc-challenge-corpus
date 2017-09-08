@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -41,7 +41,7 @@ int init_database( productDefType **database ) {
 
 	if (pTemp == 0) {
 
-		pTemp = malloc(sizeof(productDefType));
+		pTemp = __malloc(sizeof(productDefType));
 
 		if (pTemp == 0) 
 			_terminate(-1);
@@ -72,13 +72,13 @@ backlogItemType *sblPtr, *tmpSBLPtr;
 
 
 			if (pblPtr->description != 0)
-				free(pblPtr->description);
+				__free(pblPtr->description);
 
 			tmpPBIPtr = pblPtr;
 
 			pblPtr = pblPtr->next;
 
-			free(tmpPBIPtr);
+			__free(tmpPBIPtr);
 
 		}
 
@@ -93,33 +93,33 @@ backlogItemType *sblPtr, *tmpSBLPtr;
 
 
 				if (sblPtr->description != 0)
-					free(sblPtr->description);
+					__free(sblPtr->description);
 
 				tmpSBLPtr = sblPtr;
 				sblPtr = sblPtr->next;
 
-				free(tmpSBLPtr);
+				__free(tmpSBLPtr);
 
 			}
 
 			if (sprintPtr->title != 0 ) 
-				free(sprintPtr->title);
+				__free(sprintPtr->title);
 
 			tmpSprintPtr = sprintPtr;
 			sprintPtr = sprintPtr->next;
 
-			free(tmpSprintPtr);
+			__free(tmpSprintPtr);
 
 
 		}
 
 		if (productPtr->title != 0)
-			free(productPtr->title);
+			__free(productPtr->title);
 
 		tmpProduct = productPtr;
 		productPtr = productPtr->next;
 
-		free(tmpProduct);
+		__free(tmpProduct);
 
 
 	}

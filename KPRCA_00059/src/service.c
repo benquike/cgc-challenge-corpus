@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -107,12 +107,12 @@ void writeflush()
     txcnt = 0;
 }
 
-void write(int fd, void *data, size_t len)
+void __write(int fd, void *data, size_t len)
 {
     if (len + txcnt > sizeof(txbuf) || txfd != fd)
         writeflush();
     txfd = fd;
-    memcpy(&txbuf[txcnt], data, len);
+    __memcpy(&txbuf[txcnt], data, len);
     txcnt += len;
 }
 
@@ -120,12 +120,12 @@ void send_error(unsigned int ec, unsigned int extra)
 {
     pkt_t pkt;
 
-    memset(&pkt, 0, sizeof(pkt));
+    __memset(&pkt, 0, sizeof(pkt));
     pkt.type = TYPE_ERROR;
     pkt.error.code = ec;
     pkt.error.extra = extra;
 
-    write(STDOUT, &pkt, sizeof(pkt));
+    __write(STDOUT, &pkt, sizeof(pkt));
 }
 
 void send_aggregate(unsigned int timestamp)
@@ -137,7 +137,7 @@ void send_aggregate(unsigned int timestamp)
     if (stateq_empty(g_history))
         return;
 
-    memset(&state, 0, sizeof(state_t));
+    __memset(&state, 0, sizeof(state_t));
     state.timestamp = timestamp;
 
     /* aggregate history into a complete state */
@@ -167,20 +167,20 @@ void send_aggregate(unsigned int timestamp)
         }
     }
 
-    memset(&pkt, 0, sizeof(pkt));
+    __memset(&pkt, 0, sizeof(pkt));
     pkt.timestamp = state.timestamp;
 
     if (state.flags & FLAG_SPEED)
     {
         pkt.type = TYPE_SPEED;
         pkt.speed.speed = state.speed;
-        write(STDOUT, &pkt, sizeof(pkt));
+        __write(STDOUT, &pkt, sizeof(pkt));
     }
     if (state.flags & FLAG_RPM)
     {
         pkt.type = TYPE_RPM;
         pkt.rpm.rpm = state.rpm;
-        write(STDOUT, &pkt, sizeof(pkt));
+        __write(STDOUT, &pkt, sizeof(pkt));
     }
     if (state.flags & FLAG_LOCATION)
     {
@@ -188,7 +188,7 @@ void send_aggregate(unsigned int timestamp)
         pkt.loc.x = state.x;
         pkt.loc.y = state.y;
         pkt.loc.z = state.z;
-        write(STDOUT, &pkt, sizeof(pkt));
+        __write(STDOUT, &pkt, sizeof(pkt));
     }
 }
 
@@ -287,10 +287,10 @@ int do_mix(state_t *state, pkt_t *pkt)
 
 static unsigned int do_hash(const unsigned char *_data, unsigned int len)
 {
-    unsigned char *data = malloc(len);
+    unsigned char *data = __malloc(len);
     unsigned int i, hash = 0, xform = 0x12345678;
 
-    memcpy(data, _data, len);
+    __memcpy(data, _data, len);
 
     /* transform */
     for (i = 0; i < len - 3; i += 4)
@@ -305,7 +305,7 @@ static unsigned int do_hash(const unsigned char *_data, unsigned int len)
     for (i = 0; i < len - 3; i += 4)
         hash += *(unsigned int *)(data + i);
 
-    free(data);
+    __free(data);
     return hash;
 }
 
@@ -319,7 +319,7 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
 
     stateq_init(&g_history, hist_size);
 
-    memset(&cur_state, 0, sizeof(cur_state));
+    __memset(&cur_state, 0, sizeof(cur_state));
     cur_state.timestamp = secret_hash;
     stateq_push(g_history, &cur_state);
 
@@ -328,7 +328,7 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
         state_t *last_state;
 
         writeflush();
-        if (fread((char *)&pkt, sizeof(pkt), stdin) != sizeof(pkt))
+        if (__fread((char *)&pkt, sizeof(pkt), stdin) != sizeof(pkt))
             break;
 
         if (pkt.type == TYPE_RESET)
@@ -373,7 +373,7 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
         }
         else
         {
-            memset(&cur_state, 0, sizeof(cur_state));
+            __memset(&cur_state, 0, sizeof(cur_state));
             cur_state.timestamp = pkt.timestamp;
             if (last_state && pkt.timestamp >= last_state->timestamp + max_time_delta)
                 cur_state.flags |= FLAG_TENTATIVE;

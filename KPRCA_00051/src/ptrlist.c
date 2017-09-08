@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -25,13 +25,13 @@
 
 ptrlist_t *create_ptrlist()
 {
-    ptrlist_t *ptrlist = calloc(1, sizeof(ptrlist_t));
+    ptrlist_t *ptrlist = __calloc(1, sizeof(ptrlist_t));
     if (ptrlist == NULL)
         return NULL;
 
     ptrlist->size = 8;
     ptrlist->length = 0;
-    ptrlist->datalist = calloc(1, sizeof(void *) * (ptrlist->size));
+    ptrlist->datalist = __calloc(1, sizeof(void *) * (ptrlist->size));
     if (ptrlist->datalist == NULL)
         return NULL;
 
@@ -44,12 +44,12 @@ int add_item(ptrlist_t *ptrlist, void *pdata)
         return -1;
 
     if (ptrlist->size == ptrlist->length) {
-        void *expanded_list = malloc(sizeof(void *) * (ptrlist->size * 2));
+        void *expanded_list = __malloc(sizeof(void *) * (ptrlist->size * 2));
         if (!expanded_list )
             return -1;
 
-        memcpy(expanded_list , ptrlist->datalist, sizeof(void *) * (ptrlist->size));
-        free(ptrlist->datalist);
+        __memcpy(expanded_list , ptrlist->datalist, sizeof(void *) * (ptrlist->size));
+        __free(ptrlist->datalist);
         ptrlist->size *= 2;
         ptrlist->datalist = expanded_list ;
     }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -120,8 +120,8 @@ void handle_new_permit_ring(char *buf, int buf_len)
   ppring_t pring;
   if (buf_len >= MASTER_KEY_LEN + sizeof(ppring_t))
   {
-    memset(&pring, 0, sizeof(ppring_t));
-    memcpy(key, g_session_key, MASTER_KEY_LEN);
+    __memset(&pring, 0, sizeof(ppring_t));
+    __memcpy(key, g_session_key, MASTER_KEY_LEN);
     if (g_auth && memcmp(key, buf, MASTER_KEY_LEN) == 0)
     {
       count = *(int *)&buf[MASTER_KEY_LEN];
@@ -138,7 +138,7 @@ void handle_new_permit_ring(char *buf, int buf_len)
           c = MASTER_KEY_LEN + sizeof(int) + i * sizeof(ppermit_t);
           if (permit_test((ppermit_t *)&buf[c], *(int *)&buf[c + 22], &buf[c + 8]) == PRES_OK)
           {
-            memcpy(&pring.permits[i], &buf[c], sizeof(ppermit_t));
+            __memcpy(&pring.permits[i], &buf[c], sizeof(ppermit_t));
             pring.num_permits++;
           }
           else

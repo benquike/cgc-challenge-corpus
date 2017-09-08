@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -100,7 +100,7 @@ CMessagePacket *CMessagePacket::ParseStream( CDataStream *pRxStream )
     uint8_t preambleState = WaitForPreambleLock( pRxStream );
 
 #if DEBUG_MESSAGES
-    printf( "Preamble lock\n" );
+    __printf( "Preamble lock\n" );
 #endif
 
     // Find synch byte
@@ -123,7 +123,7 @@ CMessagePacket *CMessagePacket::ParseStream( CDataStream *pRxStream )
                 {
                     // Invalid state
                     return (NULL);
-                    // Expecting one -- got 0 -- puts at
+                    // Expecting one -- got 0 -- __puts at
                 }
                 else
                     preambleState = 0;
@@ -146,12 +146,12 @@ CMessagePacket *CMessagePacket::ParseStream( CDataStream *pRxStream )
             {
                 if ( readBit == 1 )
                 {
-                    // We've read two 1's
+                    // We've __read two 1's
                     byteLockPos = 3;
                 }
                 else
                 {
-                    // We've read two 1's and a zero
+                    // We've __read two 1's and a zero
                     byteLockPos = 4;
                 }
             }
@@ -170,7 +170,7 @@ CMessagePacket *CMessagePacket::ParseStream( CDataStream *pRxStream )
     }
 
 #if DEBUG_MESSAGES
-    printf( "Byte lock acquired\n" );
+    __printf( "Byte lock acquired\n" );
 #endif
 
     // Read header
@@ -218,7 +218,7 @@ CMessagePacket *CMessagePacket::ParseStream( CDataStream *pRxStream )
         pNewPacket->SetDataByteAt( data_pos, read_byte );
     }
 
-    // Now read in checksum
+    // Now __read in checksum
     if ( pNewPacket->IsLargeChecksum() )
     {
         // Read in a large checksum!
@@ -258,9 +258,9 @@ CMessagePacket *CMessagePacket::ParseStream( CDataStream *pRxStream )
     }
 
 #ifdef DEBUG_MESSAGES
-    printf( "Packet received\n" );
+    __printf( "Packet received\n" );
 #endif
 
-    // Return newly read packet
+    // Return newly __read packet
     return (pNewPacket);
 }

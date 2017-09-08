@@ -4,7 +4,7 @@ Author: James Connor (jymbo@cromulence.com)
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -53,9 +53,9 @@ void get_bytes(unsigned char *buf, unsigned int num){
 }
 
 void prime_buf(unsigned char *buf){
-	bzero(buf, MAX_MESSAGE_LEN+8);
+	__bzero(buf, MAX_MESSAGE_LEN+8);
 	unsigned char ok[12] = { 0xa5, 0x5a, 0x0a, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-	memcpy(buf,ok,12);
+	__memcpy(buf,ok,12);
 	return;
 }
 
@@ -76,7 +76,7 @@ int get_command(pState state){
 	//message is len + 8 (2 magic, 2 len, 4 checkval)
 	//magic = 0xa55a, short len, short command, var subcommand, var data, int checkval
 
-	// unsigned char *buf = malloc(MAX_MESSAGE_LEN+8);
+	// unsigned char *buf = __malloc(MAX_MESSAGE_LEN+8);
 	unsigned char buf[MAX_MESSAGE_LEN+8];	
 	unsigned int checkval = 0;
 	unsigned int calc_checkval = 0;
@@ -94,7 +94,7 @@ int get_command(pState state){
 	pStep steps = NULL;
 	int ret = -1;
 	unsigned int fw = 0;
-	bzero(buf,MAX_MESSAGE_LEN+8);
+	__bzero(buf,MAX_MESSAGE_LEN+8);
 
 	//get magic
 	get_bytes(buf ,2);
@@ -102,7 +102,7 @@ int get_command(pState state){
 	if (magic != MAGIC){
 		prime_buf(buf);
 		send(buf,12);
-		//free(buf);
+		//__free(buf);
 		return 1;
 	}
 
@@ -113,7 +113,7 @@ int get_command(pState state){
 	if (len > MAX_MESSAGE_LEN){
 		prime_buf(buf);
 		send(buf,12);
-		//free(buf);
+		//__free(buf);
 		return 1;
 	}
 
@@ -127,7 +127,7 @@ int get_command(pState state){
 		//bad check_val
 		prime_buf(buf);
 		send(buf,12);
-		//free(buf);
+		//__free(buf);
 		return 1;
 	}
 
@@ -217,13 +217,13 @@ int get_command(pState state){
 			prime_buf(buf);
 			unsigned int lenz = 0;
 			unsigned int program[30];
-			bzero(program,120);
+			__bzero(program,120);
 			buf[4]=1;
 			buf[6]=7;
 			get_program(state, &lenz, program);
 			lenz = lenz*3*sizeof(int);
-			memcpy(buf+8,&lenz,sizeof(int));
-			memcpy(buf+12,program,lenz);
+			__memcpy(buf+8,&lenz,sizeof(int));
+			__memcpy(buf+12,program,lenz);
 			send(buf,lenz + 12);
 			break;
 		}
@@ -235,8 +235,8 @@ int get_command(pState state){
 			unsigned int status[6];
 			int len = 24;
 			ret = get_status(state,status);
-			memcpy(buf+8,&len,sizeof(int));
-			memcpy(buf+12,status,24); 
+			__memcpy(buf+8,&len,sizeof(int));
+			__memcpy(buf+12,status,24); 
 			send(buf,36);
 			break;
 		}
@@ -251,7 +251,7 @@ int get_command(pState state){
 			unsigned int setTemp = state->setTemp;
 			if (ret == 0 ){
 				buf[6] = 9;
-				memcpy(buf+8, &currentTime ,sizeof(int));
+				__memcpy(buf+8, &currentTime ,sizeof(int));
 				send(buf,12);
 			}
 			if(ret == 2){
@@ -264,13 +264,13 @@ int get_command(pState state){
 				
 				new_state(state);
 				if (historyListSize > 0){
-					memcpy(buf+8, &historyListSize, sizeof(historyListSize));
-					memcpy(buf+12, pHistoryList, histSize);
+					__memcpy(buf+8, &historyListSize, sizeof(historyListSize));
+					__memcpy(buf+12, pHistoryList, histSize);
 					bufsize = histSize + 12;
 				}
-				memcpy(buf+bufsize, &ambientTemp, sizeof(unsigned int));
+				__memcpy(buf+bufsize, &ambientTemp, sizeof(unsigned int));
 				bufsize+=4;
-				memcpy(buf+bufsize, &setTemp, sizeof(unsigned int));
+				__memcpy(buf+bufsize, &setTemp, sizeof(unsigned int));
 				bufsize+=4;
 				send(buf, bufsize);
 				//new_state(state);
@@ -286,11 +286,11 @@ int get_command(pState state){
 			buf[4]=1;
 			buf[6]=0xa;
 			buf[8]=4;
-			memcpy(buf+12, &fw,sizeof(int) );
+			__memcpy(buf+12, &fw,sizeof(int) );
 			send(buf, 16);
 			break;
 		}
-		case 0xb:{//read sensor list
+		case 0xb:{//__read sensor list
 			prime_buf(buf);
 			int len = 0;
 			buf[4]=1;
@@ -299,8 +299,8 @@ int get_command(pState state){
 			//buff is filled with sensor bytes
 			unsigned int sensorList[40*sizeof(int)];
 			get_sensors(state,sensorList);
-			memcpy(buf+8,&len,sizeof(int));
-			memcpy(buf+12,sensorList,len);
+			__memcpy(buf+8,&len,sizeof(int));
+			__memcpy(buf+12,sensorList,len);
 			send(buf, len+12);
 			break;
 		}
@@ -316,7 +316,7 @@ int get_command(pState state){
 
 
 		case 0xff:{
-			//free(buf);
+			//__free(buf);
 			exit_normal();
 
 			break;
@@ -332,7 +332,7 @@ int get_command(pState state){
 
 
 	}
-	// free(buf);
+	// __free(buf);
 	
 	return 0;
 }

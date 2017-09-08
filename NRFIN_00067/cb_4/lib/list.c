@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -27,7 +27,7 @@
 
 struct node *list_create_node(void *data) {
 
-	struct node *np = malloc(sizeof(struct node));
+	struct node *np = __malloc(sizeof(struct node));
 	if (NULL == np) {
 		return np;
 	}
@@ -48,7 +48,7 @@ void list_destroy_node(struct list *l, struct node **n) {
 	(*n)->prev = NULL;
 
 	// destroy node
-	free(*n);
+	__free(*n);
 	*n = NULL;
 }
 

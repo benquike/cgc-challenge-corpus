@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -36,10 +36,10 @@ int main()
     int user = USER;
 
     init_movies();
-    printf("========= Movie Rental Service v0.1 =========\n");
-    printf("   . . . Initializing the inventory . . .\n");
-    printf("         (movie info from IMDb.com)\n");
-    printf("=============================================\n");
+    __printf("========= Movie Rental Service v0.1 =========\n");
+    __printf("   . . . Initializing the inventory . . .\n");
+    __printf("         (movie info from IMDb.com)\n");
+    __printf("=============================================\n");
 
 
     while (!exited) {
@@ -54,7 +54,7 @@ int main()
             run_debug_mode(&user);
 
         if (!exited)
-            printf("\n");
+            __printf("\n");
     }
-    printf("Bye!\n");
+    __printf("Bye!\n");
 }

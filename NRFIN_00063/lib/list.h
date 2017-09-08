@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -32,7 +32,7 @@
  */
 
 /**
- * Pointer to function to free the data element of a node.
+ * Pointer to function to __free the data element of a node.
  *
  * @param data Data element of a struct node
  */
@@ -71,7 +71,7 @@ void list_destroy_node(struct list *l, struct node **n);
  * Allocate a new list
  *
  * @param l 	Pointer to list
- * @param ndf 	Node data free'ing function
+ * @param ndf 	Node data __free'ing function
  */
 void list_init(struct list *l, nodeDataFreeFn ndf);
 

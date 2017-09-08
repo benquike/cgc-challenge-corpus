@@ -7,12 +7,12 @@ extern void terminate(int);
 
 extern "C" void __cxa_pure_virtual()
 {
-    printf("Virtual Function....\n");
+    __printf("Virtual Function....\n");
 }
 
 void *operator new(unsigned int size)
 {
-    return malloc(size);
+    return __malloc(size);
 }
 
 void *operator new[](unsigned int size)
@@ -22,7 +22,7 @@ void *operator new[](unsigned int size)
 
 void operator delete(void *p)
 {
-    free(p);
+    __free(p);
 }
 
 void operator delete[](void *p)

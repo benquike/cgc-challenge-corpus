@@ -4,7 +4,7 @@ Copyright (c) 2015 Cromulence LLC
 
 Authors: Cromulence <cgc@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -57,17 +57,17 @@ void srand( unsigned int seed )
 	seed_prng( seed );
 }
 
-int isnan( double val )
+int __isnan( double val )
 {
     return __builtin_isnan( val );
 }
 
-int isinf( double val )
+int __isinf( double val )
 {
     return __builtin_isinf( val );
 }
 
-// int isdigit( int c )
+// int __isdigit( int c )
 // {
 //     if ( c >= '0' && c <= '9' )
 //         return 1;
@@ -75,12 +75,12 @@ int isinf( double val )
 //         return 0;
 // }
 
-int atoi( const char *pStr )
+int __atoi( const char *pStr )
 {
 	int value = 0;
 	int negative = 0;
 
-	while ( isspace( *pStr ) )
+	while ( __isspace( *pStr ) )
 		pStr++;
 
 	if ( *pStr == '\0' )
@@ -93,7 +93,7 @@ int atoi( const char *pStr )
 	}
 
 	// Read in string
-	while ( isdigit( *pStr ) )
+	while ( __isdigit( *pStr ) )
 		value = (value * 10) + (*pStr++ - '0');
 
 	if ( negative )
@@ -102,7 +102,7 @@ int atoi( const char *pStr )
 		return value;	
 }
 
-double atof( char *pStr )
+double __atof( char *pStr )
 {
 	double whole;
 	double fraction = 0.0;
@@ -123,12 +123,12 @@ double atof( char *pStr )
 	}
 	
 	// convert the whole part
-	whole = atoi(pWhole);
+	whole = __atoi(pWhole);
 
 	// convert the fractional part
 	if (*pFraction != '\0') {
-		fraction = atoi(pFraction);
-		while ( pFraction != '\0' && isdigit( *pFraction ) ) {
+		fraction = __atoi(pFraction);
+		while ( pFraction != '\0' && __isdigit( *pFraction ) ) {
 			fraction /= 10.0;
 			pFraction++;
 		}
@@ -139,7 +139,7 @@ double atof( char *pStr )
 }
 	
 
-char *strcpy( char *pDest, const char *pSrc )
+char *__strcpy( char *pDest, const char *pSrc )
 {
 	char *pDestReturn = pDest;
 
@@ -151,7 +151,7 @@ char *strcpy( char *pDest, const char *pSrc )
 	return (pDestReturn);
 }
 
-char *strncpy( char *pDest, const char *pSrc, size_t maxlen )
+char *__strncpy( char *pDest, const char *pSrc, size_t maxlen )
 {
 	size_t n;
 
@@ -169,7 +169,7 @@ char *strncpy( char *pDest, const char *pSrc, size_t maxlen )
 	return (pDest);
 }
 
-void *memcpy( void *pDest, const void *pSource, size_t nbytes )
+void *__memcpy( void *pDest, const void *pSource, size_t nbytes )
 {
 	void *pDestReturn = pDest;
 

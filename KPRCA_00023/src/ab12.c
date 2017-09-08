@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -59,7 +59,7 @@ int contains(const char *arr[], char *e)
 {
   const char **cur = arr;
   while (*cur != NULL) {
-    if (strncmp((char *)*cur, e, strlen(*cur)) == 0) {
+    if (strncmp((char *)*cur, e, __strlen(*cur)) == 0) {
       return 1;
     } else {
       cur++;
@@ -102,8 +102,8 @@ int within(int min, int max, int x)
 
 int all_digits(char *input)
 {
-  for (size_t i = 0; i < strlen(input); i++)
-    if (!isdigit(input[i])) {
+  for (size_t i = 0; i < __strlen(input); i++)
+    if (!__isdigit(input[i])) {
       return 0;
     }
 
@@ -113,42 +113,42 @@ int all_digits(char *input)
 int validate_day(char *input)
 {
   if (!all_digits(input)) return 0;
-  return within(1, 31, strtol(input, NULL, 10));
+  return within(1, 31, __strtol(input, NULL, 10));
 }
 
 int validate_month(char *input)
 {
   if (!all_digits(input)) return 0;
-  return within(1, 12, strtol(input, NULL, 10));
+  return within(1, 12, __strtol(input, NULL, 10));
 }
 
 int validate_year(char *input)
 {
   if (!all_digits(input)) return 0;
-  return within(1900, 2014, strtol(input, NULL, 10));
+  return within(1900, 2014, __strtol(input, NULL, 10));
 }
 
 int validate_height_inches(char *input)
 {
   if (!all_digits(input)) return 0;
-  return within(0, 11, strtol(input, NULL, 10));
+  return within(0, 11, __strtol(input, NULL, 10));
 }
 
 int validate_height_feet(char *input)
 {
   if (!all_digits(input)) return 0;
-  return within(1, 9, strtol(input, NULL, 10));
+  return within(1, 9, __strtol(input, NULL, 10));
 }
 
 int validate_weight(char *input)
 {
   if (!all_digits(input)) return 0;
-  return within(50, 500, strtol(input, NULL, 10));
+  return within(50, 500, __strtol(input, NULL, 10));
 }
 
 int validate_name(char *input)
 {
-  for (size_t i = 0; i < strlen(input); i++)
+  for (size_t i = 0; i < __strlen(input); i++)
     if (!isprint(input[i]) && input[i] != '\'')
       return 0;
 
@@ -160,10 +160,10 @@ int validate_email(char *input)
   int has_at = 0;
   char c;
 
-  if (strlen(input) < 3 || strlen(input) > 64)
+  if (__strlen(input) < 3 || __strlen(input) > 64)
     return 0;
 
-  for (size_t i = 0; i < strlen(input); i++) {
+  for (size_t i = 0; i < __strlen(input); i++) {
     c = input[i];
 
     if (c == '@') {
@@ -175,7 +175,7 @@ int validate_email(char *input)
       }
     }
 
-    if (!(isalnum(c) || c == '.' || c == '-' || c == '_'))
+    if (!(__isalnum(c) || c == '.' || c == '-' || c == '_'))
       return 0;
   }
 
@@ -184,11 +184,11 @@ int validate_email(char *input)
 
 int validate_street(char *input)
 {
-  if (strlen(input) > 32 || strlen(input) < 3)
+  if (__strlen(input) > 32 || __strlen(input) < 3)
     return 0;
 
-  for (size_t i = 0; i < strlen(input); i++)
-    if (!(isalnum(input[i]) || isspace(input[i]) || ispunct(input[i])))
+  for (size_t i = 0; i < __strlen(input); i++)
+    if (!(__isalnum(input[i]) || __isspace(input[i]) || ispunct(input[i])))
       return 0;
 
   return 1;
@@ -196,11 +196,11 @@ int validate_street(char *input)
 
 int validate_city(char *input)
 {
-  if (strlen(input) > 32 || strlen(input) < 4)
+  if (__strlen(input) > 32 || __strlen(input) < 4)
     return 0;
 
-  for (size_t i = 0; i < strlen(input); i++)
-    if (!(isalnum(input[i]) || isspace(input[i]) || ispunct(input[i])))
+  for (size_t i = 0; i < __strlen(input); i++)
+    if (!(__isalnum(input[i]) || __isspace(input[i]) || ispunct(input[i])))
       return 0;
 
   return 1;
@@ -208,11 +208,11 @@ int validate_city(char *input)
 
 int validate_zip(char *input)
 {
-  if (strlen(input) != 5)
+  if (__strlen(input) != 5)
     return 0;
 
   for (int i = 0; i < 5; i++)
-    if (!isdigit(input[i]))
+    if (!__isdigit(input[i]))
       return 0;
 
   return 1;
@@ -220,7 +220,7 @@ int validate_zip(char *input)
 
 int validate_phone(char *input)
 {
-  if (strlen(input) != 12)
+  if (__strlen(input) != 12)
     return 0;
 
   for (int i = 0; i < 12; i++)
@@ -228,7 +228,7 @@ int validate_phone(char *input)
       if (input[i] != '-')
         return 0;
     } else {
-      if (!isdigit(input[i]))
+      if (!__isdigit(input[i]))
         return 0;
     }
 
@@ -237,7 +237,7 @@ int validate_phone(char *input)
 
 int validate_sex(char *input)
 {
-  if (strlen(input) != 1)
+  if (__strlen(input) != 1)
     return 0;
 
   if (input[0] != 'M' && input[0] != 'F')
@@ -248,7 +248,7 @@ int validate_sex(char *input)
 
 int validate_yes_no(char *input)
 {
-  if (strlen(input) != 1)
+  if (__strlen(input) != 1)
     return 0;
 
   if (input[0] != 'Y' && input[0] != 'N')
@@ -259,14 +259,14 @@ int validate_yes_no(char *input)
 
 int validate_gpa(char *input)
 {
-  if (strlen(input) != 4)
+  if (__strlen(input) != 4)
     return 0;
 
   for (int i = 0; i < 4; i++) {
     if (i == 1) {
       if (input[i] != '.')
         return 0;
-    } else if (!isdigit(input[i]))
+    } else if (!__isdigit(input[i]))
       return 0;
   }
 
@@ -429,7 +429,7 @@ form_t af86 = {
   .ending = "\n\n"
     "You have completed your application with the Sea Eye Association.\nYou "
     "may review the form. Navigate through the application with **prev and "
-    "**next.\nOnce your are satisfied type **exit to exit and submit the "
+    "**next.\nOnce your are satisfied type **__exit to __exit and submit the "
     "form\nIf you wish to discard your application, please use Control-C\n",
 
   .greeting = "\n\n"
@@ -445,7 +445,7 @@ form_t af86 = {
     "**next <Move to the next page>\n"
     "**update [id] <Update field, ex: \"Update First Name\">\n"
     "**help <Print this dialogue>\n"
-    "**exit <Exit application>\n",
+    "**__exit <Exit application>\n",
 
   .init = init_af86,
 

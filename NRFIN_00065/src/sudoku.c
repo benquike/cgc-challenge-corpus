@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -31,7 +31,7 @@ read_board(char *board)
 {
     int i;
 
-    if (fread(board, 10 * 9, stdin) != 10 * 9)
+    if (__fread(board, 10 * 9, stdin) != 10 * 9)
         return EXIT_FAILURE;
 
     for (i = 0; i < 10 * 9; i++) {
@@ -39,7 +39,7 @@ read_board(char *board)
             if (board[i] != '\n')
                 return EXIT_FAILURE;
         } else {
-            if (strchr("123456789 ", board[i]) == NULL)
+            if (__strchr("123456789 ", board[i]) == NULL)
                 return EXIT_FAILURE;
         }
     }
@@ -136,7 +136,7 @@ static int solve_board(char *board, char *square)
 {
     char num, *next_square;
 
-    if ((next_square = strchr(square, ' ')) == NULL)
+    if ((next_square = __strchr(square, ' ')) == NULL)
         return EXIT_SUCCESS;
 
     for (num = '1'; num <= '9'; num++) {
@@ -157,18 +157,18 @@ do_sudoku()
     // 9 rows of 9 chars + newlines for each row
     char board[10 * 9];
 
-    printf("Let me help you cheat at sudoku, enter your board n00b:\n");
+    __printf("Let me help you cheat at sudoku, enter your board n00b:\n");
 
     if (read_board(board) != EXIT_SUCCESS) {
-        printf("Invalid board\n");
+        __printf("Invalid board\n");
         return EXIT_SUCCESS;
     }
 
     game_state.games.sudoku.fitness = validate_board(board);
     if (solve_board(board, board) != EXIT_SUCCESS)
-        printf("Nice try\n");
+        __printf("Nice try\n");
     else
-        printf("Solved!\n%s\n", board);
+        __printf("Solved!\n%s\n", board);
 
     return EXIT_SUCCESS;
 }

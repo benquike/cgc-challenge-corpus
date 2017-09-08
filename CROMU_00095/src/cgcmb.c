@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -46,17 +46,17 @@ void AddToData(CGCMB_Data *data, uint8_t *source, uint32_t count)
   }
   if (data->data == NULL)
   {
-    data->data = calloc(count);
+    data->data = __calloc(count);
     data->count = count;
-    memcpy(data->data, source, count);
+    __memcpy(data->data, source, count);
   } 
   else 
   { 
-    uint8_t *newdata = calloc(data->count + count);
-    memcpy(newdata, data->data, data->count);
-    memcpy(newdata + data->count, source, count);
+    uint8_t *newdata = __calloc(data->count + count);
+    __memcpy(newdata, data->data, data->count);
+    __memcpy(newdata + data->count, source, count);
     data->count += count;
-    free(data->data);
+    __free(data->data);
     data->data = newdata;
   }
 }      
@@ -100,7 +100,7 @@ int ReceiveCGCMBMessage(TransportMessage *tpMessage, CGCMB_Message **pmbMessage)
   }
   if (params->count != 0)
   {
-    params->data = calloc(params->count);
+    params->data = __calloc(params->count);
     if (ReadFromTransportMessage(tpMessage, (uint8_t *)params->data, params->count) != 0)
     {
       goto FAIL;
@@ -114,7 +114,7 @@ int ReceiveCGCMBMessage(TransportMessage *tpMessage, CGCMB_Message **pmbMessage)
   }
   if (data->count != 0)
   {
-    data->data = calloc(data->count);
+    data->data = __calloc(data->count);
     if (ReadFromTransportMessage(tpMessage, (uint8_t *)data->data, data->count) != 0)
     {
       goto FAIL;
@@ -152,7 +152,7 @@ int ReadFromData(uint8_t *dest, CGCMB_Data *source, uint32_t length)
   {
     return -1;
   }
-  memcpy(dest, source->data + source->currentOffset, length);
+  __memcpy(dest, source->data + source->currentOffset, length);
   source->currentOffset += length;
   return 0;
 }
@@ -168,17 +168,17 @@ int ParseCGCMBMessage(CGCMB_Message *mbMessage)
   {
     case CGCMB_NEGOTIATE:  
     {
-      mbMessage->parsed = calloc(sizeof(CGCMB_NEGOTIATE_Message));
+      mbMessage->parsed = __calloc(sizeof(CGCMB_NEGOTIATE_Message));
       CGCMB_NEGOTIATE_Message *msg = mbMessage->parsed;
       msg->numDialects = mbMessage->data->count / 2;
       if (msg->numDialects == 0) {break;}
-      msg->dialects = calloc(sizeof(msg->numDialects * 2));
+      msg->dialects = __calloc(sizeof(msg->numDialects * 2));
       if (ReadFromData((uint8_t *)msg->dialects, mbMessage->data, msg->numDialects * 2) != 0) {break;}  
       break;
     }    
     case CGCMB_SESSION_SETUP: 
     {
-      CGCMB_SESSION_SETUP_Message *msg = calloc(sizeof(CGCMB_SESSION_SETUP_Message));
+      CGCMB_SESSION_SETUP_Message *msg = __calloc(sizeof(CGCMB_SESSION_SETUP_Message));
       mbMessage->parsed = msg;
       if (ReadFromData((uint8_t *)&msg->sessionKey, mbMessage->parameters, sizeof(msg->sessionKey)) != 0)
       {
@@ -188,39 +188,39 @@ int ParseCGCMBMessage(CGCMB_Message *mbMessage)
       if (ReadFromData((uint8_t *)&passwordLength, mbMessage->parameters, sizeof(passwordLength)) != 0) {break;}
       if (ReadFromData((uint8_t *)&msg->reserved, mbMessage->parameters, sizeof(msg->reserved)) != 0) {break;}
       if ((passwordLength == 0) || (passwordLength > 64)) {break;}
-      msg->password = calloc(passwordLength + 1);
+      msg->password = __calloc(passwordLength + 1);
       if (ReadFromData(msg->password, mbMessage->data, passwordLength) != 0) {break;}
       uint16_t nameLength;
       if ((nameLength == 0) || (nameLength > 128)) {break;}
       if (ReadFromData((uint8_t *)&nameLength, mbMessage->data, sizeof(nameLength)) != 0) {break;}
-      msg->accountName = calloc(nameLength + 1);
+      msg->accountName = __calloc(nameLength + 1);
       if (ReadFromData(msg->accountName, mbMessage->data, nameLength) != 0) {break;}
       break;
     }
     case CGCMB_TREE_CONNECT:
     {
-      CGCMB_TREE_CONNECT_Message *msg = calloc(sizeof(CGCMB_TREE_CONNECT_Message));
+      CGCMB_TREE_CONNECT_Message *msg = __calloc(sizeof(CGCMB_TREE_CONNECT_Message));
       mbMessage->parsed = msg;
       if (ReadFromData((uint8_t *)&msg->sessionKey, mbMessage->parameters, sizeof(msg->sessionKey)) != 0) {break;}
       if (ReadFromData((uint8_t *)&msg->userID, mbMessage->parameters, sizeof(msg->userID)) != 0) {break;}
       uint16_t length;
       if (ReadFromData((uint8_t *)&length, mbMessage->data, sizeof(length)) != 0) {break;}
       if ((length == 0) || (length > 64)) {break;}
-      msg->password = calloc(length + 1);
+      msg->password = __calloc(length + 1);
       if (ReadFromData(msg->password, mbMessage->data, length) != 0) {break;}
       if (ReadFromData((uint8_t *)&length, mbMessage->data, sizeof(length)) != 0) {break;}
       if ((length == 0) || (length > 128)) {break;}
-      msg->path = calloc(length + 1);
+      msg->path = __calloc(length + 1);
       if (ReadFromData(msg->path, mbMessage->data, length) != 0) {break;}
       if (ReadFromData((uint8_t *)&length, mbMessage->data, sizeof(length)) != 0) {break;}
       if ((length == 0) || (length > 128))  {break;}
-      msg->service = calloc(length + 1);
+      msg->service = __calloc(length + 1);
       if (ReadFromData(msg->service, mbMessage->data, length) != 0) {break;}
       break;
     }
     case CGCMB_TREE_DISCONNECT:
     {
-      CGCMB_TREE_DISCONNECT_Message *msg = calloc(sizeof(CGCMB_TREE_DISCONNECT_Message));
+      CGCMB_TREE_DISCONNECT_Message *msg = __calloc(sizeof(CGCMB_TREE_DISCONNECT_Message));
       mbMessage->parsed = msg;
       if (ReadFromData((uint8_t *)&msg->sessionKey, mbMessage->parameters, sizeof(msg->sessionKey)) != 0) {break;}
       if (ReadFromData((uint8_t *)&msg->userID, mbMessage->parameters, sizeof(msg->userID)) != 0) {break;}
@@ -229,7 +229,7 @@ int ParseCGCMBMessage(CGCMB_Message *mbMessage)
     }
     case CGCMB_FILE_CREATE:  
     {
-      CGCMB_FILE_CREATE_Message *msg = calloc(sizeof(CGCMB_FILE_CREATE_Message));
+      CGCMB_FILE_CREATE_Message *msg = __calloc(sizeof(CGCMB_FILE_CREATE_Message));
       mbMessage->parsed = msg;
       if (ReadFromData((uint8_t *)&msg->sessionKey, mbMessage->parameters, sizeof(msg->sessionKey)) != 0) {break;}
       if (ReadFromData((uint8_t *)&msg->userID, mbMessage->parameters, sizeof(msg->userID)) != 0) {break;}
@@ -238,13 +238,13 @@ int ParseCGCMBMessage(CGCMB_Message *mbMessage)
       uint16_t length;
       if (ReadFromData((uint8_t *)&length, mbMessage->data, sizeof(length)) != 0) {break;}
       if ((length == 0) || (length > 128)) {break;}
-      msg->filename = calloc(length + 1);
+      msg->filename = __calloc(length + 1);
       if (ReadFromData(msg->filename, mbMessage->data, length) != 0) {break;}
       break;
     }
     case CGCMB_FILE_CLOSE:  
     {
-      CGCMB_FILE_CLOSE_Message *msg = calloc(sizeof(CGCMB_FILE_CLOSE_Message));
+      CGCMB_FILE_CLOSE_Message *msg = __calloc(sizeof(CGCMB_FILE_CLOSE_Message));
       mbMessage->parsed = msg;
       if (ReadFromData((uint8_t *)&msg->sessionKey, mbMessage->parameters, sizeof(msg->sessionKey)) != 0) {break;}
       if (ReadFromData((uint8_t *)&msg->userID, mbMessage->parameters, sizeof(msg->userID)) != 0) {break;}
@@ -254,7 +254,7 @@ int ParseCGCMBMessage(CGCMB_Message *mbMessage)
     } 
     case CGCMB_FILE_READ:  
     {
-      CGCMB_FILE_READ_Message *msg = calloc(sizeof(CGCMB_FILE_READ_Message));
+      CGCMB_FILE_READ_Message *msg = __calloc(sizeof(CGCMB_FILE_READ_Message));
       mbMessage->parsed = msg;
       if (ReadFromData((uint8_t *)&msg->sessionKey, mbMessage->parameters, sizeof(msg->sessionKey)) != 0) {break;}
       if (ReadFromData((uint8_t *)&msg->userID, mbMessage->parameters, sizeof(msg->userID)) != 0) {break;}
@@ -266,7 +266,7 @@ int ParseCGCMBMessage(CGCMB_Message *mbMessage)
     }
     case CGCMB_FILE_WRITE:  
     {
-      CGCMB_FILE_WRITE_Message *msg = calloc(sizeof(CGCMB_FILE_WRITE_Message));
+      CGCMB_FILE_WRITE_Message *msg = __calloc(sizeof(CGCMB_FILE_WRITE_Message));
       mbMessage->parsed = msg;
       if (ReadFromData((uint8_t *)&msg->sessionKey, mbMessage->parameters, sizeof(msg->sessionKey)) != 0) {break;}
       if (ReadFromData((uint8_t *)&msg->userID, mbMessage->parameters, sizeof(msg->userID)) != 0) {break;}
@@ -276,13 +276,13 @@ int ParseCGCMBMessage(CGCMB_Message *mbMessage)
       if (ReadFromData((uint8_t *)&msg->bytesToWrite, mbMessage->data, sizeof(msg->bytesToWrite)) != 0) {break;}
       if (ReadFromData((uint8_t *)&msg->writeOffset, mbMessage->data, sizeof(msg->writeOffset)) != 0) {break;}
       if ((msg->bytesToWrite == 0) || (msg->bytesToWrite > MAX_WRITE_SIZE)) {break;}
-      msg->bytes = calloc(msg->bytesToWrite);
+      msg->bytes = __calloc(msg->bytesToWrite);
       if (ReadFromData(msg->bytes, mbMessage->data, msg->bytesToWrite) != 0) {break;}
       break;
     } 
     case CGCMB_TRANSACTION:    
     {
-      CGCMB_TRANSACTION_Message *msg = calloc(sizeof(CGCMB_TRANSACTION_Message));
+      CGCMB_TRANSACTION_Message *msg = __calloc(sizeof(CGCMB_TRANSACTION_Message));
       mbMessage->parsed = msg;
       if (ReadFromData((uint8_t *)&msg->sessionKey, mbMessage->parameters, sizeof(msg->sessionKey)) != 0) {break;}
       if (ReadFromData((uint8_t *)&msg->userID, mbMessage->parameters, sizeof(msg->userID)) != 0) {break;}
@@ -471,7 +471,7 @@ int HandleCGCMBMessage(CGCMB_Message *mbMessage)
       {
         if (mbServerState->connections[i] == NULL)
         {
-          mbServerState->connections[i] = calloc(sizeof(CGCMB_Connection));
+          mbServerState->connections[i] = __calloc(sizeof(CGCMB_Connection));
           connection = mbServerState->connections[i];
           break;
         }
@@ -522,7 +522,7 @@ int HandleCGCMBMessage(CGCMB_Message *mbMessage)
         {
           if (mbServerState->connections[i]->connectionID == msg->connectionID)
           {
-            free(mbServerState->connections[i]);
+            __free(mbServerState->connections[i]);
             mbServerState->connections[i] = NULL;
             CGCMB_Message *mbResponse = CreateBlankCGCMBMessage();
             mbResponse->header->command = CGCMB_TREE_DISCONNECT_RESPONSE;
@@ -679,11 +679,11 @@ int HandleCGCMBMessage(CGCMB_Message *mbMessage)
         SendErrorResponse(CGCMB_ERROR_FORMAT);
         break;
       }
-      uint8_t *data = calloc(msg->bytesToRead);
+      uint8_t *data = __calloc(msg->bytesToRead);
       if (ReadFile(data, file, msg->readOffset, msg->bytesToRead) != 0)
       {
         SendErrorResponse(CGCMB_ERROR_FILE);
-        free(data);
+        __free(data);
         break;
       }
       CGCMB_Message *mbResponse = CreateBlankCGCMBMessage();
@@ -694,7 +694,7 @@ int HandleCGCMBMessage(CGCMB_Message *mbMessage)
       AddToData(mbResponse->parameters, (uint8_t *)&msg->bytesToRead, sizeof(msg->bytesToRead));
       AddToData(mbResponse->data, data, msg->bytesToRead);
       TransmitCGCMBMessage(mbResponse);
-      free(data);
+      __free(data);
       DestroyCGCMBMessage(&mbResponse);
       break;
     }
@@ -788,7 +788,7 @@ int HandleCGCMBMessage(CGCMB_Message *mbMessage)
         SendErrorResponse(CGCMB_ERROR_NOT_FOUND);
         break;
       }
-      if (strcmp(connection->openTree->serviceType, "EYEPSEE") != 0)
+      if (__strcmp(connection->openTree->serviceType, "EYEPSEE") != 0)
       {
         SendErrorResponse(CGCMB_ERROR_TRANSACTION);
         break;
@@ -817,7 +817,7 @@ int HandleCGCMBMessage(CGCMB_Message *mbMessage)
       if ((pcResponseLength > 0) && (pcResponse != NULL))
       {
         AddToData(mbResponse->data, pcResponse, pcResponseLength);
-        free(pcResponse);
+        __free(pcResponse);
       }
       TransmitCGCMBMessage(mbResponse);
       DestroyCGCMBMessage(&mbResponse);
@@ -868,7 +868,7 @@ void DestroyCGCMBMessage(CGCMB_Message **pmbMessage)
       case CGCMB_NEGOTIATE:
       {
         CGCMB_NEGOTIATE_Message *msg = mbMessage->parsed;
-        free(msg->dialects);
+        __free(msg->dialects);
         break;
       }
       case CGCMB_SESSION_SETUP: 
@@ -876,8 +876,8 @@ void DestroyCGCMBMessage(CGCMB_Message **pmbMessage)
         CGCMB_SESSION_SETUP_Message *msg = mbMessage->parsed;
         if (msg != NULL)
         {
-          free(msg->password);
-          free(msg->accountName);
+          __free(msg->password);
+          __free(msg->accountName);
         }
         break;
       }
@@ -886,9 +886,9 @@ void DestroyCGCMBMessage(CGCMB_Message **pmbMessage)
         CGCMB_TREE_CONNECT_Message *msg = mbMessage->parsed;
         if (msg != NULL)
         {
-          free(msg->password);
-          free(msg->path);
-          free(msg->service);
+          __free(msg->password);
+          __free(msg->path);
+          __free(msg->service);
         }
         break;
       }
@@ -899,7 +899,7 @@ void DestroyCGCMBMessage(CGCMB_Message **pmbMessage)
         CGCMB_FILE_CREATE_Message *msg = mbMessage->parsed;
         if (msg != NULL)
         {
-          free(msg->filename);
+          __free(msg->filename);
         }
         break;
       }
@@ -912,7 +912,7 @@ void DestroyCGCMBMessage(CGCMB_Message **pmbMessage)
         CGCMB_FILE_WRITE_Message *msg = mbMessage->parsed;
         if (msg != NULL)
         {
-          free(msg->bytes);
+          __free(msg->bytes);
         }
         break;
       } 
@@ -927,31 +927,31 @@ void DestroyCGCMBMessage(CGCMB_Message **pmbMessage)
         _terminate(-1);
       }
     }
-    free(mbMessage->parsed);
+    __free(mbMessage->parsed);
   }
 
   if (mbMessage->data != NULL)
   {
-    free(mbMessage->data->data);
-    free(mbMessage->data);
+    __free(mbMessage->data->data);
+    __free(mbMessage->data);
   }
   if (mbMessage->parameters != NULL)
   {
-    free(mbMessage->parameters->data);
-    free(mbMessage->parameters);
+    __free(mbMessage->parameters->data);
+    __free(mbMessage->parameters);
   }
-  free(mbMessage->header);
-  free(mbMessage);
+  __free(mbMessage->header);
+  __free(mbMessage);
   *pmbMessage = NULL;
   return;
 }
 
 CGCMB_Message *CreateBlankCGCMBMessage()
 {
-  CGCMB_Message *mbMessage = calloc(sizeof(CGCMB_Message));
-  mbMessage->data = calloc(sizeof(CGCMB_Data));
-  mbMessage->parameters = calloc(sizeof(CGCMB_Data));
-  mbMessage->header = calloc(sizeof(CGCMB_Header));
+  CGCMB_Message *mbMessage = __calloc(sizeof(CGCMB_Message));
+  mbMessage->data = __calloc(sizeof(CGCMB_Data));
+  mbMessage->parameters = __calloc(sizeof(CGCMB_Data));
+  mbMessage->header = __calloc(sizeof(CGCMB_Header));
   mbMessage->header->protocol = CGCMB_MAGIC;
   return mbMessage;
 }
@@ -978,7 +978,7 @@ void TransmitCGCMBMessage(CGCMB_Message *mbMessage)
     return;
   }
   // Convert to transport and send
-  TransportMessage *tpMessage = calloc(sizeof(TransportMessage));
+  TransportMessage *tpMessage = __calloc(sizeof(TransportMessage));
   tpMessage->size = mbMessage->data->count + sizeof(mbMessage->data->count);
   tpMessage->size += mbMessage->parameters->count + sizeof(mbMessage->parameters->count);
   tpMessage->size += sizeof(mbMessage->header->security) + sizeof(mbMessage->header->flags) + sizeof(mbMessage->header->status) + sizeof(mbMessage->header->command) + sizeof(mbMessage->header->protocol);
@@ -988,22 +988,22 @@ void TransmitCGCMBMessage(CGCMB_Message *mbMessage)
     DestroyTransportMessage(&tpMessage);
     return;
   }
-  tpMessage->data = calloc(tpMessage->size);
+  tpMessage->data = __calloc(tpMessage->size);
   uint8_t *pdata = tpMessage->data;
-  memcpy(pdata, &mbMessage->header->protocol, sizeof(mbMessage->header->protocol)); pdata += sizeof(mbMessage->header->protocol);
-  memcpy(pdata, &mbMessage->header->command, sizeof(mbMessage->header->command)); pdata += sizeof(mbMessage->header->command);
-  memcpy(pdata, &mbMessage->header->status, sizeof(mbMessage->header->status)); pdata += sizeof(mbMessage->header->status);
-  memcpy(pdata, &mbMessage->header->flags, sizeof(mbMessage->header->flags)); pdata += sizeof(mbMessage->header->flags);
-  memcpy(pdata, mbMessage->header->security, sizeof(mbMessage->header->security)); pdata += sizeof(mbMessage->header->security);
-  memcpy(pdata, &mbMessage->parameters->count, sizeof(mbMessage->parameters->count)); pdata += sizeof(mbMessage->parameters->count);
+  __memcpy(pdata, &mbMessage->header->protocol, sizeof(mbMessage->header->protocol)); pdata += sizeof(mbMessage->header->protocol);
+  __memcpy(pdata, &mbMessage->header->command, sizeof(mbMessage->header->command)); pdata += sizeof(mbMessage->header->command);
+  __memcpy(pdata, &mbMessage->header->status, sizeof(mbMessage->header->status)); pdata += sizeof(mbMessage->header->status);
+  __memcpy(pdata, &mbMessage->header->flags, sizeof(mbMessage->header->flags)); pdata += sizeof(mbMessage->header->flags);
+  __memcpy(pdata, mbMessage->header->security, sizeof(mbMessage->header->security)); pdata += sizeof(mbMessage->header->security);
+  __memcpy(pdata, &mbMessage->parameters->count, sizeof(mbMessage->parameters->count)); pdata += sizeof(mbMessage->parameters->count);
   if (mbMessage->parameters->count > 0)
   {
-    memcpy(pdata, mbMessage->parameters->data, mbMessage->parameters->count); pdata += mbMessage->parameters->count;
+    __memcpy(pdata, mbMessage->parameters->data, mbMessage->parameters->count); pdata += mbMessage->parameters->count;
   }
-  memcpy(pdata, &mbMessage->data->count, sizeof(mbMessage->data->count)); pdata += sizeof(mbMessage->data->count);
+  __memcpy(pdata, &mbMessage->data->count, sizeof(mbMessage->data->count)); pdata += sizeof(mbMessage->data->count);
   if (mbMessage->data->count > 0)
   {
-    memcpy(pdata, mbMessage->data->data, mbMessage->data->count); pdata += mbMessage->data->count;
+    __memcpy(pdata, mbMessage->data->data, mbMessage->data->count); pdata += mbMessage->data->count;
   }
 
   SendTransportMessage(tpMessage);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -29,7 +29,7 @@ int get_card(hand_t **h, card_t *card)
     if (card == NULL)
         return -1;
 
-    hand_t *drawn_card = malloc(sizeof(hand_t));
+    hand_t *drawn_card = __malloc(sizeof(hand_t));
     hand_t *temp = *h;
     drawn_card->card = card;
     drawn_card->next = NULL;
@@ -51,7 +51,7 @@ int get_card_in_order(hand_t **h, card_t *card)
     if (card == NULL)
         return -1;
 
-    hand_t *drawn_card = malloc(sizeof(hand_t));
+    hand_t *drawn_card = __malloc(sizeof(hand_t));
     hand_t *temp = *h, *prev;
     drawn_card->card = card;
     drawn_card->next = NULL;
@@ -105,7 +105,7 @@ int remove_card(hand_t **h, card_t *card)
                 *h = temp->next;
             else
                 prev->next = temp->next;
-            free(temp);
+            __free(temp);
             return 0;
         }
         prev = temp;
@@ -124,8 +124,8 @@ void discard_hand(hand_t **h)
     while (temp_h->next != NULL) {
         temp = temp_h;
         temp_h = temp_h->next;
-        free(temp);
+        __free(temp);
     }
-    free(temp_h);
+    __free(temp_h);
     *h = NULL;
 }

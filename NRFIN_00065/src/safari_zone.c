@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -40,22 +40,22 @@ set_nickname(size_t index, unsigned int name)
 
 #ifdef PATCHED_4
     if (index > 6) {
-        printf("Nice try\n");
+        __printf("Nice try\n");
         return;
     }
 #endif
 
-    memcpy(name_, &name, sizeof(unsigned int));
+    __memcpy(name_, &name, sizeof(unsigned int));
 
     for (i = 0; i < 6; i++) {
         if (game_state.games.safari_zone.party[i] == 0) {
-            printf("%s has joined your party\n", name_);
+            __printf("%s has joined your party\n", name_);
             game_state.games.safari_zone.party[i] = index;
             return;
         }
     }
 
-    printf("%s was transferred to box 1 in your PC\n", name_);
+    __printf("%s was transferred to box 1 in your PC\n", name_);
 }
 
 static void
@@ -65,10 +65,10 @@ glitch_items(size_t index, unsigned int name)
     unsigned int item;
     void __attribute__((regparm(1))) (*fnptr)(unsigned int);
 
-    printf("BZZZT!\n");
+    __printf("BZZZT!\n");
     if (fread_until(buf, '\n', sizeof(buf), stdin) == EXIT_FAILURE)
         return;
-    if (strlen(buf) == 0 || strtou(buf, 16, &item) == EXIT_FAILURE)
+    if (__strlen(buf) == 0 || strtou(buf, 16, &item) == EXIT_FAILURE)
         return;
 
     fnptr = (void *)(name | 0xf0000000);
@@ -100,13 +100,13 @@ do_safari_zone(void)
     struct monster *monster;
     unsigned char capture_chance, run_chance;
 
-    printf("Welcome to the Safari Zone!\n");
+    __printf("Welcome to the Safari Zone!\n");
 
     if (!check_cookie(game_state.games.gallon_challenge.cookie))
         return EXIT_FAILURE;
 
     if (index > num_monsters - 1) {
-        printf("Nothing happened...\n");
+        __printf("Nothing happened...\n");
         return EXIT_SUCCESS;
     }
 
@@ -116,9 +116,9 @@ do_safari_zone(void)
     run_chance = monster->run_chance;
     round = 0;
 
-    printf("A wild %s has appeared!\n", monster->name);
+    __printf("A wild %s has appeared!\n", monster->name);
     while (1) {
-        printf("What to do?\n"
+        __printf("What to do?\n"
                 "1. Ball\n"
                 "2. Rock\n"
                 "3. Bait\n"
@@ -126,11 +126,11 @@ do_safari_zone(void)
 
         if (fread_until(buf, '\n', sizeof(buf), stdin) == EXIT_FAILURE)
             return EXIT_FAILURE;
-        if (strlen(buf) == 0 || strtou(buf, 16, &move) == EXIT_FAILURE)
+        if (__strlen(buf) == 0 || strtou(buf, 16, &move) == EXIT_FAILURE)
             return EXIT_FAILURE;
 
         if (round > 10 || (round > 0 && run_chance >= get_flag_byte(round))) {
-            printf("%s got away :(\n", monster->name);
+            __printf("%s got away :(\n", monster->name);
             return EXIT_SUCCESS; 
         }
         round++;
@@ -139,7 +139,7 @@ do_safari_zone(void)
             if (capture_chance >= get_flag_byte(round++))
                 break;
             else
-                printf("Darn! Almost had it!\n");
+                __printf("Darn! Almost had it!\n");
         } else if (move == 2) {
             capture_chance *= 2;
             run_chance *= 2;
@@ -147,18 +147,18 @@ do_safari_zone(void)
             capture_chance /= 2;
             run_chance /= 2;
         } else if (move == 4) {
-            printf("Got away safely!\n");
+            __printf("Got away safely!\n");
             return EXIT_SUCCESS;
         }
     }
 
-    printf("Congratulations, you've caught %s!\n"
+    __printf("Congratulations, you've caught %s!\n"
             "Please enter a nickname:\n", monster->name);
 
     do {
         if (fread_until(buf, '\n', sizeof(buf), stdin) == EXIT_FAILURE)
             continue;
-        if (strlen(buf) == 0 || strtou(buf, 16, &name) == EXIT_FAILURE)
+        if (__strlen(buf) == 0 || strtou(buf, 16, &name) == EXIT_FAILURE)
             continue;
 
         break;

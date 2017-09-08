@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -53,7 +53,7 @@ int deallocate(void *addr, size_t length)
 
 void _terminate(int ec)
 {
-    exit(ec);
+    __exit(ec);
 }
 #endif
 
@@ -82,7 +82,7 @@ static void *run_alloc(malloc_t *heap, int type)
     addri = (uintptr_t) addr;
     alignedi = ALIGNED(addri, RUN_SIZE);
 
-    /* free the memory that is extra */
+    /* __free the memory that is extra */
     if (addri < alignedi)
         deallocate((void *)addri, alignedi - addri);
     if (alignedi + RUN_SIZE < addri + RUN_SIZE * 2)
@@ -157,7 +157,7 @@ static void small_insert_free(malloc_t *heap, int bin, malloc_small_free_t *hdr)
 {
 #ifndef DISABLE_HEAP_GUARD
     if ((hdr->hdr.size_flags & 1) == 1)
-        heap_error("BAD SMALL UNLINK: block is already free hdr=%08X\n", (uintptr_t) hdr);
+        heap_error("BAD SMALL UNLINK: block is already __free hdr=%08X\n", (uintptr_t) hdr);
 #endif
 
     hdr->hdr.size_flags |= 1;
@@ -174,7 +174,7 @@ static void small_unlink_free(malloc_t *heap, int bin, malloc_small_free_t *hdr)
 {
 #ifndef DISABLE_HEAP_GUARD
     if ((hdr->hdr.size_flags & 1) == 0)
-        heap_error("BAD SMALL UNLINK: block is not free hdr=%08X\n", (uintptr_t) hdr);
+        heap_error("BAD SMALL UNLINK: block is not __free hdr=%08X\n", (uintptr_t) hdr);
 #endif
 
     hdr->hdr.size_flags &= ~1;
@@ -282,7 +282,7 @@ static void small_free(malloc_t *heap, void *ptr)
     if (addri & 7)
         heap_error("BAD SMALL FREE: address is not aligned ptr=%08X\n", addri);
     if (hdr->hdr.size_flags & 1)
-        heap_error("BAD SMALL FREE: double free ptr=%08x\n", addri);
+        heap_error("BAD SMALL FREE: double __free ptr=%08x\n", addri);
     if (hdr->hdr.size_flags > LARGE_SIZE || hdr->hdr.size_flags < SMALL_SIZE)
         heap_error("BAD SMALL FREE: corrupted size ptr=%08x\n", addri);
 
@@ -463,7 +463,7 @@ void *malloc_realloc(malloc_t *heap, void *ptr, size_t n)
     if (new_ptr == NULL)
         return NULL;
 
-    memcpy(new_ptr, ptr, malloc_size(heap, ptr));
+    __memcpy(new_ptr, ptr, malloc_size(heap, ptr));
 
     malloc_free(heap, ptr);
     return new_ptr;

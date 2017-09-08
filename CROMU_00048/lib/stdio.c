@@ -4,7 +4,7 @@ Copyright (c) 2015 Cromulence LLC
 
 Authors: Cromulence <cgc@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -118,7 +118,7 @@ int cromu_puts( const char *s )
 	size_t s_len;
 	size_t total_sent = 0;
 
-	s_len = strlen(s);
+	s_len = __strlen(s);
 
 	while (total_sent != s_len) {
 		if ( transmit( STDOUT, s+total_sent, s_len-total_sent, &tx_bytes ) != 0 ) {
@@ -212,7 +212,7 @@ int cromu_vsprintf( char *buf, const char *format, va_list args )
 	return iReturnValue;
 }
 
-// NOTE This is reversed -- it will be printed in reverse by the printf helper!
+// NOTE This is reversed -- it will be printed in reverse by the __printf helper!
 size_t printf_int_to_string( uint32_t val, uint32_t base, char *str, int32_t flags )
 {
 	size_t pos = 0;
@@ -346,14 +346,14 @@ size_t printf_float_to_string( double val, uint8_t fraction_precision_digit_coun
 
 		return pos;
 	}
-	else if ( isnan( val ) )
+	else if ( __isnan( val ) )
 	{
 		str[pos++] = 'N';
 		str[pos++] = 'a';
 		str[pos++] = 'N';
 		return pos;
 	}
-	else if ( isinf( val ) )
+	else if ( __isinf( val ) )
 	{
 		str[pos++] = 'I';
 		str[pos++] = 'N';
@@ -429,7 +429,7 @@ size_t printf_float_to_string( double val, uint8_t fraction_precision_digit_coun
 	{
 		double divider = pow( 10.0, magnitude );
 
-		if ( divider > 0.0 && !isinf(divider) )
+		if ( divider > 0.0 && !__isinf(divider) )
 		{
 			uint8_t digit = (uint8_t)floor( val / divider );
 			val -= ((double)digit * divider);
@@ -611,7 +611,7 @@ size_t printf_helper_string( void *ctx, tPrintfWrapperFP fpOut, size_t pos, cons
 		return (pos);
 	}
 
-	size_t max_printlen = strlen( outStr );
+	size_t max_printlen = __strlen( outStr );
 	size_t pad_length = 0;
 
 	if ( precision > 0 )
@@ -688,13 +688,13 @@ int wrapper_output( void *ctx, tPrintfWrapperFP fpOut, size_t pos, const char *f
 			}
 
 			// Check width
-			if ( isdigit( *format ) )
+			if ( __isdigit( *format ) )
 			{
 				if ( *format == '0' )
 					flags |= FLAG_ZERO_PAD;
 
 				const char *startpos = format;
-				while ( isdigit( *format ) )
+				while ( __isdigit( *format ) )
 					format++;
 
 				width = cromu_atoi( startpos );
@@ -712,7 +712,7 @@ int wrapper_output( void *ctx, tPrintfWrapperFP fpOut, size_t pos, const char *f
 					break;
 
 				const char *startpos = format;
-				while ( isdigit( *format ) )
+				while ( __isdigit( *format ) )
 					format++;
 
 				precision = cromu_atoi( startpos );

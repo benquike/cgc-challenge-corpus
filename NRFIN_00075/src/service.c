@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -66,16 +66,16 @@ ssize_t receive_input(void) {
     }
 
     // check for invalid INPUT_TYPE
-    if (memcmp(INPUT_TYPE_PLAIN, (const char *)tmp.type, sizeof(INPUT_TYPE_PLAIN)) &&
-        memcmp(INPUT_TYPE_SERIALIZED, (const char *)tmp.type, sizeof(INPUT_TYPE_SERIALIZED))) {
+    if (__memcmp(INPUT_TYPE_PLAIN, (const char *)tmp.type, sizeof(INPUT_TYPE_PLAIN)) &&
+        __memcmp(INPUT_TYPE_SERIALIZED, (const char *)tmp.type, sizeof(INPUT_TYPE_SERIALIZED))) {
         return -1;
     }
 
-    in = malloc(sizeof(tmp) + tmp.size);
+    in = __malloc(sizeof(tmp) + tmp.size);
     MALLOC_OK(in);
 
     in->size = tmp.size;
-    memcpy(in->type, tmp.type, sizeof(INPUT_TYPE_SERIALIZED));
+    __memcpy(in->type, tmp.type, sizeof(INPUT_TYPE_SERIALIZED));
 
     res = recv_all(in->content, in->size);
     if (res != in->size) {
@@ -101,7 +101,7 @@ int main(void) {
 
         send((char *)&order_id, sizeof(order_id));
 
-        if (0 == memcmp(INPUT_TYPE_PLAIN, (const char *)in->type, sizeof(INPUT_TYPE_PLAIN))) {
+        if (0 == __memcmp(INPUT_TYPE_PLAIN, (const char *)in->type, sizeof(INPUT_TYPE_PLAIN))) {
             ret = process_plain_input(in);
         } else {
             ret = process_serialized_input(in);
@@ -114,7 +114,7 @@ check_res:
 	        break;
         }
 
-        free(in);
+        __free(in);
         order_id++;
     }
 

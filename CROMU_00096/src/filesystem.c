@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -38,8 +38,8 @@ uint16_t *pNextFileID = (uint16_t *)MAGIC_PAGE;
 
 FileNode *InitializeFileSystem()
 {
-  root = calloc(sizeof(FileNode));
-  memcpy((char *)&root->name, &"root", 4);
+  root = __calloc(sizeof(FileNode));
+  __memcpy((char *)&root->name, &"root", 4);
   root->type = FILE_DIRECTORY;
   numFiles = 1;
   return root;
@@ -58,7 +58,7 @@ uint16_t NextFileID()
 
 int CreateFile(char *name, uint8_t type, uint32_t size, char *contents, FileNode *parent)
 {
-  int nameLength = strlen(name);
+  int nameLength = ___strlen(name);
   if (nameLength == 0)
   {
     return FS_ERROR_INVALID_INPUT;
@@ -83,7 +83,7 @@ int CreateFile(char *name, uint8_t type, uint32_t size, char *contents, FileNode
   {
     return FS_ERROR_FS_FULL;
   }
-  if (strcmp(name, "upone") == 0)
+  if (__strcmp(name, "upone") == 0)
   {
     return FS_ERROR_INVALID_INPUT;
   }
@@ -91,15 +91,15 @@ int CreateFile(char *name, uint8_t type, uint32_t size, char *contents, FileNode
   {
     size = 0;
   }
-  FileNode *newNode = calloc(sizeof(FileNode));
-  memcpy(newNode->name, name, nameLength);
+  FileNode *newNode = __calloc(sizeof(FileNode));
+  __memcpy(newNode->name, name, nameLength);
   newNode->type = type;
   newNode->fileID = NextFileID();
   numFiles++;
   if ((size > 0)&&(contents != NULL))
   {
-    newNode->contents = calloc(size);
-    memcpy(newNode->contents, contents, size);
+    newNode->contents = __calloc(size);
+    __memcpy(newNode->contents, contents, size);
     newNode->size = size;
   }
 
@@ -116,7 +116,7 @@ int CreateFile(char *name, uint8_t type, uint32_t size, char *contents, FileNode
 
   while (prev != NULL)
   {
-    int compare = strcmp(newNode->name, prev->name);
+    int compare = __strcmp(newNode->name, prev->name);
     if (compare == 0)
     {
       DestroyNode(newNode);
@@ -158,7 +158,7 @@ void DestroyNode(FileNode *node)
     numFiles--;
     DestroyNode(node->child);
     DestroyNode(node->next);
-    free(node->contents);
+    __free(node->contents);
   }
 }
 
@@ -171,7 +171,7 @@ FileNode *FindFile(char *name, FileNode *parent)
   FileNode *file = parent->child;
   while (file != NULL)
   {
-    int compare = strcmp(name, file->name);
+    int compare = __strcmp(name, file->name);
     if (compare == 0)
     {
       return file;
@@ -197,13 +197,13 @@ FileNode *FindFileAbsolute(char *name)
   FileNode *cwd = root;
   while (*namePtr != '\0')
   {
-    sepPtr = strchr(namePtr, '%');
+    sepPtr = __strchr(namePtr, '%');
     if (sepPtr == NULL)
     {
       break;
     }
-    memset(folder, '\0', 65);
-    memcpy(folder, namePtr, (sepPtr - namePtr));
+    __memset(folder, '\0', 65);
+    __memcpy(folder, namePtr, (sepPtr - namePtr));
     namePtr = sepPtr + 1;
     cwd = FindFile(folder, cwd);
     if (cwd == NULL)
@@ -287,22 +287,22 @@ char *GetFilePath(FileNode *file)
   FileNode *parent = file->parent;
   while (parent != root)
   {
-    pathLength += strlen(parent->name) + 1;
+    pathLength += ___strlen(parent->name) + 1;
     parent = parent->parent;
   }
-  char *path = calloc(pathLength + 1);
+  char *path = __calloc(pathLength + 1);
   parent = file->parent;
   char *pathPtr = path + pathLength;
   *--pathPtr = '%';
   while (parent != root)
   {
-    pathPtr -= strlen(parent->name);
-    memcpy(pathPtr, parent->name, strlen(parent->name));
+    pathPtr -= ___strlen(parent->name);
+    __memcpy(pathPtr, parent->name, ___strlen(parent->name));
     pathPtr--;
     *pathPtr = '%';
     parent = parent->parent;
   }
-  memcpy(path, &"root", 4);
+  __memcpy(path, &"root", 4);
   return path;
 }
 
@@ -328,8 +328,8 @@ char *ReadFile(FileNode *file)
   }
   if (file->size > 0)
   {
-    returnData = calloc(file->size + 1);
-    memcpy(returnData, file->contents, file->size);
+    returnData = __calloc(file->size + 1);
+    __memcpy(returnData, file->contents, file->size);
   }
   return returnData;
 }

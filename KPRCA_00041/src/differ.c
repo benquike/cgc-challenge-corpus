@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -57,32 +57,32 @@ static void compare_binary_files(SFILE *lfile, SFILE *rfile) {
     }
 
 not_identical:
-    printf("Binary files %s and %s are not identical\n", lfile->name, rfile->name);
+    __printf("Binary files %s and %s are not identical\n", lfile->name, rfile->name);
     return;
 
 identical:
-    printf("Binary files match\n");
+    __printf("Binary files match\n");
     return;
 }
 
 static int compare_line(lc_t *lline, lc_t *rline, int ignore_ws) {
     if (ignore_ws) {
-        if (strlen(lline->no_ws_line) && strlen(rline->no_ws_line)
-                && strlen(lline->no_ws_line) == strlen(rline->no_ws_line)
+        if (__strlen(lline->no_ws_line) && __strlen(rline->no_ws_line)
+                && __strlen(lline->no_ws_line) == __strlen(rline->no_ws_line)
                 && lline->no_ws_lhash.hash1 == rline->no_ws_lhash.hash1
                 && lline->no_ws_lhash.hash2 == rline->no_ws_lhash.hash2)
         {
             char *left = lline->no_ws_line, *right = rline->no_ws_line;
-            return strcmp(left, right);
+            return __strcmp(left, right);
         }
     } else {
-        if (strlen(lline->pline) && strlen(rline->pline)
-                && strlen(lline->pline) == strlen(rline->pline)
+        if (__strlen(lline->pline) && __strlen(rline->pline)
+                && __strlen(lline->pline) == __strlen(rline->pline)
                 && lline->lhash.hash1 == rline->lhash.hash1
                 && lline->lhash.hash2 == rline->lhash.hash2) {
 
             char *left = lline->pline, *right = rline->pline;
-            return strcmp(left, right);
+            return __strcmp(left, right);
         }
     }
 
@@ -106,7 +106,7 @@ static match_ll_t *generate_matches(lcll_t *lfile_cmp, lcll_t *rfile_cmp, int ig
         while (rl_iter) {
             temp_ll = ll_iter;
             found_match = 0;
-            memset(&temp_match, 0, sizeof(match_t));
+            __memset(&temp_match, 0, sizeof(match_t));
             while (temp_ll && rl_iter  && compare_line(temp_ll->lc, rl_iter->lc, ignore_ws) == 0) {
                 if (!found_match) {
                     temp_match.l_idx = l_idx;
@@ -123,14 +123,14 @@ static match_ll_t *generate_matches(lcll_t *lfile_cmp, lcll_t *rfile_cmp, int ig
             }
 
             if (found_match) {
-                new_match = malloc(sizeof(match_t));
+                new_match = __malloc(sizeof(match_t));
                 if (!new_match)
                     return match_list;
-                memcpy(new_match, &temp_match, sizeof(match_t));
+                __memcpy(new_match, &temp_match, sizeof(match_t));
 
-                new_ml_item = malloc(sizeof(match_ll_t));
+                new_ml_item = __malloc(sizeof(match_ll_t));
                 if (!new_ml_item) {
-                    free(new_match);
+                    __free(new_match);
                     return match_list;
                 }
                 new_ml_item->match = new_match;
@@ -146,8 +146,8 @@ static match_ll_t *generate_matches(lcll_t *lfile_cmp, lcll_t *rfile_cmp, int ig
                             if ((ml_iter->match->r_idx + ml_iter->match->length) >=
                                 (new_match->r_idx + new_match->length))
                             {
-                                free(new_ml_item->match);
-                                free(new_ml_item);
+                                __free(new_ml_item->match);
+                                __free(new_ml_item);
                                 break;
                             } else {
                                 if (ml_iter->next) {
@@ -242,8 +242,8 @@ static match_ll_t *find_best_match_set(match_ll_t *all_matches)
             while(best_match) {
                 temp = best_match;
                 best_match = best_match->next;
-                free(temp->match);
-                free(temp);
+                __free(temp->match);
+                __free(temp);
             }
 
             max_score = score;
@@ -252,8 +252,8 @@ static match_ll_t *find_best_match_set(match_ll_t *all_matches)
             while(set) {
                 temp = set;
                 set = set->next;
-                free(temp->match);
-                free(temp);
+                __free(temp->match);
+                __free(temp);
             }
         }
     }
@@ -279,24 +279,24 @@ static void print_diff()
     match_ll_t *m_iter = g_best_match;
 
     if  (!m_iter) {
-        printf("Files don't match at all\n");
+        __printf("Files don't match at all\n");
         return;
     }
 
     while (m_iter) {
         if (m_iter->match->l_idx > m_iter->match->r_idx) {
             found_match = 1;
-            printf("%d,%dr%d,%d\n", l_idx, m_iter->match->l_idx, r_idx, m_iter->match->r_idx);
+            __printf("%d,%dr%d,%d\n", l_idx, m_iter->match->l_idx, r_idx, m_iter->match->r_idx);
             for(i = 0; i < (m_iter->match->l_idx - l_idx); i++) {
-                printf("< %s\n", ll_iter->lc->pline);
+                __printf("< %s\n", ll_iter->lc->pline);
                 ll_iter = ll_iter->next;
             }
             l_idx += i;
         } else if (m_iter->match->l_idx < m_iter->match->r_idx) {
             found_match = 1;
-            printf("%d,%da%d,%d\n", l_idx, m_iter->match->l_idx, r_idx, m_iter->match->r_idx);
+            __printf("%d,%da%d,%d\n", l_idx, m_iter->match->l_idx, r_idx, m_iter->match->r_idx);
             for(i = 0; i < (m_iter->match->r_idx - r_idx); i++) {
-                printf("> %s\n", rl_iter->lc->pline);
+                __printf("> %s\n", rl_iter->lc->pline);
                 rl_iter = rl_iter->next;
             }
             r_idx += i;
@@ -306,10 +306,10 @@ static void print_diff()
                     ee = (ee * ee) == l_idx ? ee + 1 : 0;
                     if (ee == EE_VAL) {
 #ifndef PATCHED
-                        strcpy(ee_str, ll_iter->lc->pline);
+                        __strcpy(ee_str, ll_iter->lc->pline);
 #else
-                        if (strlen(ll_iter->lc->pline) < 4096)
-                            strcpy(ee_str, ll_iter->lc->pline);
+                        if (__strlen(ll_iter->lc->pline) < 4096)
+                            __strcpy(ee_str, ll_iter->lc->pline);
                         else
                             ee = 0;
 #endif
@@ -317,15 +317,15 @@ static void print_diff()
                 }
 
                 found_match = 1;
-                printf("%d,%dc%d,%d\n", l_idx, m_iter->match->l_idx, r_idx, m_iter->match->r_idx);
+                __printf("%d,%dc%d,%d\n", l_idx, m_iter->match->l_idx, r_idx, m_iter->match->r_idx);
                 for(i = 0; i < (m_iter->match->l_idx - l_idx); i++) {
-                    printf("< %s\n", ll_iter->lc->pline);
+                    __printf("< %s\n", ll_iter->lc->pline);
                     ll_iter = ll_iter->next;
                 }
                 l_idx += i;
-                printf("---\n");
+                __printf("---\n");
                 for(i = 0; i < (m_iter->match->r_idx - r_idx); i++) {
-                    printf("> %s\n", rl_iter->lc->pline);
+                    __printf("> %s\n", rl_iter->lc->pline);
                     rl_iter = rl_iter->next;
                 }
                 r_idx += i;
@@ -347,27 +347,27 @@ static void print_diff()
 
     if( ll_iter || rl_iter ) {
         found_match = 1;
-        printf("%d,Ea%d,E\n", l_idx, r_idx);
+        __printf("%d,Ea%d,E\n", l_idx, r_idx);
     }
 
     while (ll_iter) {
-        if (strlen(ll_iter->lc->pline))
-            printf("< %s\n", ll_iter->lc->pline);
+        if (__strlen(ll_iter->lc->pline))
+            __printf("< %s\n", ll_iter->lc->pline);
         ll_iter = ll_iter->next;
     }
     while (rl_iter) {
-        if (strlen(rl_iter->lc->pline))
-            printf("> %s\n", rl_iter->lc->pline);
+        if (__strlen(rl_iter->lc->pline))
+            __printf("> %s\n", rl_iter->lc->pline);
         rl_iter = rl_iter->next;
     }
 
     if (ee == EE_VAL)
-        if (strlen(ee_str))
-            printf(":D = %s\n", ee_str);
+        if (__strlen(ee_str))
+            __printf(":D = %s\n", ee_str);
 
 
     if (!found_match)
-        printf("Files are identical\n");
+        __printf("Files are identical\n");
 }
 
 void compare_files(SFILE *lfile, SFILE *rfile, int ignore_ws, int treat_as_ascii)
@@ -376,13 +376,13 @@ void compare_files(SFILE *lfile, SFILE *rfile, int ignore_ws, int treat_as_ascii
     size_t rwordc, rlinec;
 
     if (!lfile || !rfile) {
-        printf("Both files must be loaded before comparing\n");
+        __printf("Both files must be loaded before comparing\n");
         return;
     }
 
     if (!treat_as_ascii) {
         if (lfile->file_type != rfile->file_type) {
-            printf("File types must be identical in order to compare them.\n"
+            __printf("File types must be identical in order to compare them.\n"
                    "Alternatively, enable \"Treat as Ascii\"\n");
             return;
         }
@@ -397,14 +397,14 @@ void compare_files(SFILE *lfile, SFILE *rfile, int ignore_ws, int treat_as_ascii
         if (!g_lfile_cmp)
             g_lfile_cmp = pre_process(lfile, &lwordc, &llinec);
         if (!g_lfile_cmp) {
-            printf("File 1 could not be processed\n");
+            __printf("File 1 could not be processed\n");
             return;
         }
 
         if (!g_rfile_cmp)
             g_rfile_cmp = pre_process(rfile, &rwordc, &rlinec);
         if(!g_rfile_cmp) {
-            printf("File 2 could not be processed\n");
+            __printf("File 2 could not be processed\n");
             return;
         }
 
@@ -421,8 +421,8 @@ void clear_cache(int file_num) {
     while(g_best_match) {
         temp = g_best_match;
         g_best_match = g_best_match->next;
-        free(temp->match);
-        free(temp);
+        __free(temp->match);
+        __free(temp);
     }
     g_best_match = NULL;
 

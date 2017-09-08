@@ -4,7 +4,7 @@ Author: John Berry <hj@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -52,13 +52,13 @@ Border *extractBorder( pstring str )
 
 	/// If it does not open with a '{' then it is invalid.
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate opening brace\n");
+		__printf("!!Failed to locate opening brace\n");
 		goto error;
 	}
 
 	/// Skip past the curly brace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip opening brace\n");
+		__printf("!!Failed to skip opening brace\n");
 		goto error;
 	}
 
@@ -72,7 +72,7 @@ Border *extractBorder( pstring str )
 	end = skipAlpha( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the element id\n");
+		__printf("!!Failed to locate the end of the element id\n");
 		goto error;
 	}
 
@@ -85,33 +85,33 @@ Border *extractBorder( pstring str )
 	temp = copyData( str, start, end );
 
 	if ( temp == NULL ) {
-		printf("!!Copy from @d to @d failed\n", start, end);
+		__printf("!!Copy from @d to @d failed\n", start, end);
 		goto error;
 	}
 
 	/// If the element id is not "Border" then this is the wrong function
-	if ( strcmp( temp, "Border") != 0 ) {
-		printf("!!Element id is not \"Border\"\n");
-		deallocate( temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, "Border") != 0 ) {
+		__printf("!!Element id is not \"Border\"\n");
+		deallocate( temp, __strlen(temp) + 1 );
 		temp = NULL;
 		goto error;
 	}
 
-	/// The buffer is no longer needed so free it
-	deallocate(temp, strlen(temp) + 1);
+	/// The buffer is no longer needed so __free it
+	deallocate(temp, __strlen(temp) + 1);
 
 	/// Skip to the end of the element id
 	skipWhiteSpace( str );
 
 	/// If it is not a closing brace then this is improperly formatted.
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate initial closing brace\n");
+		__printf("!!Failed to locate initial closing brace\n");
 		goto error;
 	}
 
 	/// Skip the closing brace as well as any whitespace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip initial closing brace\n");
+		__printf("!!Failed to skip initial closing brace\n");
 		goto error;
 	}
 
@@ -121,24 +121,24 @@ Border *extractBorder( pstring str )
 	end = skipFloat( str );
 
 	if ( start == end ) {
-		printf("!!Failed to locate first lat\n");
+		__printf("!!Failed to locate first lat\n");
 		goto error;
 	}
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the first latitude float\n");
+		__printf("!!Failed to locate the end of the first latitude float\n");
 		goto error;
 	}
 
 	temp = copyData( str, start, end );
 
 	if (temp == NULL ) {
-		printf("!!Failed to copy first latitude float\n");
+		__printf("!!Failed to copy first latitude float\n");
 		goto error;
 	}
 
 	/// Convert the first value
-	bor->latStart = atof( temp );
+	bor->latStart = __atof( temp );
 
 	deallocate( temp, (end-start) + 1 );
 
@@ -148,24 +148,24 @@ Border *extractBorder( pstring str )
 	end = skipFloat(str);
 
 	if ( start == end ) {
-		printf("!!Failed to locate first long\n");
+		__printf("!!Failed to locate first long\n");
 		goto error;
 	}
 
 	if ( start == -1 || end == -1 ) {
-		printf("!!Failed to locate first longitude float\n");
+		__printf("!!Failed to locate first longitude float\n");
 		goto error;
 	}
 
 	temp = copyData( str, start, end );
 
 	if ( temp == NULL ) {
-		printf("!!Failed to copy first longitude float\n");
+		__printf("!!Failed to copy first longitude float\n");
 		goto error;
 	}
 
 	/// Convert the first long
-	bor->lngStart = atof( temp );
+	bor->lngStart = __atof( temp );
 
 	deallocate( temp, (end-start) + 1 );
 
@@ -175,24 +175,24 @@ Border *extractBorder( pstring str )
 	end = skipFloat(str);
 
 	if ( start == end ) {
-		printf("!!Failed to locate second lat\n");
+		__printf("!!Failed to locate second lat\n");
 		goto error;
 	}
 
 	if ( start == -1 || end == -1 ) {
-		printf("!!Failed to locate second latitude float\n");
+		__printf("!!Failed to locate second latitude float\n");
 		goto error;
 	}
 
 	temp = copyData( str, start, end );
 
 	if ( temp == NULL ) {
-		printf("!!Failed to copy second latitude float\n");
+		__printf("!!Failed to copy second latitude float\n");
 		goto error;
 	}
 
 	/// Convert the second lat
-	bor->latEnd = atof( temp );
+	bor->latEnd = __atof( temp );
 
 	deallocate( temp, (end-start) + 1 );
 
@@ -202,24 +202,24 @@ Border *extractBorder( pstring str )
 	end = skipFloat(str);
 
 	if ( start == end ) {
-		printf("!!Failed to locate second long\n");
+		__printf("!!Failed to locate second long\n");
 		goto error;
 	}
 
 	if ( start == -1 || end == -1 ) {
-		printf("!!Failed to locate second longitude float\n");
+		__printf("!!Failed to locate second longitude float\n");
 		goto error;
 	}
 
 	temp = copyData( str, start, end );
 
 	if ( temp == NULL ) {
-		printf("!!Failed to copy second longitude float\n");
+		__printf("!!Failed to copy second longitude float\n");
 		goto error;
 	}
 
 	/// Convert the second long
-	bor->lngEnd = atof( temp );
+	bor->lngEnd = __atof( temp );
 
 	deallocate( temp, (end-start) + 1 );
 
@@ -227,13 +227,13 @@ Border *extractBorder( pstring str )
 
 	/// If this is not an opening curly brace then fail
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate the final opening brace\n");
+		__printf("!!Failed to locate the final opening brace\n");
 		goto error;
 	}
 
 	/// Skip past the brace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip the final opening brace\n");
+		__printf("!!Failed to skip the final opening brace\n");
 		goto error;
 	}
 	
@@ -241,7 +241,7 @@ Border *extractBorder( pstring str )
 
 	/// If this is not a # indicating the closing brace then fail
 	if ( !atChar( str, '#' ) ) {
-		printf("!!Failed to locate the closing mark\n");		
+		__printf("!!Failed to locate the closing mark\n");		
 		goto error;
 	}
 
@@ -249,14 +249,14 @@ Border *extractBorder( pstring str )
 	start = skipLength( str, 1 );
 
 	if ( start == -1 ) {
-		printf("!!Failed to skip closing mark\n");
+		__printf("!!Failed to skip closing mark\n");
 		goto error;
 	}
 
 	end = skipAlpha( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the closing element id\n");
+		__printf("!!Failed to locate the end of the closing element id\n");
 		goto error;
 	}
 	
@@ -268,19 +268,19 @@ Border *extractBorder( pstring str )
 	}
 #endif
 
-	if ( strcmp( temp, "Border") != 0 ) {
-		printf("!!Invalid closing element id: @s\n", temp);
-		deallocate(temp, strlen(temp)+1);
+	if ( __strcmp( temp, "Border") != 0 ) {
+		__printf("!!Invalid closing element id: @s\n", temp);
+		deallocate(temp, __strlen(temp)+1);
 		goto error;
 	}
 
-	deallocate(temp, strlen(temp)+1);
+	deallocate(temp, __strlen(temp)+1);
 
 	skipWhiteSpace( str );
 
 	/// Check the final curly brace
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate final closing brace\n");
+		__printf("!!Failed to locate final closing brace\n");
 		goto error;
 	}
 
@@ -321,13 +321,13 @@ int extractPopulation( pstring str )
 	skipWhiteSpace(str);
 
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate opening brace\n");
+		__printf("!!Failed to locate opening brace\n");
 		return -1;
 	}
 
 	/// Skip past the curly brace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip opening brace\n");
+		__printf("!!Failed to skip opening brace\n");
 		return -1;
 	}
 
@@ -341,7 +341,7 @@ int extractPopulation( pstring str )
 	end = skipAlpha( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the element id\n");
+		__printf("!!Failed to locate the end of the element id\n");
 		return -1;
 	}
 
@@ -349,33 +349,33 @@ int extractPopulation( pstring str )
 	temp = copyData( str, start, end );
 
 	if ( temp == NULL ) {
-		printf("!!Copy from @d to @d failed\n", start, end);
+		__printf("!!Copy from @d to @d failed\n", start, end);
 		return -1;
 	}
 
 	/// If the element id is not "Population" then this is the wrong function
-	if ( strcmp( temp, "Population") != 0 ) {
-		printf("!!Element id is not \"Population\"\n");
-		deallocate( temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, "Population") != 0 ) {
+		__printf("!!Element id is not \"Population\"\n");
+		deallocate( temp, __strlen(temp) + 1 );
 		temp = NULL;
 		return -1;
 	}
 
-	/// The buffer is no longer needed so free it
-	deallocate(temp, strlen(temp) + 1);
+	/// The buffer is no longer needed so __free it
+	deallocate(temp, __strlen(temp) + 1);
 
 	/// Skip to the end of the element id
 	skipWhiteSpace( str );
 
 	/// If it is not a closing brace then this is improperly formatted.
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate initial closing brace\n");
+		__printf("!!Failed to locate initial closing brace\n");
 		return -1;
 	}
 
 	/// Skip the closing brace as well as any whitespace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip initial closing brace\n");
+		__printf("!!Failed to skip initial closing brace\n");
 		return -1;
 	}
 
@@ -388,7 +388,7 @@ int extractPopulation( pstring str )
 	pe = skipInt( str );
 
 	if ( pe == -1 ) {
-		printf("!!Failed to locate the end of the population data\n");
+		__printf("!!Failed to locate the end of the population data\n");
 		return end;
 	}
 
@@ -397,13 +397,13 @@ int extractPopulation( pstring str )
 
 	/// If this is not an opening curly brace then fail
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate the final opening brace\n");
+		__printf("!!Failed to locate the final opening brace\n");
 		return -1;
 	}
 
 	/// Skip past the brace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip the final opening brace\n");
+		__printf("!!Failed to skip the final opening brace\n");
 		return -1;
 	}
 	
@@ -411,7 +411,7 @@ int extractPopulation( pstring str )
 
 	/// If this is not a # indicating the closing brace then fail
 	if ( !atChar( str, '#' ) ) {
-		printf("!!Failed to locate the closing mark\n");		
+		__printf("!!Failed to locate the closing mark\n");		
 		return -1;
 	}
 
@@ -419,14 +419,14 @@ int extractPopulation( pstring str )
 	start = skipLength( str, 1 );
 
 	if ( start == -1 ) {
-		printf("!!Failed to skip closing mark\n");
+		__printf("!!Failed to skip closing mark\n");
 		return start;
 	}
 
 	end = skipAlpha( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the closing element id\n");
+		__printf("!!Failed to locate the end of the closing element id\n");
 		return end;
 	}
 	
@@ -438,19 +438,19 @@ int extractPopulation( pstring str )
 	}
 #endif 
 
-	if ( strcmp( temp, "Population") != 0 ) {
-		printf("!!Invalid closing element id: @s\n", temp);
-		deallocate(temp, strlen(temp)+1);
+	if ( __strcmp( temp, "Population") != 0 ) {
+		__printf("!!Invalid closing element id: @s\n", temp);
+		deallocate(temp, __strlen(temp)+1);
 		return -1;
 	}
 
-	deallocate(temp, strlen(temp)+1);
+	deallocate(temp, __strlen(temp)+1);
 
 	skipWhiteSpace( str );
 
 	/// Check the final curly brace
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate final closing brace\n");
+		__printf("!!Failed to locate final closing brace\n");
 		return -1;
 	}
 
@@ -461,13 +461,13 @@ int extractPopulation( pstring str )
 	temp = copyData( str, ps, pe );
 
 	if ( temp == NULL ) {
-		printf("!!Failed to copy population data\n");
+		__printf("!!Failed to copy population data\n");
 		return -1;
 	}
 
-	pop = atoi( temp );
+	pop = __atoi( temp );
 
-	deallocate( temp, strlen(temp) + 1 );
+	deallocate( temp, __strlen(temp) + 1 );
 
 	return pop;
 }
@@ -476,7 +476,7 @@ int extractPopulation( pstring str )
  * Extracts the data from the Name element
  * @param str Pointer to a string structure
  * @return Returns a pointer to the name data or NULL on failure
- *	The calling function must free the name pointer
+ *	The calling function must __free the name pointer
  **/
 char *extractName( pstring str )
 {
@@ -496,13 +496,13 @@ char *extractName( pstring str )
 	skipWhiteSpace(str);
 
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate opening brace\n");
+		__printf("!!Failed to locate opening brace\n");
 		return name;
 	}
 
 	/// Skip past the curly brace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip opening brace\n");
+		__printf("!!Failed to skip opening brace\n");
 		return name;
 	}
 
@@ -516,7 +516,7 @@ char *extractName( pstring str )
 	end = skipAlpha( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the element id\n");
+		__printf("!!Failed to locate the end of the element id\n");
 		return NULL;
 	}
 
@@ -530,33 +530,33 @@ char *extractName( pstring str )
 #endif
 
 	if ( temp == NULL ) {
-		printf("!!Copy from @d to @d failed\n", start, end);
+		__printf("!!Copy from @d to @d failed\n", start, end);
 		return NULL;
 	}
 
 	/// If the element id is not "Name" then this is the wrong function
-	if ( strcmp( temp, "Name") != 0 ) {
-		printf("!!Element id is not \"Name\"\n");
-		deallocate( temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, "Name") != 0 ) {
+		__printf("!!Element id is not \"Name\"\n");
+		deallocate( temp, __strlen(temp) + 1 );
 		temp = NULL;
 		return NULL;
 	}
 
-	/// The buffer is no longer needed so free it
-	deallocate(temp, strlen(temp) + 1);
+	/// The buffer is no longer needed so __free it
+	deallocate(temp, __strlen(temp) + 1);
 
 	/// Skip to the end of the element id
 	skipWhiteSpace( str );
 
 	/// If it is not a closing brace then this is improperly formatted.
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate initial closing brace\n");
+		__printf("!!Failed to locate initial closing brace\n");
 		return NULL;
 	}
 
 	/// Skip the closing brace as well as any whitespace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip initial closing brace\n");
+		__printf("!!Failed to skip initial closing brace\n");
 		return NULL;
 	}
 
@@ -569,7 +569,7 @@ char *extractName( pstring str )
 	ne = skipToNonAlphaNum( str );
 
 	if ( ne == -1 ) {
-		printf("!!Failed to locate the end of the name data\n");
+		__printf("!!Failed to locate the end of the name data\n");
 		return NULL;
 	}
 
@@ -578,13 +578,13 @@ char *extractName( pstring str )
 
 	/// If this is not an opening curly brace then fail
 	if ( !atChar( str, '{' ) ) {
-		printf("!!Failed to locate the final opening brace\n");
+		__printf("!!Failed to locate the final opening brace\n");
 		return NULL;
 	}
 
 	/// Skip past the brace
 	if ( skipLength( str, 1 ) == -1 ) {
-		printf("!!Failed to skip the final opening brace\n");
+		__printf("!!Failed to skip the final opening brace\n");
 		return NULL;
 	}
 	
@@ -592,7 +592,7 @@ char *extractName( pstring str )
 
 	/// If this is not a # indicating the closing brace then fail
 	if ( !atChar( str, '#' ) ) {
-		printf("!!Failed to locate the closing mark\n");		
+		__printf("!!Failed to locate the closing mark\n");		
 		return NULL;
 	}
 
@@ -600,14 +600,14 @@ char *extractName( pstring str )
 	start = skipLength( str, 1 );
 
 	if ( start == -1 ) {
-		printf("!!Failed to skip closing mark\n");
+		__printf("!!Failed to skip closing mark\n");
 		return NULL;
 	}
 
 	end = skipAlpha( str );
 
 	if ( end == -1 ) {
-		printf("!!Failed to locate the end of the closing element id\n");
+		__printf("!!Failed to locate the end of the closing element id\n");
 		return NULL;
 	}
 	
@@ -619,19 +619,19 @@ char *extractName( pstring str )
 	}
 #endif
 
-	if ( strcmp( temp, "Name") != 0 ) {
-		printf("!!Invalid closing element id: @s\n", temp);
-		deallocate(temp, strlen(temp)+1);
+	if ( __strcmp( temp, "Name") != 0 ) {
+		__printf("!!Invalid closing element id: @s\n", temp);
+		deallocate(temp, __strlen(temp)+1);
 		return NULL;
 	}
 
-	deallocate(temp, strlen(temp)+1);
+	deallocate(temp, __strlen(temp)+1);
 
 	skipWhiteSpace( str );
 
 	/// Check the final curly brace
 	if ( !atChar( str, '}' ) ) {
-		printf("!!Failed to locate final closing brace\n");
+		__printf("!!Failed to locate final closing brace\n");
 		return NULL;
 	}
 

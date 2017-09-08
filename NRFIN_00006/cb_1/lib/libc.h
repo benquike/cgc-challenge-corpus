@@ -16,7 +16,7 @@
 // Errors / statuses
 #define SUCCESS 0
 #define ERRNO_SEND (SERVICE_ID+1)
-#define ERR_RECV "[E] could not read or insufficient bytes\n"
+#define ERR_RECV "[E] could not __read or insufficient bytes\n"
 #define ERRNO_RECV (SERVICE_ID+2)
 #define ERRNO_ALLOC (SERVICE_ID+3)
 #define ERRNO_INSUFFICIENT_BYTES (SERVICE_ID+4)
@@ -94,7 +94,7 @@ unsigned char pkt_get_src(struct packet *pkt);
 unsigned char pkt_get_msg(struct packet *pkt);
 int pkt_send(size_t tid, char src, char msg);
 
-unsigned char * memset(void *b, char c, size_t len);
+unsigned char * __memset(void *b, char c, size_t len);
 
 // List related
 struct list {
@@ -117,7 +117,7 @@ struct node * node_create(char value);
 int node_destroy(struct node *nd);
 
 // REUSE: FASTLANE
-void pause(size_t seconds);
+void __pause(size_t seconds);
 // END USED BY: FASTLANE
 
 #ifdef DEBUG
@@ -141,13 +141,13 @@ typedef struct _FILE {
    int fd;
    int state;
    int last;
-} FILE;
+} __FILE;
 
-extern FILE *stdin;
-extern FILE *stdout;
-extern FILE *stderr;
+extern __FILE *stdin;
+extern __FILE *stdout;
+extern __FILE *stderr;
 
-int fprintf(FILE * stream, const char *format, ...);
+int fprintf(__FILE * stream, const char *format, ...);
 
 #endif
 // ^ DEBUG

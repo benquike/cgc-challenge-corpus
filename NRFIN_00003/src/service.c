@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -39,12 +39,12 @@ int copy_uri(char *buf_verb) {
 
     // Pull out the URI
 #ifndef PATCHED
-    memcpy(
+    __memcpy(
         (unsigned char *)buf_verb, 
         (unsigned char *)buf_recv+pos_uri+1, 
         URI_BUF_SZ+1); // VULN: off-by-one
 #else
-    memcpy(
+    __memcpy(
         (unsigned char *)buf_verb, 
         (unsigned char *)(buf_recv+pos_uri+1), 
         URI_BUF_SZ);
@@ -71,7 +71,7 @@ char * get_file_contents(char *name) {
     size_t i = 0;
 
     for (i=0; i<num_files; i++) {
-        if (!memcmp(name, files[i].name, FILE_BUF_SZ)) {
+        if (!__memcmp(name, files[i].name, FILE_BUF_SZ)) {
             return files[i].contents;
         }
     }
@@ -131,52 +131,52 @@ int dispatch_verb(void) {
     int ret = SUCCESS;
     int bytes_sent = -1;
 
-    if (!memcmp(buf_recv, "TIP", sizeof("TIP"))) {
+    if (!__memcmp(buf_recv, "TIP", sizeof("TIP"))) {
 
         if (SUCCESS != (ret = check_plebian())) { return ret; }
         if (SUCCESS != (ret = copy_uri(ptr_uri_tip))) { return ret; }
         if (SUCCESS != (ret = do_tip(ptr_uri_tip))) { return ret; }
 
-    } else if (!memcmp(buf_recv, "STATUS", sizeof("STATUS"))) {
+    } else if (!__memcmp(buf_recv, "STATUS", sizeof("STATUS"))) {
 
         if (SUCCESS != (ret = check_plebian())) { return ret; }
         if (SUCCESS != (ret = do_status())) { return ret; }
 
-    } else if (!memcmp(buf_recv, "GIMME", sizeof("GIMME"))) {
+    } else if (!__memcmp(buf_recv, "GIMME", sizeof("GIMME"))) {
 
         if (SUCCESS != (ret = check_plebian())) { return ret; }
         if (SUCCESS != (ret = copy_uri(ptr_uri_gimme))) { return ret; }
         if (SUCCESS != (ret = do_gimme(ptr_uri_gimme))) { return ret; }
 
-    } else if (!memcmp(buf_recv, "LIST", sizeof("LIST"))) {
+    } else if (!__memcmp(buf_recv, "LIST", sizeof("LIST"))) {
 
         if (SUCCESS != (ret = check_plebian())) { return ret; }
         if (SUCCESS != (ret = do_list())) { return ret; }
 
-    } else if (!memcmp(buf_recv, "SMORE", sizeof("SMORE"))) {
+    } else if (!__memcmp(buf_recv, "SMORE", sizeof("SMORE"))) {
 
         if (SUCCESS != (ret = copy_uri(ptr_uri_smore))) { return ret; }
         if (SUCCESS != (ret = do_smore(ptr_uri_smore))) { return ret; }
 
-    } else if (!memcmp(buf_recv, "YOUUP", sizeof("YOUUP"))) {
+    } else if (!__memcmp(buf_recv, "YOUUP", sizeof("YOUUP"))) {
 
         if (SUCCESS != (ret = do_youup())) { return ret; }
 
-    } else if (!memcmp(buf_recv, "MOOCH", sizeof("MOOCH"))) {
+    } else if (!__memcmp(buf_recv, "MOOCH", sizeof("MOOCH"))) {
 
         if (SUCCESS != (ret = copy_uri(ptr_uri_mooch))) { return ret; }
         if (SUCCESS != (ret = do_mooch(ptr_uri_mooch))) { return ret; }
 
-    } else if (!memcmp(buf_recv, "SUP", sizeof("SUP"))) {
+    } else if (!__memcmp(buf_recv, "SUP", sizeof("SUP"))) {
 
         if (SUCCESS != (ret = do_sup())) { return ret; }
 
-    } else if (!memcmp(buf_recv, "AUTH", sizeof("AUTH"))) {
+    } else if (!__memcmp(buf_recv, "AUTH", sizeof("AUTH"))) {
 
         if (SUCCESS != (ret = copy_uri(ptr_uri_auth))) { return ret; }
         if (SUCCESS != (ret = do_auth(ptr_uri_auth))) { return ret; }
 
-    } else if (!memcmp(buf_recv, "QUIT", sizeof("QUIT"))) {
+    } else if (!__memcmp(buf_recv, "QUIT", sizeof("QUIT"))) {
 
         QUIT();
 
@@ -289,7 +289,7 @@ int main(void) {
 
         // This is where a crash _may_ occur.
         // Specifically, if TIP is overflown with \xfd, \xfe or \xff, this
-        // write will go off the end of the stack (@ 0xbaaaafff).
+        // __write will go off the end of the stack (@ 0xbaaaafff).
         // This limited choice increases CRS difficulty.
         *ptr_crash = 0xdeadbeef;
     }

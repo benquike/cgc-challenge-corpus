@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -31,7 +31,7 @@ int create_tanks(struct tankset **t, uint8_t qty) {
 		return ERR_INVALID_QTY;
 	}
 
-	*t = calloc(sizeof(struct tankset) + qty * sizeof(struct tank *));
+	*t = __calloc(sizeof(struct tankset) + qty * sizeof(struct tank *));
 
 	for (int i = 0; i < qty; i++) {
 		(*t)->tanks[i] = create_tank(i + 1, TANK_CAP);

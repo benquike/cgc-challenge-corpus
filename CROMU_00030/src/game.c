@@ -4,7 +4,7 @@ Author: James Nuttall (james@cromulence.co)
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -110,13 +110,13 @@ int connect_pieces(Piece *pieceA, char sideA, Piece *pieceB, char sideB)
 		pieceB->sides[sideB].target != ROAD)
 	{
 		// can't connect pieces on non-road sides
-		printf("a: @d, b: @d...", pieceA->sides[sideA].target, pieceB->sides[sideB].target);
+		__printf("a: @d, b: @d...", pieceA->sides[sideA].target, pieceB->sides[sideB].target);
 		
 		for (int i = 0; i < game_stack.top_element; i++)
 		{
 			char str[10];
 			piece_to_pkt(&game_stack.stack[i], str);
-			printf("piece @d: @s", i, str);
+			__printf("piece @d: @s", i, str);
 		}
 
 		return FAIL;
@@ -166,7 +166,7 @@ int isTopPiecePlaced()
 		return SUCCESS; // no pieces yet
 
 	// return TRUE if the top piece on the game_stack is placed
-	// placed: one of the four sides has a valid link
+	// placed: one of the four sides has a valid __link
 	for (int i = 0; i < 4; i++)
 	{
 		if (game_stack.stack[game_stack.top_element].sides[i].target != NO_ROAD &&

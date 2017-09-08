@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -203,7 +203,7 @@ void bst_insert(bst_t *bst, int key);
  *
  * @param bst 	Pointer to a Binary Search Tree
  * @param node 	Node to remove from the BST
- * @return Pointer to removed node (caller should free this).
+ * @return Pointer to removed node (caller should __free this).
  */
 bst_node_t *bst_remove_node(bst_t *bst, bst_node_t *node);
 

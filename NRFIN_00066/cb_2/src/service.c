@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -320,7 +320,7 @@ void do_exit(void) {
     DBG("\n");
     int ret = SUCCESS;
 
-    DBG("[D] got exit() message; terminating...\n");
+    DBG("[D] got __exit() message; terminating...\n");
 
 bail:
     _terminate(ret);

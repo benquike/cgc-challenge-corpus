@@ -4,7 +4,7 @@ Author: James Nuttall (james@cromulence.co)
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -42,7 +42,7 @@ int login(char *name, char *passwd)
 	// compare username and password with users
 	for (int i = 0; i < user_count; i++)
 	{
-		if ((strcmp(name, listOfUsers[i]->name) == 0) && (!strcmp(passwd, listOfUsers[i]->password)))
+		if ((__strcmp(name, listOfUsers[i]->name) == 0) && (!__strcmp(passwd, listOfUsers[i]->password)))
 		{
 			current_user = listOfUsers[i];
 			return 1;
@@ -61,7 +61,7 @@ int get_user_index(char *name)
 {
 	for (int i = 0; i < user_count; i++)
 	{
-		if (strcmp(name, listOfUsers[i]->name) == 0)
+		if (__strcmp(name, listOfUsers[i]->name) == 0)
 		{
 			return i;
 		}
@@ -73,19 +73,19 @@ void create_user(int tries)
 {	
 	char buf[MAX_NAME_LEN];
 	char buf2[MAX_PASS_LEN];
-	printf("Username: \n");
-	size_t len = receive_until( buf, '\n', MAX_NAME_LEN - 1);
+	__printf("Username: \n");
+	size_t len = __receive_until( buf, '\n', MAX_NAME_LEN - 1);
 	buf[len++] = 0;
 
 	int found = -1;
 	// does this user already exist?
-	if (strlen(buf) < 1) 
+	if (__strlen(buf) < 1) 
 	{
 		return;
 	}
 	for (int j = 0; j < user_count; j++)
 	{
-		if (!strcmp(buf, listOfUsers[j]->name))
+		if (!__strcmp(buf, listOfUsers[j]->name))
 		{
 			found = j;
 			break;
@@ -106,11 +106,11 @@ void create_user(int tries)
 		// first login
 
 		listOfUsers[found]->first_login = 1;
-		printf("Password: \n");
-		len = receive_until( buf2, '\n', MAX_PASS_LEN - 1);
+		__printf("Password: \n");
+		len = __receive_until( buf2, '\n', MAX_PASS_LEN - 1);
 		buf2[len++] = 0;
-		bzero(listOfUsers[found]->password, MAX_PASS_LEN);
-		strncpy(listOfUsers[found]->password, buf2, len);
+		__bzero(listOfUsers[found]->password, MAX_PASS_LEN);
+		__strncpy(listOfUsers[found]->password, buf2, len);
 		return;
 	}
 
@@ -119,22 +119,22 @@ void create_user(int tries)
 		// this user doesn't exist, are we full already?
 		if (user_count >= MAX_USERS)
 		{
-			printf("Maximum number of users reached.\n");
+			__printf("Maximum number of users reached.\n");
 			return;
 		}
 		else
 		{
-			listOfUsers[user_count] = (User*)malloc(sizeof(User));
-			strncpy(listOfUsers[user_count]->name, buf, len);
+			listOfUsers[user_count] = (User*)__malloc(sizeof(User));
+			__strncpy(listOfUsers[user_count]->name, buf, len);
 
 			listOfUsers[user_count]->index = user_count;
 			listOfUsers[user_count]->first_login = 1;
 			listOfUsers[user_count]->msg_count = 0;
 			
-			printf("Password: \n");
-			len = receive_until( buf2, '\n', MAX_PASS_LEN - 1);
+			__printf("Password: \n");
+			len = __receive_until( buf2, '\n', MAX_PASS_LEN - 1);
 			buf2[len++] = 0;
-			strncpy(listOfUsers[user_count++]->password, buf2, len);
+			__strncpy(listOfUsers[user_count++]->password, buf2, len);
 		}
 	}
 }
@@ -143,6 +143,6 @@ void list_users()
 {
 	for (int i = 0; i < user_count; i++)
 	{
-		printf("@s -- @s\n", listOfUsers[i]->name, listOfUsers[i]->password);
+		__printf("@s -- @s\n", listOfUsers[i]->name, listOfUsers[i]->password);
 	}
 }

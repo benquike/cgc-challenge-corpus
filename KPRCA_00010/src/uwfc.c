@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -58,9 +58,9 @@ static int vis_multiplier = 0;
 void set_vis_multiplier(char c) {
     if (c <= '9' && c >= '0') {
         vis_multiplier = c - '0';
-        printf("Multiplier set to %d\n", c - '0');
+        __printf("Multiplier set to %d\n", c - '0');
     } else {
-        printf("Bad multiplier argument\n");
+        __printf("Bad multiplier argument\n");
     }
 }
 
@@ -131,12 +131,12 @@ uwfc_t *init_track() {
     int track_size = 0;
     size_t rx = 0, rx_count = 0;
 
-    track = malloc(sizeof(uwfc_t));
+    track = __malloc(sizeof(uwfc_t));
     if (track == NULL)
         return NULL;
 
     if (receive(STDIN, track, UWFC_HEADER_SIZE, &rx) != 0 || rx != UWFC_HEADER_SIZE) {
-        free(track);
+        __free(track);
         return NULL;
     }
 
@@ -146,18 +146,18 @@ uwfc_t *init_track() {
     track_size = validate_header(track); //track->sub_chunk2_size (size of data)
 #endif
 
-    // track_size is signed int as a mechanism to prevent huge malloc requests
+    // track_size is signed int as a mechanism to prevent huge __malloc requests
     if (track_size < 0) {
-        free(track);
+        __free(track);
         return NULL;
     }
 
     if (track_size == 0) {
         track->data = NULL;
     } else {
-        track->data = malloc(track_size);
+        track->data = __malloc(track_size);
         if (track->data == NULL) {
-            free(track);
+            __free(track);
             return NULL;
         }
     }
@@ -165,8 +165,8 @@ uwfc_t *init_track() {
     while (receive(STDIN, &track->data[rx_count], (track->sub_chunk2_size - rx_count), &rx) == 0 &&
             (rx_count + rx) != track->sub_chunk2_size) {
         if(rx == 0) {
-            free(track->data);
-            free(track);
+            __free(track->data);
+            __free(track);
             return NULL;
         }
 
@@ -182,10 +182,10 @@ void clear_track(uwfc_t **uwfc_track) {
         return;
 
     if (track->data != NULL)
-        free(track->data);
+        __free(track->data);
 
     if(track != NULL)
-        free(track);
+        __free(track);
     *uwfc_track = NULL;
 }
 
@@ -209,10 +209,10 @@ static void plot_mono_wave(uwfc_t *track, unsigned char *data) {
     int y = (w - 1) / 2;
     int x = (normalized * y) + y + .5;
     char line[w];
-    memset(line, ' ', w);
+    __memset(line, ' ', w);
     line[w-1] = '\0';
     line[x] = '*';
-    printf("%s\n", line);
+    __printf("%s\n", line);
 
 }
 
@@ -235,12 +235,12 @@ static void plot_stereo_wave(uwfc_t *track, unsigned char *data) {
     int x_l = (normalized_l * y) + y + .5;
     int x_r = (normalized_r * y) + y + chan_w + 1.5;
     char line[w];
-    memset(line, ' ', w);
+    __memset(line, ' ', w);
     line[w-1] = '\0';
     line[chan_w] = '|';
     line[x_l] = '*';
     line[x_r] = '*';
-    printf("%s\n", line);
+    __printf("%s\n", line);
 }
 
 void wave_vis(uwfc_t *track) {
@@ -260,7 +260,7 @@ void wave_vis(uwfc_t *track) {
         data += track->block_align;
     }
 
-    printf("++++END VISUALIZATION++++\n\n");
+    __printf("++++END VISUALIZATION++++\n\n");
 }
 
 typedef struct {
@@ -294,21 +294,21 @@ static void vis_buckets(eq_bucket_t *buckets, int vis_type) {
     if (vis_type == FREQ_VIS) {
         int h;
         for (h = max_height; h >= 0; h--) {
-            printf("   ");
+            __printf("   ");
             for (i = 0; i < MAX_BUCKETS; i++) {
                 // Because loudness of sound is logarithmic (dB), by using frequency buckets
                 // the equalizer is best visualized taking the log of the max power
                 // of all frequencies in a given frequency bucket
                 if (h == 0) {
-                    printf("|-----|");
+                    __printf("|-----|");
                 } else if (h <= (int)(log(buckets[i].max_power))) {
-                    printf("|=====|");
+                    __printf("|=====|");
                 } else {
                     if( h <= 30)
-                        printf("|     |");
+                        __printf("|     |");
                 }
             }
-            printf("\n");
+            __printf("\n");
         }
     } else if(vis_type == POWER_VIS) {
         double total_power = 0;
@@ -321,12 +321,12 @@ static void vis_buckets(eq_bucket_t *buckets, int vis_type) {
         // for each second (sample cycle) is best visualized taking the log of the
         // total power of all frequencies in frequency bucket
         bar_len = (int)(log(total_power + 1) * 3); // +1 to avoid log(0), log(1) is neglible
-        memset(line, 0, max_height + 1);
-        memset(line, '=', bar_len );
+        __memset(line, 0, max_height + 1);
+        __memset(line, '=', bar_len );
 
         line[bar_len] = ']';
         for(i = 0; i < bar_width; i++)
-            printf("%s\n", line);
+            __printf("%s\n", line);
     }
 }
 
@@ -341,12 +341,12 @@ void eq_vis(uwfc_t *track, int vis_type, int filter_type) {
     double normalized_r;
     eq_bucket_t freq_bars[MAX_BUCKETS];
 
-    dft_inputs_l = malloc(track->sample_rate * sizeof(double));
+    dft_inputs_l = __malloc(track->sample_rate * sizeof(double));
     if (dft_inputs_l == NULL)
         return;
 
     if (track->num_channels == 2) {
-        dft_inputs_r = malloc(track->sample_rate * sizeof(double));
+        dft_inputs_r = __malloc(track->sample_rate * sizeof(double));
         if (dft_inputs_r == NULL)
             return;
     }
@@ -423,11 +423,11 @@ void eq_vis(uwfc_t *track, int vis_type, int filter_type) {
         }
 
         vis_buckets(&freq_bars[0], vis_type);
-        free(dft_output_l);
+        __free(dft_output_l);
 
         if (track->num_channels == 2)
-            free(dft_output_r);
+            __free(dft_output_r);
     }
 
-    printf("++++END VISUALIZATION++++\n\n");
+    __printf("++++END VISUALIZATION++++\n\n");
 }

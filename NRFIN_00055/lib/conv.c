@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -30,7 +30,7 @@
 #include "conv.h"
 
 int
-isdigit(int c)
+__isdigit(int c)
 {
     return c >= '0' && c <= '9';
 }
@@ -38,25 +38,25 @@ isdigit(int c)
 int
 ishexdigit(int c)
 {
-    return isdigit(c) ||
+    return __isdigit(c) ||
         (c >= 'a' && c <= 'f') ||
         (c >= 'A' && c <= 'F');
 }
 
 int
-isalpha(int c)
+__isalpha(int c)
 {
-    return isupper(c) || islower(c);
+    return __isupper(c) || __islower(c);
 }
 
 int
-islower(int c)
+__islower(int c)
 {
     return c >= 'a' && c <= 'z';
 }
 
 int
-isupper(int c)
+__isupper(int c)
 {
     return c >= 'A' && c <= 'Z';
 }
@@ -64,13 +64,13 @@ isupper(int c)
 int
 toupper(int c)
 {
-    return islower(c) ? c - 'a' + 'A' : c;
+    return __islower(c) ? c - 'a' + 'A' : c;
 }
  
 int
 tolower(int c)
 {
-    return isupper(c) ? c - 'A' + 'a' : c;
+    return __isupper(c) ? c - 'A' + 'a' : c;
 }
 
 char
@@ -94,7 +94,7 @@ fromdigit(char digit, unsigned int base)
         return EXIT_FAILURE;
 
     digit = tolower(digit);
-    if (isdigit(digit))
+    if (__isdigit(digit))
         ret = digit - '0';
     else
         ret = digit - 'a' + 10;
@@ -151,11 +151,11 @@ dtostr(double value, char *str, size_t num)
     char fractional_buf[DTOSTR_PRECISION + 1];
     unsigned int whole_part, fractional_part;
 
-    if (isnan(value)) {
+    if (__isnan(value)) {
         if (num < 4)
             return EXIT_FAILURE;
 
-        strncpy(str, "nan", 4);
+        __strncpy(str, "nan", 4);
         return EXIT_SUCCESS;
     }
 
@@ -168,11 +168,11 @@ dtostr(double value, char *str, size_t num)
         value = abs(value);
     }
 
-    if (isinf(value)) {
+    if (__isinf(value)) {
         if (num < 4)
             return EXIT_FAILURE;
 
-        strncpy(str, "inf", 4);
+        __strncpy(str, "inf", 4);
         return EXIT_SUCCESS;
     }
 
@@ -189,14 +189,14 @@ dtostr(double value, char *str, size_t num)
     if (utostr(whole_part, 10, 0, str, num - DTOSTR_PRECISION - 1) != 0)
         return EXIT_FAILURE;
 
-    str += strlen(str);
+    str += __strlen(str);
     *str++ = '.';
 
-    fractional_len = strlen(fractional_buf);
+    fractional_len = __strlen(fractional_buf);
     for (i = 0; i < DTOSTR_PRECISION - fractional_len; i++)
         *str++ = '0';
 
-    strcpy(str, fractional_buf);
+    __strcpy(str, fractional_buf);
     return EXIT_SUCCESS;
 }
 

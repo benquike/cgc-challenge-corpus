@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -94,7 +94,7 @@ int parse_sentence(const char *buf, struct sentence_struct *ss) {
 	end = get_next_field(p_buf) - 1;
 
 #if PATCHED
-	if (MAX_SENTENCE_LEN < (end-p_buf+strlen(ss->ais_msg))) {
+	if (MAX_SENTENCE_LEN < (end-p_buf+__strlen(ss->ais_msg))) {
 		return ERR_INVALID_SENTENCE;
 	}
 #endif
@@ -121,7 +121,7 @@ void reset_sentence_struct(struct sentence_struct *ss) {
  	ss->session_id = 0;
 	ss->msg_status = EMPTY;
 	ss->msg_type = 0;
-	memset((void *)ss->ais_msg, 0, MAX_SENTENCE_LEN);
+	__memset((void *)ss->ais_msg, 0, MAX_SENTENCE_LEN);
  	ss->p_ais_msg_idx = ss->ais_msg;
  }
 

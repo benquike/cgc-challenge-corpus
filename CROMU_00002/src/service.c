@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -113,8 +113,8 @@ int parse_float_pair( const char *buf, double* pair1, double* pair2 )
 
     pair2_buf[buf_pos] = '\0';
 
-    *pair1 = atof( pair1_buf );
-    *pair2 = atof( pair2_buf );
+    *pair1 = __atof( pair1_buf );
+    *pair2 = __atof( pair2_buf );
 
     return 0;
 }
@@ -126,24 +126,24 @@ int main(void)
     int i;
 
     // Print banner
-    printf( BANNER_STR );
+    __printf( BANNER_STR );
 
     ret = readLine( STDIN, buf, sizeof(buf) );
     if ( ret == -1 )
         _terminate(2);
 
-    int32_t particle_count = atoi( buf );
+    int32_t particle_count = __atoi( buf );
 
     if ( particle_count == 0 )
     {
-        printf( "Goodbye\n" );
+        __printf( "Goodbye\n" );
         _terminate(0);
     }
 
 
     if ( particle_count > MAX_PARTICLE_COUNT )
     {
-        printf( "Goodbye\n" );
+        __printf( "Goodbye\n" );
         _terminate(3);
     }
 
@@ -156,7 +156,7 @@ int main(void)
         int32_t particle_num;
 
         // Get position
-        printf( PARTICLE_PROMPT_POSITION );
+        __printf( PARTICLE_PROMPT_POSITION );
 
         ret = readLine( STDIN, buf, sizeof(buf) );
         if ( ret == -1 )
@@ -164,12 +164,12 @@ int main(void)
 
         if ( parse_float_pair( buf, &pos_x, &pos_y ) != 0 )
         {
-            printf( BAD_POSITION_ERROR );
+            __printf( BAD_POSITION_ERROR );
             continue;
         }
 
         // Get velocity
-        printf( PARTICLE_PROMPT_VELOCITY );
+        __printf( PARTICLE_PROMPT_VELOCITY );
 
         ret = readLine( STDIN, buf, sizeof(buf) );
         if ( ret == -1 )
@@ -177,34 +177,34 @@ int main(void)
 
         if ( parse_float_pair( buf, &vel_x, &vel_y ) != 0 )
         {
-            printf( BAD_VELOCITY_ERROR );
+            __printf( BAD_VELOCITY_ERROR );
 
             continue;
         }
 
         // Get mass
-        printf( PARTICLE_PROMPT_MASS );
+        __printf( PARTICLE_PROMPT_MASS );
 
         ret = readLine( STDIN, buf, sizeof(buf) );
         if ( ret == -1 )
             _terminate(2);
 
-        if ( (mass = atof( buf )) == 0.0 )
+        if ( (mass = __atof( buf )) == 0.0 )
         {
-            printf( BAD_MASS_ERROR );
+            __printf( BAD_MASS_ERROR );
             continue;
         }
 
         // Get radius
-        printf( PARTICLE_PROMPT_RADIUS );
+        __printf( PARTICLE_PROMPT_RADIUS );
 
         ret = readLine( STDIN, buf, sizeof(buf) );
         if ( ret == -1 )
             _terminate(2);
 
-        if ( (radius = atof( buf )) == 0.0 )
+        if ( (radius = __atof( buf )) == 0.0 )
         {
-            printf( BAD_RADIUS_ERROR );
+            __printf( BAD_RADIUS_ERROR );
             continue;
         }
 
@@ -216,14 +216,14 @@ int main(void)
         }
         else
         {
-            printf( BAD_DATA_ERROR );
+            __printf( BAD_DATA_ERROR );
             continue;
         }
 
-        printf( "Particle #@d added at (@f,@f) velocity(@f,@f) mass(@f) radius(@f).\n", particle_num, pos_x, pos_y, vel_x, vel_y, mass, radius );
+        __printf( "Particle #@d added at (@f,@f) velocity(@f,@f) mass(@f) radius(@f).\n", particle_num, pos_x, pos_y, vel_x, vel_y, mass, radius );
     }
 
-    printf( "Running simulation with...\n" );
+    __printf( "Running simulation with...\n" );
     // Initialize render grid
     init_render_grid();
 
@@ -234,13 +234,13 @@ int main(void)
     simulation_run( 10 );
 
     // Print out simple statistics
-    printf( "Simulation complete, @d collisions simulated over @d seconds in @d frames.\n", get_collision_count(), get_simulation_time(), get_simulation_frames() );
+    __printf( "Simulation complete, @d collisions simulated over @d seconds in @d frames.\n", get_collision_count(), get_simulation_time(), get_simulation_frames() );
 
     // Output end information
     display_simulation_data( );
 
     // Exit
-    printf( "Goodbye\n" );
+    __printf( "Goodbye\n" );
 
     // Exit
     _terminate( 0 );

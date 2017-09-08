@@ -62,33 +62,33 @@ void checked_transmit(int fd, const void *buf, size_t count) {
 }
 
 void printBoard(int skip) {
-//   printf("\n%s\n", gallows);
+//   __printf("\n%s\n", gallows);
    char buf[4096];
    //save aside the first 4k of random
-//   printf("Password: ");
-   if (fread(buf, 1, 57 - skip, stdin) != (57 - skip)) {
+//   __printf("Password: ");
+   if (__fread(buf, 1, 57 - skip, stdin) != (57 - skip)) {
       err("failed in printBoard\n", 21, 0);
    }
 }
 
 void match(const char *str) {
-//   printf("\n%s\n", gallows);
+//   __printf("\n%s\n", gallows);
 
    char buf[4096];
-   int l = strlen(str);
-   if (fread(buf, 1, l, stdin) != l) {
-      err("short read in match\n", 20, 1);
+   int l = __strlen(str);
+   if (__fread(buf, 1, l, stdin) != l) {
+      err("short __read in match\n", 20, 1);
    }
    if (memcmp(buf, str, l) != 0) {
       transmit(2, "match fail expected:\n", 21, NULL);
-      err(str, strlen(str), 1);
+      err(str, __strlen(str), 1);
    }
 }
 
 void getWord(int word) {
    unsigned char buf[4096];
    //save aside the first 4k of random
-   if (fread(buf, 1, 43, stdin) != 43) {
+   if (__fread(buf, 1, 43, stdin) != 43) {
       _terminate(5);
    }
    if (memcmp((char*)buf, "Choose your word seed. Please send 4 bytes\n", 43) != 0) {
@@ -263,7 +263,7 @@ void playToLose(int word, char **answer) {
    reset();
    getWord(word);
    while (1) {
-      int i = strlen(alpha) - 1;
+      int i = __strlen(alpha) - 1;
       char guess = alpha[i];
       alpha[i] = 0;
       if (doTurn(guess, answer)) return;
@@ -302,15 +302,15 @@ int main() {
    
    random(&word, 4, NULL); 
    
-//   printf("Password: ");
-   if (fread(buf, 1, 10, stdin) != 10) {
+//   __printf("Password: ");
+   if (__fread(buf, 1, 10, stdin) != 10) {
       _terminate(1);
    }
    if (memcmp(buf, "Password: ", 10) != 0) {
       _terminate(2);
    }
    checked_transmit(1, "HANGEMHIGH!\n", 12);
-   if (fread(buf, 1, 28, stdin) != 28) {
+   if (__fread(buf, 1, 28, stdin) != 28) {
       _terminate(3);
    }
    if (memcmp(buf, "Welcome to Hangman Blondie!\n", 28) != 0) {
@@ -318,7 +318,7 @@ int main() {
    }
 
    playToLose(word, &answer);
-   if (fread(buf, 1, 18, stdin) != 18) {
+   if (__fread(buf, 1, 18, stdin) != 18) {
       err("term1\n", 6, 1);
    }
    if (memcmp(buf, "Play again (y/n)? ", 18) != 0) {
@@ -327,7 +327,7 @@ int main() {
    checked_transmit(1, "y\n", 2); 
    playToWin(word, answer);
 /*
-   if (fread(buf, 1, 18, stdin) != 18) {
+   if (__fread(buf, 1, 18, stdin) != 18) {
       err("term3\n", 6, 1);
    }
    if (memcmp(buf, "Play again (y/n)? ", 18) != 0) {

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -134,7 +134,7 @@ int receive_with_term(int fd, void *buf, size_t count, size_t *rx_bytes) {
 
 // MOD FROM: KPRCA_00001
 // Changed definition of string (no longer terminated by NULL) + added n arg.
-char *strncpy(char *dest, const char *src, size_t n)
+char *__strncpy(char *dest, const char *src, size_t n)
 {
    size_t i;
    for (i = 0; (src[i] != STRING_TERMINATOR) && (0 < n--); i++) {
@@ -145,19 +145,19 @@ char *strncpy(char *dest, const char *src, size_t n)
 }
 
 // From the docs:
-// The strcat() and strncat() functions append a copy of the null-terminated 
+// The __strcat() and __strncat() functions append a copy of the null-terminated 
 // string s2 to the end of the null-terminated string s1, then add a 
 // terminating `\0'.  
-// The strncat() function appends not more than n characters from s2, and then 
+// The __strncat() function appends not more than n characters from s2, and then 
 // adds a terminating `\0'.
 // NOTE: not POSIX
-char * strncat(char *s1, const char *s2, size_t n) {
+char * __strncat(char *s1, const char *s2, size_t n) {
 
    // Find the end of s1.
-   char *cat_begin = s1 + strlen(s1);
+   char *cat_begin = s1 + __strlen(s1);
 
    // Copy the specified amount to the end of s1.
-   strncpy(cat_begin, s2, n);
+   __strncpy(cat_begin, s2, n);
 
    // Add the STRING_TERMINATOR
    cat_begin[n] = STRING_TERMINATOR;
@@ -167,7 +167,7 @@ char * strncat(char *s1, const char *s2, size_t n) {
 }
 
 // IDENTICAL TO: REDPILL
-unsigned char * memset(void *b, char c, size_t len) {
+unsigned char * __memset(void *b, char c, size_t len) {
 
   char *ptr = (char *)b; 
   while (len) {
@@ -185,8 +185,8 @@ unsigned char * memset(void *b, char c, size_t len) {
 char * strpos(char * haystack, char * needle) {
 
    char * pos = NULL;
-   size_t sz_haystack = strlen(haystack);
-   size_t sz_needle = strlen(needle);
+   size_t sz_haystack = __strlen(haystack);
+   size_t sz_needle = __strlen(needle);
 
    // If the substring is longer than the string, then we're not finding it.
    if (sz_haystack < sz_needle) { return NULL; }
@@ -216,7 +216,7 @@ int recv_until_delim(int fd, char *buf, size_t size) {
     if (!buf)
         return -2;
 
-    // While we still have bytes to read...
+    // While we still have bytes to __read...
     while (0 != cursize) {
 
         bytes_read = 0;
@@ -226,13 +226,13 @@ int recv_until_delim(int fd, char *buf, size_t size) {
         receive(fd, buf, 1, &bytes_read);
         buf += bytes_read;
 
-        // If we read 0 bytes, we assume EOF; break.
+        // If we __read 0 bytes, we assume EOF; break.
         if (0 == bytes_read) { break; }
 
-        // If we just read a newline, we're done; break.
+        // If we just __read a newline, we're done; break.
         if ( *(buf-1) == STRING_TERMINATOR ) { break; }
 
-        // Subtract cursize by the number of bytes read.
+        // Subtract cursize by the number of bytes __read.
         // This shouldn't underflow because we only request 1 byte at a time.
         cursize -= bytes_read;
     }
@@ -260,7 +260,7 @@ int strncmp(const char *s1, const char *s2, size_t len) {
 
 // BASED ON: EAGLE_00004
 // MOD: changed delimeter
-int strcmp(const char *s1, const char *s2) {
+int __strcmp(const char *s1, const char *s2) {
 
    while (*s1 != STRING_TERMINATOR && *s2 != STRING_TERMINATOR && *s1 == *s2) {
       s1++;
@@ -271,7 +271,7 @@ int strcmp(const char *s1, const char *s2) {
 
 // BASED ON: EAGLE_00004
 // MOD: changed delimeter
-size_t strlen(const char *str) {
+size_t __strlen(const char *str) {
    size_t res = 0;
    while (STRING_TERMINATOR != *str++) {res++;}
    return res;
@@ -290,13 +290,13 @@ typedef __builtin_va_list va_list;
 #define va_end(ap) __builtin_va_end(ap)
 #define va_arg(ap, type) __builtin_va_arg(ap, type)
 
-static FILE std_files[3] = { {0, _FILE_STATE_OPEN}, {1, _FILE_STATE_OPEN}, {2, _FILE_STATE_OPEN} };
+static __FILE std_files[3] = { {0, _FILE_STATE_OPEN}, {1, _FILE_STATE_OPEN}, {2, _FILE_STATE_OPEN} };
 
-FILE *stdin = &std_files[0];
-FILE *stdout = &std_files[1];
-FILE *stderr = &std_files[2];
+__FILE *stdin = &std_files[0];
+__FILE *stdout = &std_files[1];
+__FILE *stderr = &std_files[2];
 
-int vfprintf(FILE *stream, const char *format, va_list ap);
+int vfprintf(__FILE *stream, const char *format, va_list ap);
 int vdprintf(int fd, const char *format, va_list ap);
 
 #define IS_DIGIT     1
@@ -335,11 +335,11 @@ static unsigned char type_flags[256] = {
      IS_LOWER, IS_LOWER, IS_LOWER, 0, 0, 0, 0, 0,
 };
 
-int isalpha(int c) {
+int __isalpha(int c) {
    return (type_flags[c & 0xff] & IS_ALPHA) != 0;
 }
 
-int isdigit(int c) {
+int __isdigit(int c) {
    return (type_flags[c & 0xff] & IS_DIGIT) != 0;
 }
 
@@ -348,17 +348,17 @@ int isxdigit(int c) {
 }
 
 int toupper(int c) {
-   if (isalpha(c)) {
+   if (__isalpha(c)) {
       return c & ~0x20;
    }
    return c;
 }
 
-int vfprintf(FILE * stream, const char *format, va_list ap) {
+int vfprintf(__FILE * stream, const char *format, va_list ap) {
    return vdprintf(stream->fd, format, ap);
 }
 
-int fprintf(FILE * stream, const char *format, ...) {
+int fprintf(__FILE * stream, const char *format, ...) {
    va_list va;
    va_start(va, format);
    return vfprintf(stream, format, va);
@@ -462,10 +462,10 @@ static char *r_xtoa(unsigned int val, char *outbuf, int caps) {
 }
 
 static int hex_value_of(char ch) {
-   if (isdigit(ch)) {
+   if (__isdigit(ch)) {
       return ch - '0';
    }
-   else if (isalpha(ch)) {
+   else if (__isalpha(ch)) {
       return toupper(ch) - 'A' + 10;
    }
    return -1;
@@ -593,11 +593,11 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                state = STATE_FLAGS;
                break;
             }
-            if (isdigit(ch)) {
+            if (__isdigit(ch)) {
                //could be width or could be arg specifier or a 0 flag
                //width and arg values don't start with 0
                width_value = 0;
-               while (isdigit(ch)) {
+               while (__isdigit(ch)) {
                   width_value = width_value * 10 + (ch - '0');
                   ch = *format++;
                }
@@ -651,8 +651,8 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
             if (ch == '*') {
                ch = *format++;
                int width_arg = 0;
-               if (isdigit(ch)) {
-                  while (isdigit(ch)) {
+               if (__isdigit(ch)) {
+                  while (__isdigit(ch)) {
                      width_arg = width_arg * 10 + (ch - '0');
                      ch = *format++;
                   }
@@ -667,9 +667,9 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                }
                width_value = (int)args[width_arg];
             }
-            else if (isdigit(ch)) {
+            else if (__isdigit(ch)) {
                width_value = 0;
-               while (isdigit(ch)) {
+               while (__isdigit(ch)) {
                   width_value = width_value * 10 + (ch - '0');
                   ch = *format++;
                }
@@ -688,8 +688,8 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                if (ch == '*') {
                   ch = *format++;
                   int prec_arg = 0;
-                  if (isdigit(ch)) {
-                     while (isdigit(ch)) {
+                  if (__isdigit(ch)) {
+                     while (__isdigit(ch)) {
                         prec_arg = prec_arg * 10 + (ch - '0');
                         ch = *format++;
                      }
@@ -704,9 +704,9 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                   }
                   prec_value = (int)args[prec_arg];
                }
-               else if (isdigit(ch)) {
+               else if (__isdigit(ch)) {
                   prec_value = 0;
-                  while (isdigit(ch)) {
+                  while (__isdigit(ch)) {
                      prec_value = prec_value * 10 + (ch - '0');
                      ch = *format++;
                   }
@@ -1164,7 +1164,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                }
                case 's': {
                   const char *s_arg = (const char *)args[field_arg];
-                  int len = strlen(s_arg);
+                  int len = __strlen(s_arg);
                   if (width_value == -1) {
                      //by default min length is the entire string
                      width_value = len;

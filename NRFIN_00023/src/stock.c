@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -84,7 +84,7 @@ remove_stock(struct stock_state *state, struct stock *stock)
 
     bucket = get_bucket(state, stock->name);
 
-// Use after free
+// Use after __free
 #ifdef PATCHED
     state->stock_freed = 1;
 
@@ -121,9 +121,9 @@ insert_stock(struct stock_state *state, const char *name)
 
 // Buffer overflow
 #ifdef PATCHED
-    strncpy(new->name, name, STOCK_NAME_MAX_LEN);
+    __strncpy(new->name, name, STOCK_NAME_MAX_LEN);
 #else
-    strcpy(new->name, name);
+    __strcpy(new->name, name);
 #endif
 
     return 0;
@@ -338,7 +338,7 @@ static void
 order_to_str(const struct order *order, char *s)
 {
     char intbuf[80] = {};
-    strcpy(s, itoa(order->id, intbuf));
+    __strcpy(s, __itoa(order->id, intbuf));
 
 // Type confusion
 #ifdef PATCHED
@@ -347,17 +347,17 @@ order_to_str(const struct order *order, char *s)
 #endif
 
     if (order->type == BUY) {
-        strcat(s, "\tBUY\t");
-        strcat(s, itoa(order->quantity, intbuf));
-        strcat(s, "\t");
-        strcat(s, itoa(order->price, intbuf));
-        strcat(s, "\t\t\t\n");
+        __strcat(s, "\tBUY\t");
+        __strcat(s, __itoa(order->quantity, intbuf));
+        __strcat(s, "\t");
+        __strcat(s, __itoa(order->price, intbuf));
+        __strcat(s, "\t\t\t\n");
     } else {
-        strcat(s, "\t\t\t");
-        strcat(s, itoa(order->price, intbuf));
-        strcat(s, "\t");
-        strcat(s, itoa(order->quantity, intbuf));
-        strcat(s, "\tSELL\n");
+        __strcat(s, "\t\t\t");
+        __strcat(s, __itoa(order->price, intbuf));
+        __strcat(s, "\t");
+        __strcat(s, __itoa(order->quantity, intbuf));
+        __strcat(s, "\tSELL\n");
     }
 }
 
@@ -397,7 +397,7 @@ cmd_list_stocks(struct stock_state *state)
     LIST_FOR_EACH(&state->stocks_list, global_list, cur) {
         len = strnlen(cur->name, STOCK_NAME_MAX_LEN);
 
-        strncpy(buf, cur->name, len);
+        __strncpy(buf, cur->name, len);
         buf[len++] = '\n';
 
         if (write_all(STDOUT, buf, len) != len)
@@ -418,11 +418,11 @@ cmd_list_orders(const struct stock_state *state, const char *name)
     if ((stock = lookup_stock(state, name)) == NULL)
         return -1;
 
-    strcpy(buf, "Order book for ");
-    strncat(buf, stock->name, STOCK_NAME_MAX_LEN);
-    strcat(buf, "\nID\tSIDE\tQTY\tPRICE\tQTY\tSIDE\n"); 
+    __strcpy(buf, "Order book for ");
+    __strncat(buf, stock->name, STOCK_NAME_MAX_LEN);
+    __strcat(buf, "\nID\tSIDE\tQTY\tPRICE\tQTY\tSIDE\n"); 
 
-    len = strlen(buf);
+    len = __strlen(buf);
     if (write_all(STDOUT, buf, len) != len)
         return -1;
 
@@ -435,7 +435,7 @@ cmd_list_orders(const struct stock_state *state, const char *name)
 
         order_to_str(cur, buf);
 
-        len = strlen(buf);
+        len = __strlen(buf);
         if (write_all(STDOUT, buf, len) != len)
             return -1;
     }
@@ -449,7 +449,7 @@ cmd_list_orders(const struct stock_state *state, const char *name)
 
         order_to_str(cur, buf);
 
-        len = strlen(buf);
+        len = __strlen(buf);
         if (write_all(STDOUT, buf, len) != len)
             return -1;
     }
@@ -480,7 +480,7 @@ cmd_check_order(const struct stock_state *state, unsigned int id)
 
     order_to_str(order, buf);
 
-    len = strlen(buf);
+    len = __strlen(buf);
     if (write_all(STDOUT, buf, len) != len)
         return -1;
 
@@ -517,7 +517,7 @@ stock_init(struct stock_state *state)
     size_t i = 0;
     size_t size = MAX(sizeof(struct order), sizeof(struct stock));
 
-// Use after free
+// Use after __free
 #ifdef PATCHED
     state->stock_freed = 0;
 #endif

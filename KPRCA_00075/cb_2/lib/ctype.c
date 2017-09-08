@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -53,12 +53,12 @@ static unsigned char __ctype[256] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-int isascii(int c)
+int __isascii(int c)
 {
     return __ctype[c & 0xff] & IS_ASCII;
 }
 
-int isdigit(int c)
+int __isdigit(int c)
 {
     return __ctype[c & 0xff] & IS_DIGIT;
 }
@@ -68,51 +68,51 @@ int isprint(int c)
     return __ctype[c & 0xff] & IS_PRINT;
 }
 
-int isalnum(int c)
+int __isalnum(int c)
 {
     return __ctype[c & 0xff] & (IS_LOWER | IS_UPPER | IS_DIGIT);
 }
 
-int isalpha(int c)
+int __isalpha(int c)
 {
     return __ctype[c & 0xff] & (IS_LOWER | IS_UPPER);
 }
 
-int islower(int c)
+int __islower(int c)
 {
     return __ctype[c & 0xff] & IS_LOWER;
 }
 
-int isupper(int c)
+int __isupper(int c)
 {
     return __ctype[c & 0xff] & IS_UPPER;
 }
 
-int isspace(int c)
+int __isspace(int c)
 {
     return __ctype[c & 0xff] & IS_SPACE;
 }
 
-int ispunct(int c)
+int __ispunct(int c)
 {
     return __ctype[c & 0xff] & IS_PUNCT;
 }
 
-int iscntrl(int c)
+int __iscntrl(int c)
 {
     return __ctype[c & 0xff] & IS_CNTRL;
 }
 
-int isxdigit(int c)
+int __isxdigit(int c)
 {
     c = toupper(c);
-    return isdigit(c) || (c >= 'A' && c <= 'F');
+    return __isdigit(c) || (c >= 'A' && c <= 'F');
 }
 
-int digittoint(int c)
+int __digittoint(int c)
 {
     c = toupper(c);
-    if (isdigit(c))
+    if (__isdigit(c))
         return c - '0';
     else if (c >= 'A' && c <= 'F')
         return c - 'A' + 10;
@@ -123,7 +123,7 @@ int digittoint(int c)
 int tolower(int c)
 {
     c &= 0xff;
-    if (isupper(c))
+    if (__isupper(c))
         return c ^= 0x20;
     else
         return c;
@@ -132,7 +132,7 @@ int tolower(int c)
 int toupper(int c)
 {
     c &= 0xff;
-    if (isupper(c))
+    if (__isupper(c))
         return c ^= 0x20;
     else
         return c;

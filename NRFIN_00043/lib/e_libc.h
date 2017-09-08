@@ -2,7 +2,7 @@
  * Copyright (C) Chris Eagle
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -27,13 +27,13 @@
 #ifndef E_LIBC_H
 #define E_LIBC_H
 
-// size_t strlen(const char *str);
-// char *strcpy(char *dst, const char *src);
-// int strcmp(const char *s1, const char *s2);
-// int memcmp(const char *s1, const char *s2, unsigned int len);
-// char *memcpy(char *s1, const char *s2, unsigned int len);
-// char *strchr(const char *s, int c);
-// int printf(const char *format, ...);
+// size_t __strlen(const char *str);
+// char *__strcpy(char *dst, const char *src);
+// int __strcmp(const char *s1, const char *s2);
+// int __memcmp(const char *s1, const char *s2, unsigned int len);
+// char *__memcpy(char *s1, const char *s2, unsigned int len);
+// char *__strchr(const char *s, int c);
+// int __printf(const char *format, ...);
 
 // int toupper(int c);
 // int tolower(int c);
@@ -53,22 +53,22 @@
 #define _FILE_HAVE_LAST   8
 
 struct _FILE;
-typedef struct _FILE FILE;
+typedef struct _FILE __FILE;
 
-extern FILE *stdin;
-extern FILE *stdout;
-extern FILE *stderr;
+extern __FILE *stdin;
+extern __FILE *stdout;
+extern __FILE *stderr;
 
-// int  fgetc(FILE *);
-// int  getc(FILE *);
+// int  fgetc(__FILE *);
+// int  getc(__FILE *);
 // int  getchar(void);
 
-// char *fgets(char *, int, FILE *);
-// int fread(void *, size_t, size_t, FILE *);
+// char *fgets(char *, int, __FILE *);
+// int __fread(void *, size_t, size_t, __FILE *);
 
-// int ferror(FILE *stream);
-// int feof(FILE *stream);
+// int ferror(__FILE *stream);
+// int feof(__FILE *stream);
 
-int fprintf(FILE * stream, const char *format, ...);
+int fprintf(__FILE * stream, const char *format, ...);
 
 #endif

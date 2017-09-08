@@ -3,7 +3,7 @@
  * 
  * Copyright (c) 2014 Kaprica Security, Inc.
  * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -164,7 +164,7 @@ static void output_byte(uint8_t byte)
 {
 #ifdef PATCHED
     if (encoder.output_idx >= sizeof(encoder.output_buffer))
-        exit(2);
+        __exit(2);
 #endif
     encoder.output_buffer[encoder.output_idx++] = byte;
 }
@@ -237,7 +237,7 @@ int main()
     if (1ULL * bmp_info.width * bmp_info.height > 256*256)
         goto error;
 
-    uint8_t *data = malloc(data_size);
+    uint8_t *data = __malloc(data_size);
     if (data == NULL)
         goto error;
     if (recvall(STDIN, (uint8_t*)data, data_size, &rx) != 0 || rx != data_size)
@@ -253,8 +253,8 @@ int main()
     huffman_decode_table(&encoder.ht_dc[1], HT_DC_C);
     huffman_decode_table(&encoder.ht_ac[0], HT_AC_L);
     huffman_decode_table(&encoder.ht_ac[1], HT_AC_C);
-    memcpy(encoder.qt[0], Q50_L, 64);
-    memcpy(encoder.qt[1], Q50_C, 64);
+    __memcpy(encoder.qt[0], Q50_L, 64);
+    __memcpy(encoder.qt[1], Q50_C, 64);
     set_quality(encoder.qt[0], quality);
     set_quality(encoder.qt[1], quality);
     

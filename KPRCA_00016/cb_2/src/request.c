@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -64,7 +64,7 @@ void send_request(void *req, enum cmd_t cmd)
     default:
       goto done;
   }
-  packet->body = malloc(packet->body_len);
+  packet->body = __malloc(packet->body_len);
   if (packet->body)
   {
     size_t size;
@@ -73,16 +73,16 @@ void send_request(void *req, enum cmd_t cmd)
       char *pb = packet->body;
       send_req_t *sr = (send_req_t *)req;
       size = sizeof(send_req_t) - sizeof(message_t *);
-      memcpy(pb, (char *)req, size);
+      __memcpy(pb, (char *)req, size);
       pb += size;
       size = sizeof(message_t) - sizeof(char *);
-      memcpy(pb, (char *)(sr->msg), size);
+      __memcpy(pb, (char *)(sr->msg), size);
       pb += size;
-      memcpy(pb, sr->msg->text, sr->msg->text_len);
+      __memcpy(pb, sr->msg->text, sr->msg->text_len);
     }
     else
     {
-      memcpy(packet->body, (char *)req, packet->body_len);
+      __memcpy(packet->body, (char *)req, packet->body_len);
     }
     packet->checksum = calc_checksum(packet);
     size = sizeof(packet_t) - sizeof(char *);

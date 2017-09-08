@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -53,7 +53,7 @@ do_hugman(void)
     char c;
 
     char board[11][31];
-    memcpy(board, new_board, sizeof(board));
+    __memcpy(board, new_board, sizeof(board));
 
     char graveyard[53] = { 0 };
 
@@ -90,8 +90,8 @@ do_hugman(void)
         win = 1;
 
         for (j = 0; j < sizeof(board) / sizeof(board[0]); j++)
-            printf("%s", board[j]);
-        printf("Incorrect: %s\n", graveyard);
+            __printf("%s", board[j]);
+        __printf("Incorrect: %s\n", graveyard);
 
         do {
             if ((c_ = getc()) < 0)
@@ -116,24 +116,24 @@ do_hugman(void)
             board[limb_coordinates[i].x][limb_coordinates[i].y] = limbs[i];
             i++;
 
-            if (strchr(graveyard, c) == NULL)
-                strncat(graveyard, &c, 1);
+            if (__strchr(graveyard, c) == NULL)
+                __strncat(graveyard, &c, 1);
         }
     }
 
     for (j = 0; j < sizeof(board) / sizeof(board[0]); j++)
-        printf("%s", board[j]);
+        __printf("%s", board[j]);
 
     game_state.games.hugman.round++;
-    // Avoid giving away a free Missigno/Mewthree!
+    // Avoid giving away a __free Missigno/Mewthree!
     if (game_state.games.hugman.round == 6 ||
             game_state.games.hugman.round == 0xffffffff)
         game_state.games.hugman.round++;
 
     if (win)
-        printf("CONGRATULATIONS!\n");
+        __printf("CONGRATULATIONS!\n");
     else
-        printf("Sorry, the word was %s!\n", word);
+        __printf("Sorry, the word was %s!\n", word);
 
     return EXIT_SUCCESS;
 }

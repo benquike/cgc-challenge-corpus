@@ -66,7 +66,7 @@ bool List<T>::remove(size_t idx)
     if (idx >= len)
         return false;
 
-    memcpy(&data[idx], &data[idx+1], (len - idx) * sizeof(T));
+    __memcpy(&data[idx], &data[idx+1], (len - idx) * sizeof(T));
     len--;
     return true;
 }
@@ -117,7 +117,7 @@ void List<T>::print_list(void (*print_func)(void *))
 {
     int i;
     for (i = 0; i < len; i++) {
-        printf("\t%d. ", i+1);
+        __printf("\t%d. ", i+1);
         print_func(data[i]);
     }
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -27,14 +27,14 @@
 
 board_t *create_board()
 {
-    board_t *board = malloc(sizeof(board_t));
+    board_t *board = __malloc(sizeof(board_t));
     clear_board(board);
     return board;
 }
 
 void clear_board(board_t *board)
 {
-    memset(board->ttt_board, BLANK, BOARD_WIDTH * BOARD_HEIGHT * sizeof(char));
+    __memset(board->ttt_board, BLANK, BOARD_WIDTH * BOARD_HEIGHT * sizeof(char));
     board->num_moves = 0;
     board->winner = 0;
 }
@@ -123,7 +123,7 @@ void print_board(board_t *board)
     int i, j;
     char *c;
     for (i = 0; i < BOARD_HEIGHT; i++) {
-        printf("|");
+        __printf("|");
         for (j = 0; j < BOARD_WIDTH; j++) {
             switch(board->ttt_board[i][j]) {
             case HUMAN:
@@ -138,8 +138,8 @@ void print_board(board_t *board)
             default:
                 c = "%";
             }
-            printf("%s|", c);
+            __printf("%s|", c);
         }
-        printf("\n");
+        __printf("\n");
     }
 }

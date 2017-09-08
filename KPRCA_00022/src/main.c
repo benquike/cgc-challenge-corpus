@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -182,15 +182,15 @@ static page_option get_response()
 
     if (i > 2 && response[0] == '*' && response[1] == '*') {
         //parse command
-        if( memcmp(&response[2], "prev", strlen("prev")) == 0 )
+        if( memcmp(&response[2], "prev", __strlen("prev")) == 0 )
             return PREV;
-        if( memcmp(&response[2], "next", strlen("next")) == 0 )
+        if( memcmp(&response[2], "next", __strlen("next")) == 0 )
             return NEXT;
-        if( memcmp(&response[2], "update ", strlen("update ")) == 0 )
+        if( memcmp(&response[2], "update ", __strlen("update ")) == 0 )
             return UPDATE;
-        if( memcmp(&response[2], "help", strlen("help")) == 0 )
+        if( memcmp(&response[2], "help", __strlen("help")) == 0 )
             return HELP;
-        if( memcmp(&response[2], "exit", strlen("exit")) == 0 )
+        if( memcmp(&response[2], "__exit", __strlen("__exit")) == 0 )
             return EXIT;
     }
 
@@ -199,23 +199,23 @@ static page_option get_response()
 
 void print_menu()
 {
-    printf("All commands begin with '**' and may be entered at any time\n");
-    printf("**prev <Return to the previous page>\n");
-    printf("**next <Move to the next page>\n");
-    printf("**update [id] <Update field, ex: \"Update First Name\">\n");
-    printf("**help <Print this dialogue>\n");
-    printf("**exit <Exit application>\n");
+    __printf("All commands begin with '**' and may be entered at any time\n");
+    __printf("**prev <Return to the previous page>\n");
+    __printf("**next <Move to the next page>\n");
+    __printf("**update [id] <Update field, ex: \"Update First Name\">\n");
+    __printf("**help <Print this dialogue>\n");
+    __printf("**__exit <Exit application>\n");
 }
 
 int main(void)
 {
     page_option pg_opt = NOOP;
-    printf("\n\n");
-    printf("Thanks for your interest in the Sea Eye Association.\n");
-    printf("In order to be considered for the job complete the preliminary online background check\n");
-    printf("Due to the secure nature of the position you are applying for you may be asked to\n");
-    printf("submit additional paperwork after your preliminary background check has been approved.\n");
-    printf("Thank you for your cooperation\n");
+    __printf("\n\n");
+    __printf("Thanks for your interest in the Sea Eye Association.\n");
+    __printf("In order to be considered for the job complete the preliminary online background check\n");
+    __printf("Due to the secure nature of the position you are applying for you may be asked to\n");
+    __printf("submit additional paperwork after your preliminary background check has been approved.\n");
+    __printf("Thank you for your cooperation\n");
     g_page_idx = CAND;
 
     while(pg_opt != EXIT) {
@@ -241,7 +241,7 @@ int main(void)
         }
     }
 
-    printf("Thank you!\n");
+    __printf("Thank you!\n");
     return 0;
 }
 
@@ -252,21 +252,21 @@ int fill_out_form(app_input_t form_questions[], int num_fields)
     for (i = 0; i < num_fields; i++) {
         app_input_t *form_question = &form_questions[i];
         while (form_question->input == NULL) {
-            printf("%s%s: ", form_question->text_field, form_question->input_specification);
+            __printf("%s%s: ", form_question->text_field, form_question->input_specification);
             pg_opt = get_response();
             if (pg_opt < 0) {
                 continue;
             } else if (pg_opt != INPUT) {
                 goto page_option_selected;
             } else if (!form_question->is_required && memcmp(g_user_resp, "", 1) == 0) {
-                form_question->input = calloc(1, form_question->max_input_length);
+                form_question->input = __calloc(1, form_question->max_input_length);
                 break;
             } else if (form_question->verify_input(g_user_resp, form_question->max_input_length) != 0) {
                 continue;
             }
 
-            form_question->input = calloc(1, form_question->max_input_length);
-            strcpy(form_question->input, g_user_resp);
+            form_question->input = __calloc(1, form_question->max_input_length);
+            __strcpy(form_question->input, g_user_resp);
         }
     }
 
@@ -278,8 +278,8 @@ page_option_selected:
 
 int update_field(char *field, app_input_t form_questions[], int num_fields)
 {
-    if (field == NULL || strlen(field) < 1) {
-        printf("Bad field\n");
+    if (field == NULL || __strlen(field) < 1) {
+        __printf("Bad field\n");
         return -1;
     }
 
@@ -287,29 +287,29 @@ int update_field(char *field, app_input_t form_questions[], int num_fields)
     page_option pg_opt;
     for (i = 0; i < num_fields; i++) {
         app_input_t *form_question = &form_questions[i];
-        if (strlen(field) != strlen(form_question->text_field) ||
-            memcmp(field, form_question->text_field, strlen(form_question->text_field)) != 0)
+        if (__strlen(field) != __strlen(form_question->text_field) ||
+            memcmp(field, form_question->text_field, __strlen(form_question->text_field)) != 0)
             continue;
 
-        printf("%s%s: ", form_question->text_field, form_question->input_specification);
+        __printf("%s%s: ", form_question->text_field, form_question->input_specification);
         pg_opt = get_response();
         if (pg_opt != INPUT) {
-            printf("Bad command\n");
+            __printf("Bad command\n");
             return -2;
         } else if (!form_question->is_required && memcmp(g_user_resp, "", 1) == 0) {
-            memset(form_question->input, 0, form_question->max_input_length);
+            __memset(form_question->input, 0, form_question->max_input_length);
             return 0;
         } else if (form_question->verify_input(g_user_resp, form_question->max_input_length) != 0) {
-            printf("Bad input.\n");
+            __printf("Bad input.\n");
             return -4;
         }
 
-        memset(form_question->input, 0, form_question->max_input_length);
-        strcpy(form_question->input, g_user_resp);
+        __memset(form_question->input, 0, form_question->max_input_length);
+        __strcpy(form_question->input, g_user_resp);
         return 0;
     }
 
-    printf("Could not find specified field\n");
+    __printf("Could not find specified field\n");
     return -1;
 }
 
@@ -317,11 +317,11 @@ void print_page(char *banner, app_input_t form_questions[], int num_fields)
 {
     int i;
     if (banner != NULL)
-        printf("%s", banner);
+        __printf("%s", banner);
 
     for (i = 0; i < num_fields; i++) {
         app_input_t *form_question = &form_questions[i];
-        printf("%s=%s\n", form_question->text_field, form_question->input);
+        __printf("%s=%s\n", form_question->text_field, form_question->input);
     }
 }
 
@@ -332,7 +332,7 @@ int form(char *banner, app_input_t form_questions[], size_t num_fields)
     page_option pg_opt;
 
     if (g_page_idx > g_last_page_completed + 1) {
-        printf("You must complete the previous page before proceeding to this page\n");
+        __printf("You must complete the previous page before proceeding to this page\n");
         g_page_idx = g_last_page_completed + 1;
         return -1;
     }
@@ -352,7 +352,7 @@ int form(char *banner, app_input_t form_questions[], size_t num_fields)
         if (pg_opt == NOOP) {
             g_last_page_completed++;
         } else if (pg_opt == UPDATE) {
-            printf("Cannot update field until all fields are inputted\n");
+            __printf("Cannot update field until all fields are inputted\n");
             return pg_opt;
         } else {
             return pg_opt;
@@ -360,14 +360,14 @@ int form(char *banner, app_input_t form_questions[], size_t num_fields)
     }
 
     print_page(banner, form_questions, num_fields);
-    printf("\nType **next to continue\n");
+    __printf("\nType **next to continue\n");
 
     pg_opt = get_response();
     if (pg_opt == UPDATE) {
         update_tok = g_user_resp;
         strsep(&update_tok, " ");
         if (update_field(update_tok, form_questions, num_fields) != 0)
-            printf("Update Unsuccessful\n");
+            __printf("Update Unsuccessful\n");
     }
 
     return pg_opt;
@@ -375,49 +375,49 @@ int form(char *banner, app_input_t form_questions[], size_t num_fields)
 
 int candidate_info()
 {
-    printf("\nCandidate Info Form\n");
+    __printf("\nCandidate Info Form\n");
     return form("\n*********Candidate Info:*********\n", applicant_id, sizeof(applicant_id)/sizeof(app_input_t));
 }
 
 int contact()
 {
-    printf("\nContact Info Form\n");
+    __printf("\nContact Info Form\n");
     return form("\n*********Contact Info:*********\n",  contact_info, sizeof(contact_info)/sizeof(app_input_t));
 }
 
 int address()
 {
-    printf("\nAddress Form\n");
+    __printf("\nAddress Form\n");
     return form("\n*********Address:*********\n", current_address, sizeof(current_address)/sizeof(app_input_t));
 }
 
 int education()
 {
-    printf("\nEducation Form\n");
+    __printf("\nEducation Form\n");
     return form("\n*********Highest Education:*********\n", highest_education, sizeof(highest_education)/sizeof(app_input_t));
 }
 
 int employment_history()
 {
-    printf("\nEmployment Form\n");
+    __printf("\nEmployment Form\n");
     return form("\n*********Most Recent Employer:*********\n", last_employer, sizeof(last_employer)/sizeof(app_input_t));
 }
 
 int final_screening()
 {
 
-    printf("\nFinal Questions\n");
+    __printf("\nFinal Questions\n");
     return form("\n*********Final Screening:*********\n", screening_questions, sizeof(screening_questions)/sizeof(app_input_t));
 }
 
 int finished() {
-    printf("\n\nYou have completed your application with the Sea Eye Association.\n");
-    printf("You may review the form. Navigate through the application with **prev and **next.\n");
-    printf("Once your are satisfied type **exit to exit and submit the form\n");
-    printf("If you wish to discard your application, please use Control-C\n");
+    __printf("\n\nYou have completed your application with the Sea Eye Association.\n");
+    __printf("You may review the form. Navigate through the application with **prev and **next.\n");
+    __printf("Once your are satisfied type **__exit to __exit and submit the form\n");
+    __printf("If you wish to discard your application, please use Control-C\n");
 
     if (g_page_idx > g_last_page_completed + 1) {
-        printf("You must complete the previous page before proceeding to this page\n");
+        __printf("You must complete the previous page before proceeding to this page\n");
         g_page_idx = g_last_page_completed + 1;
         return -1;
     }

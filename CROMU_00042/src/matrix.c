@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.co>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -65,12 +65,12 @@ void ScalerMultiply(int32_t *m1, int32_t multiplier, int32_t *result) {
 }
 
 void PrintMenu(void) {
-	puts("Matrix Calculator");
-	puts("1. Add two matrices");
-	puts("2. Subtract two matrices");
-	puts("3. Scalar multiply a matrix");
-	puts("4. Return to main menu");
-	printf("Choice: ");
+	__puts("Matrix Calculator");
+	__puts("1. Add two matrices");
+	__puts("2. Subtract two matrices");
+	__puts("3. Scalar multiply a matrix");
+	__puts("4. Return to main menu");
+	__printf("Choice: ");
 
 }
 
@@ -80,24 +80,24 @@ int32_t ReadMatrix(int32_t *m) {
 
 	if (X == 0) {
 		// X
-		printf("X: ");
-		if (receive_until(buf, '\n', 7) == 0) {
+		__printf("X: ");
+		if (__receive_until(buf, '\n', 7) == 0) {
 			return(0);
 		}
-		x = atoi(buf);	
+		x = __atoi(buf);	
 		if (x < 1 || x > MAX_X) {
-			puts("invalid");
+			__puts("invalid");
 			return(0);
 		}
 	
 		// Y
-		printf("Y: ");
-		if (receive_until(buf, '\n', 7) == 0) {
+		__printf("Y: ");
+		if (__receive_until(buf, '\n', 7) == 0) {
 			return(0);
 		}
-		y = atoi(buf);	
+		y = __atoi(buf);	
 		if (y < 1 || y > MAX_Y) {
-			puts("invalid");
+			__puts("invalid");
 			return(0);
 		}
 
@@ -114,20 +114,20 @@ int32_t ReadMatrix(int32_t *m) {
 #endif
 	matrix_size = x * y;
 	if (matrix_size > MAX_MATRIX_SIZE) {
-		puts("matrix too large");
+		__puts("matrix too large");
 		return(0);
 	}
 		
 
 	// Read in the matrix values
-	puts("Enter the matrix values");
+	__puts("Enter the matrix values");
 	for (x = 0; x < X; x++) {
 		for (y = 0; y < Y; y++) {
-			printf("@d,@d: ", x, y);
-			if (receive_until(buf, '\n', 7) == 0) {
+			__printf("@d,@d: ", x, y);
+			if (__receive_until(buf, '\n', 7) == 0) {
 				return(0);
 			}
-			*pM(m, x, y) = atoi(buf);
+			*pM(m, x, y) = __atoi(buf);
 		}
 	}
 
@@ -139,9 +139,9 @@ void PrintMatrix(int32_t *m) {
 
 	for (x = 0; x < X; x++) {
 		for (y = 0; y < Y; y++) {
-			printf("@d ", *pM(m, x, y));
+			__printf("@d ", *pM(m, x, y));
 		}
-		puts("");
+		__puts("");
 	}
 
 }
@@ -154,17 +154,17 @@ int32_t matrix_add(void) {
 
 	X = 0;
 	Y = 0;
-	puts("First matrix");
-	puts("Provide the matrix dimensions");
+	__puts("First matrix");
+	__puts("Provide the matrix dimensions");
 	if (!ReadMatrix(m1)) {
 		return(0);
 	}	
-	puts("Second matrix");
+	__puts("Second matrix");
 	if (!ReadMatrix(m2)) {
 		return(0);
 	}	
 	Add(m1, m2, result);
-	puts("Result");
+	__puts("Result");
 	PrintMatrix(result);
 
 	return(1);
@@ -178,17 +178,17 @@ int32_t matrix_sub(void) {
 
 	X = 0;
 	Y = 0;
-	puts("First matrix");
-	puts("Provide the matrix dimensions");
+	__puts("First matrix");
+	__puts("Provide the matrix dimensions");
 	if (!ReadMatrix(m1)) {
 		return(0);
 	}	
-	puts("Second matrix");
+	__puts("Second matrix");
 	if (!ReadMatrix(m2)) {
 		return(0);
 	}	
 	Sub(m1, m2, result);
-	puts("Result");
+	__puts("Result");
 	PrintMatrix(result);
 
 	return(1);
@@ -203,17 +203,17 @@ int32_t matrix_smul(void) {
 
 	X = 0;
 	Y = 0;
-	puts("Provide the matrix dimensions");
+	__puts("Provide the matrix dimensions");
 	if (!ReadMatrix(m1)) {
 		return(0);
 	}	
-	printf("Multiplier: ");
-	if (receive_until(buf, '\n', 7) == 0) {
+	__printf("Multiplier: ");
+	if (__receive_until(buf, '\n', 7) == 0) {
 		return(0);
 	}
-	multiplier = atoi(buf);	
+	multiplier = __atoi(buf);	
 	ScalerMultiply(m1, multiplier, result);
-	puts("Result");
+	__puts("Result");
 	PrintMatrix(result);
 
 	return(1);
@@ -225,10 +225,10 @@ int32_t matrix_command(char *t) {
 	
 	while (1) {
 		PrintMenu();
-		if (receive_until(buf, '\n', 7) == 0) {
+		if (__receive_until(buf, '\n', 7) == 0) {
 			return(0);
 		}
-		choice = atoi(buf);
+		choice = __atoi(buf);
 		if (choice < 1 || choice > 4) {
 			continue;
 		}

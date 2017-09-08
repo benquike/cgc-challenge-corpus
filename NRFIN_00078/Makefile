@@ -1,6 +1,6 @@
 AUTHOR_ID  = NRFIN
 SERVICE_ID = 00078
-CFLAGS     = -O0 -g -Werror -Wno-overlength-strings -Wno-packed
+CFLAGS     = -O0 -g -Wno-overlength-strings -Wno-packed
 VULN_COUNT = 2
 
 include ../cgc-cb.mk

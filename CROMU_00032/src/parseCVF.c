@@ -1,7 +1,7 @@
 /*
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -39,7 +39,7 @@ size_t receiveWrapper( void *outdata, size_t length )
 		count = 0;
 
 		if ( receive( 0, tbuff + bytesRead, 1, &count ) != 0 ) {
-			printf("[ERROR] Read fail\n");
+			__printf("[ERROR] Read fail\n");
 			return 0;
 		}
 		bytesRead += count;
@@ -56,7 +56,7 @@ void freeCVF( pcvf cvf )
 
 	while ( index < 8 ) {
 		if ( cvf->pds[index].pixelArray != NULL ) {
-			free( cvf->pds[index].pixelArray);
+			__free( cvf->pds[index].pixelArray);
 			cvf->pds[index].pixelArray = NULL;
 			cvf->pds[index].charCount = 0;
 		}	
@@ -68,22 +68,22 @@ void freeCVF( pcvf cvf )
 		while ( index < cvf->rCount ) {
 			if ( cvf->renderedFrames[index] != NULL ) {
 				if ( cvf->renderedFrames[index]->image != NULL ) {
-					free( cvf->renderedFrames[index]->image);
+					__free( cvf->renderedFrames[index]->image);
 					cvf->renderedFrames[index]->image = NULL;
 					cvf->renderedFrames[index]->height = 0;
 					cvf->renderedFrames[index]->width = 0;
 				}
-				free(cvf->renderedFrames[index]);
+				__free(cvf->renderedFrames[index]);
 				cvf->renderedFrames[index] = NULL;
 
 			}
 			index++;
 		}
-		free(cvf->renderedFrames);
+		__free(cvf->renderedFrames);
 		cvf->renderedFrames = NULL;
 	}
 
-	free(cvf);
+	__free(cvf);
 
 	return;
 }
@@ -107,14 +107,14 @@ int playVideo( pcvf cvf )
 
 	length = cvf->width * cvf->height;
 
-	printf("--------------------Playing video-------------------\n");
-	printf("INFO: Height: $d Width: $d Frames: $d\n", cvf->height, cvf->width, cvf->rCount);
-	printf("INFO: Set your terminal height so that only the '|'s show.\n");
-	printf("INFO: This will provide a better viewing experience\n");
-	printf("INFO: When ready press a key...\n");
+	__printf("--------------------Playing video-------------------\n");
+	__printf("INFO: Height: $d Width: $d Frames: $d\n", cvf->height, cvf->width, cvf->rCount);
+	__printf("INFO: Set your terminal height so that only the '|'s show.\n");
+	__printf("INFO: This will provide a better viewing experience\n");
+	__printf("INFO: When ready press a key...\n");
 
 	for ( int i = 0; i < cvf->height; i++ ) {
-		printf("|\n");
+		__printf("|\n");
 	}
 
 	while ( receiveWrapper( &tb, 1 ) == 0 ) {
@@ -130,13 +130,13 @@ int playVideo( pcvf cvf )
 
 		for (int i = 0; i < length; i++) {
 			if ( i != 0 && i % rf->width == 0 ) {
-				printf("\n");
+				__printf("\n");
 			}
-			printf("$c", rf->image[i]);
+			__printf("$c", rf->image[i]);
 		}
 
 		index++;
-		printf("\n");
+		__printf("\n");
 
 		/// SLEPIE
 		/// This was here for a slightly more realistic video feel but
@@ -196,14 +196,14 @@ int parseCVFFrame( pBitStream pbs, pcvf pNewImage )
 
 	/// Test that header has been parsed
 	if ( pNewImage->height == 0 ) {
-		printf("[ERROR] Header must be specified prior to frame rendering.\n");
+		__printf("[ERROR] Header must be specified prior to frame rendering.\n");
 		return 0;
 	}
 
 #ifdef PATCHED
 	/// Ensure that we have not passed the specified number of frames
 	if ( pNewImage->frameCount <= pNewImage->rCount ) {
-		printf("[ERROR] Too many frames\n");
+		__printf("[ERROR] Too many frames\n");
 		return 0;
 	}
 #endif
@@ -228,14 +228,14 @@ int parseCVFFrame( pBitStream pbs, pcvf pNewImage )
 
 	/// The first frame must be a full frame
 	if ( pNewImage->rCount == 0 && frame_type != 0 ) {
-		printf("[ERROR] First frame must be full\n");
+		__printf("[ERROR] First frame must be full\n");
 		return 0;
 	}
 
 	/// If using a custom dictionary ensure that the dictionary has chars
 	if ( pixel_dict == 0 ) {
 		if ( pNewImage->pds[custom_dict].charCount == 0 ) {
-			printf("[ERROR] Custom Dictionary $d does not exist\n", pixel_dict);
+			__printf("[ERROR] Custom Dictionary $d does not exist\n", pixel_dict);
 			return 0;
 		}
 
@@ -277,7 +277,7 @@ int parseCVFFrame( pBitStream pbs, pcvf pNewImage )
 	pixel_bits = bitsNeeded( dictionary->charCount - 1);
 
 	/// allocate the new frame
-	newFrame = malloc( sizeof(frame) );
+	newFrame = __malloc( sizeof(frame) );
 
 	if ( newFrame == NULL ) {
 		return 0;
@@ -287,10 +287,10 @@ int parseCVFFrame( pBitStream pbs, pcvf pNewImage )
 	newFrame->height = pNewImage->height;
 	newFrame->width = pNewImage->width;
 
-	newFrame->image = malloc( length );	
+	newFrame->image = __malloc( length );	
 
 	if ( newFrame->image == NULL ) {
-		free(newFrame);
+		__free(newFrame);
 		newFrame = NULL;
 		return 0;
 	}
@@ -306,18 +306,18 @@ int parseCVFFrame( pBitStream pbs, pcvf pNewImage )
 		pixel_index_length = bitsNeeded( length );
 
 		if ( readBits( pbs, pixel_index_length, (&pixel_count)) == 0 ) {
-			free(newFrame->image);
+			__free(newFrame->image);
 			newFrame->image = NULL;
-			free(newFrame);
+			__free(newFrame);
 			newFrame = NULL;
 			return 0;
 		}
 
 		if ( pixel_count == 0 ) {
-			printf("[ERROR] Empty frames not allowed\n");
-			free(newFrame->image);
+			__printf("[ERROR] Empty frames not allowed\n");
+			__free(newFrame->image);
 			newFrame->image = NULL;
-			free(newFrame);
+			__free(newFrame);
 			newFrame = NULL;
 			return 0;
 		}
@@ -334,23 +334,23 @@ int parseCVFFrame( pBitStream pbs, pcvf pNewImage )
 	///	is required.
 	if ( frame_type == 0 ) {
 		/// Set the base image to all spaces
-		memset( newFrame->image, 0x20, length );
+		__memset( newFrame->image, 0x20, length );
 
 		xbits = 0;
 		while ( xbits < pixel_count ) {
 			if ( readBits( pbs, pixel_bits, &ybits) == 0 ) {
-				free(newFrame->image);
+				__free(newFrame->image);
 				newFrame->image = NULL;
-				free(newFrame);
+				__free(newFrame);
 				newFrame = NULL;
 				return 0;
 			}
 
 			if ( ybits > dictionary->charCount ) {
-				printf("[ERROR] invalid pixel\n");
-				free(newFrame->image);
+				__printf("[ERROR] invalid pixel\n");
+				__free(newFrame->image);
 				newFrame->image = NULL;
-				free(newFrame);
+				__free(newFrame);
 				newFrame = NULL;
 				return 0;
 			}
@@ -369,14 +369,14 @@ int parseCVFFrame( pBitStream pbs, pcvf pNewImage )
 	} else {
 		/// An incremental image requires a copy of the previously rendered frame
 		if ( pNewImage->renderedFrames[ pNewImage->rCount - 1] == NULL ) {
-			free(newFrame->image);
+			__free(newFrame->image);
 			newFrame->image = NULL;
-			free(newFrame);
+			__free(newFrame);
 			newFrame = NULL;
 			return 0;
 		}
 
-		memcpy( newFrame->image, pNewImage->renderedFrames[ pNewImage->rCount-1 ]->image, length );
+		__memcpy( newFrame->image, pNewImage->renderedFrames[ pNewImage->rCount-1 ]->image, length );
 
 		/// Read index and then pixel
 		for ( int i = 0; i < pixel_count; i++ ) {
@@ -384,38 +384,38 @@ int parseCVFFrame( pBitStream pbs, pcvf pNewImage )
 			ybits = 0;
 
 			if ( readBits( pbs, pixel_count_bits, &xbits) == 0 ) {
-				free( newFrame->image);
+				__free( newFrame->image);
 				newFrame->image = NULL;
-				free(newFrame);
+				__free(newFrame);
 				newFrame = NULL;
-				printf("[ERROR] Failed to read pixel index\n");
+				__printf("[ERROR] Failed to __read pixel index\n");
 				return 0;
 			}
 
 			if ( readBits( pbs, pixel_bits, &ybits) == 0 ) {
-				free( newFrame->image);
+				__free( newFrame->image);
 				newFrame->image = NULL;
-				free(newFrame);
+				__free(newFrame);
 				newFrame = NULL;
-				printf("[ERROR] Failed to read pixel value\n");
+				__printf("[ERROR] Failed to __read pixel value\n");
 				return 0;
 			}
 
 
 			if ( xbits >= length ) {
-				printf("[ERROR] Index out of image bounds\n");
-				free(newFrame->image);
+				__printf("[ERROR] Index out of image bounds\n");
+				__free(newFrame->image);
 				newFrame->image = NULL;
-				free(newFrame);
+				__free(newFrame);
 				newFrame = NULL;
 				return 0;
 			}
 
 			if ( ybits >= dictionary->charCount ) {
-				printf("[ERROR] Pixel beyond dictionary bounds\n");
-				free(newFrame->image);
+				__printf("[ERROR] Pixel beyond dictionary bounds\n");
+				__free(newFrame->image);
 				newFrame->image = NULL;
-				free(newFrame);
+				__free(newFrame);
 				newFrame = NULL;
 				return 0;
 			}
@@ -434,11 +434,11 @@ int parseCVFFrame( pBitStream pbs, pcvf pNewImage )
 	/// Consume any padding bits
 	if ( xbits ) {
 		if ( readBits( pbs, xbits, &ybits) == 0 ) {
-			free(newFrame->image);
+			__free(newFrame->image);
 			newFrame->image = NULL;
-			free(newFrame);
+			__free(newFrame);
 			newFrame = NULL;
-			printf("[ERROR] Failed to read padding bits\n");
+			__printf("[ERROR] Failed to __read padding bits\n");
 			return 0;
 		}
 	}
@@ -472,7 +472,7 @@ int parseCVFPixelDict( pBitStream pbs, pcvf pNewImage, int index )
 
 	/// If the pixel dictionary has already been specified then fail
 	if ( pNewImage->pds[index].charCount != 0 ) {
-		printf("[ERROR] Only one type %d pixel allowed.\n");
+		__printf("[ERROR] Only one type %d pixel allowed.\n");
 		return 0;
 	}
 
@@ -482,23 +482,23 @@ int parseCVFPixelDict( pBitStream pbs, pcvf pNewImage, int index )
 	}
 
 	if ( pixelCount == 0 ) {
-		printf("[ERROR] Zero length pixel dictionary not allowed.\n");
+		__printf("[ERROR] Zero length pixel dictionary not allowed.\n");
 		return pixelCount;
 	}
 
-	pixelArray = malloc( pixelCount + 1 );
+	pixelArray = __malloc( pixelCount + 1 );
 
 	if (pixelArray == NULL ) {
 		return 0;
 	}
 
-	memset( pixelArray, 0, pixelCount + 1 );
+	__memset( pixelArray, 0, pixelCount + 1 );
 
-	/// Loop to read the specified number of pixels
+	/// Loop to __read the specified number of pixels
 	for (unsigned int i = 0; i < pixelCount; i++) {
 		if ( readBits( pbs, 8, &t) == 0 ) {
-			printf("[ERROR] Failed to read custom pixel dictionary\n");
-			free(pixelArray);
+			__printf("[ERROR] Failed to __read custom pixel dictionary\n");
+			__free(pixelArray);
 			pixelArray = NULL;
 			return 0;
 		}
@@ -507,7 +507,7 @@ int parseCVFPixelDict( pBitStream pbs, pcvf pNewImage, int index )
 		t = 0;
 	}
 
-	memset( &pNewImage->pds[index], 0, sizeof(pixelDict) );
+	__memset( &pNewImage->pds[index], 0, sizeof(pixelDict) );
 
 	pNewImage->pds[index].charCount = pixelCount;
 	pNewImage->pds[index].pixelArray = pixelArray;
@@ -559,8 +559,8 @@ int parseCVFDescription( pBitStream pbs, pcvf pNewImage )
 	for( index = 0; index < descLength; index++ ) {
 		c = pNewImage->desc[index];
 
-		if ( !isalpha( c ) && !isdigit( c ) && !isspace( c ) ) {
-			printf("[ERROR] Invalid character in description\n");
+		if ( !__isalpha( c ) && !__isdigit( c ) && !__isspace( c ) ) {
+			__printf("[ERROR] Invalid character in description\n");
 			return 0;
 		}
 	}
@@ -577,7 +577,7 @@ int parseCVFName( pBitStream pbs, pcvf pNewImage )
 		return 0;
 	}
 
-	/// If the name has already been read then error out
+	/// If the name has already been __read then error out
 	if ( pNewImage->name[0] != '\x00' ) {
 		return 0;
 	}
@@ -604,7 +604,7 @@ int parseCVFName( pBitStream pbs, pcvf pNewImage )
 	/// Ensure valid characters in the name field
 	for ( int i = 0; i < nameLength; i++) {
 		if ( !isascii( pNewImage->name[i] ) ){
-			printf("[ERROR] Invalid value in name field\n");
+			__printf("[ERROR] Invalid value in name field\n");
 			return 0;
 		}
 	}
@@ -626,7 +626,7 @@ int parseCVFHeader( pBitStream pbs, pcvf pNewImage )
 	/// is non-zero then a header has already been parsed.
 	/// Multiple headers are not permitted so error out
 	if ( pNewImage->height != 0 ) {
-		printf("[ERROR] Multiple header sections are not permitted.\n");
+		__printf("[ERROR] Multiple header sections are not permitted.\n");
 		return 0;
 	}
 
@@ -636,13 +636,13 @@ int parseCVFHeader( pBitStream pbs, pcvf pNewImage )
 	}
 
 	if ( pNewImage->height == 0 ) {
-		printf("[ERROR] Zero length height is not permitted\n");
+		__printf("[ERROR] Zero length height is not permitted\n");
 		return 0;
 	}
 
 	/// Maximum height is 35 characters
 	if ( pNewImage->height > 35 ) {
-		printf("[ERROR] Height must be less than 35\n");
+		__printf("[ERROR] Height must be less than 35\n");
 		return 0;
 	}
 
@@ -652,13 +652,13 @@ int parseCVFHeader( pBitStream pbs, pcvf pNewImage )
 	}
 
 	if ( pNewImage->width == 0 ) {
-		printf("[ERROR] Zero length width is not permitted\n");
+		__printf("[ERROR] Zero length width is not permitted\n");
 		return 0;
 	}
 
 	/// Maximum width is 128 characters
 	if ( pNewImage->width > 128 ) {
-		printf("[ERROR] Width must be less than 128\n");
+		__printf("[ERROR] Width must be less than 128\n");
 		return 0;
 	}
 
@@ -669,24 +669,24 @@ int parseCVFHeader( pBitStream pbs, pcvf pNewImage )
 
 	/// Maximum frame count is 2048
 	if ( pNewImage->frameCount > 2048 ) {
-		printf("[ERROR] Maximum frame count is 2048\n");
+		__printf("[ERROR] Maximum frame count is 2048\n");
 		return 0;
 	}
 
 	/// Zero frame count is not permitted
 	if ( pNewImage->frameCount == 0 ) {
-		printf("[ERROR] Zero frame count is not permitted\n");
+		__printf("[ERROR] Zero frame count is not permitted\n");
 		return 0;
 	}
 
 	/// Allocate frame structure pointer array
-	pNewImage->renderedFrames = malloc( sizeof( pframe ) * pNewImage->frameCount);
+	pNewImage->renderedFrames = __malloc( sizeof( pframe ) * pNewImage->frameCount);
 
 	if ( pNewImage->renderedFrames == NULL ) {
 		return 0;
 	}
 
-	memset( pNewImage->renderedFrames, 0x00, sizeof(pframe) * pNewImage->frameCount); 
+	__memset( pNewImage->renderedFrames, 0x00, sizeof(pframe) * pNewImage->frameCount); 
 
 	return 1;
 }
@@ -707,7 +707,7 @@ void renderCVF( pBitStream pbs )
 	}
 
 	if ( tdata != 0x00435646 ) {
-		printf("[ERROR] Invalid magic: $d\n", tdata);
+		__printf("[ERROR] Invalid magic: $d\n", tdata);
 		return;
 	}
 
@@ -719,9 +719,9 @@ void renderCVF( pBitStream pbs )
 
 	/// This loop starts by reading 2 bytes. Those two bytes
 	///	should be the section type such as 0x1111 for the header
-	///	Depending on this value the proper function is called to read and
+	///	Depending on this value the proper function is called to __read and
 	///	parse the data.
-	/// The loop stops when there is nothing left to read.
+	/// The loop stops when there is nothing left to __read.
 	tdata = 0;
 
 	while( readBits( pbs, 16, &tdata) != 0 ) {
@@ -777,7 +777,7 @@ void renderCVF( pBitStream pbs )
 
 				break;
 			default:
-				printf("[ERROR] Invalid section type: $d\n", tdata);
+				__printf("[ERROR] Invalid section type: $d\n", tdata);
 				return;
 				break;
 
@@ -797,13 +797,13 @@ pcvf initCVF( void )
 {
 	pcvf nc = NULL;
 
-	nc = malloc( sizeof( cvf ) );
+	nc = __malloc( sizeof( cvf ) );
 
 	if ( nc == NULL ) {
 		return nc;
 	}
 
-	memset( nc, 0, sizeof(cvf) );
+	__memset( nc, 0, sizeof(cvf) );
 
 	return nc;
 }

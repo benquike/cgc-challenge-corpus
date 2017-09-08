@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -93,8 +93,8 @@ void cleanup_input(input_t *input)
     if (input->pkk_data)
       free_pkk(input->pkk_data);
     if (input->text_data)
-      free(input->text_data);
-    free(input);
+      __free(input->text_data);
+    __free(input);
   }
 }
 
@@ -105,7 +105,7 @@ input_t* parse_input()
   input_t *input = NULL;
   unsigned int total_bytes = 0;
 
-  input = (input_t *) malloc(sizeof(input_t));
+  input = (input_t *) __malloc(sizeof(input_t));
   if (input == NULL)
     goto fail;
 
@@ -125,7 +125,7 @@ input_t* parse_input()
   input->pkk_size = dword;
   if (input->pkk_size > 0 && input->pkk_size < MAX_PPM_SIZE)
   {
-    char *pkk_data = malloc(input->pkk_size);
+    char *pkk_data = __malloc(input->pkk_size);
     if (read_n(STDIN, pkk_data, input->pkk_size) != input->pkk_size)
       goto fail;
     input->pkk_data = parse_pkk(pkk_data, input->pkk_size);
@@ -151,7 +151,7 @@ input_t* parse_input()
   {
     if (input->text_size > MAX_TEXT_LEN)
       goto fail;
-    input->text_data = malloc(input->text_size);
+    input->text_data = __malloc(input->text_size);
     if (read_n(STDIN, (char *)input->text_data, input->text_size) != input->text_size)
       goto fail;
     total_bytes += input->text_size;
@@ -182,7 +182,7 @@ int embed_text(pkk_t *pkk, char *text, unsigned short len)
     size = sizeof(int) * 2 + sizeof(short) + len;
     if (pkk->width * pkk->height * sizeof(pixel_t) / 8 < size)
       return -1;
-    message = malloc(size);
+    message = __malloc(size);
     if (message == NULL)
       return -1;
     cur = message;
@@ -190,7 +190,7 @@ int embed_text(pkk_t *pkk, char *text, unsigned short len)
     cur += sizeof(int);
     *(short *)cur = len;
     cur += sizeof(short);
-    memcpy(cur, text, len);
+    __memcpy(cur, text, len);
     cur += len;
     *(int *)cur = SECRET_END_TAG;
 
@@ -293,7 +293,7 @@ int main()
 
   if ((input = parse_input()) == NULL)
   {
-    printf("[ERROR] Failed to parse input.\n");
+    __printf("[ERROR] Failed to parse input.\n");
     return -1;
   }
 
@@ -301,27 +301,27 @@ int main()
   {
     case MODE_EM:
       if (embed_text(input->pkk_data, input->text_data, input->text_size) != 0)
-        printf("[ERROR] Failed to embed your message.\n");
+        __printf("[ERROR] Failed to embed your message.\n");
       else
       {
         output = output_pkk(input->pkk_data, &out_len);
         if (output)
         {
           transmit(STDOUT, output, out_len, NULL);
-          free(output);
+          __free(output);
         }
       }
       break;
     case MODE_EX:
       if (extract_text(input->pkk_data, text) != 0)
-        printf("[ERROR] Failed to extract the message.\n");
+        __printf("[ERROR] Failed to extract the message.\n");
       else
       {
-        printf("Secret Text: %s\n", text);
+        __printf("Secret Text: %s\n", text);
       }
       break;
     default:
-      printf("[ERROR] Invalid mode.\n");
+      __printf("[ERROR] Invalid mode.\n");
       break;
   }
 

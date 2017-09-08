@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -97,7 +97,7 @@ bool CFlashFS::Init( CNORFlash *pFlash )
 		bFlashErased = true;
 	}
 	
-	memcpy( (void *)&m_fsHdr, (void *)&oFSHdr, sizeof(oFSHdr) );
+	__memcpy( (void *)&m_fsHdr, (void *)&oFSHdr, sizeof(oFSHdr) );
 
 	// Get the file table address
 	m_fileTableAddress = (oFSHdr.fileTableBlockIdx * m_pFlash->GetBlockSize()) + oFSHdr.fileTableBlockOffset;
@@ -183,7 +183,7 @@ bool CFlashFS::Init( CNORFlash *pFlash )
 			// Check for overrun
 			if ( dataBlockID >= m_maxDataBlockID )
 			{
-				// No free data blocks! FLASH FULL
+				// No __free data blocks! FLASH FULL
 				return (false);
 			}		
 				
@@ -238,7 +238,7 @@ int32_t CFlashFS::WriteFile( int32_t fd, uint8_t *pData, uint32_t dataLen )
 		return (-1);
 	}
 
-	// Find proper position to write to
+	// Find proper position to __write to
 	uint16_t dataID = oHdrData.dataID;
 
 	uint32_t filePos = oFDData.filePos;
@@ -247,7 +247,7 @@ int32_t CFlashFS::WriteFile( int32_t fd, uint8_t *pData, uint32_t dataLen )
 	{
 		// Error
 #if FLASH_DEBUG_MODE
-		printf( "FS ERR: File position past file size\n" );
+		__printf( "FS ERR: File position past file size\n" );
 #endif
 		filePos = oHdrData.objSize;
 	}
@@ -255,7 +255,7 @@ int32_t CFlashFS::WriteFile( int32_t fd, uint8_t *pData, uint32_t dataLen )
 	// Remember file size
 	uint32_t fileSize = oHdrData.objSize;
 
-	// Find block to write to and offset of block to write to (starting)
+	// Find block to __write to and offset of block to __write to (starting)
 	uint32_t movePos = 0;
 	uint32_t baseBlockSize = (m_pFlash->GetBlockSize() - sizeof(tFlashDataHdr));
 
@@ -296,7 +296,7 @@ int32_t CFlashFS::WriteFile( int32_t fd, uint8_t *pData, uint32_t dataLen )
 		{
 			// Errror
 #if FLASH_DEBUG_MODE
-			printf( "FS ERR: Read error\n" );
+			__printf( "FS ERR: Read error\n" );
 #endif
 			return -1;
 		}
@@ -304,7 +304,7 @@ int32_t CFlashFS::WriteFile( int32_t fd, uint8_t *pData, uint32_t dataLen )
 		if ( oDataHdr.objBits != OBJ_INUSE )
 		{
 #if FLASH_DEBUG_MODE
-			printf( "FS ERR: Data block should be in use\n" );
+			__printf( "FS ERR: Data block should be in use\n" );
 #endif
 			return -1;
 		}
@@ -364,8 +364,8 @@ int32_t CFlashFS::WriteFile( int32_t fd, uint8_t *pData, uint32_t dataLen )
 				return (-1);
 			}
 
-			// Add in new data to write
-			memcpy( m_tempBlock+(curBlockOffset-sizeof(oPrevDataHdr)), pData+dataPos, dataToWriteInBlock );
+			// Add in new data to __write
+			__memcpy( m_tempBlock+(curBlockOffset-sizeof(oPrevDataHdr)), pData+dataPos, dataToWriteInBlock );
 
 			// Is there any data remaining in the block that wasn't written
 			if ( (curBlockOffset+dataToWriteInBlock) < blockSize )
@@ -431,7 +431,7 @@ int32_t CFlashFS::WriteFile( int32_t fd, uint8_t *pData, uint32_t dataLen )
 				if ( oPrevBlockHdr.nextDataID != 0xFFFF )
 				{
 #if FLASH_DEBUG_MODE
-					printf( "FS ERR: Previous data block ID should be 0xFFFF\n" );
+					__printf( "FS ERR: Previous data block ID should be 0xFFFF\n" );
 #endif
 					return (-1);
 				}
@@ -481,7 +481,7 @@ int32_t CFlashFS::WriteFile( int32_t fd, uint8_t *pData, uint32_t dataLen )
 		// Update data position
 		dataPos += dataToWriteInBlock;
 
-		// Reduce amount of data left to write
+		// Reduce amount of data left to __write
 		dataToWrite -= dataToWriteInBlock;	
 	}
 
@@ -536,7 +536,7 @@ int32_t CFlashFS::WriteFile( int32_t fd, uint8_t *pData, uint32_t dataLen )
 		if ( i == MAX_FILES )
 		{
 #if FLASH_DEBUG_MODE
-			printf( "FS ERR: File table entry not found when attempting update on file table\n" );
+			__printf( "FS ERR: File table entry not found when attempting update on file table\n" );
 #endif
 			return (-1);
 		}
@@ -548,7 +548,7 @@ int32_t CFlashFS::WriteFile( int32_t fd, uint8_t *pData, uint32_t dataLen )
 				m_fileDescriptorTable[i].hdrID = newHdrID;
 		}
 
-		// Lastly write the new file table block
+		// Lastly __write the new file table block
 		uint32_t newHdrAddress = GetAddressForHeaderID( newHdrID );
 
 		if ( m_pFlash->WriteData( newHdrAddress, (uint8_t*)&oNewFileHdr, sizeof(oNewFileHdr) ) != sizeof(oNewFileHdr) )
@@ -589,7 +589,7 @@ int32_t CFlashFS::ReadFile( int32_t fd, uint8_t *pData, uint32_t dataLen )
 		return (-1);
 	}
 
-	// Find proper position to write to
+	// Find proper position to __write to
 	uint16_t dataID = oHdrData.dataID;
 
 	uint32_t filePos = oFDData.filePos;
@@ -598,25 +598,25 @@ int32_t CFlashFS::ReadFile( int32_t fd, uint8_t *pData, uint32_t dataLen )
 	{
 		// Error
 #if FLASH_DEBUG_MODE
-		printf( "FS ERR: File position past file size\n" );
+		__printf( "FS ERR: File position past file size\n" );
 #endif
 		filePos = oHdrData.objSize;
 
 		return (-1);
 	}
 
-	// Only read the amount remaining
+	// Only __read the amount remaining
 	if ( filePos+dataLen > oHdrData.objSize )
 		dataLen = oHdrData.objSize - filePos;
 
-	// IF we don't have anything to read -- just return 0
+	// IF we don't have anything to __read -- just return 0
 	if ( dataLen == 0 )
 		return (0);
 
 	// Remember file size
 	uint32_t fileSize = oHdrData.objSize;
 
-	// Find block to write to and offset of block to write to (starting)
+	// Find block to __write to and offset of block to __write to (starting)
 	uint32_t movePos = 0;
 	uint32_t baseBlockSize = (m_pFlash->GetBlockSize() - sizeof(tFlashDataHdr));
 
@@ -656,7 +656,7 @@ int32_t CFlashFS::ReadFile( int32_t fd, uint8_t *pData, uint32_t dataLen )
 		{
 			// Errror
 #if FLASH_DEBUG_MODE
-			printf( "FS ERR: Read error\n" );
+			__printf( "FS ERR: Read error\n" );
 #endif
 			return -1;
 		}
@@ -664,7 +664,7 @@ int32_t CFlashFS::ReadFile( int32_t fd, uint8_t *pData, uint32_t dataLen )
 		if ( oDataHdr.objBits != OBJ_INUSE )
 		{
 #if FLASH_DEBUG_MODE
-			printf( "FS ERR: Data block should be in use\n" );
+			__printf( "FS ERR: Data block should be in use\n" );
 #endif
 			return -1;
 		}
@@ -695,7 +695,7 @@ int32_t CFlashFS::ReadFile( int32_t fd, uint8_t *pData, uint32_t dataLen )
 		if ( curBlockID == 0xFFFF )
 		{
 #if FLASH_DEBUG_MODE
-			printf( "FS ERR: Read past inuse blocks\n" );
+			__printf( "FS ERR: Read past inuse blocks\n" );
 #endif
 			return -1;
 		}
@@ -715,7 +715,7 @@ int32_t CFlashFS::ReadFile( int32_t fd, uint8_t *pData, uint32_t dataLen )
 		if ( oDataHdr.objBits != OBJ_INUSE )
 		{
 #if FLASH_DEBUG_MODE
-			printf( "FS ERR: Read block should be in use\n" );
+			__printf( "FS ERR: Read block should be in use\n" );
 #endif
 			return -1;
 		}
@@ -778,7 +778,7 @@ int32_t CFlashFS::DeleteFile( const char *pszFilename )
 		{
 			// Errror
 #if FLASH_DEBUG_MODE
-			printf( "FS ERR: Delete error\n" );
+			__printf( "FS ERR: Delete error\n" );
 #endif
 			return -1;
 		}
@@ -786,7 +786,7 @@ int32_t CFlashFS::DeleteFile( const char *pszFilename )
 		if ( oDataHdr.objBits != OBJ_INUSE )
 		{
 #if FLASH_DEBUG_MODE
-			printf( "FS ERR: Data block should be in use, while deleting file\n" );
+			__printf( "FS ERR: Data block should be in use, while deleting file\n" );
 #endif
 			return -1;
 		}
@@ -838,7 +838,7 @@ int32_t CFlashFS::DeleteFile( const char *pszFilename )
 	if ( fileTableID == 0xFFFF )
 	{
 #if FLASH_DEBUG_MODE
-			printf( "FS ERR: File table entry not found, while deleting file\n" );
+			__printf( "FS ERR: File table entry not found, while deleting file\n" );
 #endif
 			return -1;
 	}
@@ -894,7 +894,7 @@ int32_t CFlashFS::OpenFile( const char *pszFilename, uint8_t openAttributes )
 		// No file present -- create it
 		if ( !CreateNewFile( pszFilename, &objID, &objSize ) )
 		{
-			// Fail -- out of free blocks
+			// Fail -- out of __free blocks
 			return (OPEN_FILE_OUT_OF_SPACE);
 		}
 	}
@@ -907,7 +907,7 @@ int32_t CFlashFS::OpenFile( const char *pszFilename, uint8_t openAttributes )
 		return (OPEN_FILE_ALREADY_OPEN);
 	}
 
-	// File found or file created for write mode
+	// File found or file created for __write mode
 	m_fileDescriptorTable[newFD].hdrID = objID;
 
 	if ( openAttributes == OPEN_MODE_APPEND )
@@ -958,7 +958,7 @@ bool CFlashFS::FindFileInFlashTable( const char *pszFilename, uint16_t *pObjID, 
 {
 	char szFilenameTemp[256];
 	
-	uint8_t testFileLen = strlen( pszFilename );
+	uint8_t testFileLen = __strlen( pszFilename );
 
 	// Read first file in file table
 	// Loop through file descriptor table
@@ -990,7 +990,7 @@ bool CFlashFS::FindFileInFlashTable( const char *pszFilename, uint16_t *pObjID, 
 
 		szFilenameTemp[oFileHdr.fileNameLen] = '\0';
 
-		if ( strcmp( pszFilename, szFilenameTemp ) == 0 )
+		if ( __strcmp( pszFilename, szFilenameTemp ) == 0 )
 		{
 			(*pObjID) = m_fileTable[i].hdrID;
 			(*pObjSize) = oFileHdr.objSize;
@@ -1202,7 +1202,7 @@ bool CFlashFS::CleanObjHeaderTable( void )
 			if ( i >= MAX_FILES )
 			{
 #if FLASH_DEBUG_MODE
-				printf( "FS ERR: Cleaning object header table -- wrap-around (should not happen)\n" );
+				__printf( "FS ERR: Cleaning object header table -- wrap-around (should not happen)\n" );
 #endif
 				return (false);
 			}
@@ -1273,7 +1273,7 @@ bool CFlashFS::CleanObjHeaderTable( void )
 			if ( i >= MAX_FILES )
 			{
 #if FLASH_DEBUG_MODE
-				printf( "FS ERR: Cleaning object header table -- wrap-around (should not happen)\n" );
+				__printf( "FS ERR: Cleaning object header table -- wrap-around (should not happen)\n" );
 #endif
 				return (false);
 			}
@@ -1355,7 +1355,7 @@ uint16_t CFlashFS::GetNextScratchSector( void )
 
 bool CFlashFS::CreateNewObject( const char *pszObjectName, uint16_t fileTableID, uint16_t hdrID )
 {
-	uint8_t objNameLen = strlen(pszObjectName);
+	uint8_t objNameLen = __strlen(pszObjectName);
 
 	// Find new spot for object
 	for ( uint32_t i = 0; i < MAX_FILES; i++ )
@@ -1384,14 +1384,14 @@ bool CFlashFS::CreateNewObject( const char *pszObjectName, uint16_t fileTableID,
 
 	if ( m_pFlash->WriteData( dataAddress, (uint8_t*)&oDataHdr, sizeof(oDataHdr) ) != sizeof(oDataHdr) )
 	{
-		// Fail to write data
+		// Fail to __write data
 		return (false);
 	}
 
 	// Write name
 	if ( m_pFlash->WriteData( (dataAddress+sizeof(oDataHdr)), (uint8_t*)pszObjectName, objNameLen ) != objNameLen )
 	{
-		// Fail to write data
+		// Fail to __write data
 		return (false);
 	}
 	
@@ -1408,7 +1408,7 @@ bool CFlashFS::CreateNewObject( const char *pszObjectName, uint16_t fileTableID,
 
 	if ( m_pFlash->WriteData( hdrAddress, (uint8_t*)&oFileHdr, sizeof(oFileHdr) ) != sizeof(oFileHdr) )
 	{
-		// Fail to write header
+		// Fail to __write header
 		return (false);
 	}
 	

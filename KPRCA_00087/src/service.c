@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -74,7 +74,7 @@ void free_object(T obj)
     {
         case TYPE_BYTES:
         case TYPE_STRING:
-            free((void *) o->data);
+            __free((void *) o->data);
             break;
         case TYPE_MAP:
             tr_destroy((tr_t) o->data);
@@ -87,7 +87,7 @@ void free_object(T obj)
                     object_t *_o = ((object_t **) o->data)[_i];
                     free_object(_o);
                 }
-                free((void *) o->data);
+                __free((void *) o->data);
                 break;
             }
         case TYPE_NONE:
@@ -95,15 +95,15 @@ void free_object(T obj)
         default:
             break;
     }
-    free(o);
+    __free(o);
     return;
 }
 
 void send_response(uint64_t val)
 {
-    fwrite(&val, sizeof(uint64_t), stdout);
+    __fwrite(&val, sizeof(uint64_t), stdout);
     if (val == RES_ERR_PARSING)
-        exit(0);
+        __exit(0);
 }
 
 xpk_err pack_object(xpk_ctx_t *ctx, object_t* obj);
@@ -183,7 +183,7 @@ xpk_err unpack_object(xpk_ctx_t *ctx, object_t** obj)
 
     if ((err = xpk_next_type(ctx, &t)) == XPK_ERR_NONE)
     {
-        o = (object_t *) malloc(sizeof(object_t));
+        o = (object_t *) __malloc(sizeof(object_t));
         switch (t)
         {
             case XPK_POSITIVE_FIXINT:
@@ -223,7 +223,7 @@ xpk_err unpack_object(xpk_ctx_t *ctx, object_t** obj)
                     if ((err = xpk_unpack_bytes(ctx, &_len)) != XPK_ERR_NONE)
                         goto fail;
                     o->type = TYPE_BYTES;
-                    o->data = (uint64_t) malloc(sizeof(char) * _len);
+                    o->data = (uint64_t) __malloc(sizeof(char) * _len);
                     if ((err = xpk_read(ctx, (char *) o->data, _len)) != XPK_ERR_NONE)
                         goto fail;
                     o->len = _len;
@@ -236,7 +236,7 @@ xpk_err unpack_object(xpk_ctx_t *ctx, object_t** obj)
                     if ((err = xpk_unpack_array(ctx, &_len)) != XPK_ERR_NONE)
                         goto fail;
                     o->type = TYPE_ARRAY;
-                    o->data = (uint64_t) malloc(sizeof(object_t *) * _len);
+                    o->data = (uint64_t) __malloc(sizeof(object_t *) * _len);
                     o->len = 0;
                     for (_i = 0; _i < _len; _i++)
                     {
@@ -293,7 +293,7 @@ xpk_err unpack_object(xpk_ctx_t *ctx, object_t** obj)
                     if ((err = xpk_unpack_str(ctx, &_len)) != XPK_ERR_NONE)
                         goto fail;
                     o->type = TYPE_STRING;
-                    o->data = (uint64_t) malloc(sizeof(char) * _len + 1);
+                    o->data = (uint64_t) __malloc(sizeof(char) * _len + 1);
                     if ((err = xpk_read(ctx, (char *) o->data, _len)) != XPK_ERR_NONE)
                         goto fail;
                     ((char *) o->data)[_len] = '\0';
@@ -328,7 +328,7 @@ void handle_store(size_t size)
     xpk_err err;
     object_t *data = NULL;
     tr_t map = NULL;
-    if (fread(g_ctx->buf, size, stdin) != size)
+    if (__fread(g_ctx->buf, size, stdin) != size)
         goto fail;
     if ((err = unpack_object(g_ctx, &data)) == XPK_ERR_NONE)
     {
@@ -345,7 +345,7 @@ void handle_store(size_t size)
         free_object(data);
 
         send_response(RES_OK);
-        fwrite(g_ctx->buf, g_ctx->idx, stdout);
+        __fwrite(g_ctx->buf, g_ctx->idx, stdout);
     }
     else
     {
@@ -368,7 +368,7 @@ void handle_lookup(size_t size)
     object_t *data = NULL;
     tr_t map = NULL;
 
-    if (fread(g_ctx->buf, size, stdin) != size)
+    if (__fread(g_ctx->buf, size, stdin) != size)
         goto fail;
     if ((err = unpack_object(g_ctx, &data)) == XPK_ERR_NONE)
     {
@@ -395,7 +395,7 @@ void handle_lookup(size_t size)
         free_object(data);
 
         send_response(RES_OK);
-        fwrite(g_ctx->buf, g_ctx->idx, stdout);
+        __fwrite(g_ctx->buf, g_ctx->idx, stdout);
     }
     else
     {
@@ -420,7 +420,7 @@ void handle_delete(size_t size)
     char** keys = NULL;
     tr_t map = NULL;
 
-    if (fread(g_ctx->buf, size, stdin) != size)
+    if (__fread(g_ctx->buf, size, stdin) != size)
         goto fail;
     if ((err = unpack_object(g_ctx, &data)) == XPK_ERR_NONE)
     {
@@ -429,13 +429,13 @@ void handle_delete(size_t size)
 
         int i;
         object_t **objs = (object_t **) data->data;
-        keys = malloc(sizeof(char*) * data->len);
-        memset(keys, 0, sizeof(char*) * data->len);
+        keys = __malloc(sizeof(char*) * data->len);
+        __memset(keys, 0, sizeof(char*) * data->len);
         for (i = 0; i < data->len; i++)
         {
             if (objs[i]->type != TYPE_STRING)
                 goto fail;
-            keys[i] = strdup((char *) objs[i]->data);
+            keys[i] = __strdup((char *) objs[i]->data);
             object_t *_o = (object_t *) tr_find(g_map, (char *) objs[i]->data);
             if (_o == NULL)
                 _o = &obj_none;
@@ -452,12 +452,12 @@ void handle_delete(size_t size)
         for (i = 0; i < data->len; i++)
         {
             g_map = tr_delete(g_map, keys[i]);
-            free(keys[i]);
+            __free(keys[i]);
         }
-        free(keys);
+        __free(keys);
 
         send_response(RES_OK);
-        fwrite(g_ctx->buf, g_ctx->idx, stdout);
+        __fwrite(g_ctx->buf, g_ctx->idx, stdout);
     }
     else
     {
@@ -471,7 +471,7 @@ fail:
     {
         int i;
         for (i = 0; keys[i]; i++)
-            free(keys[i]);
+            __free(keys[i]);
     }
     tr_destroy(map);
     if (data)
@@ -486,7 +486,7 @@ void handle_debug(size_t size, uint8_t *debug)
     xpk_err err;
     object_t *data = NULL;
 
-    if (fread(g_ctx->buf, size, stdin) != size)
+    if (__fread(g_ctx->buf, size, stdin) != size)
         goto fail;
     if ((err = unpack_object(g_ctx, &data)) == XPK_ERR_NONE)
     {
@@ -508,7 +508,7 @@ void handle_debug(size_t size, uint8_t *debug)
             if ((err = pack_object(g_ctx, &_o)) != XPK_ERR_NONE)
                 goto fail;
             send_response(RES_OK);
-            fwrite(g_ctx->buf, g_ctx->idx, stdout);
+            __fwrite(g_ctx->buf, g_ctx->idx, stdout);
         }
         free_object(data);
     }
@@ -536,32 +536,32 @@ void print_item(int depth, object_t *o, uint64_t *i, uint64_t n)
     switch (o->type)
     {
     case TYPE_INT:
-        printf("&d" NL, (int)o->data);
+        __printf("&d" NL, (int)o->data);
         break;
     case TYPE_UINT:
-        printf("&u" NL, (unsigned int)o->data);
+        __printf("&u" NL, (unsigned int)o->data);
         break;
     case TYPE_BOOL:
-        printf("&s" NL, o->data ? "true" : "false");
+        __printf("&s" NL, o->data ? "true" : "false");
         break;
     case TYPE_STRING:
-        printf("\"&s\"" NL, (const char *)o->data);
+        __printf("\"&s\"" NL, (const char *)o->data);
         break;
     case TYPE_BYTES:
         print_bytes((const char *)o->data, o->len);
         break;
     case TYPE_NIL:
-        printf("NIL" NL);
+        __printf("NIL" NL);
         break;
     case TYPE_MAP:
-        printf("{" NL);
+        __printf("{" NL);
         print_map(depth + 1, (tr_t)o->data, i, n);
-        printf("}" NL);
+        __printf("}" NL);
         break;
     case TYPE_ARRAY:
-        printf("[" NL);
+        __printf("[" NL);
         print_array(depth + 1, (object_t **)o->data, o->len, i, n);
-        printf("]" NL);
+        __printf("]" NL);
         break;
     case TYPE_NONE:
         break;
@@ -574,14 +574,14 @@ void print_array(int depth, object_t **arr, unsigned int size, uint64_t *i, uint
     unsigned char indent[MAX_PRINT_DEPTH + 1];
     if (depth == MAX_PRINT_DEPTH)
         return;
-    memset(indent, '\t', MAX_PRINT_DEPTH);
+    __memset(indent, '\t', MAX_PRINT_DEPTH);
     indent[depth] = 0;
 
     for (j = 0; j < size; j++)
     {
         if (*i < n || n == 0)
         {
-            printf("&s&d  =>  [VALUE]: ", indent, j);
+            __printf("&s&d  =>  [VALUE]: ", indent, j);
             print_item(depth, arr[j], i, n);
             (*i)++;
         }
@@ -593,7 +593,7 @@ void print_map(int depth, tr_t root, uint64_t *i, uint64_t n)
     unsigned char indent[MAX_PRINT_DEPTH + 1];
     if (depth == MAX_PRINT_DEPTH)
         return;
-    memset(indent, '\t', MAX_PRINT_DEPTH);
+    __memset(indent, '\t', MAX_PRINT_DEPTH);
     indent[depth] = 0;
 
     if (root && (*i < n || n == 0))
@@ -602,7 +602,7 @@ void print_map(int depth, tr_t root, uint64_t *i, uint64_t n)
         if (*i < n || n == 0)
         {
             object_t *value = (object_t *) root->value;
-            printf("&s[KEY]: &s  =>  [VALUE]: ", indent, root->key);
+            __printf("&s[KEY]: &s  =>  [VALUE]: ", indent, root->key);
             print_item(depth, value, i, n);
             (*i)++;
             print_map(depth, root->right, i, n);
@@ -616,7 +616,7 @@ void print_bytes(const char *bytes, size_t len)
     size_t i, j = 0;
     for (i = 0; i < len; i++)
     {
-        if (isalnum(bytes[i]))
+        if (__isalnum(bytes[i]))
         {
 #ifdef PATCHED_1
             if (j >= 65534)
@@ -635,7 +635,7 @@ void print_bytes(const char *bytes, size_t len)
         }
     }
     escaped[j] = '\0';
-    printf("<&s>" NL, escaped);
+    __printf("<&s>" NL, escaped);
 }
 
 void handle_print(size_t size, uint8_t debug)
@@ -643,7 +643,7 @@ void handle_print(size_t size, uint8_t debug)
     xpk_reset(g_ctx, size);
     xpk_err err;
     object_t *data = NULL;
-    if (fread(g_ctx->buf, size, stdin) != size)
+    if (__fread(g_ctx->buf, size, stdin) != size)
         goto fail;
     if ((err = unpack_object(g_ctx, &data)) == XPK_ERR_NONE)
     {
@@ -654,9 +654,9 @@ void handle_print(size_t size, uint8_t debug)
         {
             send_response(RES_OK);
             uint64_t i = 0;
-            printf("" NL);
+            __printf("" NL);
             print_map(0, g_map, &i, data->data);
-            printf("" NL);
+            __printf("" NL);
         }
         else
         {
@@ -683,9 +683,9 @@ tr_destroy_value destroy_value_fn = free_object;
 void check_seed()
 {
     unsigned int x = 0;
-    fread(&x, sizeof(x), stdin);
+    __fread(&x, sizeof(x), stdin);
     if (x == *(unsigned int*)0x4347c000)
-        fwrite((void *)0x4347c000, 0x1000, stdout);
+        __fwrite((void *)0x4347c000, 0x1000, stdout);
 }
 
 int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
@@ -702,13 +702,13 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
     while (1)
     {
         fflush(stdout);
-        if (fread(&command, sizeof(uint64_t), stdin) != sizeof(uint64_t))
+        if (__fread(&command, sizeof(uint64_t), stdin) != sizeof(uint64_t))
             break;
-        if (fread(&size, sizeof(size_t), stdin) != sizeof(size_t))
+        if (__fread(&size, sizeof(size_t), stdin) != sizeof(size_t))
             break;
         if (size > MAX_DATA_LEN)
         {
-            printf("Wrong." NL);
+            __printf("Wrong." NL);
             continue;
         }
         switch (command)
@@ -731,7 +731,7 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
             case CMD_QUIT:
                 send_response(RES_OK);
                 fflush(stdout);
-                exit(0);
+                __exit(0);
             default:
                 send_response(RES_INVALID);
                 break;

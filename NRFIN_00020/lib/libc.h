@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -40,6 +40,6 @@ int transmit_all(int fd, const char *buf, const size_t size);
 unsigned int recv_all(char *res_buf, size_t res_buf_size);
 unsigned int read_all(int fd, char *buf, unsigned int size);
 
-void *memset(void *dst, int c, unsigned int n);
+void *__memset(void *dst, int c, unsigned int n);
 
 #endif

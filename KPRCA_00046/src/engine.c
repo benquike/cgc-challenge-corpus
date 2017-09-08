@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -194,8 +194,8 @@ void engine_destroy()
 {
     if (engine)
     {
-        free(engine->moves_buf);
-        free(engine);
+        __free(engine->moves_buf);
+        __free(engine);
         engine = NULL;
     }
 }
@@ -204,11 +204,11 @@ int engine_init()
 {
     int r, c;
 
-    engine = malloc(sizeof(engine_t));
+    engine = __malloc(sizeof(engine_t));
     if (engine == NULL)
         return 0;
-    memset(engine, 0, sizeof(engine_t));
-    memset(engine->mailbox, EMPTY, 64);
+    __memset(engine, 0, sizeof(engine_t));
+    __memset(engine->mailbox, EMPTY, 64);
 
     for (r = 0; r < 8; r++)
     for (c = 0; c < 8; c++)
@@ -254,10 +254,10 @@ int engine_init()
         BISHOP_MOVES[r * 8 + c] = moves;
     }
 
-    engine->moves_buf = malloc(MAX_DEPTH * MAX_MOVES_PER_DEPTH * sizeof(move_t));
+    engine->moves_buf = __malloc(MAX_DEPTH * MAX_MOVES_PER_DEPTH * sizeof(move_t));
     if (engine->moves_buf == NULL)
     {
-        free(engine);
+        __free(engine);
         return 0;
     }
 
@@ -294,7 +294,7 @@ void engine_new()
     /* setup mailbox representation */
     engine->scores[WHITE] = 0;
     engine->scores[BLACK] = 0;
-    memset(engine->mailbox, EMPTY, 64);
+    __memset(engine->mailbox, EMPTY, 64);
     for (r = 0; r < 8; r++)
     for (c = 0; c < 8; c++)
     {
@@ -317,7 +317,7 @@ void engine_new()
     }
 
     engine->last_move.op = EMPTY;
-    memset(engine->num_moves, 0, 64);
+    __memset(engine->num_moves, 0, 64);
     engine->current_move = 0;
     engine->accept_draw = 0;
 }

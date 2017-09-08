@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -73,15 +73,15 @@ void ac_add_custom(char *typo, char *correct)
     int i;
     for (i = 0; i < num_words; ++i)
     {
-      if (strcmp(typo, word_list[i].typo) == 0)
+      if (__strcmp(typo, word_list[i].typo) == 0)
         return;
     }
-    if (strlen(typo) < MAX_AC_LEN &&
-        strlen(correct) < MAX_AC_LEN &&
-        strlen(typo) > 0)
+    if (__strlen(typo) < MAX_AC_LEN &&
+        __strlen(correct) < MAX_AC_LEN &&
+        __strlen(typo) > 0)
     {
-      strcpy(word_list[num_words].typo, typo);
-      strcpy(word_list[num_words].correct, correct);
+      __strcpy(word_list[num_words].typo, typo);
+      __strcpy(word_list[num_words].correct, correct);
       num_words++;
     }
   }
@@ -111,7 +111,7 @@ void ac_process(void *ud)
 
       if (end-start < sizeof(word))
       {
-        memcpy(word, &ac_buffer[start], end-start);
+        __memcpy(word, &ac_buffer[start], end-start);
         word[end-start] = 0;
       }
       else
@@ -123,24 +123,24 @@ void ac_process(void *ud)
       int diff = 0;
       for (j = 0; j < num_words; ++j)
       {
-        if (strcmp(word, word_list[j].typo) == 0)
+        if (__strcmp(word, word_list[j].typo) == 0)
         {
           char *newbuf;
-          diff = strlen(word_list[j].correct) - strlen(word);
+          diff = __strlen(word_list[j].correct) - __strlen(word);
           mutex_lock(&ac_mutex);
 
           if (diff < 0)
             // memmove before we shrink the buffer
             memmove(&ac_buffer[end + diff], &ac_buffer[end], ac_idx - end);
           // adjust buffer size to new size plus null character
-          newbuf = realloc(ac_buffer, ac_idx + 1 + diff);
+          newbuf = __realloc(ac_buffer, ac_idx + 1 + diff);
           if (newbuf != NULL)
           {
             ac_buffer = newbuf;
             if (diff > 0)
               // memmove after we enlarge the buffer
               memmove(&ac_buffer[end + diff], &ac_buffer[end], ac_idx - end);
-            memcpy(&ac_buffer[start], word_list[j].correct, strlen(word_list[j].correct));
+            __memcpy(&ac_buffer[start], word_list[j].correct, __strlen(word_list[j].correct));
             ac_idx += diff;
           }
 
@@ -172,14 +172,14 @@ char *ac_read(int fd, char term)
 
   while (1)
   {
-    // read next word
+    // __read next word
     size_t count = 0;
     char word[MAX_AC_LEN];
     for (count = 0; count < MAX_AC_LEN; count++)
     {
       if (receive(fd, &word[count], 1, &rx) != 0 || rx == 0)
         goto fail;
-      if (word[count] == term || !isalpha(word[count]))
+      if (word[count] == term || !__isalpha(word[count]))
       {
         count++;
         break;
@@ -189,7 +189,7 @@ char *ac_read(int fd, char term)
 #ifdef PATCHED
     mutex_lock(&ac_mutex);
 #endif
-    char *newbuf = realloc(ac_buffer, ac_idx+count+1);
+    char *newbuf = __realloc(ac_buffer, ac_idx+count+1);
     if (newbuf == NULL)
       goto fail;
 
@@ -197,7 +197,7 @@ char *ac_read(int fd, char term)
     mutex_lock(&ac_mutex);
 #endif
     ac_buffer = newbuf;
-    memcpy(&ac_buffer[ac_idx], word, count);
+    __memcpy(&ac_buffer[ac_idx], word, count);
     ac_idx += count;
     ac_buffer[ac_idx] = 0;
     mutex_unlock(&ac_mutex);
@@ -232,7 +232,7 @@ char *ac_read(int fd, char term)
 
 fail:
   mutex_lock(&ac_mutex);
-  free(ac_buffer);
+  __free(ac_buffer);
   ac_buffer = NULL;
   mutex_unlock(&ac_mutex);
   return NULL;

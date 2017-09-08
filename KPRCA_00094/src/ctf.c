@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -31,11 +31,11 @@ error_t ctf_init(ctf_t *ctf)
     ctf->num_chals = 0;
     ctf->num_teams = 0;
     ctf->num_users = 0;
-    ctf->chals = (chal_t **) malloc(8 * sizeof(chal_t *));
+    ctf->chals = (chal_t **) __malloc(8 * sizeof(chal_t *));
     ctf->sz_chals = 8;
-    ctf->teams = (team_t **) malloc(16 * sizeof(team_t *));
+    ctf->teams = (team_t **) __malloc(16 * sizeof(team_t *));
     ctf->sz_teams = 16;
-    ctf->users = (user_t **) malloc(32 * sizeof(user_t *));
+    ctf->users = (user_t **) __malloc(32 * sizeof(user_t *));
     ctf->sz_users = 32;
     ctf->logged_in = NULL;
     flg_init(&ctf->flg, ctf->chals, &ctf->num_chals);
@@ -58,12 +58,12 @@ error_t ctf_add_user(ctf_t *ctf, user_t *user)
     int i;
     for (i = 0; i < ctf->num_users; ++i)
     {
-        if (strcmp(ctf->users[i]->nick, user->nick) == 0)
+        if (__strcmp(ctf->users[i]->nick, user->nick) == 0)
             return ERR_USER_EXISTS;
     }
     if (ctf->num_users == ctf->sz_users)
     {
-        ctf->users = (user_t **) realloc(ctf->users, 2 * ctf->sz_users * sizeof(user_t *));
+        ctf->users = (user_t **) __realloc(ctf->users, 2 * ctf->sz_users * sizeof(user_t *));
         ctf->sz_users *= 2;
     }
     ctf->users[ctf->num_users++] = user;
@@ -78,9 +78,9 @@ error_t ctf_auth_user(ctf_t *ctf, user_t **user, const char *nick, const char *p
     for (i = 0; i < ctf->num_users; ++i)
     {
         user_t *u = ctf->users[i];
-        if (strcmp(u->nick, nick) == 0)
+        if (__strcmp(u->nick, nick) == 0)
         {
-            if (strcmp(u->pass, pass) == 0)
+            if (__strcmp(u->pass, pass) == 0)
             {
                 *user = u;
                 return ERR_OK;
@@ -98,12 +98,12 @@ error_t ctf_add_team(ctf_t *ctf, team_t *team)
     int i;
     for (i = 0; i < ctf->num_teams; ++i)
     {
-        if (strcmp(ctf->teams[i]->name, team->name) == 0)
+        if (__strcmp(ctf->teams[i]->name, team->name) == 0)
             return ERR_TEAM_EXISTS;
     }
     if (ctf->num_teams == ctf->sz_teams)
     {
-        ctf->teams = (team_t **) realloc(ctf->teams, 2 * ctf->sz_teams * sizeof(team_t *));
+        ctf->teams = (team_t **) __realloc(ctf->teams, 2 * ctf->sz_teams * sizeof(team_t *));
         ctf->sz_teams *= 2;
     }
     ctf->teams[ctf->num_teams++] = team;
@@ -117,13 +117,13 @@ error_t ctf_add_chal(ctf_t *ctf, chal_t *chal)
     int i;
     for (i = 0; i < ctf->num_chals; ++i)
     {
-        if (strcmp(ctf->chals[i]->name, chal->name) == 0 ||
-            strcmp(ctf->chals[i]->flag, chal->flag) == 0)
+        if (__strcmp(ctf->chals[i]->name, chal->name) == 0 ||
+            __strcmp(ctf->chals[i]->flag, chal->flag) == 0)
             return ERR_CHAL_EXISTS;
     }
     if (ctf->num_chals == ctf->sz_chals)
     {
-        ctf->chals = (chal_t **) realloc(ctf->chals, 2 * ctf->sz_chals * sizeof(chal_t *));
+        ctf->chals = (chal_t **) __realloc(ctf->chals, 2 * ctf->sz_chals * sizeof(chal_t *));
         ctf->flg.chals = ctf->chals;
         ctf->sz_chals *= 2;
     }
@@ -208,12 +208,12 @@ error_t ctf_get_ranks(ctf_t *ctf, team_t ***ranks, size_t *page)
     else
         p = (p - 1) * 5;
     *page = p;
-    *ranks = (team_t **) malloc(n * sizeof(team_t *));
-    team_t **temp = (team_t **) malloc(ctf->num_teams * sizeof(team_t *));
-    memcpy(temp, ctf->teams, ctf->num_teams * sizeof(team_t *));
+    *ranks = (team_t **) __malloc(n * sizeof(team_t *));
+    team_t **temp = (team_t **) __malloc(ctf->num_teams * sizeof(team_t *));
+    __memcpy(temp, ctf->teams, ctf->num_teams * sizeof(team_t *));
     for (i = p, j = 0; i < ctf->num_teams && j < n; ++i, ++j)
         (*ranks)[j] = ctf_select_nth(temp, ctf->num_teams, i);
-    free(temp);
+    __free(temp);
     return ERR_OK;
 }
 

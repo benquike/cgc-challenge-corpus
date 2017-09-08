@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,14 +37,14 @@ THE SOFTWARE.
 
 tMallocManager g_memManager;
 
-void *calloc( size_t count, size_t obj_size )
+void *__calloc( size_t count, size_t obj_size )
 {
     size_t allocation_size = (count * obj_size);
     void *pMemBuffer;
 
-    pMemBuffer = malloc( allocation_size );
+    pMemBuffer = __malloc( allocation_size );
 
-    memset( pMemBuffer, 0, allocation_size );
+    __memset( pMemBuffer, 0, allocation_size );
 
     return (pMemBuffer);
 }
@@ -54,7 +54,7 @@ void *add_free_list( size_t request_size )
     // Include header
     size_t grow_size = (request_size + 4);
 
-    // Increases the size of the free list
+    // Increases the size of the __free list
     if ( grow_size % ALLOC_PAGE_SIZE != 0 )
     {
         grow_size = (grow_size / ALLOC_PAGE_SIZE) + 1;
@@ -83,7 +83,7 @@ void *add_free_list( size_t request_size )
     return (void*)pNewAllocHdr;
 }
 
-void *malloc( size_t alloc_size )
+void *__malloc( size_t alloc_size )
 {
     // Allocate
     if ( alloc_size < 8 )
@@ -94,7 +94,7 @@ void *malloc( size_t alloc_size )
         alloc_size = (alloc_size << 2);
     }
 
-    // Scan free list for available objects
+    // Scan __free list for available objects
     void *pFreeCur;
 
     pFreeCur = g_memManager.pFreeList;
@@ -127,7 +127,7 @@ void *malloc( size_t alloc_size )
 
             if ( size_remaining >= (sizeof(tMallocAllocHdr) + sizeof(tMallocAllocFtr)) )
             {
-                // Build a new free block
+                // Build a new __free block
                 void *pNewChunk = (pFreeCur + (alloc_size + sizeof(tMallocAllocHdr)));
 
                 tMallocAllocHdr *pNewChunkHeader = ((tMallocAllocHdr *)pNewChunk);
@@ -140,7 +140,7 @@ void *malloc( size_t alloc_size )
                     _terminate( -3 );
                 }
 
-                // Fix top link (if we need to)
+                // Fix top __link (if we need to)
                 if ( g_memManager.pFreeList == pFreeCur )
                 {
                     g_memManager.pFreeList = (void *)pNewChunkHeader;
@@ -163,7 +163,7 @@ void *malloc( size_t alloc_size )
             }
             else
             {
-                // Fix link (if we need to)
+                // Fix __link (if we need to)
                 if ( g_memManager.pFreeList == pFreeCur )
                 {
                     g_memManager.pFreeList = (void *)pFreeCurFooter->pNext;
@@ -184,7 +184,7 @@ void *malloc( size_t alloc_size )
 
 
             // Clear the allocation
-            memset( (void *)(pFreeCur + sizeof(tMallocAllocHdr)), 0, alloc_size );
+            __memset( (void *)(pFreeCur + sizeof(tMallocAllocHdr)), 0, alloc_size );
 
             // Return the allocated memory
             return (pFreeCur+sizeof(tMallocAllocHdr));
@@ -195,7 +195,7 @@ void *malloc( size_t alloc_size )
     }
 }
 
-void free( void *pItem )
+void __free( void *pItem )
 {
     // Free an object and coalesce to neighboring block if available
 
@@ -255,7 +255,7 @@ void free( void *pItem )
         }
     }
 
-    // No coalesce possible, just link it to the top of the list
+    // No coalesce possible, just __link it to the top of the list
     CLEAR_BIT( pItemHdr->alloc_size, MALLOC_INUSE_FLAG_BIT );
 
     tMallocAllocFtr *pItemFtr = ((tMallocAllocFtr *)((void *)pItemHdr + (pItemHdr->alloc_size & ~0x3)-sizeof(tMallocAllocHdr)));

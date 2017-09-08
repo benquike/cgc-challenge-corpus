@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -358,7 +358,7 @@ int main(void) {
       SEND(1, (char *)deal_cmd, cmd_sz);
       read_ok();
 
-      /* Send round data cmd and read wagers + results */
+      /* Send round data cmd and __read wagers + results */
       SEND(1, (char *)data_cmd, cmd_sz);
 
       RECV(0, (char *)wagers_and_results, sizeof(wagers_and_results));

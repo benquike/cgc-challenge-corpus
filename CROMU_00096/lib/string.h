@@ -4,7 +4,7 @@ Copyright (c) 2015 Cromulence LLC
 
 Authors: Cromulence <cgc@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -28,16 +28,16 @@ THE SOFTWARE.
 
 #include <libcgc.h>
 
-size_t strlen( const char *str );
-void bzero(void *s, size_t n);
-void *memset( void *ptr, int value, size_t num );
-char *strchr(char *s, int c);
+size_t ___strlen( const char *str );
+void __bzero(void *s, size_t n);
+void *__memset( void *ptr, int value, size_t num );
+char *__strchr(char *s, int c);
 char *strstr( char *str, char *sub, size_t len);
-char *strtok(char *str, char *sep);
-int strcmp(const char *s1, const char *s2);
+char *__strtok(char *str, char *sep);
+int __strcmp(const char *s1, const char *s2);
 int strncmp(const char *s1, const char *s2, size_t n);
-char *strcat(char *restrict s1, const char *restrict s2);
-char *strncat(char *s1, char *s2, size_t n);
+char *__strcat(char *restrict s1, const char *restrict s2);
+char *__strncat(char *s1, char *s2, size_t n);
 int memcmp( const void *s1, const void *s2, size_t n );
 
 #endif // __STRING_H__

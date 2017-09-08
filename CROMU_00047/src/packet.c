@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,7 +35,7 @@ tPacketData g_packetData = { NULL, 0, 0, 0 };
 
 void init_packet_handler( void )
 {
-	g_packetHandlers.pHandlers = (tPacketTypeHandler *)malloc( sizeof(tPacketTypeHandler) * 5 );
+	g_packetHandlers.pHandlers = (tPacketTypeHandler *)__malloc( sizeof(tPacketTypeHandler) * 5 );
 
 	g_packetHandlers.handlerCount = 5;
 
@@ -61,7 +61,7 @@ void destroy_packet_handler( void )
 {
 	// Free data
 	if ( g_packetHandlers.pHandlers )
-		free( g_packetHandlers.pHandlers );
+		__free( g_packetHandlers.pHandlers );
 
 	g_packetHandlers.pHandlers = NULL;
 
@@ -72,7 +72,7 @@ void destroy_packet_handler( void )
 	{
 		pNext = pCur->pNextPacket;
 
-		free( pCur );
+		__free( pCur );
 	}
 
 	g_packetData.pPacketList = NULL;
@@ -113,7 +113,7 @@ void receive_packet( uint8_t *pData, uint8_t dataLen, uint16_t packetCRC )
 
 	// Process and receive packet
 #if DEBUG_PACKET	
-	printf( "Packet received %d!\n", pData[0] );
+	__printf( "Packet received %d!\n", pData[0] );
 #endif
 
 	// Handle packet type
@@ -142,7 +142,7 @@ void receive_packet( uint8_t *pData, uint8_t dataLen, uint16_t packetCRC )
 
 void add_new_packet( uint8_t packetType, fpPacketTypeHandler fpHandler, uint8_t *pData, uint8_t dataLen )
 {
-	tSinglePacketData *pNewPacket = (tSinglePacketData *)malloc( sizeof(tSinglePacketData) );
+	tSinglePacketData *pNewPacket = (tSinglePacketData *)__malloc( sizeof(tSinglePacketData) );
 
 
 	pNewPacket->packetType = packetType;
@@ -153,7 +153,7 @@ void add_new_packet( uint8_t packetType, fpPacketTypeHandler fpHandler, uint8_t 
 	pNewPacket->dataLen = dataLen;
 	
 	// Copy in the data	
-	memcpy( pNewPacket->packetData, pData, dataLen );
+	__memcpy( pNewPacket->packetData, pData, dataLen );
 
 	// Add packet to receive list
 	if ( g_packetData.pPacketList == NULL )
@@ -169,14 +169,14 @@ void display_packets( void )
 {
 	tSinglePacketData *pCur = NULL;
 
-	printf( "Total $d bytes received and $d invalid packets.\n", g_packetData.byteCount, g_packetData.invalidPacketCount );
-	printf( "Displaying $d received packets:\n", g_packetData.packetCount );
+	__printf( "Total $d bytes received and $d invalid packets.\n", g_packetData.byteCount, g_packetData.invalidPacketCount );
+	__printf( "Displaying $d received packets:\n", g_packetData.packetCount );
 
 	uint32_t packetNum = 0;
 	for ( pCur = g_packetData.pPacketList; pCur; pCur = pCur->pNextPacket )
 	{
 		// Print display information
-		printf( "Displaying packet $d type $d:\n", packetNum, pCur->packetType );
+		__printf( "Displaying packet $d type $d:\n", packetNum, pCur->packetType );
 
 		// Display packet data
 		(*pCur->fpHandler)( pCur->packetData, pCur->dataLen );
@@ -189,13 +189,13 @@ void HandleBroadcastPacket( uint8_t *pData, uint32_t dataLen )
 {
 	if ( pData == NULL )
 	{
-		printf( "[BROADCAST]No data\n" );
+		__printf( "[BROADCAST]No data\n" );
 		return;
 	}
 
 	if ( dataLen < 1 )
 	{
-		printf( "[BROADCAST]Missing length\n" );
+		__printf( "[BROADCAST]Missing length\n" );
 		return;
 	}
 
@@ -203,13 +203,13 @@ void HandleBroadcastPacket( uint8_t *pData, uint32_t dataLen )
 
 	if ( dataLen < fromUserNameLen+2 )
 	{
-		printf( "[BROADCAST]Invalid message length\n" );
+		__printf( "[BROADCAST]Invalid message length\n" );
 		return;
 	}
 
 	if ( fromUserNameLen > MAX_USERNAME_LENGTH )
 	{
-		printf( "[BROADCAST]Username length was too large\n" );
+		__printf( "[BROADCAST]Username length was too large\n" );
 		return;
 	}
 
@@ -217,7 +217,7 @@ void HandleBroadcastPacket( uint8_t *pData, uint32_t dataLen )
 
 	if ( dataLen != (fromUserNameLen+broadcastMessageLen+2) )
 	{
-		printf( "[BROADCAST]Message length did not match packet length\n" );
+		__printf( "[BROADCAST]Message length did not match packet length\n" );
 		return;
 	}
 
@@ -225,26 +225,26 @@ void HandleBroadcastPacket( uint8_t *pData, uint32_t dataLen )
 	char szTemp[256];
 	char szUsername[MAX_USERNAME_LENGTH+1];
 
-	memcpy( szUsername, pData+1, fromUserNameLen );
+	__memcpy( szUsername, pData+1, fromUserNameLen );
 	szUsername[fromUserNameLen] = '\0';
 
-	memcpy( szTemp, pData+fromUserNameLen+2, broadcastMessageLen );
+	__memcpy( szTemp, pData+fromUserNameLen+2, broadcastMessageLen );
 	szTemp[broadcastMessageLen] = '\0';
 
-	printf( "[BROADCAST]From $s::$s\n", szUsername, szTemp );
+	__printf( "[BROADCAST]From $s::$s\n", szUsername, szTemp );
 }
 
 void HandleChannelPacket( uint8_t *pData, uint32_t dataLen )
 {
 	if ( pData == NULL )
 	{
-		printf( "[CHANNEL]No data\n" );
+		__printf( "[CHANNEL]No data\n" );
 		return;
 	}
 
 	if ( dataLen < 2 )
 	{
-		printf( "[CHANNEL]Invalid length\n" );
+		__printf( "[CHANNEL]Invalid length\n" );
 		return;
 	}
 
@@ -252,13 +252,13 @@ void HandleChannelPacket( uint8_t *pData, uint32_t dataLen )
 
 	if ( dataLen < fromUserNameLen+3 )
 	{
-		printf( "[CHANNEL]Invalid message length\n" );
+		__printf( "[CHANNEL]Invalid message length\n" );
 		return;
 	}
 
 	if ( fromUserNameLen > MAX_USERNAME_LENGTH )
 	{
-		printf( "[CHANNEL]Username length was too large\n" );
+		__printf( "[CHANNEL]Username length was too large\n" );
 		return;
 	}
 
@@ -267,7 +267,7 @@ void HandleChannelPacket( uint8_t *pData, uint32_t dataLen )
 
 	if ( dataLen != (fromUserNameLen+channelMessageLen+3) )
 	{
-		printf( "[CHANNEL]Message length did not match packet length\n" );
+		__printf( "[CHANNEL]Message length did not match packet length\n" );
 		return;
 	}
 
@@ -275,26 +275,26 @@ void HandleChannelPacket( uint8_t *pData, uint32_t dataLen )
 	char szFromUsername[MAX_USERNAME_LENGTH+1];
 	char szTemp[256];
 
-	memcpy( szFromUsername, pData+1, fromUserNameLen );
+	__memcpy( szFromUsername, pData+1, fromUserNameLen );
 	szFromUsername[fromUserNameLen] = '\0';
 
-	memcpy( szTemp, pData+fromUserNameLen+3, channelMessageLen );
+	__memcpy( szTemp, pData+fromUserNameLen+3, channelMessageLen );
 	szTemp[channelMessageLen] = '\0';
 
-	printf( "[CHANNEL $d]Message from $s::$s\n", channelNumber, szFromUsername, szTemp );
+	__printf( "[CHANNEL $d]Message from $s::$s\n", channelNumber, szFromUsername, szTemp );
 }
 
 void HandlePrivatePacket( uint8_t *pData, uint32_t dataLen )
 {
 	if ( pData == NULL )
 	{
-		printf( "[PRIVATE MESSAGE]No data\n" );
+		__printf( "[PRIVATE MESSAGE]No data\n" );
 		return;
 	}
 
 	if ( dataLen < 2 )
 	{
-		printf( "[PRIVATE MESSAGE]Invalid length\n" );
+		__printf( "[PRIVATE MESSAGE]Invalid length\n" );
 		return;
 	}
 
@@ -302,13 +302,13 @@ void HandlePrivatePacket( uint8_t *pData, uint32_t dataLen )
 
 	if ( dataLen < (toUserNameLen+3) )
 	{
-		printf( "[PRIVATE MESSAGE]Message length did not match packet length\n" );
+		__printf( "[PRIVATE MESSAGE]Message length did not match packet length\n" );
 		return;
 	}
 
 	if ( toUserNameLen > MAX_USERNAME_LENGTH )
 	{
-		printf( "[PRIVATE MESSAGE]Username length was too large\n" );
+		__printf( "[PRIVATE MESSAGE]Username length was too large\n" );
 		return;
 	}
 
@@ -316,13 +316,13 @@ void HandlePrivatePacket( uint8_t *pData, uint32_t dataLen )
 
 	if ( dataLen < (toUserNameLen+fromUserNameLen+3) )
 	{
-		printf( "[PRIVATE MESSAGE]Message length did not match packet length\n" );
+		__printf( "[PRIVATE MESSAGE]Message length did not match packet length\n" );
 		return;
 	}
 
 	if ( fromUserNameLen > MAX_USERNAME_LENGTH )
 	{
-		printf( "[PRIVATE MESSAGE]Username length was too large\n" );
+		__printf( "[PRIVATE MESSAGE]Username length was too large\n" );
 		return;
 	}
 
@@ -330,7 +330,7 @@ void HandlePrivatePacket( uint8_t *pData, uint32_t dataLen )
 
 	if ( dataLen != (toUserNameLen+fromUserNameLen+privateMessageLen+3) )
 	{
-		printf( "[PRIVATE MESSAGE]Message length did not match packet length\n" );
+		__printf( "[PRIVATE MESSAGE]Message length did not match packet length\n" );
 		return;
 	}
 
@@ -340,29 +340,29 @@ void HandlePrivatePacket( uint8_t *pData, uint32_t dataLen )
 	char szFromUsername[MAX_USERNAME_LENGTH+1];
 	char szToUsername[MAX_USERNAME_LENGTH+1];
 
-	memcpy( szToUsername, pData+1, toUserNameLen );
+	__memcpy( szToUsername, pData+1, toUserNameLen );
 	szToUsername[toUserNameLen] = '\0';
 
-	memcpy( szFromUsername, pData+toUserNameLen+2, fromUserNameLen );
+	__memcpy( szFromUsername, pData+toUserNameLen+2, fromUserNameLen );
 	szFromUsername[fromUserNameLen] = '\0';
 
-	memcpy( szTemp, pData+toUserNameLen+fromUserNameLen+3, privateMessageLen );
+	__memcpy( szTemp, pData+toUserNameLen+fromUserNameLen+3, privateMessageLen );
 	szTemp[privateMessageLen] = '\0';
 
-	printf( "[PRIVATE MESSAGE]$s to $s::$s\n", szToUsername, szFromUsername, szTemp );
+	__printf( "[PRIVATE MESSAGE]$s to $s::$s\n", szToUsername, szFromUsername, szTemp );
 }
 
 void HandleConnectPacket( uint8_t *pData, uint32_t dataLen )
 {
 	if ( pData == NULL )
 	{
-		printf( "[CONNECT MESSAGE]No data\n" );
+		__printf( "[CONNECT MESSAGE]No data\n" );
 		return;
 	}
 
 	if ( dataLen < 1 )
 	{
-		printf( "[CONNECT MESSAGE]Invalid length\n" );
+		__printf( "[CONNECT MESSAGE]Invalid length\n" );
 		return;
 	}
 
@@ -370,36 +370,36 @@ void HandleConnectPacket( uint8_t *pData, uint32_t dataLen )
 
 	if ( dataLen != (connectUserNameLen+1) )
 	{
-		printf( "[CONNECT MESSAGE]Message length did not match packet length\n" );
+		__printf( "[CONNECT MESSAGE]Message length did not match packet length\n" );
 		return;
 	}
 
 	if ( connectUserNameLen >= MAX_USERNAME_LENGTH )
 	{
-		printf( "[CONNECT MESSAGE]Username length was too large\n" );
+		__printf( "[CONNECT MESSAGE]Username length was too large\n" );
 		return;	
 	}
 
 	// Display message
 	char szUsername[MAX_USERNAME_LENGTH];
 
-	memcpy( szUsername, pData+1, connectUserNameLen );
+	__memcpy( szUsername, pData+1, connectUserNameLen );
 	szUsername[connectUserNameLen] = '\0';
 
-	printf( "[CONNECT MESSAGE]$s connected\n", szUsername );	
+	__printf( "[CONNECT MESSAGE]$s connected\n", szUsername );	
 }
 
 void HandleDisconnectPacket( uint8_t *pData, uint32_t dataLen )
 {
 	if ( pData == NULL )
 	{
-		printf( "[DISCONNECT MESSAGE]No data\n" );
+		__printf( "[DISCONNECT MESSAGE]No data\n" );
 		return;
 	}
 
 	if ( dataLen < 1 )
 	{
-		printf( "[DISCONNECT MESSAGE]Invalid length\n" );
+		__printf( "[DISCONNECT MESSAGE]Invalid length\n" );
 		return;
 	}
 
@@ -407,21 +407,21 @@ void HandleDisconnectPacket( uint8_t *pData, uint32_t dataLen )
 
 	if ( dataLen != (disconnectUserNameLen+1) )
 	{
-		printf( "[DISCONNECT MESSAGE]Message length did not match packet length\n" );
+		__printf( "[DISCONNECT MESSAGE]Message length did not match packet length\n" );
 		return;
 	}
 
 	if ( disconnectUserNameLen >= MAX_USERNAME_LENGTH )
 	{
-		printf( "[DISCONNECT MESSAGE]Username length was too large\n" );
+		__printf( "[DISCONNECT MESSAGE]Username length was too large\n" );
 		return;	
 	}
 
 	// Display message
 	char szUsername[MAX_USERNAME_LENGTH];
 
-	memcpy( szUsername, pData+1, disconnectUserNameLen );
+	__memcpy( szUsername, pData+1, disconnectUserNameLen );
 	szUsername[disconnectUserNameLen] = '\0';
 
-	printf( "[DISCONNECT MESSAGE]$s disconnected\n", szUsername );	
+	__printf( "[DISCONNECT MESSAGE]$s disconnected\n", szUsername );	
 }

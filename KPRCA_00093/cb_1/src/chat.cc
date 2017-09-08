@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,7 +35,7 @@ Chat::Chat() {
 Chat::Chat(char *msg, unsigned short msg_length, User *from) {
     msg_length_ = msg_length <= MAX_MSG_LENGTH ? msg_length : MAX_MSG_LENGTH;
     msg_ = new char[msg_length_];
-    memcpy(msg_, msg, msg_length_);
+    __memcpy(msg_, msg, msg_length_);
     from_ = from;
 }
 

@@ -4,7 +4,7 @@ Author: John Berry <hj@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -38,35 +38,35 @@ int countyMenu( pCounty co )
 	}
 
 	while ( 1 ) {
-		printf("County: @s\n", co->name );
-		printf("1) Display County Info\n");
-		printf("2) Set Seat\n");
-		printf("3) Set Population\n");
-		printf("4) Set Area\n");
-		printf("5) Set Density\n");
-		printf("6) Add Border\n");
-		printf("7) Add City\n");
-		printf("8) Select City\n");
-		printf("9) Delete County and Exit Menu\n");
-		printf("10) Exit Menu\n");
-		printf("Selection: ");
+		__printf("County: @s\n", co->name );
+		__printf("1) Display County Info\n");
+		__printf("2) Set Seat\n");
+		__printf("3) Set Population\n");
+		__printf("4) Set Area\n");
+		__printf("5) Set Density\n");
+		__printf("6) Add Border\n");
+		__printf("7) Add City\n");
+		__printf("8) Select City\n");
+		__printf("9) Delete County and Exit Menu\n");
+		__printf("10) Exit Menu\n");
+		__printf("Selection: ");
 
-		bzero(selection, 4 );
-		receive_until( selection, '\n', 3);
+		__bzero(selection, 4 );
+		__receive_until( selection, '\n', 3);
 
-		choice = atoi( selection );
-		bzero( selection, 30 );
+		choice = __atoi( selection );
+		__bzero( selection, 30 );
 
 		switch( choice ) {
 			case 1:
 				printCountyInfo( co );
 				break;
 			case 2: 	// Set Seat
-				printf("\n-> ");
-				receive_until(selection, '\n', 19 );
+				__printf("\n-> ");
+				__receive_until(selection, '\n', 19 );
 				
 				choice = 0;
-				while ( isalpha( selection[choice] ) ) {
+				while ( __isalpha( selection[choice] ) ) {
 					co->seat[choice] = selection[choice];
 					choice++;
 				}
@@ -75,25 +75,25 @@ int countyMenu( pCounty co )
 				co->seat[choice] = '\x00';				
 				break;
 			case 3:		// Set Population
-				printf("\n-> ");
-				receive_until( selection, '\n', 19 );
+				__printf("\n-> ");
+				__receive_until( selection, '\n', 19 );
 
-				co->population = atoi(selection);
+				co->population = __atoi(selection);
 
 				break;
 			case 4:		/// Set Area
-				printf("\n-> ");
-				receive_until( selection, '\n', 19);
-				co->area = atof( selection );
+				__printf("\n-> ");
+				__receive_until( selection, '\n', 19);
+				co->area = __atof( selection );
 				break;
 			case 5:		/// Set Density
-				printf("\n-> ");
-				receive_until( selection, '\n', 19);
-				co->density = atof( selection );
+				__printf("\n-> ");
+				__receive_until( selection, '\n', 19);
+				co->density = __atof( selection );
 				break;
 			case 6:	/// Add border
 				if ( co->border_count >= COUNTYBORDERMAX) {
-                                        printf("!!Max borders reached\n");
+                                        __printf("!!Max borders reached\n");
 					break;
                                 }
 
@@ -102,32 +102,32 @@ int countyMenu( pCounty co )
                                         break;
                                 }
 
-                                printf("Lat Start: ");
-                                bzero(selection, 30 );
-                                receive_until( selection, '\n', 19 );
-                                pb->latStart = atof(selection);
+                                __printf("Lat Start: ");
+                                __bzero(selection, 30 );
+                                __receive_until( selection, '\n', 19 );
+                                pb->latStart = __atof(selection);
 
-                                printf("Long Start: ");
-                                bzero(selection, 30 );
-                                receive_until( selection, '\n', 19 );
-                                pb->lngStart = atof(selection);
+                                __printf("Long Start: ");
+                                __bzero(selection, 30 );
+                                __receive_until( selection, '\n', 19 );
+                                pb->lngStart = __atof(selection);
 
-                                printf("Lat End: ");
-                                bzero(selection, 30 );
-                                receive_until( selection, '\n', 19 );
-                                pb->latEnd = atof(selection);
+                                __printf("Lat End: ");
+                                __bzero(selection, 30 );
+                                __receive_until( selection, '\n', 19 );
+                                pb->latEnd = __atof(selection);
 
-                                printf("Long End: ");
-                                bzero(selection, 30 );
-                                receive_until( selection, '\n', 19 );
-                                pb->lngEnd = atof(selection);
+                                __printf("Long End: ");
+                                __bzero(selection, 30 );
+                                __receive_until( selection, '\n', 19 );
+                                pb->lngEnd = __atof(selection);
 
                                 co->borders[ co->border_count ] = pb;
                                 co->border_count++;
 				break;
 			case 7:
 				/// Add City
-				/// Find a free slot
+				/// Find a __free slot
 				choice = 0;
 				while ( choice < COUNTYCITYMAX ) {
 					if ( co->cities[choice] == NULL ) {
@@ -137,7 +137,7 @@ int countyMenu( pCounty co )
 				}
 
 				if ( choice == COUNTYCITYMAX ) {
-					printf("!!Max cities reached\n");
+					__printf("!!Max cities reached\n");
 					continue;
 				}
 
@@ -150,11 +150,11 @@ int countyMenu( pCounty co )
 
 				co->cities[choice] = pc;
 
-				printf("New City Name: ");
-				receive_until( selection, '\n', 19 );
+				__printf("New City Name: ");
+				__receive_until( selection, '\n', 19 );
 
 				choice = 0;
-				while( isalnum( selection[choice] ) ) {
+				while( __isalnum( selection[choice] ) ) {
 					pc->name[choice] = selection[choice];
 					choice++;
 				} 
@@ -166,18 +166,18 @@ int countyMenu( pCounty co )
 				/// select city
 				for ( choice = 0; choice < COUNTYCITYMAX; choice++ ) {
 					if ( co->cities[choice] != NULL ) {
-						printf("@d) @s\n", choice + 1, co->cities[choice]);
+						__printf("@d) @s\n", choice + 1, co->cities[choice]);
 					}
 				}
 
-				printf("\n-> ");
-				bzero( selection, 30 );
-				receive_until( selection, '\n', 4 );
+				__printf("\n-> ");
+				__bzero( selection, 30 );
+				__receive_until( selection, '\n', 4 );
 
-				choice = atoi( selection );
+				choice = __atoi( selection );
 
 				if ( choice < 1 || choice > COUNTYCITYMAX || co->cities[choice-1] == NULL ) {
-					printf("Invalid choice\n");
+					__printf("Invalid choice\n");
 					continue;
 				}
 
@@ -194,7 +194,7 @@ int countyMenu( pCounty co )
 				return 1;
 				break;
 			default:
-				printf("Invalid choice\n");
+				__printf("Invalid choice\n");
 				continue;
 		};
 	}
@@ -274,34 +274,34 @@ void printCountyInfo( pCounty co )
 		return;
 	}
 
-	printf("\t\t\tCounty: ");
+	__printf("\t\t\tCounty: ");
 	if ( co->name[0] == '\x00' ) {
-		printf("Unknown\n");
+		__printf("Unknown\n");
 	} else {
-		printf("@s\n", co->name);
+		__printf("@s\n", co->name);
 	}
 
-	printf("\t\t\t\tSeat: ");
+	__printf("\t\t\t\tSeat: ");
 	if ( co->seat[0] == '\x00' ) {
-		printf("Unknown\n");
+		__printf("Unknown\n");
 	} else {
-		printf("@s\n", co->seat);
+		__printf("@s\n", co->seat);
 	}
 
 	if ( co->population >= 0 ) {
-		printf("\t\t\t\tPopulation: @d\n", co->population);
+		__printf("\t\t\t\tPopulation: @d\n", co->population);
 	}
 
 	if ( co->area >= 0 ) {
-		printf("\t\t\t\tArea: @f\n", co->area);
+		__printf("\t\t\t\tArea: @f\n", co->area);
 	}
 
 	if ( co->density >= 0 ) {
-		printf("\t\t\t\tDensity: @f\n", co->density);
+		__printf("\t\t\t\tDensity: @f\n", co->density);
 	}
 
 	for (index = 0; index < co->border_count; index++ ) {
-		printf("\t\t\t\tBorder: @f @f @f @f\n", co->borders[index]->latStart, co->borders[index]->lngStart, co->borders[index]->latEnd, co->borders[index]->lngEnd);
+		__printf("\t\t\t\tBorder: @f @f @f @f\n", co->borders[index]->latStart, co->borders[index]->lngStart, co->borders[index]->latEnd, co->borders[index]->lngEnd);
 	}
 
 	for (index = 0; index < COUNTYCITYMAX; index++ ) {
@@ -362,7 +362,7 @@ pCounty countyTopLevel( pstring str )
 		goto end;
 	}
 
-	if ( strcmp( tempChar, "County" ) != 0 ) {
+	if ( __strcmp( tempChar, "County" ) != 0 ) {
 		goto end;
 	}
 
@@ -393,7 +393,7 @@ pCounty countyTopLevel( pstring str )
 	while (tempChar != NULL ) {
 		el = elementNameToEnum( tempChar );
 
-		deallocate( tempChar, strlen(tempChar) + 1 );
+		deallocate( tempChar, __strlen(tempChar) + 1 );
 
 		switch ( el ) {
 			case name:
@@ -403,10 +403,10 @@ pCounty countyTopLevel( pstring str )
 					goto error;
 				}
 	
-				bzero( newCounty->name, 20 );
-				strncpy( newCounty->name, tempChar, 19 );
+				__bzero( newCounty->name, 20 );
+				__strncpy( newCounty->name, tempChar, 19 );
 
-				deallocate( tempChar, strlen(tempChar) + 1 );
+				deallocate( tempChar, __strlen(tempChar) + 1 );
 				tempChar = NULL;
 				break;
 			case seat:
@@ -416,10 +416,10 @@ pCounty countyTopLevel( pstring str )
 					goto error;
 				}
 
-				bzero( newCounty->seat, 20 );
-				strncpy( newCounty->seat, tempChar, 19);
+				__bzero( newCounty->seat, 20 );
+				__strncpy( newCounty->seat, tempChar, 19);
 
-				deallocate( tempChar, strlen(tempChar) + 1 );
+				deallocate( tempChar, __strlen(tempChar) + 1 );
 				tempChar = NULL;
 				break;
 			case density:
@@ -478,7 +478,7 @@ pCounty countyTopLevel( pstring str )
 				newCounty->city_count++;
 				break;
 			default:
-				printf("!!Element not allowed\n");
+				__printf("!!Element not allowed\n");
 				goto error;
 				break;
 		
@@ -524,12 +524,12 @@ pCounty countyTopLevel( pstring str )
 	}
 #endif
 
-	if ( strcmp( tempChar, "County" ) != 0 ) {
-		deallocate( tempChar, strlen(tempChar) + 1 );
+	if ( __strcmp( tempChar, "County" ) != 0 ) {
+		deallocate( tempChar, __strlen(tempChar) + 1 );
 		goto error;
 	}
 
-	deallocate( tempChar, strlen(tempChar) + 1 );
+	deallocate( tempChar, __strlen(tempChar) + 1 );
 
 	skipWhiteSpace( str );
 	
@@ -547,7 +547,7 @@ error:
 		newCounty = NULL;
 	}
 
-	printf("!!Error at: @s\n", str->buffer + lastGood );
+	__printf("!!Error at: @s\n", str->buffer + lastGood );
 	str->index = lastGood;
 
 end:
@@ -606,13 +606,13 @@ int checkId ( pstring str, char *id, int ending )
 		goto end;
 	}
 
-	if ( strcmp( temp, id ) != 0 ) {
-		deallocate( temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, id ) != 0 ) {
+		deallocate( temp, __strlen(temp) + 1 );
 
 		goto end;
 	}
 
-	deallocate( temp, strlen(temp) + 1 );
+	deallocate( temp, __strlen(temp) + 1 );
 
 	skipWhiteSpace( str );
 	if ( str->buffer[str->index] != '}' ) {
@@ -666,7 +666,7 @@ double extractDensity( pstring str )
 		goto end;
 	}
 
-	density = atof( temp );
+	density = __atof( temp );
 
 	deallocate( temp, (endIndex-startIndex) + 1 );
 	temp = NULL;
@@ -725,13 +725,13 @@ double extractArea( pstring str )
 		goto end;
 	}
 
-	if ( strcmp( temp, "Area" ) != 0 ) {
-		deallocate( temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, "Area" ) != 0 ) {
+		deallocate( temp, __strlen(temp) + 1 );
 
 		goto end;
 	}
 
-	deallocate( temp, strlen(temp) + 1 );
+	deallocate( temp, __strlen(temp) + 1 );
 
 	skipWhiteSpace( str );
 	if ( str->buffer[str->index] != '}' ) {
@@ -756,7 +756,7 @@ double extractArea( pstring str )
 		goto end;
 	}
 
-	area = atof( temp );
+	area = __atof( temp );
 
 	deallocate( temp, (endIndex-startIndex) + 1 );
 	temp = NULL;
@@ -782,12 +782,12 @@ double extractArea( pstring str )
 		goto error;
 	}
 
-	if ( strcmp( temp, "Area") != 0 ) {
-		deallocate( temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, "Area") != 0 ) {
+		deallocate( temp, __strlen(temp) + 1 );
 		goto error;
 	}
 
-	deallocate( temp, strlen(temp) + 1 );
+	deallocate( temp, __strlen(temp) + 1 );
 
 	skipWhiteSpace( str );
 	if ( !atChar( str, '}') ) {
@@ -846,12 +846,12 @@ char *extractSeat( pstring str )
 		goto end;
 	}
 
-	if ( strcmp( temp, "Seat" ) != 0 ) {
-		deallocate( temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, "Seat" ) != 0 ) {
+		deallocate( temp, __strlen(temp) + 1 );
 		goto end;
 	}
 
-	deallocate( temp, strlen(temp) + 1 );
+	deallocate( temp, __strlen(temp) + 1 );
 
 	skipWhiteSpace( str );
 	if ( str->buffer[str->index] != '}' ) {
@@ -906,12 +906,12 @@ char *extractSeat( pstring str )
 		goto error;
 	}
 
-	if ( strcmp( temp, "Seat") != 0 ) {
-		deallocate( temp, strlen(temp) + 1 );
+	if ( __strcmp( temp, "Seat") != 0 ) {
+		deallocate( temp, __strlen(temp) + 1 );
 		goto error;
 	}
 
-	deallocate( temp, strlen(temp) + 1 );
+	deallocate( temp, __strlen(temp) + 1 );
 
 	skipWhiteSpace( str );
 	if ( !atChar( str, '}') ) {
@@ -924,7 +924,7 @@ char *extractSeat( pstring str )
 	
 error:
 	if ( seat ) {
-		deallocate( seat, strlen(seat) + 1 );
+		deallocate( seat, __strlen(seat) + 1 );
 		seat = NULL;
 	}
 

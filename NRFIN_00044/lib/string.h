@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -33,7 +33,7 @@
  * @param num The number of bytes to copy
  * @return The destination pointer
  */
-void *memcpy(void *destination, const void *source, size_t num);
+void *__memcpy(void *destination, const void *source, size_t num);
 
 /**
  * Moves num bytes from source to destination, allowing buffers to overlap.
@@ -53,7 +53,7 @@ void *memmove(void *destination, const void *source, size_t num);
  * @param num The number of bytes to set
  * @return The destination pointer
  */
-void *memset(void *ptr, int value, size_t num);
+void *__memset(void *ptr, int value, size_t num);
 
 /**
  * Returns the length of str.
@@ -61,7 +61,7 @@ void *memset(void *ptr, int value, size_t num);
  * @param str The string to measure
  * @return The length of str
  */
-size_t strlen(const char *str);
+size_t __strlen(const char *str);
 
 /**
  * Returns the length of str, examining at most num bytes.
@@ -79,7 +79,7 @@ size_t strnlen(const char *str, size_t num);
  * @param source The source string
  * @return destination
  */
-char *strcpy(char *destination, const char *source);
+char *__strcpy(char *destination, const char *source);
 
 /**
  * Copies at most num bytes of a string from source to destination.
@@ -92,7 +92,7 @@ char *strcpy(char *destination, const char *source);
  * @param num The maximum number of bytes to copy
  * @return destination
  */
-char *strncpy(char *destination, const char *source, size_t num);
+char *__strncpy(char *destination, const char *source, size_t num);
 
 /**
  * Appends a string from source to destination.
@@ -101,7 +101,7 @@ char *strncpy(char *destination, const char *source, size_t num);
  * @param source The source string
  * @return destination
  */
-char *strcat(char *destination, const char *source);
+char *__strcat(char *destination, const char *source);
 
 /**
  * Appends at most num bytes from source to destination.
@@ -111,7 +111,7 @@ char *strcat(char *destination, const char *source);
  * @param num The maximum number of bytes to append
  * @return destination
  */
-char *strncat(char *destination, const char *source, size_t num);
+char *__strncat(char *destination, const char *source, size_t num);
 
 /**
  * Compares num bytes between ptr1 and ptr2.
@@ -130,7 +130,7 @@ int memcmp(const void *ptr1, const void *ptr2, size_t num);
  * @param str2 The second string to compare
  * @return 0 if str1 == str2, <0 if str1 < str2, >0 if str1 > str2
  */
-int strcmp(const char *str1, const char *str2);
+int __strcmp(const char *str1, const char *str2);
 
 /**
  * Compares at most num bytes between str1 and str2.
@@ -160,7 +160,7 @@ void *memchr(void *ptr, int value, size_t num);
  * @return A pointer to the first instance of character in str, or NULL if not
  *      found
  */
-char *strchr(char *str, int character);
+char *__strchr(char *str, int character);
 
 /**
  * Find the first instance of any of the characters in str2 in str1.
@@ -197,7 +197,7 @@ char *strstr(char *str1, const char *str2);
  * @param str1 The string to search
  * @param str2 A string containing the characters to search for
  * @return The number of characters in str1 before any of the characters in str2
- *      occur, or strlen(str1) if none found
+ *      occur, or __strlen(str1) if none found
  */
 size_t strcspn(const char *str1, const char *str2);
 
@@ -216,14 +216,14 @@ size_t strspn(const char *str1, const char *str2);
  * Split a string into tokens separated by the characters in delimiter.
  *
  * Begin tokenizing a string by passing it as the first parameter, then call
- * with NULL as the first parameter until strtok returns NULL.
+ * with NULL as the first parameter until __strtok returns NULL.
  *
  * @param str The string to search, or NULL to continue previous search
  * @param delimeters A string containing the delimiters to split on
  * @return Tokens of str separated by characters in delimiter, or NULL if no
  *      more tokens available.
  */
-char *strtok(char *str, const char *delimiters);
+char *__strtok(char *str, const char *delimiters);
 
 #endif /* STRING_H_ */
 

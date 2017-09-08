@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -76,7 +76,7 @@ public:
 
     bool operator==(const CString& other) const
     {
-        return strcmp(ptr, other.ptr) == 0;
+        return __strcmp(ptr, other.ptr) == 0;
     }
 
     CString& ensure()
@@ -85,7 +85,7 @@ public:
         {
             size_t len = length() + 1;
             _ptr.reset(new char [len]);
-            memcpy(_ptr.get(), ptr, len);
+            __memcpy(_ptr.get(), ptr, len);
             ptr = _ptr.get();
         }
         return *this;
@@ -99,7 +99,7 @@ public:
     size_t hash() const;
     size_t length() const
     {
-        return strlen(ptr);
+        return __strlen(ptr);
     }
 private:
     const char *ptr;

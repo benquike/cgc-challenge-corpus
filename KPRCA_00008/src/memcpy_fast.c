@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -25,13 +25,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef unsigned int intptr_t;
+typedef unsigned int ___intptr_t;
 typedef unsigned int uint128_t __attribute__((__vector_size__(16)));
 
 void *memcpy_fast(void *dst, void *src, size_t length)
 {
-    if ((length % 16) || ((intptr_t)dst % 16) || ((intptr_t)src % 16))
-        return memcpy(dst, src, length);
+    if ((length % 16) || ((___intptr_t)dst % 16) || ((___intptr_t)src % 16))
+        return __memcpy(dst, src, length);
 
 #if PATCHED
     if (length == 0)

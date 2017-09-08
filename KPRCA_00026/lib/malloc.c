@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -44,7 +44,7 @@ static int allocate_new_blk(void)
 
   new_blk = (struct blk_t *)ret;
   new_blk->size = size;
-  new_blk->free = 1;
+  new_blk->__free = 1;
   new_blk->fpred = NULL;
   new_blk->fsucc = NULL;
   new_blk->prev = NULL;
@@ -80,7 +80,7 @@ static void *malloc_huge(size_t size)
         return NULL;
     struct blk_t *blk = mem;
     blk->size = size;
-    blk->free = 0;
+    blk->__free = 0;
     blk->fpred = NULL;
     blk->fsucc = NULL;
     blk->prev = NULL;
@@ -88,7 +88,7 @@ static void *malloc_huge(size_t size)
     return (void *)((intptr_t)blk + HEADER_PADDING);
 }
 
-void *malloc(size_t size)
+void *__malloc(size_t size)
 {
   if (size == 0)
     return NULL;
@@ -119,7 +119,7 @@ void *malloc(size_t size)
     }
   }
 
-  /* Remove the block we're going to use from the free list */
+  /* Remove the block we're going to use from the __free list */
   remove_from_flist(blk);
 
   /* Split the block into two pieces if possible */
@@ -128,7 +128,7 @@ void *malloc(size_t size)
     struct blk_t *nb = (struct blk_t *)((intptr_t)blk + size);
 
     nb->size = sdiff;
-    nb->free = 1;
+    nb->__free = 1;
     nb->fsucc = NULL;
     nb->fpred = NULL;
 
@@ -141,7 +141,7 @@ void *malloc(size_t size)
       blk->next->prev = nb;
     blk->next = nb;
 
-    /* Put the new block into the free list */
+    /* Put the new block into the __free list */
     insert_into_flist(nb);
   }
 

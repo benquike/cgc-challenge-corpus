@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -27,7 +27,7 @@
 
 struct game_state *create_game(char *player_name) {
 	struct game_state *game = NULL;
-	game = calloc(sizeof(struct game_state));
+	game = __calloc(sizeof(struct game_state));
 
 	game->whos_turn =  0; // remote player goes first
 	uint8_t seed = 0;
@@ -38,8 +38,8 @@ struct game_state *create_game(char *player_name) {
 	game->pool = get_shuffled_deck(seed); // seed: first byte of player_name
 	game->p_remote = create_player(0, player_name);
 	char *bot = NULL;
-	bot = calloc(4);
-	strncpy(bot, "Bot", 3);
+	bot = __calloc(4);
+	__strncpy(bot, "Bot", 3);
 
 	game->p_bot = create_player(1, bot);
 

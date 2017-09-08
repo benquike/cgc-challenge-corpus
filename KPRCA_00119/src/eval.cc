@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -145,7 +145,7 @@ bool Evaluator::eval_expr(Scope& scope, Node *node, unique_ptr<Var>& outresult)
     }
     case TokenType::Number:
     {
-        outresult.reset(new NumberVar(strtoul(node->getLiteral(), 0, 0)));
+        outresult.reset(new NumberVar(__strtoul(node->getLiteral(), 0, 0)));
         break;
     }
     case TokenType::Call:

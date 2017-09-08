@@ -37,14 +37,14 @@ extern "C" {
 extern void terminate(int);
 
 extern "C" void __cxa_pure_virtual() {
-	printf("pure as yellow snow...\n");
+	__printf("pure as yellow snow...\n");
 	terminate(1);
 }
 
 /* new, new[], delete, delete[] */
 void *
 operator new(unsigned int sz) {
-	return malloc(sz);
+	return __malloc(sz);
 }
 
 void *
@@ -54,7 +54,7 @@ operator new[](unsigned int sz) {
 
 void
 operator delete(void *v) {
-	free(v);
+	__free(v);
 }
 
 void

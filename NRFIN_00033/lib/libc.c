@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -36,7 +36,7 @@ uint32_t __cookie = 0;
 
 void promptc(char *buf, uint16_t  size, char *prompt) {
 
-    SSEND(strlen(prompt), prompt);
+    SSEND(__strlen(prompt), prompt);
 
     SRECV((uint32_t)size, buf);
 }
@@ -130,7 +130,7 @@ int recvline(int fd, char *buf, size_t size) {
 }
 
 //non-standard convention, returns num bytes copied instead of s1
-size_t strcpy(char *s1, char *s2) {
+size_t __strcpy(char *s1, char *s2) {
     char *tmp = s1;
     while (*s2) {
         *tmp = *s2;
@@ -142,7 +142,7 @@ size_t strcpy(char *s1, char *s2) {
 }
 
 //non-standard convention, returns num bytes copied instead of s1
-size_t strncpy(char *s1, char *s2, size_t n) {
+size_t __strncpy(char *s1, char *s2, size_t n) {
     char *tmp = s1;
     while ((tmp-s1 < n) && *s2) {
         *tmp = *s2;
@@ -153,14 +153,14 @@ size_t strncpy(char *s1, char *s2, size_t n) {
     return tmp-s1-1;
 }
 
-char * strcat(char *s1, char *s2) {
+char * __strcat(char *s1, char *s2) {
     char *tmp = s1;
     while (*tmp) tmp++;
-    strcpy(tmp,s2);
+    __strcpy(tmp,s2);
     return s1;
 }
 
-size_t strlen(char *s) {
+size_t __strlen(char *s) {
     char *tmp = s;
     while (*tmp) tmp++;
     return (size_t)(tmp-s);
@@ -286,7 +286,7 @@ int int2str(char* str_buf, int buf_size, int i) {
 // returns 0 if str_buf is "0" or has no digits.
 uint32_t str2uint(const char* str_buf) {
     int result = 0;
-    int max_chars = 10; // max number of chars read from str_buf
+    int max_chars = 10; // max number of chars __read from str_buf
     int i = 0;
 
     if (str_buf == NULL)
@@ -305,7 +305,7 @@ uint32_t str2uint(const char* str_buf) {
     return result;
 }
 
-void * memset(void *dst, char c, size_t n) {
+void * __memset(void *dst, char c, size_t n) {
     size_t i;
     for (i=0; i<n; i++) {
         *((uint8_t*)dst+i) = c;
@@ -313,7 +313,7 @@ void * memset(void *dst, char c, size_t n) {
     return dst;
 }
 
-void * memcpy(void *dst, void *src, size_t n) {
+void * __memcpy(void *dst, void *src, size_t n) {
     size_t i;
     for (i=0; i<n; i++) {
         *((uint8_t*)dst+i) = *((uint8_t*)src+i);
@@ -335,7 +335,7 @@ char * b2hex(uint8_t b, char *h) {
     return h;
 }
 
-char * strchr(char *str, char c) {
+char * __strchr(char *str, char c) {
     char *tmp = str;
     while (*tmp) {
         if (*tmp == c)
@@ -350,14 +350,14 @@ int __umoddi3(int a, int b) {
     return a-(a/b*b);
 }
 
-void sleep(int s) {
+void __sleep(int s) {
     struct timeval tv;
     tv.tv_sec = s;
     tv.tv_usec = 0;
     fdwait(0, NULL, NULL, &tv, NULL);
 }
 
-int memcmp(void *a, void *b, size_t n) {
+int __memcmp(void *a, void *b, size_t n) {
     size_t i;
     for (i=0; i < n; i++)
         if ( *(uint8_t*)(a+i) != *(uint8_t*)(b+i))
@@ -409,13 +409,13 @@ void checkheap() {
     }
 }
 
-void *malloc(size_t size) {
+void *__malloc(size_t size) {
     /*
-     * A very stupid malloc implementation, meant to be simple.
+     * A very stupid __malloc implementation, meant to be simple.
      * Keeps a list of allocated and freed chunks
      * Alloc walks list of freed chunks to see if any are large enough
      * If not, it allocates space large enough to store
-     * Oh, and we never actually free pages. It's quality software.
+     * Oh, and we never actually __free pages. It's quality software.
      *
      */
     if (!heapinit_done) 
@@ -435,13 +435,13 @@ void *malloc(size_t size) {
 
     if (chunk->size >= size) {
         //found a match, remove from freed list, add to allocated list, and return
-        //SSSENDL("found free chunk");
+        //SSSENDL("found __free chunk");
         remove(chunk);
         insert(allocated,chunk);
         return ((uint8_t*)chunk)+sizeof(heap_chunk_t);
     }
 
-    //see if free space in last allocated page is enough
+    //see if __free space in last allocated page is enough
     if (size <= curleft) {
         //SSSENDL("had enough left in current page");
         chunk = (heap_chunk_t*)lastpage;
@@ -458,7 +458,7 @@ void *malloc(size_t size) {
     //first add the remaining page to our freed list as a lazy hack
     //if there's not enough left, we just let it leak
     if (curleft > sizeof(heap_chunk_t)) {
-        //SSSENDL("adding remainder to free list");
+        //SSSENDL("adding remainder to __free list");
         chunk = (heap_chunk_t*)lastpage;
         chunk->size = curleft;
         insert(freed,chunk);
@@ -479,20 +479,20 @@ void *malloc(size_t size) {
     return ((uint8_t*)chunk)+sizeof(heap_chunk_t);
 }
 
-void *calloc(size_t size) {
+void *__calloc(size_t size) {
     void *ptr;
 
-    if (!(ptr = malloc(size)))
+    if (!(ptr = __malloc(size)))
         return NULL;
 
-    memset(ptr,'\0',size);
+    __memset(ptr,'\0',size);
     return ptr;
 }
 
-void free(void *p) {
+void __free(void *p) {
     /*
-     * A very stupid free for a very stupid malloc
-     * Simply moves pointer from allocated to free list
+     * A very stupid __free for a very stupid __malloc
+     * Simply moves pointer from allocated to __free list
      * With no checking of anything, obviously
      *
      */
@@ -552,7 +552,7 @@ size_t strnlen(const char *string, size_t max_len) {
 }
 
 // From JUKEBOX, modified for non-null-terminated string2
-int strcmp(const char* string1, const char* string2)
+int __strcmp(const char* string1, const char* string2)
 {
     int pos;
 

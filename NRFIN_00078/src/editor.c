@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -93,22 +93,22 @@ do_insert(struct command *command, struct result **result, int append)
     line_count = list_length(&state.line_list);
 
     // We always ensure that commands end with at least one NULL byte
-    tok = strtok(command->buf, '\n');
+    tok = __strtok(command->buf, '\n');
     while (tok != NULL) {
-        if (strlen(tok) > MAX_LINE_SIZE)
+        if (__strlen(tok) > MAX_LINE_SIZE)
             return EXIT_FAILURE;
 
         if (++line_count > MAX_LINE_COUNT)
             return EXIT_FAILURE;
 
-        if ((newline = calloc(sizeof(struct line) + strlen(tok) + 1)) == NULL)
+        if ((newline = __calloc(sizeof(struct line) + __strlen(tok) + 1)) == NULL)
             return EXIT_FAILURE;
 
-        strcpy(newline->buf, tok);
+        __strcpy(newline->buf, tok);
         list_insert_entry_after(struct line, list, &state.line_list, line, newline);
 
         line = newline;
-        tok = strtok(NULL, '\n');
+        tok = __strtok(NULL, '\n');
     }
 
     // Update special marks
@@ -152,7 +152,7 @@ delete_command(struct command *command, struct result **result)
 
     for (cur = start; cur && cur != list_entry(struct line, list, end->list.next);
             cur = list_entry(struct line, list, cur->list.next)) {
-        free(tofree);
+        __free(tofree);
         tofree = cur;
 
         // Remove stale marks
@@ -163,7 +163,7 @@ delete_command(struct command *command, struct result **result)
         list_remove_entry(struct line, list, &state.line_list, cur);
     }
 
-    free(tofree);
+    __free(tofree);
 
     // Update special marks
     state.marks[-DOT_MARK - 1] = get_line_by_address(command->start);
@@ -206,9 +206,9 @@ join_command(struct command *command, struct result **result)
     // Calculate our size
     for (cur = start; cur && cur != list_entry(struct line, list, end->list.next);
             cur = list_entry(struct line, list, cur->list.next))
-        size += strlen(cur->buf);
+        size += __strlen(cur->buf);
 
-    if ((newline = calloc(sizeof(struct line) + size + 1)) == NULL)
+    if ((newline = __calloc(sizeof(struct line) + size + 1)) == NULL)
         return EXIT_FAILURE;
 
     c = newline->buf;
@@ -221,19 +221,19 @@ join_command(struct command *command, struct result **result)
                 state.marks[i] = NULL;
 
         if (cur != start) {
-            free(tofree);
+            __free(tofree);
             tofree = cur;
             list_remove_entry(struct line, list, &state.line_list, cur);
         }
 
-        strcpy(c, cur->buf);
-        c += strlen(cur->buf);
+        __strcpy(c, cur->buf);
+        c += __strlen(cur->buf);
     }
 
     // Insert the new line, remove old start line
     list_insert_entry_before(struct line, list, &state.line_list, start, newline);
     list_remove_entry(struct line, list, &state.line_list, start);
-    free(start);
+    __free(start);
 
     // Update special marks
     state.marks[-DOT_MARK - 1] = newline;
@@ -289,11 +289,11 @@ get_mark_command(struct command *command, struct result **result)
     if (index > (sizeof(state.marks) / sizeof(state.marks[0]) - 2))
         return EXIT_FAILURE;
 
-    if ((*result = calloc(sizeof(struct result) + sizeof(unsigned int))) == NULL)
+    if ((*result = __calloc(sizeof(struct result) + sizeof(unsigned int))) == NULL)
         return EXIT_FAILURE;
 
     (*result)->size = sizeof(unsigned int);
-    memcpy((*result)->buf, &state.marks[index], sizeof(unsigned int));
+    __memcpy((*result)->buf, &state.marks[index], sizeof(unsigned int));
 
     // Update special marks
     state.marks[-DOT_MARK - 1] = state.marks[index];
@@ -324,9 +324,9 @@ list_command(struct command *command, struct result **result)
     // Calculate our size
     for (cur = start; cur && cur != list_entry(struct line, list, end->list.next);
             cur = list_entry(struct line, list, cur->list.next))
-        size += strlen(cur->buf) + 1;
+        size += __strlen(cur->buf) + 1;
 
-    if ((*result = calloc(sizeof(struct result) + size + 1)) == NULL)
+    if ((*result = __calloc(sizeof(struct result) + size + 1)) == NULL)
         return EXIT_FAILURE;
 
     (*result)->size = size;
@@ -334,9 +334,9 @@ list_command(struct command *command, struct result **result)
     for (cur = start; cur && cur != list_entry(struct line, list, end->list.next);
             cur = list_entry(struct line, list, cur->list.next)) {
 
-        strcpy(c, cur->buf);
-        strcat(c, "\n");
-        c += strlen(cur->buf) + 1;
+        __strcpy(c, cur->buf);
+        __strcat(c, "\n");
+        c += __strlen(cur->buf) + 1;
     }
 
     // Update special marks
@@ -375,15 +375,15 @@ num_command(struct command *command, struct result **result)
     for (cur = start; cur && cur != list_entry(struct line, list, end->list.next);
             cur = list_entry(struct line, list, cur->list.next))
 #ifdef PATCHED_2
-        size += strlen(cur->buf) + 5;
+        size += __strlen(cur->buf) + 5;
 #else
-        size += strlen(cur->buf) + 4;
+        size += __strlen(cur->buf) + 4;
 #endif
 
-    if ((*result = calloc(sizeof(struct result) + size + 1)) == NULL)
+    if ((*result = __calloc(sizeof(struct result) + size + 1)) == NULL)
         return EXIT_FAILURE;
 
-    if ((buf = calloc(size + 1)) == NULL)
+    if ((buf = __calloc(size + 1)) == NULL)
         return EXIT_FAILURE;
 
     c = buf;
@@ -392,16 +392,16 @@ num_command(struct command *command, struct result **result)
 
         start_line++;
 
-        strcpy(c, itoa(start_line, s));
-        strcat(c, " ");
-        strcat(c, cur->buf);
-        strcat(c, "\n");
-        c += strlen(c);
+        __strcpy(c, __itoa(start_line, s));
+        __strcat(c, " ");
+        __strcat(c, cur->buf);
+        __strcat(c, "\n");
+        c += __strlen(c);
     }
-    strcpy((*result)->buf, buf);
-    (*result)->size = strlen((*result)->buf);
+    __strcpy((*result)->buf, buf);
+    (*result)->size = __strlen((*result)->buf);
 
-    free(buf);
+    __free(buf);
 
     // Update special marks
     state.marks[-DOT_MARK - 1] = end;
@@ -433,14 +433,14 @@ do_search_command(struct command *command, struct result **result, int invert)
     for (cur = start; cur && cur != list_entry(struct line, list, end->list.next);
             cur = list_entry(struct line, list, cur->list.next))
         if (!invert && regex_match(command->buf, cur->buf, &match_begin, &match_end) == EXIT_SUCCESS)
-            size += strlen(cur->buf) + 1;
+            size += __strlen(cur->buf) + 1;
         else if (invert && regex_match(command->buf, cur->buf, &match_begin, &match_end) == EXIT_FAILURE)
-            size += strlen(cur->buf) + 1;
+            size += __strlen(cur->buf) + 1;
 
     if (size == 0)
         return EXIT_FAILURE;
 
-    if ((*result = calloc(sizeof(struct result) + size + 1)) == NULL)
+    if ((*result = __calloc(sizeof(struct result) + size + 1)) == NULL)
         return EXIT_FAILURE;
 
     (*result)->size = size;
@@ -449,13 +449,13 @@ do_search_command(struct command *command, struct result **result, int invert)
             cur = list_entry(struct line, list, cur->list.next)) {
 
         if (!invert && regex_match(command->buf, cur->buf, &match_begin, &match_end) == EXIT_SUCCESS) {
-            strcpy(c, cur->buf);
-            strcat(c, "\n");
-            c += strlen(cur->buf) + 1;
+            __strcpy(c, cur->buf);
+            __strcat(c, "\n");
+            c += __strlen(cur->buf) + 1;
         } else if (invert && regex_match(command->buf, cur->buf, &match_begin, &match_end) == EXIT_FAILURE) {
-            strcpy(c, cur->buf);
-            strcat(c, "\n");
-            c += strlen(cur->buf) + 1;
+            __strcpy(c, cur->buf);
+            __strcat(c, "\n");
+            c += __strlen(cur->buf) + 1;
         }
     }
 

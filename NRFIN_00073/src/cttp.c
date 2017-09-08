@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, ___free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -40,7 +40,7 @@
 #define LOGERR(req) if(dolog) logreq(req,ERR)
 #define LOGWARN(req) if (dolog) logreq(req,WARN)
 #define LOGINFO(req) if (dolog) logreq(req,INFO)
-#define ISLE(resp) (memcmp(resp,LEHDR,4) == 0)
+#define ISLE(resp) (___memcmp(resp,LEHDR,4) == 0)
 #define SWAP32(i) { i = (i<<24) | ((i<<8) & 0xff0000) | ((i>>8) & 0xff00) | ((i>>24)&0xff); }
 
 
@@ -123,7 +123,7 @@ static void logreq(cttpreq_t *req, int level) {
     char *path, *body;
     list_node_t *node;
     logmsg_t *info;
-    cttpreq_t *lreq = calloc(sizeof(cttpreq_t));
+    cttpreq_t *lreq = ___calloc(sizeof(cttpreq_t));
 
     if (!req) {
         debug("Passed null req\n");
@@ -135,31 +135,31 @@ static void logreq(cttpreq_t *req, int level) {
         return;
     }
 
-    memcpy(lreq, req, sizeof(cttpreq_t));
+    ___memcpy(lreq, req, sizeof(cttpreq_t));
 
     if (lreq->path && lreq->psize) {
-        lreq->path = calloc(lreq->psize);
+        lreq->path = ___calloc(lreq->psize);
 
         if (!lreq->path) {
             debug("Failed to allocate path\n");
             return;
         }
 
-        memcpy(lreq->path, req->path, lreq->psize);
+        ___memcpy(lreq->path, req->path, lreq->psize);
     }
 
     if (lreq->body && lreq->bodysize) {
-        lreq->body = calloc(lreq->bodysize);
+        lreq->body = ___calloc(lreq->bodysize);
 
         if (!lreq->body) {
             debug("Failed to allocate body\n");
             return;
         }
         
-        memcpy(lreq->body, req->body, lreq->bodysize);
+        ___memcpy(lreq->body, req->body, lreq->bodysize);
     }
 
-    info = calloc(sizeof(logmsg_t));
+    info = ___calloc(sizeof(logmsg_t));
 
     if (!info) {
         debug("Failed to allocate log entry\n");
@@ -169,7 +169,7 @@ static void logreq(cttpreq_t *req, int level) {
     info->req = lreq;
     info->level = level;
 
-    node = calloc(sizeof(list_node_t));
+    node = ___calloc(sizeof(list_node_t));
 
     if (!node) {
         debug("Failed to allocate node\n");
@@ -198,7 +198,7 @@ static fileinfo_t *get_file(char *path, size_t psize) {
 
     list_for_each_safe(&files, n, cur) {
         f = (fileinfo_t*)cur->data;
-        if (!memcmp(path, f->path, psize < f->psize ? psize : f->psize)) {
+        if (!___memcmp(path, f->path, psize < f->psize ? psize : f->psize)) {
             break;
         }
     }
@@ -218,7 +218,7 @@ out:
  * @return true on success, false on fail
  */
 static bool add_file(fileinfo_t *file) {
-    list_node_t *node = calloc(sizeof(list_node_t));
+    list_node_t *node = ___calloc(sizeof(list_node_t));
 
     if (!node) {
         return false;
@@ -253,7 +253,7 @@ static bool delete_file(char *path, size_t psize) {
 
     list_for_each_safe(&files, n, cur) {
         f = (fileinfo_t*)cur->data;
-        if (!memcmp(path, f->path, psize < f->psize ? psize : f->psize)) {
+        if (!___memcmp(path, f->path, psize < f->psize ? psize : f->psize)) {
             break;
         }
     }
@@ -276,22 +276,22 @@ static bool delete_file(char *path, size_t psize) {
  * @return a response structure
  */
 static cttpresp_t *genericmsg(rcode_t code, const char *msg, size_t s) {
-    cttpresp_t  *resp = calloc(sizeof(cttpresp_t));
+    cttpresp_t  *resp = ___calloc(sizeof(cttpresp_t));
 
     if (!resp) {
         debug("Failed to allocate resp");
         return internalerror();
     }
 
-    resp->data = calloc(s);
+    resp->data = ___calloc(s);
     
     if (!resp->data) {
         debug("Failed to allocate resp data");
         return internalerror();
     }
 
-    strcpy(resp->data, msg);
-    resp->rsize = strlen(resp->data)+1;
+    ___strcpy(resp->data, msg);
+    resp->rsize = ___strlen(resp->data)+1;
     resp->code = code;
     return resp;
 }
@@ -322,7 +322,7 @@ static cttpresp_t *notimplemented() {
  * @return response struct
  */
 static cttpresp_t *handle_retrieve(cttpreq_t *req) {
-    cttpresp_t  *resp = calloc(sizeof(cttpresp_t));
+    cttpresp_t  *resp = ___calloc(sizeof(cttpresp_t));
     fileinfo_t *file; 
 
     if (!resp) {
@@ -342,14 +342,14 @@ static cttpresp_t *handle_retrieve(cttpreq_t *req) {
         goto out_free;
     }
 
-    resp->data = calloc(file->bodysize);
+    resp->data = ___calloc(file->bodysize);
     
     if (!resp->data) {
         debug("Failed to allocate resp data");
         goto out_free;
     }
 
-    memcpy(resp->data, file->body, file->bodysize);
+    ___memcpy(resp->data, file->body, file->bodysize);
     resp->rsize = file->bodysize;
     resp->code = OK;
 
@@ -357,7 +357,7 @@ static cttpresp_t *handle_retrieve(cttpreq_t *req) {
     return resp;
 
 out_free:
-    free(resp);
+    ___free(resp);
 out:
     if (req)
         LOGERR(req);
@@ -379,21 +379,21 @@ static cttpresp_t *handle_submit(cttpreq_t *req) {
         goto out;
     }
 
-    file = calloc(sizeof(fileinfo_t));
+    file = ___calloc(sizeof(fileinfo_t));
 
     if (!file) {
         debug("Failed to alloc file.\n");
         goto out;
     }
 
-    file->path = calloc(req->psize);
+    file->path = ___calloc(req->psize);
 
     if (!file->path) {
         debug("Failed too alloc path.\n");
         goto out_free_file;
     }
 
-    file->body = calloc(req->bodysize);
+    file->body = ___calloc(req->bodysize);
 
     if (!file->body) {
         debug("Failed to alloc body.\n");
@@ -404,8 +404,8 @@ static cttpresp_t *handle_submit(cttpreq_t *req) {
     file->psize = req->psize;
     file->bodysize = req->bodysize;
 
-    memcpy(file->path, req->path, req->psize);
-    memcpy(file->body, req->body, req->bodysize);
+    ___memcpy(file->path, req->path, req->psize);
+    ___memcpy(file->body, req->body, req->bodysize);
 
     if (add_file(file)) {
         LOGINFO(req);
@@ -413,11 +413,11 @@ static cttpresp_t *handle_submit(cttpreq_t *req) {
     }
 
 out_free_body:
-    free(file->body);
+    ___free(file->body);
 out_free_path:
-    free(file->path);
+    ___free(file->path);
 out_free_file:
-    free(file);
+    ___free(file);
 out:
     if (req)
         LOGERR(req);
@@ -432,7 +432,7 @@ out:
  * @return response struct
  */
 static cttpresp_t *handle_check(cttpreq_t *req) {
-    cttpresp_t  *resp = calloc(sizeof(cttpresp_t));
+    cttpresp_t  *resp = ___calloc(sizeof(cttpresp_t));
     fileinfo_t *file; 
 
     if (!resp) {
@@ -454,7 +454,7 @@ static cttpresp_t *handle_check(cttpreq_t *req) {
         goto out_free;
     }
 
-    resp->data = calloc(sizeof(size_t));
+    resp->data = ___calloc(sizeof(size_t));
     
     if (!resp->data) {
         debug("Failed to allocate resp data");
@@ -462,7 +462,7 @@ static cttpresp_t *handle_check(cttpreq_t *req) {
     }
 
     debug("found file\n");
-    memcpy(resp->data, &file->bodysize, sizeof(size_t));
+    ___memcpy(resp->data, &file->bodysize, sizeof(size_t));
 
     resp->rsize = sizeof(size_t);
     resp->code = OK;
@@ -471,7 +471,7 @@ static cttpresp_t *handle_check(cttpreq_t *req) {
     return resp;
 
 out_free:
-    free(resp);
+    ___free(resp);
 out:
     if (req)
         LOGERR(req);
@@ -520,7 +520,7 @@ static cttpresp_t *handle_auth(cttpreq_t *req) {
 #endif
     int i;
     char key;
-    cttpresp_t  *resp = calloc(sizeof(cttpresp_t));
+    cttpresp_t  *resp = ___calloc(sizeof(cttpresp_t));
     fileinfo_t *file; 
 
     if (!do_challenge()) {
@@ -546,7 +546,7 @@ static cttpresp_t *handle_auth(cttpreq_t *req) {
     }
     
     s = file->bodysize;
-    resp->data = calloc(s);
+    resp->data = ___calloc(s);
     
     if (!resp->data) {
         debug("Failed to allocate resp data");
@@ -554,12 +554,12 @@ static cttpresp_t *handle_auth(cttpreq_t *req) {
     }
 
 #ifndef PATCHED_2
-    memcpy(tmpbuf, file->body, s);
+    ___memcpy(tmpbuf, file->body, s);
     key = randint();
     for (i=0; i < s; i++)
         *(resp->data+i) = tmpbuf[i] ^ key;
 #else
-    memcpy(resp->data, file->body, s);
+    ___memcpy(resp->data, file->body, s);
     key = randint();
     for (i=0; i < s; i++)
         *(resp->data+i) ^= key;
@@ -572,7 +572,7 @@ static cttpresp_t *handle_auth(cttpreq_t *req) {
     return resp;
 
 out_free:
-    free(resp);
+    ___free(resp);
 out:
     if (req)
         LOGERR(req);
@@ -697,11 +697,11 @@ bool do_challenge() {
     uint32_t etoken = token;
     uint32_t dtoken;
 
-    clen = strlen(challenge);
+    clen = ___strlen(challenge);
 
-    encoded = calloc(clen+1);
+    encoded = ___calloc(clen+1);
 
-    decoded = calloc(clen+1);
+    decoded = ___calloc(clen+1);
 
     if (!encoded || !decoded) {
         debug("Failed to allocate encode/decode buffers.\n");
@@ -731,10 +731,10 @@ bool do_challenge() {
     RECV(sizeof(dtoken), (char*)&dtoken);
     debug("grabbed all\n");
 
-    res = (memcmp(challenge, decoded, clen) == 0) && (token == (dtoken^0x127a1b76));
+    res = (___memcmp(challenge, decoded, clen) == 0) && (token == (dtoken^0x127a1b76));
 
-    free(encoded);
-    free(decoded);
+    ___free(encoded);
+    ___free(decoded);
 
     return res;
 }
@@ -774,7 +774,7 @@ bool handle_request() {
     }
 
     if (req.psize > MAX_PATH_SIZE || req.bodysize > MAX_BODY_SIZE) {
-        resp = calloc(sizeof(cttpresp_t));
+        resp = ___calloc(sizeof(cttpresp_t));
         
 
         if (!resp) {
@@ -782,15 +782,15 @@ bool handle_request() {
             _terminate(1);
         }
 
-        resp->data = calloc(sizeof(WAYTOOBIG));
+        resp->data = ___calloc(sizeof(WAYTOOBIG));
         
         if (!resp->data) {
             debug("Failed to allocate resp data.\n");
             _terminate(1);
         }
 
-        strcpy(resp->data, WAYTOOBIG);
-        resp->rsize = strlen(resp->data)+1;
+        ___strcpy(resp->data, WAYTOOBIG);
+        resp->rsize = ___strlen(resp->data)+1;
         resp->code = NOK;
 
         LOGERR(&req);
@@ -805,7 +805,7 @@ bool handle_request() {
 
         if (req.psize > 0) {
             int res = 0;
-            req.path = calloc(req.psize);
+            req.path = ___calloc(req.psize);
 
             if (!req.path) {
                 debug("Failed to allocate path.\n");
@@ -816,7 +816,7 @@ bool handle_request() {
         }
 
         if (req.bodysize > 0) {
-            req.body = calloc(req.bodysize);
+            req.body = ___calloc(req.bodysize);
 
             if (!req.body) {
                 debug("Failed to allocate body.\n");
@@ -849,9 +849,9 @@ bool handle_request() {
     if (resp) {
         size_t osize = resp->rsize;
         if(ISLE(&req)) {
-            memcpy(resp->hdr, LEHDR, sizeof(resp->hdr));
+            ___memcpy(resp->hdr, LEHDR, sizeof(resp->hdr));
         } else {
-            memcpy(resp->hdr, BEHDR, sizeof(resp->hdr));
+            ___memcpy(resp->hdr, BEHDR, sizeof(resp->hdr));
             SWAP32(resp->rsize);
             SWAP32(resp->code);
         }
@@ -861,21 +861,21 @@ bool handle_request() {
         
         if (req.path) {
             debug("freeing path\n");
-            free(req.path);
+            ___free(req.path);
         }
 
         if (req.body) {
             debug("freeing body\n");
-            free(req.body);
+            ___free(req.body);
         }
 
         if (resp->data) {
             debug("freeing resp data\n");
-            free(resp->data);
+            ___free(resp->data);
         }
 
         debug("freeing resp\n");
-        free(resp);
+        ___free(resp);
         
 
         return true;

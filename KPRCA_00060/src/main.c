@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,7 +37,7 @@ printer_t* find_printer(char *queue)
     int i;
     for (i = 0; i < NUM_PRINTERS; ++i)
     {
-        if (strcmp(printers[i].queue, queue) == 0)
+        if (__strcmp(printers[i].queue, queue) == 0)
             return &printers[i];
     }
     return NULL;
@@ -62,12 +62,12 @@ int main()
     printer_t *printer = NULL;
 
     /* Initialize printers */
-    printers = (printer_t *) malloc(NUM_PRINTERS * sizeof(printer_t));
-    memset(printers, 0, NUM_PRINTERS * sizeof(printer_t));
+    printers = (printer_t *) __malloc(NUM_PRINTERS * sizeof(printer_t));
+    __memset(printers, 0, NUM_PRINTERS * sizeof(printer_t));
     for (i = 0; i < NUM_PRINTERS; ++i)
     {
         if (i == 0)
-            strcpy(printers[i].queue, "DEFAULT");
+            __strcpy(printers[i].queue, "DEFAULT");
         else
             set_name(&printers[i], i);
         printers[i].state = PS_IDLE;
@@ -179,8 +179,8 @@ int main()
                 {
                     char *agent = strsep(&tmp, " ");
                     unsigned int job_id = 0;
-                    if (strlen(tmp) > 0)
-                        job_id = strtoul(tmp, NULL, 10);
+                    if (__strlen(tmp) > 0)
+                        job_id = __strtoul(tmp, NULL, 10);
                     if (cmd_remove_jobs(printer, agent, job_id) == 0)
                     {
                         transmit(STDOUT, "\x00", 1, NULL);
@@ -190,7 +190,7 @@ int main()
                 transmit(STDOUT, "\xFF", 1, NULL);
                 break;
             case 7:
-                exit(0);
+                __exit(0);
                 break;
             default:
                 transmit(STDOUT, "\xFF", 1, NULL);

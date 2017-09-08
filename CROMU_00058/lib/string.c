@@ -4,7 +4,7 @@ Copyright (c) 2015 Cromulence LLC
 
 Authors: Cromulence <cgc@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -26,7 +26,7 @@ THE SOFTWARE.
 #include <string.h>
 #include <stdint.h>
 
-size_t strlen( const char *str )
+size_t __strlen( const char *str )
 {
 	size_t len = 0;
 	while ( *str++ != '\0' )
@@ -35,14 +35,14 @@ size_t strlen( const char *str )
 	return len;
 }
 
-void bzero(void *s, size_t n) {
+void __bzero(void *s, size_t n) {
         while (n) {
                 ((char *)s)[--n] = '\0';
         }
         ((char *)s)[n] = '\0';
 }
 
-void *memset( void *ptr, int value, size_t num )
+void *__memset( void *ptr, int value, size_t num )
 {
 	void *ptr_temp = ptr;
 	uint8_t set_value_byte = (uint8_t)value;
@@ -63,13 +63,13 @@ void *memset( void *ptr, int value, size_t num )
 	return (ptr_temp);
 }
 
-char *strchr(char *s, int c) {
+char *__strchr(char *s, int c) {
 	uint32_t i;
 
 	if (!s) {
 		return(NULL);
 	}
-	for (i = 0; i < strlen(s); i++) {
+	for (i = 0; i < __strlen(s); i++) {
 		if (s[i] == c) {
 			return(s+i);
 		}
@@ -80,7 +80,7 @@ char *strchr(char *s, int c) {
 }
 
 char *StrtokNext = NULL;
-char *strtok(char *str, char *sep) {
+char *__strtok(char *str, char *sep) {
 	uint32_t i, j;
 	uint32_t str_len;
 	char *tok;
@@ -98,7 +98,7 @@ char *strtok(char *str, char *sep) {
 	}
 
 	// deal with any leading sep chars
-	while (strchr(sep, *str) && *str != '\0') {
+	while (__strchr(sep, *str) && *str != '\0') {
 		str++;
 	}
 	if (*str == '\0') {
@@ -106,14 +106,14 @@ char *strtok(char *str, char *sep) {
 		return(NULL);
 	}
 
-	str_len = strlen(str);
+	str_len = __strlen(str);
 	for (i = 0; i < str_len; i++) {
-		if (strchr(sep, str[i])) {
+		if (__strchr(sep, str[i])) {
 			// found a sep character
 			str[i] = '\0';
 			// see if there are any subsequent tokens
 			for (j = i+1; j < str_len; j++) {
-				if (strchr(sep, str[j])) {
+				if (__strchr(sep, str[j])) {
 					// found one
 					str[j] = '\0';
 				} else {

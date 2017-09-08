@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -202,7 +202,7 @@ int parse_string(char **cursor, uint16_t *line_remaining, char *string) {
 
     // NOTE: minus 1 because we don't want to copy the newline
     // XXXX: underflow?
-    strncpy(string, *cursor, MIN(*line_remaining-1, MAX_SZ_STRING));
+    __strncpy(string, *cursor, MIN(*line_remaining-1, MAX_SZ_STRING));
 
 #ifdef DEBUG
     fprintf(stderr, "[D] parse_string | string = %s\n", string);
@@ -259,7 +259,7 @@ int object_new(uint8_t id, objtype_t type, uint32_t number, char *string) {
         object->type = TYPE_STRING;
         object->string = (char *)(object + OFF_STRING);
         // If a VAL isn't specified, don't try to copy from NULL.
-        if (NULL != string) { strncpy(object->string, string, MAX_SZ_STRING); }
+        if (NULL != string) { __strncpy(object->string, string, MAX_SZ_STRING); }
     } else {
 #ifdef DEBUG
         fprintf(stderr, "[E] object_new | TYPE INVALID (shouldn't happen)\n", id);
@@ -717,7 +717,7 @@ int deserialize(void) {
     }
 
 #ifdef DEBUG
-    fprintf(stderr, "[D] deserialize | read 0x%04x bytes of json\n", rx_bytes);
+    fprintf(stderr, "[D] deserialize | __read 0x%04x bytes of json\n", rx_bytes);
 #endif
 
     // Parse json.
@@ -773,7 +773,7 @@ int serialize(void) {
 
         // Do the TYPE + VAL.
         if (TYPE_NUMBER == object->type) {
-            consumed += strncpy(tx_buf+consumed, " NUMBER ", MAX_SZ_LINE-consumed-1);
+            consumed += __strncpy(tx_buf+consumed, " NUMBER ", MAX_SZ_LINE-consumed-1);
 #ifdef DEBUG
             fprintf(stderr, "[D] serialize | += TYPE: tx_buf = '%s'\n", tx_buf);
 #endif
@@ -787,15 +787,15 @@ int serialize(void) {
             consumed += uint2str32(tx_buf+consumed, MAX_SZ_LINE-consumed-1, *object->number);
 
         } else if (TYPE_STRING == object->type) {
-            consumed += strncpy(tx_buf+consumed, " STRING ", MAX_SZ_LINE-consumed-1);
-            consumed += strncpy(tx_buf+consumed, object->string, MAX_SZ_LINE-consumed-1);
+            consumed += __strncpy(tx_buf+consumed, " STRING ", MAX_SZ_LINE-consumed-1);
+            consumed += __strncpy(tx_buf+consumed, object->string, MAX_SZ_LINE-consumed-1);
         } else {
 #ifdef DEBUG
             fprintf(stderr, "[E] serialize | INVALID TYPE (SHOULDN'T HAPPEN)\n");
 #endif      
         }
 
-        // CRS will read until here.
+        // CRS will __read until here.
         tx_buf[consumed] = '\n';
 
         // We've built a line.
@@ -822,7 +822,7 @@ bail:
 // 1B: command
 //  - deserialize
 //  - serialize
-//  - exit
+//  - __exit
 // if command is deserialize, then JSON follows:
 // 2B: length of JSON
 // ?B: JSON data
@@ -832,9 +832,9 @@ int main(void) {
     size_t rx_bytes = 0;
     size_t tx_bytes = 0;
 
-    memset((void *)&ns, 0, sizeof(ns));
+    __memset((void *)&ns, 0, sizeof(ns));
 
-    // Keep processing commands until told to exit (or error occurs).
+    // Keep processing commands until told to __exit (or error occurs).
     while (TRUE) {
 
         // Keep trying to get a command byte.

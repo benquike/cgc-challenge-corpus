@@ -13,7 +13,7 @@ typedef char string;
 } while (0)
 
 #define ASSERT_RESULT() do { \
-    if (_result < 0) exit(1); \
+    if (_result < 0) __exit(1); \
 } while (0)
 
 static int _checked_calloc(void **ptr, unsigned int count, size_t size)
@@ -24,7 +24,7 @@ static int _checked_calloc(void **ptr, unsigned int count, size_t size)
     if ((unsigned long long)count * size > INT32_MAX)
         return -1;
 
-    *ptr = calloc(count, size);
+    *ptr = __calloc(count, size);
     if (*ptr == NULL)
         return -1;
     return 0;

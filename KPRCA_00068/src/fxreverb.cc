@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -38,7 +38,7 @@ void FxReverb::apply(AudioStream &stream) const
 {
     Gain gain = Gain::fromRational(-50, 100);
     int32_t *buffer = new int32_t[delay];
-    memset(buffer, 0, sizeof(int32_t) * delay);
+    __memset(buffer, 0, sizeof(int32_t) * delay);
 
     for (unsigned int i = 0; i < stream.getLength(); i++)
     {
@@ -52,5 +52,5 @@ void FxReverb::apply(AudioStream &stream) const
         stream.setSample(i, sample); // put mix into audio stream
     }
 
-    delete buffer;
+    delete[] buffer;
 }

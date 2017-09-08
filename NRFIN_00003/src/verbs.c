@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -118,7 +118,7 @@ int do_mooch(char *uri) {
     if (sizeof(BANNER_MOOCH) != bytes_sent) { return ERRNO_SEND; }
 
 #ifndef DEBUG_ENABLE
-    pause(CLOG_DELAY);
+    __pause(CLOG_DELAY);
 #endif
 
     if ((ret = dump_file(uri)) != SUCCESS) { return ret; }

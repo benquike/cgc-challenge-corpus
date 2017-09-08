@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -29,13 +29,13 @@ size_t g_user_id = 0;
 
 user_t *create_user(char *username, char *about)
 {
-    if (!username || !strlen(username) || !about || !strlen(about))
+    if (!username || !__strlen(username) || !about || !__strlen(about))
         return NULL;
 
-    user_t *user = calloc(1, sizeof(user_t));
+    user_t *user = __calloc(1, sizeof(user_t));
     user->id = g_user_id++;
-    strcpy(user->username, username);
-    strcpy(user->about, about);
+    __strcpy(user->username, username);
+    __strcpy(user->about, about);
     user->calendar.num_events = 0;
     user->calendar.events = NULL;
 
@@ -46,7 +46,7 @@ bool delete_user(user_t **user)
 {
     if (!*user)
         return false;
-    free(*user);
+    __free(*user);
     *user = NULL;
     return true;
 }
@@ -59,22 +59,22 @@ int compare_users(void *_user1, void *_user2)
     if (!user1 || !user2)
         return -1;
 
-    return strcmp(user1->username, user2->username);
+    return __strcmp(user1->username, user2->username);
 }
 
 void print_user(void *_user)
 {
     user_t *user = (user_t *)_user;
-    printf("User id = %d\n", user->id);
-    printf("Username is \"%s\"\n", user->username);
-    printf("About %s: %s\n", user->username, user->about);
-    printf("---------------------\n");
+    __printf("User id = %d\n", user->id);
+    __printf("Username is \"%s\"\n", user->username);
+    __printf("About %s: %s\n", user->username, user->about);
+    __printf("---------------------\n");
 }
 
 void print_simple(void *_user)
 {
     user_t *user = (user_t *)_user;
-    printf("Id=%d, username=%s\n", user->id, user->username);
+    __printf("Id=%d, username=%s\n", user->id, user->username);
 }
 
 
@@ -82,7 +82,7 @@ void clear_list(user_list_t **users)
 {
     user_t *user = (user_t *)popfront((list_t **) users);
     while (user) {
-        free(user);
+        __free(user);
         user = (user_t *)popfront((list_t **) users);
     }
 }
@@ -107,7 +107,7 @@ user_t *find_user_from_list(char *buf, size_t buflen, int *recv_status, user_lis
         return NULL;
 
     if (*recv_status != SUCCESS) {
-        free(username);
+        __free(username);
         return NULL;
     }
 
@@ -115,16 +115,16 @@ user_t *find_user_from_list(char *buf, size_t buflen, int *recv_status, user_lis
         user_list_t *iter = list;
         int i;
         for (i = 0; i < list_size; i++, iter = iter->next) {
-            if (strcmp(username, iter->user->username) == 0) {
-                free(username);
+            if (__strcmp(username, iter->user->username) == 0) {
+                __free(username);
                 return iter->user;
             }
         }
-        free(username);
+        __free(username);
         return NULL;
     } else {
-        strcpy(temp_user.username, username);
-        free(username);
+        __strcpy(temp_user.username, username);
+        __free(username);
         username = NULL;
         return find((list_t *)users, &temp_user, &compare_users);
     }
@@ -153,7 +153,7 @@ bool add_user_to_list(char *buf, size_t buflen, int *recv_status, user_list_t *a
             }
         case FAIL:
         default:
-            printf("Try again\n");
+            __printf("Try again\n");
         }
         if (++num_tries == MAX_TRIES)
             break;
@@ -164,6 +164,6 @@ bool add_user_to_list(char *buf, size_t buflen, int *recv_status, user_list_t *a
 
 void print_user_list(char *msg, user_list_t *list)
 {
-    printf("%s", msg);
+    __printf("%s", msg);
     print((list_t *)list, &print_user);
 }

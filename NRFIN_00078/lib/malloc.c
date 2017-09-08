@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -149,7 +149,7 @@ split_chunk(struct chunk *chunk, size_t size)
 
     new->header = orig_size - size;
     mark_allocated(new);
-    free(chunk_to_ptr(new));
+    __free(chunk_to_ptr(new));
 
     return chunk;
 }
@@ -190,7 +190,7 @@ coalesce(struct chunk *chunk)
 }
 
 void *
-malloc(size_t size)
+__malloc(size_t size)
 {
     struct chunk *chunk = NULL;
     unsigned int size_class;
@@ -227,7 +227,7 @@ malloc(size_t size)
 }
 
 void
-free(void *ptr)
+__free(void *ptr)
 {
     struct chunk *chunk = ptr_to_chunk(ptr);
     unsigned int size_class;
@@ -248,30 +248,30 @@ free(void *ptr)
 }
 
 void *
-calloc(size_t size)
+__calloc(size_t size)
 {
-    void *ret = malloc(size);
+    void *ret = __malloc(size);
     if (ret)
-        memset(ret, '\0', size);
+        __memset(ret, '\0', size);
     return ret;
 }
 
 void *
-realloc(void *ptr, size_t size)
+__realloc(void *ptr, size_t size)
 {
     size_t orig_size;
     void *ret;
 
     if (ptr == NULL)
-        return malloc(size);
+        return __malloc(size);
 
     orig_size = CHUNK_SIZE(ptr_to_chunk(ptr)) - CHUNK_OVERHEAD;
     if (size == orig_size)
         return ptr;
    
-    ret = malloc(size);
-    memcpy(ret, ptr, MIN(size, orig_size));
-    free(ptr);
+    ret = __malloc(size);
+    __memcpy(ret, ptr, MIN(size, orig_size));
+    __free(ptr);
 
     return ret;
 }

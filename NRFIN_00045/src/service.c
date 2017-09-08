@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -54,9 +54,9 @@ size_t err_resp(OP_ERR e, packet_t *req, packet_t *p){
         //NOTE: this can also overflow, leading to TYPE1 pov.
 		// vuln deference of qty, only 4 bytes though, need to have length field to transmit
 #ifdef PATCHED_1
-		memcpy("FAIL", (void *) (&p->op_data), sizeof(uint32_t));
+		__memcpy("FAIL", (void *) (&p->op_data), sizeof(uint32_t));
 #else
-		memcpy((void *) req->bank_id, (void *) (&p->op_data), req->data_l);
+		__memcpy((void *) req->bank_id, (void *) (&p->op_data), req->data_l);
 #endif
 
 		p->data_l = req->data_l;
@@ -75,7 +75,7 @@ size_t err_resp(OP_ERR e, packet_t *req, packet_t *p){
 OP_ERR checksum_order(uint32_t acct_id, option_order_t *o, char * chk_dst){
 	
 	checksum(acct_id, o->qty, o->symbol, o->price, chk_dst);
-	int mc = memcmp(chk_dst, o->sig, KEY_LEN);
+	int mc = __memcmp(chk_dst, o->sig, KEY_LEN);
 	if(mc == 0)
 		return OK;
 	return BAD_SIG;
@@ -149,7 +149,7 @@ void run_quote(packet_t *p, packet_t *resp){
 		qr->ask = ask;
 
 		size_t data_sz = get_data_len(p);
-		memcpy(p, resp, data_sz+sizeof(packet_t));
+		__memcpy(p, resp, data_sz+sizeof(packet_t));
 		resp->rt = RESPONSE;
 
 		if(transmit_all((void *) resp, data_sz+sizeof(packet_t)) != OK)
@@ -173,9 +173,9 @@ int main(void){
 	while(1){
 		tol += 1;
 		memclr(p, sizeof(packet_t));
-		int errno = recv_all(sizeof(packet_t), (void *) p);
+		int __errno_ = recv_all(sizeof(packet_t), (void *) p);
 
-		if(errno != OK)
+		if(__errno_ != OK)
 			_terminate(1);
 
 		if(p->rt != REQUEST)

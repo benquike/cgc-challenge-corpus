@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,21 +37,21 @@ static unsigned int hash_seed(const char *seed)
     return H;
 }
 
-void fxlat(FILE *stream, const char *seed)
+void fxlat(__FILE *stream, const char *seed)
 {
     unsigned int state, i;
     unsigned char *map, *map_inv;
 
     if (seed == NULL)
     {
-        free(stream->xlat_map);
+        __free(stream->xlat_map);
         stream->xlat_map = NULL;
         stream->xlat_map_inv = NULL;
         return;
     }
     
-    map = stream->xlat_map = realloc(stream->xlat_map, 256);
-    map_inv = stream->xlat_map_inv = realloc(stream->xlat_map_inv, 256);
+    map = stream->xlat_map = __realloc(stream->xlat_map, 256);
+    map_inv = stream->xlat_map_inv = __realloc(stream->xlat_map_inv, 256);
     state = hash_seed(seed);
 
     /* initialize map with identity */

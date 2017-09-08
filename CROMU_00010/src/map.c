@@ -4,7 +4,7 @@ Author: James Connor (jymbo@cromulence.co)
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -45,10 +45,10 @@ and addresses
 pmap init_map(char mapName[32]){
 	pmap thisMap;
 	if (  allocate( sizeof(map), 0, (void**)&thisMap ) != 0  ){
-	puts("\n**Allocate returned an error.\n");
+	__puts("\n**Allocate returned an error.\n");
 	_terminate(1);
 	}
-	strcpy(thisMap->name, mapName);
+	__strcpy(thisMap->name, mapName);
 	thisMap->name[31] = 0;
 	thisMap->roadList = create_double_list();
 	return thisMap;
@@ -61,8 +61,8 @@ proad add_road(pmap thisMap, char roadName[32], double roadLength){
 	pdListNode lastRoadNode = get_last_element_d(thisMap->roadList);
 	thisNode = insert_double_list_node(thisMap->roadList, lastRoadNode);
 	thisRoad = (proad)thisNode->data;
-	strcpy(thisRoad->name, roadName);
-	thisRoad->name[strlen(roadName)] = 0;
+	__strcpy(thisRoad->name, roadName);
+	thisRoad->name[__strlen(roadName)] = 0;
 	thisRoad->length = roadLength;
 	thisRoad->addressList = create_double_list();
 	thisRoad->intersectionList = create_double_list();
@@ -79,10 +79,10 @@ void print_roads(pmap thisMap){
 	}else{
 		thisRoad = NULL;
 	}
-	printf("The map @s contains @d roads.\n", thisMap->name, thisMap->roadList->count);
+	__printf("The map @s contains @d roads.\n", thisMap->name, thisMap->roadList->count);
 	int i = 1;
 	while (thisRoad != NULL){
-		printf("(@d) @s is @f units long\n", i, thisRoad->name, thisRoad->length);
+		__printf("(@d) @s is @f units long\n", i, thisRoad->name, thisRoad->length);
 		i++;
 		if (thisRoad->self->next != NULL){
 			thisRoad = (proad)thisRoad->self->next->data;
@@ -105,7 +105,7 @@ paddress add_address ( int number, char resident[32], proad thisRoad, pintersect
 	pdListNode prevNode = NULL;
 	paddress nextAddress = NULL;
 	paddress prevAddress = NULL;
-	bzero(thisAddress, sizeof(address));
+	__bzero(thisAddress, sizeof(address));
 	//if empty addressList or first entry is higher number, insert at begining(prevAddress = NULL)
 	if (thisRoad->addressList->listRoot != NULL){
 		nextAddress = (paddress)thisRoad->addressList->listRoot->data;
@@ -130,11 +130,11 @@ paddress add_address ( int number, char resident[32], proad thisRoad, pintersect
 
 	thisNode = insert_double_list_node(thisRoad->addressList, prevNode);
 	if (thisNode == NULL){
-		puts("**insert_double_list_node failed");
+		__puts("**insert_double_list_node failed");
 		return NULL;
 	}
 	thisAddress->number = number;
-	strcpy(thisAddress->resident, resident);
+	__strcpy(thisAddress->resident, resident);
 	thisAddress->resident[31] = 0;
 	thisAddress->thisRoad = thisRoad;
 	thisAddress->prevIntersection = prevIntersection;
@@ -142,7 +142,7 @@ paddress add_address ( int number, char resident[32], proad thisRoad, pintersect
 	thisAddress->nextIntersection = nextIntersection;
 	thisAddress->distance_to_next = distance_to_next;
 	thisAddress->self = thisNode;
-	memcpy( thisNode->data, thisAddress, sizeof(address) );
+	__memcpy( thisNode->data, thisAddress, sizeof(address) );
 	return (paddress)thisNode->data;
 }
 
@@ -154,10 +154,10 @@ void print_addresses(proad thisRoad){
 	}else{
 		thisAddress = NULL;
 	}
-	printf("The road @s contains @d addresses.\n", thisRoad->name, thisRoad->addressList->count);
+	__printf("The road @s contains @d addresses.\n", thisRoad->name, thisRoad->addressList->count);
 	int i = 1;
 	while (thisAddress != NULL){
-		printf("(@d)\t@s\n\t@d @s\n", i, thisAddress->resident, thisAddress->number, thisRoad->name);
+		__printf("(@d)\t@s\n\t@d @s\n", i, thisAddress->resident, thisAddress->number, thisRoad->name);
 		i++;
 		if (thisAddress->self->next != NULL){
 			thisAddress = (paddress)thisAddress->self->next->data;
@@ -184,7 +184,7 @@ pintersection add_intersection ( proad thisRoad, proad other_road, pintersection
 
 	newNode = insert_double_list_node(thisRoad->intersectionList, prevIntersectionNode);
 	if (newNode == NULL){
-		puts("Failed to insert node");
+		__puts("Failed to insert node");
 		return NULL;
 	} 
 	newIntersection = (pintersection)newNode->data;
@@ -211,17 +211,17 @@ void print_intersections(proad thisRoad){
 	if (thisRoad->intersectionList->listRoot != NULL){
 		thisIntersection = (pintersection)thisRoad->intersectionList->listRoot->data;
 	}
-	printf("The road @s contains @d intersections.\n", thisRoad->name, thisRoad->intersectionList->count);
+	__printf("The road @s contains @d intersections.\n", thisRoad->name, thisRoad->intersectionList->count);
 	int i = 1;
 	while (thisIntersection != NULL){
-		printf("(@d)\t@s intersects @s\n", i, thisRoad->name, thisIntersection->other_road->name );
+		__printf("(@d)\t@s intersects @s\n", i, thisRoad->name, thisIntersection->other_road->name );
 		i++;
 		if (thisIntersection->prevIntersection != NULL){
-			printf("\t\t@f units after the intersection of @s\n",thisIntersection->distance_to_prev, 
+			__printf("\t\t@f units after the intersection of @s\n",thisIntersection->distance_to_prev, 
 					thisIntersection->prevIntersection->other_road->name);
 		}
 		if (thisIntersection->nextIntersection != NULL){
-			printf("\t\t@f units before the intersection of @s\n", thisIntersection->distance_to_next, 
+			__printf("\t\t@f units before the intersection of @s\n", thisIntersection->distance_to_next, 
 					thisIntersection->nextIntersection->other_road->name);
 		}
 		if (thisIntersection->self->next != NULL){
@@ -236,7 +236,7 @@ void print_intersections(proad thisRoad){
 pintersection find_pintersection(proad thisRoad, pintersection searchpIntersection, pintersection startIntersection){
 	pintersection tempIntersection = NULL;
 	if (thisRoad->intersectionList->count == 0){
-		puts("intersection list is empty");
+		__puts("intersection list is empty");
 		return (pintersection)NULL;
 	}
 	if (startIntersection == NULL){
@@ -262,7 +262,7 @@ paddress find_pintersection_addresses(proad thisRoad, pintersection searchpInter
 	paddress tempAddress = NULL;
 	if (startAddress == NULL){
 		if(thisRoad->addressList->count == 0){
-			puts("addresss list is empty");
+			__puts("addresss list is empty");
 			return (paddress)NULL;
 		}
 		tempAddress = (paddress) thisRoad->addressList->listRoot->data;
@@ -379,7 +379,7 @@ prouteList push_to_turn_list(pmap thisMap, psList turnList, proad thisRoad, prou
 	}
 #endif	
 	thisRouteList = (prouteList)(  (unsigned)turnList->listRoot->data + (unsigned int)( sizeof(routeList) * (unsigned int)(turnList->listRoot->count) )  );
-	bzero(thisRouteList, sizeof(routeList));
+	__bzero(thisRouteList, sizeof(routeList));
 	thisRouteList->thisRoad = thisRoad;
 	thisRouteList->parent = parent;
 	turnList->listRoot->count++;
@@ -392,9 +392,9 @@ psList get_route(pmap thisMap, psList turnList, proad targetRoad, proad startRoa
 //	turnList->count--;
 //	turnList->count = 0;
 	turnList->listRoot->count = 0;
-	bzero(turnList->listRoot->data, 4080);
+	__bzero(turnList->listRoot->data, 4080);
 //
-//	bzero(turnList->listRoot->count, sizeof(int));
+//	__bzero(turnList->listRoot->count, sizeof(int));
 //	
 	prouteList curRouteList = push_to_turn_list(thisMap, turnList, startRoad, NULL);
 	proad curRoad = NULL; 

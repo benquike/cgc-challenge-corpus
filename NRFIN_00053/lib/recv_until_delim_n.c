@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -32,9 +32,9 @@ typedef struct {
 	size_t 	idx;					// current idx in buf
 	size_t 	count;					// number of usable bytes in buf
 	unsigned char buf[FILE_BUF_SZ]; // buffer of received bytes
-} FILE;
+} __FILE;
 
-// list of FILE's in use by this CB for RECEIVING data (not used for sending)
+// list of __FILE's in use by this CB for RECEIVING data (not used for sending)
 // In an IPC CB, will need to modify this with the correct FDs
 // By default READ_FD is defined in libc.h
 #define RECV_FILE_COUNT 		1	// number of FILEs in recv_files
@@ -46,10 +46,10 @@ typedef struct {
  		default: return ERRNO_RECV;	\
  	}
 
-static FILE recv_files[RECV_FILE_COUNT] = { {.fd = READ_FD} };
+static __FILE recv_files[RECV_FILE_COUNT] = { {.fd = READ_FD} };
 
 /**
- *	Receive one char from the FILE
+ *	Receive one char from the __FILE
  *
  * @param f 	file descriptor to process
  * @param error Value to store error condition.
@@ -57,7 +57,7 @@ static FILE recv_files[RECV_FILE_COUNT] = { {.fd = READ_FD} };
  */
 static ssize_t recv_char(int fd, int *error) {
 	char ch = 0;
-	FILE *f = NULL;
+	__FILE *f = NULL;
 	RECV_FILE_FROM_FD(fd);
 
 	*error = 0;

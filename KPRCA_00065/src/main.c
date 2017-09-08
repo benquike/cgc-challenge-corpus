@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -52,12 +52,12 @@ int main()
             otp_verify_otp(o);
         else if (cmd == 0x54495551)     // QUIT
         {
-            fwrite("\x00", 1, stdout);
+            __fwrite("\x00", 1, stdout);
             fflush(stdout);
             _terminate(0);
         }
         else
-            fwrite("\xFF", 1, stdout);
+            __fwrite("\xFF", 1, stdout);
     }
     return 0;
 }

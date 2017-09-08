@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,7 +35,7 @@ THE SOFTWARE.
 #define FD_TO_ISH 7
 
 void print(char *s) {
-  send_all(s, strlen(s));
+  send_all(s, __strlen(s));
 }
 
 int main(void) {
@@ -45,15 +45,15 @@ int main(void) {
   int bytes_received = 0;
   // Receive service request
   do {
-    printf("frontdoor:");
-    memset(input, 0, sizeof(input));
-    bytes_received = receive_until(input, sizeof(input), '\n');
+    __printf("frontdoor:");
+    __memset(input, 0, sizeof(input));
+    bytes_received = __receive_until(input, sizeof(input), '\n');
     replace(input, ' ', '\0', 1);
     if (equals(input, "lookupd")) {
-      char *s = input +  strlen("lookupd ");
-      int s_len = bytes_received - strlen("lookupd ");
+      char *s = input +  __strlen("lookupd ");
+      int s_len = bytes_received - __strlen("lookupd ");
       if (s_len < 0) s_len = 0;
-      s_len = force_newline(s, sizeof(input) - strlen("lookupd "), s_len);
+      s_len = force_newline(s, sizeof(input) - __strlen("lookupd "), s_len);
       send_all_fd(FD_TO_LOOKUPD, s, s_len);
       while ((bytes_received = receive_until_fd(FD_TO_MAIN, output, sizeof(output),'\n')) > 0) {
         if (output[0] == '\0') {
@@ -64,10 +64,10 @@ int main(void) {
       }
     }
     else if (equals(input, "mailsend")) {
-      char *s = input +  strlen("mailsend ");
-      int s_len = bytes_received - strlen("mailsend ");
+      char *s = input +  __strlen("mailsend ");
+      int s_len = bytes_received - __strlen("mailsend ");
       if (s_len < 0) s_len = 0;
-      s_len = force_newline(s, sizeof(input) - strlen("mailsend "), s_len);
+      s_len = force_newline(s, sizeof(input) - __strlen("mailsend "), s_len);
       send_all_fd(FD_TO_MAILSEND, s, s_len);
       while ((bytes_received = receive_until_fd(FD_TO_MAIN, output, sizeof(output),'\n')) > 0) {
         if (output[0] == '\0') {
@@ -78,10 +78,10 @@ int main(void) {
       }
     }
     else if (equals(input, "ish")) {
-      char *s = input +  strlen("ish ");
-      int s_len = bytes_received - strlen("ish ");
+      char *s = input +  __strlen("ish ");
+      int s_len = bytes_received - __strlen("ish ");
       if (s_len < 0) s_len = 0;
-      s_len = force_newline(s, sizeof(input) - strlen("ish "), s_len);
+      s_len = force_newline(s, sizeof(input) - __strlen("ish "), s_len);
       send_all_fd(FD_TO_ISH, s, s_len);
       while ((bytes_received = receive_until_fd(FD_TO_MAIN, output, sizeof(output),'\n')) > 0) {
         if (output[0] == '\0') {
@@ -105,6 +105,6 @@ int main(void) {
   send_all_fd(FD_TO_MAILSEND, end , sizeof(end) );  
   send_all_fd(FD_TO_ISH, end , sizeof(end));
   struct timeval timeout;
-  printf("Goodbye\n");
+  __printf("Goodbye\n");
   return 0;
 }

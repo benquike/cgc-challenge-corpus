@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -59,7 +59,7 @@ int connectionNum;
 	airportCount = *readPtr % 16 + 5;
 
 
-	*airports = malloc(sizeof(airportInfoType));
+	*airports = __malloc(sizeof(airportInfoType));
 
 	if (*airports == 0)
 		return -1;
@@ -84,12 +84,12 @@ int connectionNum;
 
 		} // while(1)	
 		
-		strcpy(tmpPtr->code, airportCode);
+		__strcpy(tmpPtr->code, airportCode);
 
-		// if this isn't the last one, malloc memory for the next
+		// if this isn't the last one, __malloc memory for the next
 		if (i < airportCount -1 ) {
 
-			tmpPtr->next = malloc(sizeof(airportInfoType));
+			tmpPtr->next = __malloc(sizeof(airportInfoType));
 
 			if (tmpPtr->next == 0)
 				return -1;
@@ -110,7 +110,7 @@ int connectionNum;
 		connectionCount = *(readPtr + offset) % (airportCount/2) + 1;
 		offset++;
 
-		tmpPtr->connections = malloc(sizeof(connectionListType));
+		tmpPtr->connections = __malloc(sizeof(connectionListType));
 
 		if (tmpPtr->connections == 0)
 			return -1;
@@ -130,7 +130,7 @@ int connectionNum;
 			if (check4ConnectionCode(tmpPtr->connections, code) == -1) {
 
 
-				strcpy(tmpConnectionPtr->destCode, code);
+				__strcpy(tmpConnectionPtr->destCode, code);
 
 				tmpConnectionPtr->cost = *(unsigned char *)(readPtr+offset);
 				++offset;
@@ -142,7 +142,7 @@ int connectionNum;
 
 				if (i < connectionCount) {
 
-					tmpConnectionPtr->next = malloc(sizeof(connectionListType));
+					tmpConnectionPtr->next = __malloc(sizeof(connectionListType));
 
 					if (tmpConnectionPtr->next == 0)
 						return -1;

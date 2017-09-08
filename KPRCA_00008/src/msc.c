@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -43,7 +43,7 @@ static int rbc_handle_data(msc_t *msc, uint8_t *data, size_t length);
 
 int msc_init(msc_t *msc)
 {
-    memset(msc, 0, sizeof(msc_t));
+    __memset(msc, 0, sizeof(msc_t));
     msc->state = MSC_ST_IDLE;
     msc->memory = memory;
     return 1;
@@ -221,15 +221,15 @@ static int rbc_handle_packet(msc_t *msc, uint8_t *data, size_t length)
         msc_send(msc, inquiry_data, data[4] < sizeof(inquiry_data) ? data[4] : sizeof(inquiry_data), 0);
         break;
     case 0x25: /* READ CAPACITY */
-        *(uint32_t *)&buffer[0] = htobe32(NUM_BLOCKS-1);
-        *(uint32_t *)&buffer[4] = htobe32(BLOCK_SIZE);
+        *(uint32_t *)&buffer[0] = __htobe32(NUM_BLOCKS-1);
+        *(uint32_t *)&buffer[4] = __htobe32(BLOCK_SIZE);
         msc_send(msc, buffer, 8, 0);
         break;
     case 0x28: { /* READ (10) */
-        uint32_t lba = be32toh(*(uint32_t *)&data[2]);
-        uint16_t len = be16toh(*(uint16_t *)&data[7]);
+        uint32_t lba = __be32toh(*(uint32_t *)&data[2]);
+        uint16_t len = __be16toh(*(uint16_t *)&data[7]);
 #ifdef DEBUG
-        fprintf(stderr, "read from %d, %d bytes\n", lba * BLOCK_SIZE, len * BLOCK_SIZE);
+        fprintf(stderr, "__read from %d, %d bytes\n", lba * BLOCK_SIZE, len * BLOCK_SIZE);
 #endif
         if (lba > NUM_BLOCKS)
             return 0;
@@ -239,31 +239,31 @@ static int rbc_handle_packet(msc_t *msc, uint8_t *data, size_t length)
         break;
     }
     case 0x2A: { /* WRITE (10) */
-        uint32_t lba = be32toh(*(uint32_t *)&data[2]);
-        uint16_t len = be16toh(*(uint16_t *)&data[7]);
+        uint32_t lba = __be32toh(*(uint32_t *)&data[2]);
+        uint16_t len = __be16toh(*(uint16_t *)&data[7]);
 #ifdef DEBUG
-        fprintf(stderr, "write to %d, %d bytes\n", lba * BLOCK_SIZE, len * BLOCK_SIZE);
+        fprintf(stderr, "__write to %d, %d bytes\n", lba * BLOCK_SIZE, len * BLOCK_SIZE);
 #endif
         if (lba > NUM_BLOCKS)
             return 0;
         else if (lba + len > NUM_BLOCKS)
             return 0;
         msc->state = MSC_ST_IN;
-        msc->in_state.write.lba = lba;
-        msc->in_state.write.length = len * BLOCK_SIZE;
+        msc->in_state.__write.lba = lba;
+        msc->in_state.__write.length = len * BLOCK_SIZE;
         break;
     }
     case 0x5A: /* MODE SENSE */
         if (data[2] == 0x3F || data[2] == 0x06)
         {
-            memset(buffer, 0, 18);
-            *(uint16_t *)&buffer[0] = htobe16(16);
+            __memset(buffer, 0, 18);
+            *(uint16_t *)&buffer[0] = __htobe16(16);
             buffer[8] = 0x86;
             buffer[9] = 0x08;
             buffer[10] = 0x01;
-            *(uint16_t *)&buffer[11] = htobe16(BLOCK_SIZE);
+            *(uint16_t *)&buffer[11] = __htobe16(BLOCK_SIZE);
             buffer[13] = 0;
-            *(uint32_t *)&buffer[14] = htobe32(NUM_BLOCKS);
+            *(uint32_t *)&buffer[14] = __htobe32(NUM_BLOCKS);
             msc_send(msc, buffer, 18, 0);
         }
         break;
@@ -287,12 +287,12 @@ static int rbc_handle_data(msc_t *msc, uint8_t *data, size_t length)
     switch (msc->cbw.cb[0])
     {
     case 0x2A: /* WRITE (10) */
-        if (msc->count + length > msc->in_state.write.length)
-            length = msc->in_state.write.length - msc->count;
+        if (msc->count + length > msc->in_state.__write.length)
+            length = msc->in_state.__write.length - msc->count;
 
-        memcpy_fast(&msc->memory[msc->in_state.write.lba * BLOCK_SIZE + msc->count], data, length);
+        memcpy_fast(&msc->memory[msc->in_state.__write.lba * BLOCK_SIZE + msc->count], data, length);
         msc->count += length;
-        if (msc->count == msc->in_state.write.length)
+        if (msc->count == msc->in_state.__write.length)
             msc->state = MSC_ST_STATUS;
         break;
     default:

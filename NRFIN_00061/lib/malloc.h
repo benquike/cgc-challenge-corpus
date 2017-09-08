@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -26,7 +26,7 @@
 #define clearBit(A, k) ( A[((k)/32)] &= ~(1 << ((k)%32)) )
 #define testBit(A, k)  ( A[((k)/32)] &   (1 << ((k)%32)) )
 
-#define _SC_PAGESIZE 4096
+#define ___SC_PAGESIZE_ 4096
 #define MAX_RUNS 10
 #define BITMAP_SIZE 64
 #define POOL_NUM 11
@@ -57,7 +57,7 @@ typedef struct {
 *
 * @return a pointer the allocated memory
 */
-void* malloc(size_t size);
+void* __malloc(size_t size);
 
 /**
 * Deallocate the chunk of memory at address ptr
@@ -66,4 +66,4 @@ void* malloc(size_t size);
 *
 * @return None
 */
-void free(void* ptr);
+void __free(void* ptr);

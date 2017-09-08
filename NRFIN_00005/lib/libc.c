@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -150,17 +150,17 @@ int send(const char *buf, const size_t size) {
 
 int recv(char *res_buf, size_t res_buf_size, char * err_msg) {
     if(recvline(STDIN, res_buf, res_buf_size) < 0) {
-        send(err_msg, strlen(err_msg));
+        send(err_msg, __strlen(err_msg));
         _terminate(2);
     }
 
     return 0;
 }
 
-// res_buf_size should be the number of byes to read from the user + 1 for '\0'.
+// res_buf_size should be the number of byes to __read from the user + 1 for '\0'.
 int prompt_user(char* prompt_str, char* res_buf, size_t res_buf_size, char * err_msg) {
     // send prompt
-    send(prompt_str, strlen(prompt_str));
+    send(prompt_str, __strlen(prompt_str));
 
     // receive user input
     recv(res_buf, res_buf_size, err_msg);
@@ -229,11 +229,11 @@ int syslog(int priority, const char *format, ...) {
     va_list args;
 
 
-    // write priority to log_entry buffer
+    // __write priority to log_entry buffer
     log_entry_len = snprintf(log_entry_idx, MAX_SYSLOG_LEN, "~c: ", pri_str);
     log_entry_idx += log_entry_len;
 
-    // process format string and write it to log_entry buffer
+    // process format string and __write it to log_entry buffer
     va_start(args, format);
     log_entry_len += vsnprintf(log_entry_idx, MAX_SYSLOG_LEN - log_entry_len, format, args);
     va_end(args);
@@ -249,7 +249,7 @@ int syslog(int priority, const char *format, ...) {
 // return 0 if str1 == str2, else return -1
 int streq(const char* str1, const char* str2) {
 
-    if (strlen(str1) != strlen(str2))
+    if (__strlen(str1) != __strlen(str2))
         return -1;
 
     while(*str1 != '\0') {
@@ -261,7 +261,7 @@ int streq(const char* str1, const char* str2) {
 }
 
 // return number of chars in str, not counting the '\0'
-unsigned int strlen(const char *str) {
+unsigned int __strlen(const char *str) {
     unsigned int count = 0;
     while(*str != '\0') {
         count++;
@@ -272,9 +272,9 @@ unsigned int strlen(const char *str) {
 }
 
 // size bytes of src are copied into dest.
-// if strlen(src) < size, dest is padded with '\0' bytes.
-// NOTE: if size <= strlen(src), the dest will not be null terminated.
-char * strncpy(char* dest, const char* src, size_t size) {
+// if __strlen(src) < size, dest is padded with '\0' bytes.
+// NOTE: if size <= __strlen(src), the dest will not be null terminated.
+char * __strncpy(char* dest, const char* src, size_t size) {
 
     int idx = 0;
     for (; idx < size && src[idx] != '\0'; idx++) {
@@ -289,7 +289,7 @@ char * strncpy(char* dest, const char* src, size_t size) {
 }
 
 // overwrites the first n chars of str with unsigned char ch.
-void * memset(void* str, int ch, size_t n) {
+void * __memset(void* str, int ch, size_t n) {
     unsigned char *ch_ptr = str;
     while (n > 0) {
         *ch_ptr = (unsigned char)ch;
@@ -301,7 +301,7 @@ void * memset(void* str, int ch, size_t n) {
 }
 
 // copy cnt bytes from src into dst; src and dst cannot overlap!
-void * memcpy(void* dst, const void* src, size_t cnt) {
+void * __memcpy(void* dst, const void* src, size_t cnt) {
 
     uint8_t *dst_ptr = (uint8_t *) dst;
     uint8_t *src_ptr = (uint8_t *) src;
@@ -317,7 +317,7 @@ void * memcpy(void* dst, const void* src, size_t cnt) {
 // find index of char 'ch' in char buffer 'str'
 // return pointer to index of ch if found
 // return NULL if ch is not found
-char * strchr(char *str, char ch) {
+char * __strchr(char *str, char ch) {
 
     while (*str != '\0') {
         if (*str == ch)
@@ -330,7 +330,7 @@ char * strchr(char *str, char ch) {
     return NULL;
 }
 
-// write a random number between 0 and (2^32) in res
+// __write a random number between 0 and (2^32) in res
 // returns 0 on success, non-zero on failure.
 int rand(uint32_t * res) {
     size_t bytes = 0;
@@ -392,7 +392,7 @@ int vsnprintf(char* buf, size_t buf_size, const char* fmt, va_list args) {
                     int_arg = va_arg(args, int);
                     int2str(tmp, 32, int_arg);
                     next_arg = tmp;
-                    arg_len = strlen(next_arg);
+                    arg_len = __strlen(next_arg);
 
                     break; 
                 case 'c': // deal with char buffer (i.e. string)
@@ -400,7 +400,7 @@ int vsnprintf(char* buf, size_t buf_size, const char* fmt, va_list args) {
                     if (!next_arg) {
                         arg_len = 0;
                     } else { 
-                        arg_len = strlen(next_arg);
+                        arg_len = __strlen(next_arg);
                     } 
 
                     break; 
@@ -419,10 +419,10 @@ int vsnprintf(char* buf, size_t buf_size, const char* fmt, va_list args) {
             if (fmt_spec == 'n' || fmt_spec == 'c') {
                 remaining = buf_size - buf_len;
                 if (arg_len <= remaining) {
-                    memcpy(&buf[buf_len], next_arg, arg_len);
+                    __memcpy(&buf[buf_len], next_arg, arg_len);
                     buf_len += arg_len;
                 } else {
-                    memcpy(&buf[buf_len], next_arg, remaining);
+                    __memcpy(&buf[buf_len], next_arg, remaining);
                     buf_len += remaining;
                 }
             }
@@ -520,7 +520,7 @@ uint32_t str2uint32(const char* str_buf) {
 int str2int(const char* str_buf) {
     int result = 0;
     int temp = 0;
-    int max_chars = 10; // max number of chars read from str_buf
+    int max_chars = 10; // max number of chars __read from str_buf
     int i = 0;
     int sign = 1; // 1 for pos, -1 for neg
 
@@ -615,7 +615,7 @@ int int2str(char* str_buf, int buf_size, int i) {
 int is_numeric(const char *str) {
     int sign = 0;
 
-    if (strlen(str) == 0)
+    if (__strlen(str) == 0)
         return -1;
 
     if (*str == '-') {
@@ -633,7 +633,7 @@ int is_numeric(const char *str) {
 
 // remove \t, \r, \n, and space from end of string
 void strip(char *str) {
-    int len = strlen(str);
+    int len = __strlen(str);
     for (int i = len - 1; i >= 0; i--) {
         if (str[i] == '\n' ||
             str[i] == '\t' ||

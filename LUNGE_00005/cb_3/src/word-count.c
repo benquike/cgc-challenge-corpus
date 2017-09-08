@@ -23,7 +23,7 @@ void setup(void) {
 
 #define ISALPHA(x) ((x >= 'A' && x <= 'Z') || (x >= 'a' && x <= 'z'))
 
-void exit(int i) {
+void __exit(int i) {
     transmit_all(write_fd, "\x00\n", 2);
     _terminate(i);
 }
@@ -55,7 +55,7 @@ int count(void) {
         }
         if (buf == '\n') {
             line_count++;
-            printf(write_fd, ": %u %u %u", char_count, word_count, line_count);
+            __printf(write_fd, ": %u %u %u", char_count, word_count, line_count);
             if (current_line_count == 0) {
                 return 0;
             }
@@ -71,7 +71,7 @@ int main(void) {
     int ret;
 
     setup();
-    sleep(2);
+    __sleep(2);
     ret = count();
-    exit(ret);
+    __exit(ret);
 }

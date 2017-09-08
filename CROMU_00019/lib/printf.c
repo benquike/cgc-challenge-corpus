@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -32,7 +32,7 @@ THE SOFTWARE.
 // 5 digits of precision
 #define F32_PRECISION       0.00001
 
-int putc( int c )
+int __putc( int c )
 {
     size_t tx_count;
 
@@ -114,17 +114,17 @@ void float_to_str( double val, char *buf )
     if ( buf == NULL )
         return;
 
-    if ( isnan( val ) )
+    if ( __isnan( val ) )
     {
-        strcpy( buf, "nan" );
+        __strcpy( buf, "nan" );
     }
-    else if ( isinf( val ) )
+    else if ( __isinf( val ) )
     {
-        strcpy( buf, "inf" );
+        __strcpy( buf, "inf" );
     }
     else if ( val == 0.0 )
     {
-        strcpy( buf, "0.00000" );
+        __strcpy( buf, "0.00000" );
     }
     else
     {
@@ -160,7 +160,7 @@ void float_to_str( double val, char *buf )
         while ( val > F32_PRECISION || m >= 0 )
         {
             double weight = pow( 10.0, m );
-            if ( weight > 0 && !isinf(weight) )
+            if ( weight > 0 && !__isinf(weight) )
             {
                 digit = floor( val / weight );
                 val -= (digit * weight);
@@ -209,14 +209,14 @@ int vprintf( const char *fmt, va_list arg )
             switch ( *fmt )
             {
             case '@':
-                putc( '@' );
+                __putc( '@' );
                 break;
 
             case 'c':
                 // Character
                 {
                     char c = va_arg(arg, int);
-                    putc( c );
+                    __putc( c );
                     character_count++;
                 }
                 break;
@@ -231,7 +231,7 @@ int vprintf( const char *fmt, va_list arg )
                     c = temp_buf;
                     while ( *c )
                     {
-                        putc( *c );
+                        __putc( *c );
                         character_count++;
                         c++;
                     }
@@ -249,7 +249,7 @@ int vprintf( const char *fmt, va_list arg )
                     c = temp_buf;
                     while ( *c )
                     {
-                        putc( *c );
+                        __putc( *c );
                         character_count++;
                         c++;
                     }
@@ -267,7 +267,7 @@ int vprintf( const char *fmt, va_list arg )
                     c = temp_buf;
                     while ( *c )
                     {
-                        putc( *c );
+                        __putc( *c );
                         character_count++;
                         c++;
                     }
@@ -281,7 +281,7 @@ int vprintf( const char *fmt, va_list arg )
 
                     while ( *string_arg )
                     {
-                        putc( *string_arg );
+                        __putc( *string_arg );
                         character_count++;
                         string_arg++;
                     }
@@ -301,7 +301,7 @@ int vprintf( const char *fmt, va_list arg )
         }
         else
         {
-            putc( *fmt );
+            __putc( *fmt );
             fmt++;
 
             character_count++;
@@ -311,7 +311,7 @@ int vprintf( const char *fmt, va_list arg )
     return (character_count);
 }
 
-int printf( const char *fmt, ... )
+int __printf( const char *fmt, ... )
 {
     va_list arg;
     int done;

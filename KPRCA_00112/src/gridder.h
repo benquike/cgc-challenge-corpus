@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -34,9 +34,9 @@ class Gridder
     bool GenerateNewGridder(int cell_idx, NumGen *pngen);
     void MakeGridderSolveable(int difficulty, NumGen *pngen);
     Gridder *FindSolution(int cell_idx);
-    bool HasUniqueSolution(int cell_idx, const Gridder *s1, bool *exit);
+    bool HasUniqueSolution(int cell_idx, const Gridder *s1, bool *__exit);
     bool ValidateGridder(const Gridder &master);
-    void Serialize(FILE *out);
+    void Serialize(__FILE *out);
     unsigned int *GetRawGridder(int *size);
     void Debug();
 

@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -27,4 +27,4 @@ THE SOFTWARE.
 #include <libcgc.h>
 
 int receive_bytes ( unsigned char *buffer, size_t count);
-size_t receive_until( unsigned char *buffer, unsigned char delim, size_t limit );
+size_t __receive_until( unsigned char *buffer, unsigned char delim, size_t limit );

@@ -3,7 +3,7 @@
  * 
  * Copyright (c) 2014 Kaprica Security, Inc.
  * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -28,13 +28,13 @@
 
 #include "malloc_internal.h"
 
-void free(void *mem)
+void __free(void *mem)
 {
-    //printf("free(%08X)\n", mem);
+    //__printf("__free(%08X)\n", mem);
     if (mem == NULL)
         return;
     free_block_t *block = (free_block_t *)((intptr_t)mem - OVERHEAD_BYTES);
-    if (block->hdr.free != 0)
+    if (block->hdr.__free != 0)
         _terminate(1);
     if (block->hdr.mmap)
     {
@@ -42,7 +42,7 @@ void free(void *mem)
         return;
     }
 
-    block->hdr.free = 1;
+    block->hdr.__free = 1;
     
     int order;
     for (order = 0; block->hdr.size > (MIN_ALLOC << order); order++) ;
@@ -50,11 +50,11 @@ void free(void *mem)
     for (; order < NUM_BUCKETS-1; order++)
     {
         free_block_t *buddy = (free_block_t *)((intptr_t)block ^ block->hdr.size);
-        //printf("\tbuddy = %08X, size = %d,%d\n", buddy, block->hdr.size, buddy->hdr.size);
-        if (buddy->hdr.free == 0 || buddy->hdr.size != block->hdr.size)
+        //__printf("\tbuddy = %08X, size = %d,%d\n", buddy, block->hdr.size, buddy->hdr.size);
+        if (buddy->hdr.__free == 0 || buddy->hdr.size != block->hdr.size)
             break;
 
-        /* remove buddy from free list */
+        /* remove buddy from __free list */
         if (buddy->prev == NULL)
             g_malloc.free_list[order] = buddy->next;
         else

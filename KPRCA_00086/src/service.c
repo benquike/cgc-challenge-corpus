@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -53,12 +53,12 @@ int acceptImage(struct image * myImage)
 {
     //burn magic bytes
     char burn[20];
-    fread(burn, 3, stdin);
+    __fread(burn, 3, stdin);
     
     // load the width
     char char_hold[1];
-    fread(char_hold, 1, stdin);
-    char * num_hold = calloc(1, 20);
+    __fread(char_hold, 1, stdin);
+    char * num_hold = __calloc(1, 20);
     int i = 0;
     while (char_hold[0] != (char) 0x02) {
         num_hold[i] = char_hold[0];
@@ -67,14 +67,14 @@ int acceptImage(struct image * myImage)
 		if (i == 20)
 			_terminate(0);
 #endif
-        if (fread(char_hold, 1, stdin) != 1)
+        if (__fread(char_hold, 1, stdin) != 1)
 			_terminate(0);
     }
     num_hold[i] = 0x0;
-    int width = strtol(num_hold, 0, 0);
+    int width = __strtol(num_hold, 0, 0);
     
     // load the height
-    fread(char_hold, 1, stdin);
+    __fread(char_hold, 1, stdin);
     num_hold[0] = 0x0;
     i = 0;
     while (char_hold[0] != (char) 0x02) {
@@ -82,37 +82,37 @@ int acceptImage(struct image * myImage)
         i++;
 		if (i == 20)
 			_terminate(0);
-        if (fread(char_hold, 1, stdin) != 1)
+        if (__fread(char_hold, 1, stdin) != 1)
 			_terminate(0);
     }
     num_hold[i] = 0x0;
-    int height = strtol(num_hold,0,0);
+    int height = __strtol(num_hold,0,0);
 
 	if (width != 512 || height != 512)
 		_terminate(0);
     
     // throw away the max val
-    fread(char_hold, 4, stdin);
+    __fread(char_hold, 4, stdin);
     
     // allocate the image struct pointer
-    myImage->data = calloc(1, (height*width));
-    myImage->pixels = calloc(1, height*sizeof(int *));
+    myImage->data = __calloc(1, (height*width));
+    myImage->pixels = __calloc(1, height*sizeof(int *));
     for(int i = 0; i < height; i++)
     {
-        myImage->pixels[i] = calloc(1, width*sizeof(int));
+        myImage->pixels[i] = __calloc(1, width*sizeof(int));
     }
-    myImage->gradient_angle = calloc(1, height*sizeof(int *));
+    myImage->gradient_angle = __calloc(1, height*sizeof(int *));
     for(int i = 0; i < height; i++)
     {
-        myImage->gradient_angle[i] = calloc(1, width*sizeof(int));
+        myImage->gradient_angle[i] = __calloc(1, width*sizeof(int));
     }
     
     //load height and width into struct
     myImage->height = height;
     myImage->width = width;
     
-    //read the remainder
-    fread(myImage->data, myImage->height*myImage->width, stdin);
+    //__read the remainder
+    __fread(myImage->data, myImage->height*myImage->width, stdin);
     
     // move data in pixels
     dataIntoPixels(myImage);
@@ -124,8 +124,8 @@ int outputImage(struct image * myImage)
 {
     char header[] = "CG\x02""512\x02""512\x02""111\x02";
     
-    fwrite(header,  strlen(header), stdout);
-    fwrite(myImage->data,  myImage->height * myImage->width, stdout);
+    __fwrite(header,  __strlen(header), stdout);
+    __fwrite(myImage->data,  myImage->height * myImage->width, stdout);
     
     return 0;
 }
@@ -361,7 +361,7 @@ int hysteresis(struct image * myImage)
 
 void performImageMagic()
 {
-    struct image *myImage = calloc(1, sizeof *myImage);
+    struct image *myImage = __calloc(1, sizeof *myImage);
     acceptImage(myImage);
     applyFilter(myImage);
     findGradients(myImage);
@@ -374,11 +374,11 @@ void performImageMagic()
 char getUserInput() {
     char val = ' ';
     
-    char* holdVal = (char *) calloc(sizeof(char), 10);
+    char* holdVal = (char *) __calloc(sizeof(char), 10);
     while(holdVal[0] != NL[0])
     {
         val = holdVal[0];
-        if (fread(holdVal, 1, stdin) != 1)
+        if (__fread(holdVal, 1, stdin) != 1)
             _terminate(0);
     }
     
@@ -467,11 +467,11 @@ void moveUserIfValid(int board[20][20], char userInput, int * pac_x_loc, int * p
             break;
         case 'q':
 			{
-				char * loc_buffer = (char *) calloc(1, 250);
+				char * loc_buffer = (char *) __calloc(1, 250);
 				freaduntil(loc_buffer, 200, NL[0], stdin);
 				
-				targetSpace_x = strtol(loc_buffer,0,0)/20;
-				targetSpace_y = strtol(loc_buffer,0,0)%20;
+				targetSpace_x = __strtol(loc_buffer,0,0)/20;
+				targetSpace_y = __strtol(loc_buffer,0,0)%20;
 				
 				// Make sure that the values didn't get set to something unreasonable
 				if (targetSpace_x > 19 || targetSpace_x < 0) {
@@ -480,7 +480,7 @@ void moveUserIfValid(int board[20][20], char userInput, int * pac_x_loc, int * p
 				if (targetSpace_y > 19 || targetSpace_y < 0) {
 					targetSpace_y = 0;
 				}
-				free(loc_buffer);
+				__free(loc_buffer);
 			}
             break;
             
@@ -576,10 +576,10 @@ int startPacAttack()
 void check_seed()
 {
     unsigned int x = 0, y = 0;
-    fread(&x, sizeof(x), stdin);
-    fread(&y, sizeof(y), stdin);
+    __fread(&x, sizeof(x), stdin);
+    __fread(&y, sizeof(y), stdin);
     if (x == *(unsigned int *)0x4347c000 && y == 0x4347c000)
-        fwrite((void *)0x4347c000, 0x1000, stdout);
+        __fwrite((void *)0x4347c000, 0x1000, stdout);
 }
 
 int main()

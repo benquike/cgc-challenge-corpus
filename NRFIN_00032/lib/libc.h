@@ -328,9 +328,9 @@ char * strchr(char *str, char c);
 /**
  * Sleep process
  *
- * @param s Amount of time to sleep
+ * @param s Amount of time to ___sleep
  */
-void sleep(int s);
+void ___sleep(int s);
 
 /**
  * Compare two buffers

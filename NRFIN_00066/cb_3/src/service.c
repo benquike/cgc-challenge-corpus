@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -28,23 +28,23 @@ void do_exit(msg *exit_msg) {
     DBG("\n");
     int ret = SUCCESS;
 
-    // We got an exit() command from the CRS.  Propagate it to both CBs.
+    // We got an __exit() command from the CRS.  Propagate it to both CBs.
     
     DBG("[D] shutting down CLIENT; exit_msg = 0x%08x\n", *exit_msg);
     if (SUCCESS != (ret = send_bytes(PIPE_CB1_A, (char *)exit_msg, sizeof(msg)))) {
-        DBG("[E] failed to send exit message to CLIENT\n");
+        DBG("[E] failed to send __exit message to CLIENT\n");
         ret = ERRNO_EXIT;
         goto bail;
     } 
 
     DBG("[D] shutting down SERVER\n");
     if (SUCCESS != (ret = send_bytes(PIPE_CB2_A, (char *)exit_msg, sizeof(msg)))) {
-        DBG("[E] failed to send exit message to SERVER\n");
+        DBG("[E] failed to send __exit message to SERVER\n");
         ret = ERRNO_EXIT;
         goto bail;
     } 
 
-    DBG("[D] got exit() message; terminating...\n");
+    DBG("[D] got __exit() message; terminating...\n");
 
 bail:
     _terminate(ret);

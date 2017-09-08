@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -52,7 +52,7 @@ unsigned int count;
 
 	if ( fh < 0 ) {
 
-        printf("error opening Users.db\n");
+        __printf("error opening Users.db\n");
         _terminate(-1);
 
     }
@@ -61,14 +61,14 @@ unsigned int count;
 
 	    retcode = readFileUntil( fh, username, sizeof(username), ':', &count, ROOT_ID);
 
-	    // if no data was read we must be at the end of the file or its empty
+	    // if no data was __read we must be at the end of the file or its empty
 	    if (retcode == 0 ) {
 
 	    	break;
 	    }
 	    
 	    // if the username isn't a match, go to the next entry
-	    if (strcmp(username, name) != 0) {
+	    if (__strcmp(username, name) != 0) {
 
 	    	retcode = readFileUntil( fh, line, sizeof(line), '\n', &count, ROOT_ID);
 	    	continue;
@@ -76,7 +76,7 @@ unsigned int count;
 
 	    retcode = readFileUntil( fh, pass, sizeof(pass), ':', &count, ROOT_ID);
 
-	    if ( strcmp(pass, password) != 0 ) {
+	    if ( __strcmp(pass, password) != 0 ) {
 
 	    	closeFile(fh);
 	    	return -1;
@@ -86,7 +86,7 @@ unsigned int count;
 	    retcode = readFileUntil( fh, tmpbuff, sizeof(tmpbuff), '\n', &count, ROOT_ID);
 
 	    closeFile(fh);
-	    return(atoi(tmpbuff));
+	    return(__atoi(tmpbuff));
 
     } // while (retcode >= 0)
 
@@ -114,7 +114,7 @@ char line[1024];
 
 	if ( fh < 0 ) {
 
-        printf("error opening Users.db\n");
+        __printf("error opening Users.db\n");
         _terminate(-1);
 
     }
@@ -125,7 +125,7 @@ char line[1024];
 
         if (securityIDFileHandle < 0 ) {
 
-            printf("error opening security ID file\n");
+            __printf("error opening security ID file\n");
             _terminate(-1);
         }
     }
@@ -153,12 +153,12 @@ char line[1024];
 
 	    retcode = readFileUntil( fh, username, sizeof(username), ':', &count, ROOT_ID);
 
-	    // if no data was read we must be at the end of the file or its empty
+	    // if no data was __read we must be at the end of the file or its empty
 	    if (retcode == 0 )
 	    	break;
 
 	    // if the username is a dupe, rewind the securityID by 4 bytes and then return an error
-	    if (strcmp(username, name) == 0) {
+	    if (__strcmp(username, name) == 0) {
 
             fileReadPosRelative( securityIDFileHandle, -4 );
             closeFile(fh);
@@ -168,7 +168,7 @@ char line[1024];
         retcode = readFileUntil( fh, line, sizeof(line), ':', &count, ROOT_ID);
 	    retcode = readFileUntil( fh, line, sizeof(line), '\n', &count, ROOT_ID);
 
-        if ( atoi(tmpbuff) == newID ) {
+        if ( __atoi(tmpbuff) == newID ) {
 
             ++newID;
             continue;
@@ -180,11 +180,11 @@ char line[1024];
     // at the end of the file and didn't find a username collision
     sprintf(line, "$s:$s:$d\n", name, password, newID);
 
-    retcode = writeFile(fh, line, strlen(line), ROOT_ID );
+    retcode = writeFile(fh, line, __strlen(line), ROOT_ID );
 
     if (retcode < 0 ) {
 
-    	printf("error updating Users.db\n");
+    	__printf("error updating Users.db\n");
     	_terminate(-1);
 
     }
@@ -197,7 +197,7 @@ char line[1024];
 
     if ( retcode < 0 ) {
 
-        printf("$d\n", retcode);
+        __printf("$d\n", retcode);
         _terminate(-1);
     }
 
@@ -205,7 +205,7 @@ char line[1024];
 
     if ( fh3 < 0 ) {
 
-    	printf("error opening users file\n");
+    	__printf("error opening users file\n");
     	_terminate(-1);
 
     }
@@ -214,13 +214,13 @@ char line[1024];
     real_name[REALNAME_LEN] = 0;
 #endif
 
-    // initial values for last read and last written posts
+    // initial values for last __read and last written posts
     count = 0;
 
     writeFile( fh3, (char *)&count, sizeof(count), ROOT_ID );
     writeFile( fh3, (char *)&count, sizeof(count), ROOT_ID );
 
-    count = strlen(real_name);
+    count = __strlen(real_name);
     writeFile( fh3, (char *)&count, sizeof(count), ROOT_ID );
 
     writeFile( fh3, real_name, count, ROOT_ID );

@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -28,7 +28,7 @@ THE SOFTWARE.
 CCommandHandler::CCommandHandler()
     : m_cmdCount( 0 )
 {
-    memset( m_cmdTable, 0, sizeof(tCommandTableEntry) * MAX_COMMAND_ENTRIES );
+    __memset( m_cmdTable, 0, sizeof(tCommandTableEntry) * MAX_COMMAND_ENTRIES );
 }
 
 CCommandHandler::~CCommandHandler()
@@ -47,8 +47,8 @@ bool CCommandHandler::RegisterCommand( const char *pszCommand, const char *pszDe
     if ( !pFunc )
         return (false);
 
-    strncpy( m_cmdTable[m_cmdCount].szCommand, pszCommand, MAX_COMMAND_LENGTH );
-    strncpy( m_cmdTable[m_cmdCount].szDescription, pszDescription, MAX_DESCRIPTION_LENGTH );
+    __strncpy( m_cmdTable[m_cmdCount].szCommand, pszCommand, MAX_COMMAND_LENGTH );
+    __strncpy( m_cmdTable[m_cmdCount].szDescription, pszDescription, MAX_DESCRIPTION_LENGTH );
 
     m_cmdTable[m_cmdCount].pCmdFunc = pFunc;
 
@@ -76,20 +76,20 @@ void CCommandHandler::Run( void )
     for (;;)
     {
         // Prompt
-        printf( ": " );
+        __printf( ": " );
 
         // Get command line
         getline( szLine, 1024 );
 
-        char *szToken = strtok( szLine, " " );
+        char *szToken = __strtok( szLine, " " );
 
         if ( szToken == NULL )
         {
-            printf( "Unknown command.\n" );
+            __printf( "Unknown command.\n" );
             continue;
         }
 
-        if ( stricmp( szToken, "exit" ) == 0 )
+        if ( stricmp( szToken, "__exit" ) == 0 )
             break;
 
         if ( stricmp( szToken, "?" ) == 0 )
@@ -103,19 +103,19 @@ void CCommandHandler::Run( void )
 
         if ( pCmdFunc == NULL )
         {
-            printf( "Unknown command.\n" );
+            __printf( "Unknown command.\n" );
             continue;
         }
 
-        (*pCmdFunc)( strtok( NULL, "" ) );
+        (*pCmdFunc)( __strtok( NULL, "" ) );
     }
 }
 
 void CCommandHandler::ListCommands( void )
 {
-    printf( "Available commands:\n" );
+    __printf( "Available commands:\n" );
     for ( uint32_t i = 0; i < m_cmdCount; i++ )
     {
-        printf( "@s - @s\n", m_cmdTable[i].szCommand, m_cmdTable[i].szDescription );
+        __printf( "@s - @s\n", m_cmdTable[i].szCommand, m_cmdTable[i].szDescription );
     }
 }

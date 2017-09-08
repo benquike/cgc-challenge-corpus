@@ -4,7 +4,7 @@ Copyright (c) 2015 Cromulence LLC
 
 Authors: Jason Williams <jdw@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -45,7 +45,7 @@ namespace CUtil
 {
 	// Easy means of declaring linked list data structures
 #define DLL_LINK( T ) DoubleLink<T>
-#define DLL_LIST( T, link ) DoubleListDeclare<T, offsetof( T, link )>
+#define DLL_LIST( T, __link ) DoubleListDeclare<T, offsetof( T, __link )>
 #define DLL_PTR( T ) DoubleList<T> *
 
 	template<class T>
@@ -104,7 +104,7 @@ namespace CUtil
 
 		template<class U, uint32_t linkOffset> friend class DoubleListDeclare;
 
-		uint32_t m_listLinkOffset;	// Contains the offset for the list link member variable in the item class
+		uint32_t m_listLinkOffset;	// Contains the offset for the list __link member variable in the item class
 
 		DoubleLink<T> m_first;
 		DoubleLink<T> m_last;
@@ -117,7 +117,7 @@ namespace CUtil
 		DoubleListDeclare();
 	};
 
-	// Declare a double list class with the appropriate link offset
+	// Declare a double list class with the appropriate __link offset
 	template<class T, uint32_t linkOffset>
 	DoubleListDeclare<T, linkOffset>::DoubleListDeclare()
 		: DoubleList<T>( linkOffset )

@@ -76,15 +76,15 @@ long double significandl(long double);
 
 
 
-int isdigit(int c);
-int isascii(int c);
+int __isdigit(int c);
+int __isascii(int c);
 int isprint(int c);
-int isalnum(int c);
-int isalpha(int c);
-int islower(int c);
-int isupper(int c);
-int isspace(int c);
-int ispunct(int c);
+int __isalnum(int c);
+int __isalpha(int c);
+int __islower(int c);
+int __isupper(int c);
+int __isspace(int c);
+int __ispunct(int c);
 int tolower(int c);
 int toupper(int c);
 # 26 "src/main.c" 2
@@ -115,20 +115,20 @@ typedef long int ptrdiff_t;
 
 
 
-extern int fdprintf(int fd, const char *fmt, ...);
-extern int sprintf(char *s, const char *fmt, ...);
+extern int __fdprintf(int fd, const char *fmt, ...);
+extern int __sprintf(char *s, const char *fmt, ...);
 
 
-long strtol(const char *str, char **endptr, int base);
-unsigned long strtoul(const char *str, char **endptr, int base);
+long __strtol(const char *str, char **endptr, int base);
+unsigned long __strtoul(const char *str, char **endptr, int base);
 
-extern void *malloc(size_t size);
-extern void *calloc(size_t nmemb, size_t size);
-extern void *realloc(void *ptr, size_t size);
-extern void free(void *ptr);
+extern void *__malloc(size_t size);
+extern void *__calloc(size_t nmemb, size_t size);
+extern void *__realloc(void *ptr, size_t size);
+extern void __free(void *ptr);
 extern size_t malloc_size(void *ptr);
 
-static void exit(int ret)
+static void __exit(int ret)
 {
     _terminate(ret);
 }
@@ -139,23 +139,23 @@ static void exit(int ret)
 
 
 
-extern void *memcpy(void *dest, const void *src, size_t n);
+extern void *__memcpy(void *dest, const void *src, size_t n);
 extern void *memmove(void *dest, const void *src, size_t n);
-extern void *memset(void *dest, int c, size_t n);
-extern int memcmp(void *s1, const void *s2, size_t n);
+extern void *__memset(void *dest, int c, size_t n);
+extern int __memcmp(void *s1, const void *s2, size_t n);
 extern void *memchr(const void *s, int c, size_t n);
 
-extern size_t strlen(const char *s);
-extern char *strcpy(char *dest, const char *src);
-extern char *strncpy(char *dest, const char *src, size_t n);
-extern char *strchr(const char *s, int c);
+extern size_t __strlen(const char *s);
+extern char *__strcpy(char *dest, const char *src);
+extern char *__strncpy(char *dest, const char *src, size_t n);
+extern char *__strchr(const char *s, int c);
 extern char *strsep(char **stringp, const char *delim);
-extern int strcmp(const char *s1, const char *s2);
+extern int __strcmp(const char *s1, const char *s2);
 extern int strncmp(const char *s1, const char *s2, size_t n);
 extern int strcasecmp(const char *s1, const char *s2);
 extern int strncasecmp(const char *s1, const char *s2, size_t n);
-extern char *strcat(char *dest, const char *src);
-extern char *strdup(const char *src);
+extern char *__strcat(char *dest, const char *src);
+extern char *__strdup(const char *src);
 # 28 "src/main.c" 2
 
 # 1 "src/commands.h" 1
@@ -209,11 +209,11 @@ void free_command(command_t* cmd)
   {
     for (size_t i = 0; i < cmd->arity; i++)
       if (cmd->argv[i])
-        free(cmd->argv[i]);
-    free(cmd->argv);
+        __free(cmd->argv[i]);
+    __free(cmd->argv);
   }
 
-  free(cmd);
+  __free(cmd);
 }
 # 30 "src/main.c" 2
 # 1 "src/io.h" 1
@@ -254,27 +254,27 @@ store_tree_t* make_tree(store_tree_t* l, store_tree_t* r, char* key, char* val)
   if (!key || !val)
     return ((void *)0);
 
-  store_tree_t* new = calloc(sizeof(store_tree_t), 1);
+  store_tree_t* new = __calloc(sizeof(store_tree_t), 1);
   if (!new)
-    ({ fdprintf(2, "ERROR %s:%d:\t" "bad calloc" "\n", "src/main.c", 57); exit(1); });
+    ({ __fdprintf(2, "ERROR %s:%d:\t" "bad __calloc" "\n", "src/main.c", 57); __exit(1); });
   if (l)
     new->l = l;
   if (r)
     new->r = r;
 
-  new->klen = strlen(key);
-  new->key = calloc(sizeof(char), new->klen + 1);
+  new->klen = __strlen(key);
+  new->key = __calloc(sizeof(char), new->klen + 1);
   if (!new->key)
-    ({ fdprintf(2, "ERROR %s:%d:\t" "bad calloc" "\n", "src/main.c", 66); exit(1); });
+    ({ __fdprintf(2, "ERROR %s:%d:\t" "bad __calloc" "\n", "src/main.c", 66); __exit(1); });
   else
-    strcpy(new->key, key);
+    __strcpy(new->key, key);
 
-  new->vlen = strlen(val);
-  new->val = calloc(sizeof(char), new->vlen + 1);
+  new->vlen = __strlen(val);
+  new->val = __calloc(sizeof(char), new->vlen + 1);
   if (!new->val)
-    ({ fdprintf(2, "ERROR %s:%d:\t" "bad calloc" "\n", "src/main.c", 73); exit(1); });
+    ({ __fdprintf(2, "ERROR %s:%d:\t" "bad __calloc" "\n", "src/main.c", 73); __exit(1); });
   else
-    strcpy(new->val, val);
+    __strcpy(new->val, val);
 
   return new;
 }
@@ -290,7 +290,7 @@ store_tree_t* ins_tree(store_tree_t* root, char* key, char* val)
     return make_tree(((void *)0), ((void *)0), key, val);
   }
 
-  int sret = strcmp(root->key, key);
+  int sret = __strcmp(root->key, key);
 
   if (sret < 0)
   {
@@ -309,7 +309,7 @@ store_tree_t* find_tree(store_tree_t* root, char* key)
   if (!root || !key)
     return ((void *)0);
 
-  int sret = strcmp(root->key, key);
+  int sret = __strcmp(root->key, key);
 
   if (sret == 0)
     return root;
@@ -343,7 +343,7 @@ store_tree_t* del_tree(store_tree_t* root, char* key)
   if (!root)
     return root;
 
-  int sret = strcmp(root->key, key);
+  int sret = __strcmp(root->key, key);
 
   if (sret < 0)
   {
@@ -378,11 +378,11 @@ int append_tree_val(store_tree_t* node, char* append_val)
   if (!append_val || !node)
     return -1;
 
-  node->vlen += strlen(append_val);
-  node->val = realloc(node->val, node->vlen + 1);
+  node->vlen += __strlen(append_val);
+  node->val = __realloc(node->val, node->vlen + 1);
   if (!node->val)
-      ({ fdprintf(2, "ERROR %s:%d:\t" "bad realloc" "\n", "src/main.c", 182); exit(1); });
-  strcat(node->val, append_val);
+      ({ __fdprintf(2, "ERROR %s:%d:\t" "bad __realloc" "\n", "src/main.c", 182); __exit(1); });
+  __strcat(node->val, append_val);
   return 0;
 }
 
@@ -391,12 +391,12 @@ int update_tree_val(store_tree_t* node, char* new_val)
   if (!new_val)
     return -1;
 
-  free(node->val);
-  node->val = calloc(sizeof(char), strlen(new_val) + 1);
+  __free(node->val);
+  node->val = __calloc(sizeof(char), __strlen(new_val) + 1);
   if (!node->val)
-    ({ fdprintf(2, "ERROR %s:%d:\t" "bad calloc" "\n", "src/main.c", 195); exit(1); });
-  strcpy(node->val, new_val);
-  node->vlen = strlen(new_val);
+    ({ __fdprintf(2, "ERROR %s:%d:\t" "bad __calloc" "\n", "src/main.c", 195); __exit(1); });
+  __strcpy(node->val, new_val);
+  node->vlen = __strlen(new_val);
   return 0;
 }
 
@@ -408,18 +408,18 @@ unsigned char* read_command(int fd)
     return ((void *)0);
 
   if (strncmp("quit", (char *)&size, 4) == 0)
-    exit(0);
+    __exit(0);
 
   if (size > (16 * 1024) || size < 0)
     return ((void *)0);
 
-  unsigned char* command = calloc(sizeof(unsigned char), size);
+  unsigned char* command = __calloc(sizeof(unsigned char), size);
   if (!command)
-    ({ fdprintf(2, "ERROR %s:%d:\t" "bad calloc" "\n", "src/main.c", 216); exit(1); });
+    ({ __fdprintf(2, "ERROR %s:%d:\t" "bad __calloc" "\n", "src/main.c", 216); __exit(1); });
 
   if (read_n_bytes(fd, size, (char* )command) != size)
   {
-    free(command);
+    __free(command);
     return ((void *)0);
   }
 
@@ -428,32 +428,32 @@ unsigned char* read_command(int fd)
 
 command_t* unserialize_command(unsigned char* serialized)
 {
-  command_t* command = calloc(sizeof(command_t), 1);
+  command_t* command = __calloc(sizeof(command_t), 1);
   if (!command)
-    ({ fdprintf(2, "ERROR %s:%d:\t" "bad calloc" "\n", "src/main.c", 231); exit(1); });
+    ({ __fdprintf(2, "ERROR %s:%d:\t" "bad __calloc" "\n", "src/main.c", 231); __exit(1); });
 
   unsigned char* cur = serialized;
 
-  memcpy(&command->type, cur, sizeof(command->type));
+  __memcpy(&command->type, cur, sizeof(command->type));
   cur += sizeof(command->type);
 
-  memcpy(&command->arity, cur, sizeof(command->arity));
+  __memcpy(&command->arity, cur, sizeof(command->arity));
   cur += sizeof(command->arity);
 
   if (command->arity > 0)
   {
-    command->argv = calloc(sizeof(char *), command->arity);
+    command->argv = __calloc(sizeof(char *), command->arity);
     if (!command->argv)
-      ({ fdprintf(2, "ERROR %s:%d:\t" "bad calloc" "\n", "src/main.c", 245); exit(1); });
+      ({ __fdprintf(2, "ERROR %s:%d:\t" "bad __calloc" "\n", "src/main.c", 245); __exit(1); });
   }
 
   for (size_t i = 0; i < command->arity; i++)
   {
-    command->argv[i] = calloc(sizeof(char), strlen((char *)cur) + 1);
+    command->argv[i] = __calloc(sizeof(char), __strlen((char *)cur) + 1);
     if (!command->argv[i])
-      ({ fdprintf(2, "ERROR %s:%d:\t" "bad calloc" "\n", "src/main.c", 252); exit(1); });
-    strcpy(command->argv[i], (char* )cur);
-    cur += strlen(command->argv[i]) + 1;
+      ({ __fdprintf(2, "ERROR %s:%d:\t" "bad __calloc" "\n", "src/main.c", 252); __exit(1); });
+    __strcpy(command->argv[i], (char* )cur);
+    cur += __strlen(command->argv[i]) + 1;
   }
 
   return command;
@@ -475,16 +475,16 @@ char* handle_append(command_t* command)
     append_tree_val(node, command->argv[1]);
   }
 
-  char *res = calloc(sizeof(char), 32);
+  char *res = __calloc(sizeof(char), 32);
   if (!res)
-    ({ fdprintf(2, "ERROR %s:%d:\t" "bad calloc" "\n", "src/main.c", 278); exit(1); });
-  sprintf(res, "%d", (int)strlen(node->val));
+    ({ __fdprintf(2, "ERROR %s:%d:\t" "bad __calloc" "\n", "src/main.c", 278); __exit(1); });
+  __sprintf(res, "%d", (int)__strlen(node->val));
   return res;
 }
 
 char* handle_auth(command_t* command)
 {
-  if (strncmp(command->argv[0], "password", strlen("password")) != 0)
+  if (strncmp(command->argv[0], "password", __strlen("password")) != 0)
     return (char *)AUTH_ERR;
 
   authed = 1;
@@ -495,22 +495,22 @@ char* handle_bitcount(command_t* command)
 {
   int bitcount = 0;
   char* key = command->argv[0];
-  char *res = calloc(sizeof(char), 32);
+  char *res = __calloc(sizeof(char), 32);
   store_tree_t* node = find_tree(groot, key);
   if (!node)
     goto done;
 
   char *p = node->val;
 
-  while (strlen(p) >= 4)
+  while (__strlen(p) >= 4)
   {
     bitcount += __builtin_popcount(*(unsigned int *)p);
     p += 4;
   }
 
-  if (strlen(p) > 0)
+  if (__strlen(p) > 0)
   {
-    int i = strlen(p);
+    int i = __strlen(p);
     unsigned mask = 0;
     for (int ii = 0; ii < i; ii++)
       mask |= (0xFF << (ii * 8));
@@ -519,8 +519,8 @@ char* handle_bitcount(command_t* command)
 
 done:
   if (!res)
-    ({ fdprintf(2, "ERROR %s:%d:\t" "bad calloc" "\n", "src/main.c", 320); exit(1); });
-  sprintf(res, "%d", bitcount);
+    ({ __fdprintf(2, "ERROR %s:%d:\t" "bad __calloc" "\n", "src/main.c", 320); __exit(1); });
+  __sprintf(res, "%d", bitcount);
   return res;
 }
 
@@ -529,7 +529,7 @@ char safe_str_index(char* s, size_t i, char def)
   if (!s)
     return def;
 
-  size_t max = strlen(s);
+  size_t max = __strlen(s);
 
   if (i >= max)
     return def;
@@ -575,15 +575,15 @@ char* handle_bitop(command_t* command)
 #endif
     return (char *)_false;
 
-  size_t llen = strlen(s1) > strlen(s2) ? strlen(s1) : strlen(s2);
-  char *res = calloc(sizeof(char), llen + 1);
+  size_t llen = __strlen(s1) > __strlen(s2) ? __strlen(s1) : __strlen(s2);
+  char *res = __calloc(sizeof(char), llen + 1);
   if (!res)
-      ({ fdprintf(2, "ERROR %s:%d:\t" "bad calloc" "\n", "src/main.c", 375); exit(1); });
+      ({ __fdprintf(2, "ERROR %s:%d:\t" "bad __calloc" "\n", "src/main.c", 375); __exit(1); });
 
-  if (strlen(s1) > strlen(s2))
-    strcpy(res, s1);
+  if (__strlen(s1) > __strlen(s2))
+    __strcpy(res, s1);
   else
-    strcpy(res, s2);
+    __strcpy(res, s2);
 
   switch (bop)
   {
@@ -605,16 +605,16 @@ char* handle_bitop(command_t* command)
       break;
   }
 
-  char* bytestring = calloc(sizeof(char), 16 * llen);
+  char* bytestring = __calloc(sizeof(char), 16 * llen);
   size_t offset = 0;
   if (!bytestring)
-    ({ fdprintf(2, "ERROR %s:%d:\t" "bad calloc" "\n", "src/main.c", 405); exit(1); });
+    ({ __fdprintf(2, "ERROR %s:%d:\t" "bad __calloc" "\n", "src/main.c", 405); __exit(1); });
 
   for (size_t i = 0; i < llen; i++)
   {
     if (!isprint(res[i]))
     {
-      sprintf(bytestring + offset, "\\x%02x", res[i]);
+      __sprintf(bytestring + offset, "\\x%02x", res[i]);
       offset += 4;
     }
     else
@@ -624,7 +624,7 @@ char* handle_bitop(command_t* command)
     }
   }
 
-  free(res);
+  __free(res);
   return bytestring;
 }
 
@@ -639,17 +639,17 @@ char* handle_cr(command_t* command, int diff)
     node = find_tree(groot, key);
   }
 
-  val = strtol(node->val, ((void *)0), 10);
+  val = __strtol(node->val, ((void *)0), 10);
   val += diff;
 
   char NUM_BUF[32];
-  memset(NUM_BUF, 0, 32);
-  sprintf(NUM_BUF, "%d", val);
+  __memset(NUM_BUF, 0, 32);
+  __sprintf(NUM_BUF, "%d", val);
   update_tree_val(node, NUM_BUF);
 
-  char* res = calloc(sizeof(char), strlen(NUM_BUF) + strlen("num is ") + 1);
-  strcat(res, "num is ");
-  strcat(res, NUM_BUF);
+  char* res = __calloc(sizeof(char), __strlen(NUM_BUF) + __strlen("num is ") + 1);
+  __strcat(res, "num is ");
+  __strcat(res, NUM_BUF);
 
   return res;
 }
@@ -682,11 +682,11 @@ char* handle_get(command_t* command)
   if (!node)
     return (char *)nil;
 
-  char *res = calloc(sizeof(char), strlen(node->val) + 12);
+  char *res = __calloc(sizeof(char), __strlen(node->val) + 12);
   if (!res)
-    ({ fdprintf(2, "ERROR %s:%d:\t" "bad calloc" "\n", "src/main.c", 481); exit(1); });
+    ({ __fdprintf(2, "ERROR %s:%d:\t" "bad __calloc" "\n", "src/main.c", 481); __exit(1); });
 
-  sprintf(res, "val is \"%s\"", node->val);
+  __sprintf(res, "val is \"%s\"", node->val);
   return res;
 }
 
@@ -705,27 +705,27 @@ void preorder_walk(store_tree_t* root, char** buffer, size_t max)
     return;
 
   preorder_walk(root->l, buffer, max);
-  if (root->key && strlen(root->key))
+  if (root->key && __strlen(root->key))
   {
-    if (strlen(*buffer) + strlen(root->key) + 4 >= max)
+    if (__strlen(*buffer) + __strlen(root->key) + 4 >= max)
     {
 
 
 #ifdef PATCHED
-      max = (strlen(*buffer) + strlen(root->key) + 4);
+      max = (__strlen(*buffer) + __strlen(root->key) + 4);
 #else
-      max = (strlen(*buffer) + strlen(root->key));
+      max = (__strlen(*buffer) + __strlen(root->key));
 #endif
 
-      *buffer = realloc(*buffer, max);
+      *buffer = __realloc(*buffer, max);
       if (!*buffer)
-        ({ fdprintf(2, "ERROR %s:%d:\t" "bad realloc" "\n", "src/main.c", 513); exit(1); });
+        ({ __fdprintf(2, "ERROR %s:%d:\t" "bad __realloc" "\n", "src/main.c", 513); __exit(1); });
     }
 
-      strcat(*buffer, "\"");
-      strcat(*buffer, root->key);
-      strcat(*buffer, "\"");
-      strcat(*buffer, " ");
+      __strcat(*buffer, "\"");
+      __strcat(*buffer, root->key);
+      __strcat(*buffer, "\"");
+      __strcat(*buffer, " ");
     }
   preorder_walk(root->r, buffer, max);
 }
@@ -733,9 +733,9 @@ void preorder_walk(store_tree_t* root, char** buffer, size_t max)
 char* handle_keys(command_t* command)
 {
 
-  char* buffer = calloc(sizeof(char), 1024);
+  char* buffer = __calloc(sizeof(char), 1024);
   preorder_walk(groot, &buffer, 1024);
-  if (strlen(buffer) == 0)
+  if (__strlen(buffer) == 0)
     return "empty";
   return buffer;
 }
@@ -755,9 +755,9 @@ char* handle_rename(command_t* command)
   if (dst)
   {
     del_tree(groot, dst->key);
-    free(dst->val);
-    free(dst->key);
-    free(dst);
+    __free(dst->val);
+    __free(dst->key);
+    __free(dst);
     dst = ((void *)0);
   }
 
@@ -835,7 +835,7 @@ int main(void)
     if (!command)
     {
                                           ;
-      free(serialized_command);
+      __free(serialized_command);
       continue;
     }
                                                   ;
@@ -847,24 +847,24 @@ int main(void)
 
     if (i == 12)
     {
-      free(serialized_command);
-      free(command);
+      __free(serialized_command);
+      __free(command);
       continue;
     }
 
     if (command->type != CMD_AUTH && !authed)
     {
       if (transmit_string(tx, "unauthed\n") != 0)
-        ({ fdprintf(2, "ERROR %s:%d:\t" "send failed" "\n", "src/main.c", 649); exit(1); });
+        ({ __fdprintf(2, "ERROR %s:%d:\t" "send failed" "\n", "src/main.c", 649); __exit(1); });
       continue;
     }
 
     char* result = call_command(command);
                                       ;
     if (transmit_string(tx, result) != 0)
-      ({ fdprintf(2, "ERROR %s:%d:\t" "send failed" "\n", "src/main.c", 656); exit(1); });
+      ({ __fdprintf(2, "ERROR %s:%d:\t" "send failed" "\n", "src/main.c", 656); __exit(1); });
     if (transmit_string(tx, "\n") != 0)
-      ({ fdprintf(2, "ERROR %s:%d:\t" "send failed" "\n", "src/main.c", 658); exit(1); });
+      ({ __fdprintf(2, "ERROR %s:%d:\t" "send failed" "\n", "src/main.c", 658); __exit(1); });
 
     switch (command->type)
     {
@@ -880,12 +880,12 @@ int main(void)
             result == nil)
           break;
         else
-          free(result);
+          __free(result);
       default:
         break;
     }
 
-    free(serialized_command);
+    __free(serialized_command);
     free_command(command);
   }
 }

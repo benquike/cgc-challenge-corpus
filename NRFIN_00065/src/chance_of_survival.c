@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -29,43 +29,43 @@
 static void
 empty(void)
 {
-    printf("Is this thing on?\n");
+    __printf("Is this thing on?\n");
 }
 
 static void
 option_0(void)
 {
-    printf("*CLICK*\n");
+    __printf("*CLICK*\n");
 }
 
 static void
 option_1(void)
 {
-    printf("*CLICK*\n");
+    __printf("*CLICK*\n");
 }
 
 static void
 option_2(void)
 {
-    printf("*CLICK*\n");
+    __printf("*CLICK*\n");
 }
 
 static void
 option_3(void)
 {
-    printf("*NERVOUS LOOK*\n");
+    __printf("*NERVOUS LOOK*\n");
 }
 
 static void
 option_4(void)
 {
-    printf("*CRAZY EYES*\n");
+    __printf("*CRAZY EYES*\n");
 }
 
 static void
 option_5(void)
 {
-    printf("WHEW!\n");
+    __printf("WHEW!\n");
 }
 
 static void
@@ -75,15 +75,15 @@ doit(void)
     unsigned int foo, bar;
     void __attribute__((regparm(1))) (*fnptr)(unsigned int);
 
-    printf("Whoops:\n");
+    __printf("Whoops:\n");
     if (fread_until(buf, '\n', sizeof(buf), stdin) == EXIT_FAILURE)
         return;
-    if (strlen(buf) == 0 || strtou(buf, 16, &foo) == EXIT_FAILURE)
+    if (__strlen(buf) == 0 || strtou(buf, 16, &foo) == EXIT_FAILURE)
         return;
 
     if (fread_until(buf, '\n', sizeof(buf), stdin) == EXIT_FAILURE)
         return;
-    if (strlen(buf) == 0 || strtou(buf, 16, &bar) == EXIT_FAILURE)
+    if (__strlen(buf) == 0 || strtou(buf, 16, &bar) == EXIT_FAILURE)
         return;
 
     fnptr = (void *)(foo | 0xf0000000);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -172,7 +172,7 @@ struct pixel_list {
             _head = _item->next;                \
         _item->prev = NULL;                     \
         _item->next = NULL;                     \
-        free(_item);                            \
+        __free(_item);                            \
     } while(0)
 
 
@@ -182,7 +182,7 @@ struct pixel_list {
         while (_head != NULL) {                 \
             l = _head;                          \
             _head = _head->next;                \
-            free(l);                            \
+            __free(l);                            \
         }                                       \
     } while(0)
 

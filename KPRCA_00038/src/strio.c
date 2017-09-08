@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -40,7 +40,7 @@ static int enlarge(strio_t *s, int min)
     while (new_length < min)
         new_length *= 2;
 
-    buf = realloc(s->buf, new_length);
+    buf = __realloc(s->buf, new_length);
     if (buf == NULL)
         return 0;
 
@@ -52,7 +52,7 @@ static int enlarge(strio_t *s, int min)
 int strio_init(strio_t *s)
 {
     s->length = 32;
-    s->buf = malloc(s->length);
+    s->buf = __malloc(s->length);
     s->pos = 0;
 
     if (s->buf == NULL)
@@ -63,8 +63,8 @@ int strio_init(strio_t *s)
 
 void strio_free(strio_t *s)
 {
-    free(s->buf);
-    memset(s, 0, sizeof(strio_t));
+    __free(s->buf);
+    __memset(s, 0, sizeof(strio_t));
 }
 
 int strio_append_char(strio_t *s, char c)
@@ -87,5 +87,5 @@ char *strio_dup(strio_t *s)
             return 0;
     }
     s->buf[s->pos] = 0;
-    return strdup(s->buf);
+    return __strdup(s->buf);
 }

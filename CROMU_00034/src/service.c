@@ -4,7 +4,7 @@ Author: James Nuttall (james@cromulence.co)
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -45,24 +45,24 @@ uint16_t read_short()
 
 void populate_entry(int entry, int num, char* str, int str_len, uint8_t req, uint8_t mult, uint8_t type)
 {
-	entry_info_table[entry][num] = (Entry_Info*)malloc(sizeof(Entry_Info));
+	entry_info_table[entry][num] = (Entry_Info*)__malloc(sizeof(Entry_Info));
 	entry_info_table[entry][num]->format = type;
 	entry_info_table[entry][num]->mult_ok = mult;
 	entry_info_table[entry][num]->required = req;
 	entry_info_table[entry][num]->str_len = str_len;
-	strncpy(entry_info_table[entry][num]->entry_str, str, str_len);
-	bzero(str, NAME_LEN_MAX);	
+	__strncpy(entry_info_table[entry][num]->entry_str, str, str_len);
+	__bzero(str, NAME_LEN_MAX);	
 }
 
 void populate_sub_entry(int entry, int num, char* str, int str_len, uint8_t req, uint8_t mult, uint8_t type)
 {
-	sub_entry_info_list[entry][num] = (Entry_Info*)malloc(sizeof(Entry_Info));
+	sub_entry_info_list[entry][num] = (Entry_Info*)__malloc(sizeof(Entry_Info));
 	sub_entry_info_list[entry][num]->format = type;
 	sub_entry_info_list[entry][num]->mult_ok = mult;
 	sub_entry_info_list[entry][num]->required = req;
 	sub_entry_info_list[entry][num]->str_len = str_len;
-	strncpy(sub_entry_info_list[entry][num]->entry_str, str, str_len);
-	bzero(str, NAME_LEN_MAX);	
+	__strncpy(sub_entry_info_list[entry][num]->entry_str, str, str_len);
+	__bzero(str, NAME_LEN_MAX);	
 }
 
 #define REQ 1
@@ -73,193 +73,193 @@ void populate_sub_entry(int entry, int num, char* str, int str_len, uint8_t req,
 void populateEntryInfo()
 {
 	char ss[NAME_LEN_MAX];
-	bzero(ss, NAME_LEN_MAX);
+	__bzero(ss, NAME_LEN_MAX);
 	int num, entry;
 
 // IDENTITY
 	num = 0;
 	entry = IDENTITY;
 
-	strcpy(ss, "first name");
-	populate_entry(entry, num++, ss, strlen(ss), REQ, 0, STR);
+	__strcpy(ss, "first name");
+	populate_entry(entry, num++, ss, __strlen(ss), REQ, 0, STR);
 
-	strcpy(ss, "middle name");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, STR);
+	__strcpy(ss, "middle name");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, STR);
 
-	strcpy(ss, "last name");
-	populate_entry(entry, num++, ss, strlen(ss), REQ, 0, STR);
+	__strcpy(ss, "last name");
+	populate_entry(entry, num++, ss, __strlen(ss), REQ, 0, STR);
 
-	strcpy(ss, "age");
-	populate_entry(entry, num++, ss, strlen(ss), REQ, 0, CHAR);
+	__strcpy(ss, "age");
+	populate_entry(entry, num++, ss, __strlen(ss), REQ, 0, CHAR);
 
-	strcpy(ss, "weight");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, SHORT);
+	__strcpy(ss, "weight");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, SHORT);
 
-	strcpy(ss, "birth country");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, STR);
+	__strcpy(ss, "birth country");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, STR);
 
-	strcpy(ss, "birth state");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, STR);
+	__strcpy(ss, "birth state");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, STR);
 
-	strcpy(ss, "birth city");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, STR);
+	__strcpy(ss, "birth city");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, STR);
 
-	strcpy(ss, "married");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, BOOL);
+	__strcpy(ss, "married");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, BOOL);
 
 // MOVIE
 	num = 0;
 	entry = MOVIES;
-	strcpy(ss, "title");
-	populate_entry(entry, num++, ss, strlen(ss), REQ, 0, STR);
+	__strcpy(ss, "title");
+	populate_entry(entry, num++, ss, __strlen(ss), REQ, 0, STR);
 
-	strcpy(ss, "actor");
-	populate_entry(entry, num++, ss, strlen(ss), 0, MULT_OK, STR);
+	__strcpy(ss, "actor");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, MULT_OK, STR);
 
-	strcpy(ss, "director");
-	populate_entry(entry, num++, ss, strlen(ss), 0, MULT_OK, STR);
+	__strcpy(ss, "director");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, MULT_OK, STR);
 
-	strcpy(ss, "producer");
-	populate_entry(entry, num++, ss, strlen(ss), 0, MULT_OK, STR);
+	__strcpy(ss, "producer");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, MULT_OK, STR);
 
-	strcpy(ss, "year released");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, SHORT);
+	__strcpy(ss, "year released");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, SHORT);
 
-	strcpy(ss, "plot summary");
-	populate_entry(entry, num++, ss, strlen(ss), REQ, 0, STR);
+	__strcpy(ss, "plot summary");
+	populate_entry(entry, num++, ss, __strlen(ss), REQ, 0, STR);
 
 // VEHICLES
 	num = 0;
 	entry = VEHICLES;
 
-	strcpy(ss, "make");
-	populate_entry(entry, num++, ss, strlen(ss), REQ, 0, STR);
+	__strcpy(ss, "make");
+	populate_entry(entry, num++, ss, __strlen(ss), REQ, 0, STR);
 
-	strcpy(ss, "model");
-	populate_entry(entry, num++, ss, strlen(ss), REQ, 0, STR);
+	__strcpy(ss, "model");
+	populate_entry(entry, num++, ss, __strlen(ss), REQ, 0, STR);
 
-	strcpy(ss, "color");
-	populate_entry(entry, num++, ss, strlen(ss), 0, MULT_OK, STR);
+	__strcpy(ss, "color");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, MULT_OK, STR);
 
-	strcpy(ss, "displacement");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, SHORT);
+	__strcpy(ss, "displacement");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, SHORT);
 
-	strcpy(ss, "displacement units");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, CHAR);
+	__strcpy(ss, "displacement units");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, CHAR);
 
-	strcpy(ss, "doors");
-	populate_entry(entry, num++, ss, strlen(ss), REQ, 0, CHAR);	
+	__strcpy(ss, "doors");
+	populate_entry(entry, num++, ss, __strlen(ss), REQ, 0, CHAR);	
 
 // BOOKS
 	num = 0;
 	entry = BOOKS;
 
-	strcpy(ss, "author");
-	populate_entry(entry, num++, ss, strlen(ss), REQ, MULT_OK, STR);
+	__strcpy(ss, "author");
+	populate_entry(entry, num++, ss, __strlen(ss), REQ, MULT_OK, STR);
 
-	strcpy(ss, "year");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, CHAR);
+	__strcpy(ss, "year");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, CHAR);
 
-	strcpy(ss, "summary");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, STR);
+	__strcpy(ss, "summary");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, STR);
 
-	strcpy(ss, "publisher");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, STR);
+	__strcpy(ss, "publisher");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, STR);
 
-	strcpy(ss, "character");
-	populate_entry(entry, num++, ss, strlen(ss), 0, MULT_OK, STR);
+	__strcpy(ss, "character");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, MULT_OK, STR);
 
-	strcpy(ss, "made into a movie");
-	populate_entry(entry, num++, ss, strlen(ss), REQ, 0, BOOL);	
+	__strcpy(ss, "made into a movie");
+	populate_entry(entry, num++, ss, __strlen(ss), REQ, 0, BOOL);	
 
 // SONG
 	num = 0;
 	entry = SONGS;
 
-	strcpy(ss, "writer");
-	populate_entry(entry, num++, ss, strlen(ss), REQ, MULT_OK, STR);
+	__strcpy(ss, "writer");
+	populate_entry(entry, num++, ss, __strlen(ss), REQ, MULT_OK, STR);
 
-	strcpy(ss, "year");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, CHAR);
+	__strcpy(ss, "year");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, CHAR);
 
-	strcpy(ss, "genre");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, STR);
+	__strcpy(ss, "genre");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, STR);
 
-	strcpy(ss, "publisher");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, STR);
+	__strcpy(ss, "publisher");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, STR);
 
-	strcpy(ss, "free online");
-	populate_entry(entry, num++, ss, strlen(ss), REQ, 0, BOOL);	
+	__strcpy(ss, "__free online");
+	populate_entry(entry, num++, ss, __strlen(ss), REQ, 0, BOOL);	
 
 // JOB
 	num = 0;
 	entry = JOBS;
 
-	strcpy(ss, "title");
-	populate_entry(entry, num++, ss, strlen(ss), REQ, MULT_OK, STR);
+	__strcpy(ss, "title");
+	populate_entry(entry, num++, ss, __strlen(ss), REQ, MULT_OK, STR);
 
-	strcpy(ss, "years");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, CHAR);
+	__strcpy(ss, "years");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, CHAR);
 
-	strcpy(ss, "job category");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, STR);
+	__strcpy(ss, "job category");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, STR);
 
-	strcpy(ss, "company");
-	populate_entry(entry, num++, ss, strlen(ss), REQ, 0, STR);
+	__strcpy(ss, "company");
+	populate_entry(entry, num++, ss, __strlen(ss), REQ, 0, STR);
 
-	strcpy(ss, "have a best friend");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, BOOL);
+	__strcpy(ss, "have a best friend");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, BOOL);
 
-	strcpy(ss, "salary");
-	populate_entry(entry, num++, ss, strlen(ss), REQ, 0, INT);
+	__strcpy(ss, "salary");
+	populate_entry(entry, num++, ss, __strlen(ss), REQ, 0, INT);
 
 	num = 0;
 	entry = HOBBIES;
 
-	strcpy(ss, "");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, PTR);
+	__strcpy(ss, "");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, PTR);
 
-	strcpy(ss, "");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, PTR);
+	__strcpy(ss, "");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, PTR);
 
-	strcpy(ss, "");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, PTR);
+	__strcpy(ss, "");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, PTR);
 
-	strcpy(ss, "");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, PTR);
+	__strcpy(ss, "");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, PTR);
 
-	strcpy(ss, "");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, PTR);
+	__strcpy(ss, "");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, PTR);
 
-	strcpy(ss, "");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, PTR);
+	__strcpy(ss, "");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, PTR);
 
 	num = 0;
 	entry = PETS;
 
-	strcpy(ss, "name");
-	populate_entry(entry, num++, ss, strlen(ss), REQ, MULT_OK, STR);
+	__strcpy(ss, "name");
+	populate_entry(entry, num++, ss, __strlen(ss), REQ, MULT_OK, STR);
 
-	strcpy(ss, "species");
-	populate_entry(entry, num++, ss, strlen(ss), REQ, 0, STR);
+	__strcpy(ss, "species");
+	populate_entry(entry, num++, ss, __strlen(ss), REQ, 0, STR);
 
-	strcpy(ss, "legs");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, CHAR);
+	__strcpy(ss, "legs");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, CHAR);
 
-	strcpy(ss, "inside only");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, BOOL);
+	__strcpy(ss, "inside only");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, BOOL);
 
-	strcpy(ss, "age");
-	populate_entry(entry, num++, ss, strlen(ss), 0, 0, CHAR);
+	__strcpy(ss, "age");
+	populate_entry(entry, num++, ss, __strlen(ss), 0, 0, CHAR);
 
-	strcpy(ss, "shots updated");
-	populate_entry(entry, num++, ss, strlen(ss), REQ, 0, BOOL);
+	__strcpy(ss, "shots updated");
+	populate_entry(entry, num++, ss, __strlen(ss), REQ, 0, BOOL);
 }
 
 void populateSubEntryInfo()
 {
 	char ss[NAME_LEN_MAX];
-	bzero(ss, NAME_LEN_MAX);
+	__bzero(ss, NAME_LEN_MAX);
 	int num, entry;
 
 // HOBBIES
@@ -267,159 +267,159 @@ void populateSubEntryInfo()
 // SHOOTING
 	num = 0;
 	entry = SHOOTING;
-	strcpy(ss, "make");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, MULT_OK, STR);
+	__strcpy(ss, "make");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, MULT_OK, STR);
 
-	strcpy(ss, "model");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, MULT_OK, STR);
+	__strcpy(ss, "model");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, MULT_OK, STR);
 
-	strcpy(ss, "league");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, STR);
+	__strcpy(ss, "league");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, STR);
 
-	strcpy(ss, "length");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, CHAR);
+	__strcpy(ss, "length");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, CHAR);
 
-	strcpy(ss, "length units");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, STR);
+	__strcpy(ss, "length units");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, STR);
 
-	strcpy(ss, "years experience");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, 0, CHAR);
+	__strcpy(ss, "years experience");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, 0, CHAR);
 
-	strcpy(ss, "injury");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, BOOL);
+	__strcpy(ss, "injury");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, BOOL);
 
 // KNIVES
 	num = 0;
 	entry = KNIVES;
-	strcpy(ss, "make");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, STR);
+	__strcpy(ss, "make");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, STR);
 
-	strcpy(ss, "model");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, 0, STR);
+	__strcpy(ss, "model");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, 0, STR);
 
-	strcpy(ss, "value");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, SHORT);
+	__strcpy(ss, "value");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, SHORT);
 
-	strcpy(ss, "style");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, STR);
+	__strcpy(ss, "style");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, STR);
 
-	strcpy(ss, "blade length");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, 0, CHAR);
+	__strcpy(ss, "blade length");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, 0, CHAR);
 
-	strcpy(ss, "length units");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, 0, STR);
+	__strcpy(ss, "length units");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, 0, STR);
 
-	strcpy(ss, "comes with sheath");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, BOOL);
+	__strcpy(ss, "comes with sheath");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, BOOL);
 
-	strcpy(ss, "injury");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, 0, BOOL);
+	__strcpy(ss, "injury");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, 0, BOOL);
 
 // STAMPS
 	num = 0;
 	entry = STAMPS;
-	strcpy(ss, "name");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, 0, STR);
+	__strcpy(ss, "name");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, 0, STR);
 
-	strcpy(ss, "value");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, 0, SHORT);
+	__strcpy(ss, "value");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, 0, SHORT);
 
-	strcpy(ss, "seller");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, STR);
+	__strcpy(ss, "seller");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, STR);
 
-	strcpy(ss, "mint");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, 0, BOOL);
+	__strcpy(ss, "mint");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, 0, BOOL);
 
-	strcpy(ss, "count");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, 0, CHAR);
+	__strcpy(ss, "count");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, 0, CHAR);
 
 // KAYAKING
 	num = 0;
 	entry = KAYAKING;
-	strcpy(ss, "make");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, 0, STR);
+	__strcpy(ss, "make");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, 0, STR);
 
-	strcpy(ss, "model");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, 0, STR);
+	__strcpy(ss, "model");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, 0, STR);
 
-	strcpy(ss, "length");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, CHAR);
+	__strcpy(ss, "length");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, CHAR);
 
-	strcpy(ss, "style");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, STR);
+	__strcpy(ss, "style");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, STR);
 
-	strcpy(ss, "initial stability");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, CHAR);
+	__strcpy(ss, "initial stability");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, CHAR);
 
-	strcpy(ss, "years experience");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, CHAR);
+	__strcpy(ss, "years experience");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, CHAR);
 
-	strcpy(ss, "highest class");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, CHAR);
+	__strcpy(ss, "highest class");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, CHAR);
 
-	strcpy(ss, "touring");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, BOOL);
+	__strcpy(ss, "touring");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, BOOL);
 
-	strcpy(ss, "surfing");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, BOOL);
+	__strcpy(ss, "surfing");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, BOOL);
 
-	strcpy(ss, "tricking");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, BOOL);
+	__strcpy(ss, "tricking");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, BOOL);
 
-	strcpy(ss, "injury");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, BOOL);
+	__strcpy(ss, "injury");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, BOOL);
 
 // COINS
 	num = 0;
 	entry = COINS;
-	strcpy(ss, "name");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, 0, STR);
+	__strcpy(ss, "name");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, 0, STR);
 
-	strcpy(ss, "seller");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, STR);
+	__strcpy(ss, "seller");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, STR);
 
-	strcpy(ss, "value");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, 0, INT);
+	__strcpy(ss, "value");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, 0, INT);
 
-	strcpy(ss, "mint");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, 0, BOOL);
+	__strcpy(ss, "mint");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, 0, BOOL);
 
-	strcpy(ss, "count");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, 0, CHAR);
+	__strcpy(ss, "count");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, 0, CHAR);
 
 // EXERCISES
 	num = 0;
 	entry = EXERCISES;
-	strcpy(ss, "name");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, MULT_OK, STR);
+	__strcpy(ss, "name");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, MULT_OK, STR);
 
-	strcpy(ss, "max weight");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, 0, SHORT);
+	__strcpy(ss, "max weight");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, 0, SHORT);
 
-	strcpy(ss, "reps");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, CHAR);
+	__strcpy(ss, "reps");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, CHAR);
 
-	strcpy(ss, "sets");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, 0, CHAR);
+	__strcpy(ss, "sets");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, 0, CHAR);
 
-	strcpy(ss, "injury");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, BOOL);
+	__strcpy(ss, "injury");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, BOOL);
 
 // SPORTS
 	num = 0;
 	entry = SPORTS;
 
-	strcpy(ss, "name");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, 0, STR);
+	__strcpy(ss, "name");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, 0, STR);
 
-	strcpy(ss, "position");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, MULT_OK, STR);
+	__strcpy(ss, "position");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, MULT_OK, STR);
 
-	strcpy(ss, "years experience");
-	populate_sub_entry(entry, num++, ss, strlen(ss), REQ, 0, CHAR);
+	__strcpy(ss, "years experience");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), REQ, 0, CHAR);
 
-	strcpy(ss, "injury");
-	populate_sub_entry(entry, num++, ss, strlen(ss), 0, 0, BOOL);
+	__strcpy(ss, "injury");
+	populate_sub_entry(entry, num++, ss, __strlen(ss), 0, 0, BOOL);
 }
 
 
@@ -432,10 +432,10 @@ uint8_t getEntryInfo(uint16_t title, uint8_t entry, uint8_t is_sub, Entry_Info *
 				if (sub_entry_info_list[title][entry] == NULL) {
 					return 0;
 				}
-				memcpy(entry_info,sub_entry_info_list[title][entry], sizeof(Entry_Info));
+				__memcpy(entry_info,sub_entry_info_list[title][entry], sizeof(Entry_Info));
 			}
 		#else
-			memcpy(entry_info,sub_entry_info_list[title][entry], sizeof(Entry_Info));
+			__memcpy(entry_info,sub_entry_info_list[title][entry], sizeof(Entry_Info));
 		#endif
 	else 
 		#ifdef PATCHED
@@ -443,14 +443,14 @@ uint8_t getEntryInfo(uint16_t title, uint8_t entry, uint8_t is_sub, Entry_Info *
 				if (entry_info_table[title][entry] == NULL) {
 					return 0;
 				}
-				memcpy(entry_info,entry_info_table[title][entry], sizeof(Entry_Info));
+				__memcpy(entry_info,entry_info_table[title][entry], sizeof(Entry_Info));
 			}
 		#else
-			memcpy(entry_info,entry_info_table[title][entry], sizeof(Entry_Info));
+			__memcpy(entry_info,entry_info_table[title][entry], sizeof(Entry_Info));
 		#endif
 	if (entry_info->mult_ok > 1 || entry_info->required > 1)
 	{
-		printf("WRONG FORMAT in getEntryInfo\n");
+		__printf("WRONG FORMAT in getEntryInfo\n");
 	}
 
 
@@ -551,7 +551,7 @@ int parse_book(uint8_t* buff, int rcv_len, int first_offset)
 		int t = 0;
 		#ifdef PATCHED
 		if ((uint8_t *)chapter + sizeof(Chapter) > buff + rcv_len) {
-			printf("bad book.\n");
+			__printf("bad book.\n");
 			return -1;
 		}
 		#endif
@@ -559,8 +559,8 @@ int parse_book(uint8_t* buff, int rcv_len, int first_offset)
 		//if (chapter->title >= NUM_TITLES-1 && !is_subtitle)
 		if (chapter->title == HOBBIES && !is_subtitle)
 		{ 	// we just found HOBBIES, change over
-			printf("Title: @s\n", titles[chapter->title]);
-			printf("Entry Count: 0x@x\n", chapter->entry_count);
+			__printf("Title: @s\n", titles[chapter->title]);
+			__printf("Entry Count: 0x@x\n", chapter->entry_count);
 			names = subtitles;
 			entry_table = sub_entry_info_list;
 			next_offset = (chapter->offset_first_entry);
@@ -579,7 +579,7 @@ int parse_book(uint8_t* buff, int rcv_len, int first_offset)
 
 			if ((t = verify_chapter(chapter)) != 0)
 			{
-				printf("Malformed chapter found! @d Exiting.\n", t);
+				__printf("Malformed chapter found! @d Exiting.\n", t);
 				_terminate(-2);
 			}
 		}
@@ -588,26 +588,26 @@ int parse_book(uint8_t* buff, int rcv_len, int first_offset)
 		
 		if ((t = verify_chapter(chapter)) != 0)
 		{
-			printf("Malformed chapter found! @d Exiting.\n", t);
+			__printf("Malformed chapter found! @d Exiting.\n", t);
 			_terminate(-2);
 		}
 		#endif
 		
 
-		printf("Title: @s\n", names[chapter->title]);
+		__printf("Title: @s\n", names[chapter->title]);
 
 		if (chapter->entry_count > MAX_NUM_ENTRIES)
 		{
-			printf("ERROR: Too many entries: @d\n", chapter->entry_count);
+			__printf("ERROR: Too many entries: @d\n", chapter->entry_count);
 			_terminate(-1);
 		}
-		printf("Entry Count: 0x@x\n", chapter->entry_count);
+		__printf("Entry Count: 0x@x\n", chapter->entry_count);
 
 		if (!chapter->offset_first_entry || !chapter->entry_count)
 		{
 			// go to the next chapter. no entries here
 			next_offset = (chapter->offset_next_chapter);
-			printf("NO entries found\n");
+			__printf("NO entries found\n");
 			continue;
 		}
 
@@ -618,7 +618,7 @@ int parse_book(uint8_t* buff, int rcv_len, int first_offset)
 		//int t = 0;
 		if ((t = verify_entry(entry)) != 0)
 		{
-			printf("Malformed entry found! @d Exiting.\n", t);
+			__printf("Malformed entry found! @d Exiting.\n", t);
 			_terminate(-1);
 		}
 
@@ -636,8 +636,8 @@ int parse_book(uint8_t* buff, int rcv_len, int first_offset)
 			// once per chapter, check the required entries
 			if (first)
 			{
-				memset(prev_read_entries, -1, chapter->entry_count); 
-				memset(required_entries, -1, MAX_ENTRY_PER_TITLE);
+				__memset(prev_read_entries, -1, chapter->entry_count); 
+				__memset(required_entries, -1, MAX_ENTRY_PER_TITLE);
 
 				// record the required entries for this chapter
 				// later, make sure that these are populated 
@@ -678,7 +678,7 @@ int parse_book(uint8_t* buff, int rcv_len, int first_offset)
 					if (entry_info.mult_ok != MULT_OK)
 					{
 						// Duplicate! Not allowed.
-						printf("Duplicate entry found! Exiting...\n");
+						__printf("Duplicate entry found! Exiting...\n");
 						_terminate(-1);
 					}
 				}	
@@ -689,7 +689,7 @@ int parse_book(uint8_t* buff, int rcv_len, int first_offset)
 			if (entry_info.format != entry->format)
 			{
 				// they sent us the wrong format. exit
-				printf("WRONG FORMAT: @d vs @d\n", entry_info.format, entry->format);
+				__printf("WRONG FORMAT: @d vs @d\n", entry_info.format, entry->format);
 				_terminate(-2);
 			}
 
@@ -723,33 +723,33 @@ int parse_book(uint8_t* buff, int rcv_len, int first_offset)
 			{
 				// go to the offset and retrieve the string
 				char str[NAME_LEN_MAX];
-				memcpy(str, (char*)&buff[(entry->offset_data)], entry->len);
+				__memcpy(str, (char*)&buff[(entry->offset_data)], entry->len);
 				if (entry->len < NAME_LEN_MAX)
 					str[entry->len] = '\0';
 				else
 					str[NAME_LEN_MAX-1] = '\0';
-				printf("@s: @s\n", entry_info.entry_str, str);
+				__printf("@s: @s\n", entry_info.entry_str, str);
 				data_offset += entry->len;
 			}
 			else if (entry_info.format == INT)
 			{
 				uint32_t num = *(uint32_t*)&buff[(entry->offset_data)];
-				printf("@s: 0x@x\n", entry_info.entry_str, num);
+				__printf("@s: 0x@x\n", entry_info.entry_str, num);
 				data_offset += 4;
 			}
 			else if (entry_info.format == BOOL)
 			{
 				short num = *(short*)&entry->offset_data;
 				if (num == 1)
-					printf("@s: true\n", entry_info.entry_str);
+					__printf("@s: true\n", entry_info.entry_str);
 				else if (num == 0)
-					printf("@s: false\n", entry_info.entry_str);
+					__printf("@s: false\n", entry_info.entry_str);
 				else
-					printf("@s!!: 0x@x\n", entry_info.entry_str, num);
+					__printf("@s!!: 0x@x\n", entry_info.entry_str, num);
 				data_offset += 0;
 			}
 			else
-				printf("@s: 0x@x\n", entry_info.entry_str, (entry->offset_data));
+				__printf("@s: 0x@x\n", entry_info.entry_str, (entry->offset_data));
 
 			if (chapter->title == IDENTITY)
 			{
@@ -788,7 +788,7 @@ int parse_book(uint8_t* buff, int rcv_len, int first_offset)
 
 			if ((t = verify_entry(entry)) != 0)
 			{
-				printf("Malformed entry found! @d @d Exiting..\n", t, entry->format);
+				__printf("Malformed entry found! @d @d Exiting..\n", t, entry->format);
 				_terminate(-1);
 			}
 		} while (entry != NULL);
@@ -798,7 +798,7 @@ int parse_book(uint8_t* buff, int rcv_len, int first_offset)
 		// if there are any left in 'required_entries', fail
 		if (required_entries[0] != 0)
 		{
-			printf("DIDN'T SEND ME ALL THE REQUIRED ENTRIES! @c  ", required_entries[0]);
+			__printf("DIDN'T SEND ME ALL THE REQUIRED ENTRIES! @c  ", required_entries[0]);
 			return -1;
 		}
 
@@ -833,44 +833,44 @@ void test_win()
 		#endif
 
 		// WIN
-		printf("What is your family's last name?\n");
-		int len = receive_until(buff, '\n', max_len);
+		__printf("What is your family's last name?\n");
+		int len = __receive_until(buff, '\n', max_len);
 		buff[len] = 0;
 
 		// names of two parents and kid put together
-		printf("Congratulations, @s family! You have a great diary!\n",buff);
+		__printf("Congratulations, @s family! You have a great diary!\n",buff);
 	}
 }
 
-// read the file
+// __read the file
 // parse and print the content
 int main()
 {
 	init();
 
-	memset(successful, 0, 5);
-	memset(success_info, 0, 10*sizeof(uint16_t));
+	__memset(successful, 0, 5);
+	__memset(success_info, 0, 10*sizeof(uint16_t));
 
 	int current_buffer_offset = 0;
-	printf("Welcome to the diary logger!\n");
+	__printf("Welcome to the diary logger!\n");
 
-	// read the size of the input (uint16)
+	// __read the size of the input (uint16)
 	uint16_t buffer_size = read_short();
 
 	buffer_length = buffer_size;
 
 	if (buffer_size < 1)
 	{
-		printf("Buffer length is too small.\n");
+		__printf("Buffer length is too small.\n");
 		_terminate(-3);
 	}
 
 	// create a buffer of 'size' size
-	uint8_t *buffer = (uint8_t*)malloc( buffer_size );
+	uint8_t *buffer = (uint8_t*)__malloc( buffer_size );
 
 	if (buffer == NULL)
 	{
-		printf("Failed to allocate enough space for this buffer.\n");
+		__printf("Failed to allocate enough space for this buffer.\n");
 		_terminate(-3);
 	}
 
@@ -878,36 +878,36 @@ int main()
 
 	if (rcv_len != buffer_size)
 	{
-		printf("Buffer received is not correct size.\n");
+		__printf("Buffer received is not correct size.\n");
 		_terminate(-3);
 	}
 
 	if (buffer_size < sizeof(Header))
 	{
-		printf("Buffer received is not correct size.\n");
+		__printf("Buffer received is not correct size.\n");
 		_terminate(-3);
 	}
 
-	// read in the HEADER
+	// __read in the HEADER
 	Header *header = (Header*)(buffer+current_buffer_offset);
 	current_buffer_offset += sizeof(Header);
 
 	// print header info
-	printf("Length: @d\n", buffer_size);	
-	printf("Magic number: 0x@x\n", header->magic_number);
-	printf("Future: 0x@x\n", header->future);
-	printf("Offset: 0x@x\n", header->offset_to_first_chapter);
+	__printf("Length: @d\n", buffer_size);	
+	__printf("Magic number: 0x@x\n", header->magic_number);
+	__printf("Future: 0x@x\n", header->future);
+	__printf("Offset: 0x@x\n", header->offset_to_first_chapter);
 
 	int ret = parse_book(buffer, rcv_len, header->offset_to_first_chapter);
 	if (ret == -1)
 	{
-		printf("bad book.\n");
+		__printf("bad book.\n");
 		return -1;
 	}
 	test_win();
 	
 
-	free(buffer);
-	printf("good book.\n");
+	__free(buffer);
+	__printf("good book.\n");
 	return 0;
 }

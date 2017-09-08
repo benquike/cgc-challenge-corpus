@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -50,7 +50,7 @@ void random_alpha_lower(char *buf, size_t len) {
 // Vulnerability is in this function, emulates MS08-067 (Conficker).
 // Canonicalization process:
     // CANON_TOKEN -> empty string
-    //  for each CANON_TOKEN, advance beyond the token and strncat() until the 
+    //  for each CANON_TOKEN, advance beyond the token and __strncat() until the 
     //  next CANON_TOKEN
 // Case A:
     // aaaaaaaaaaaaaaaa
@@ -101,10 +101,10 @@ int canonicalize_path(char * cp, char * rp, size_t rp_len) {
         goto _bail_canon;
     }
 
-    // If we pass the security check, we do the strncat.
-    strncat(cp, sec_start, sz_copy);
+    // If we pass the security check, we do the __strncat.
+    __strncat(cp, sec_start, sz_copy);
 
-    // If pos is NULL, meaning we just strncat()ed the entire rp into the cp, 
+    // If pos is NULL, meaning we just __strncat()ed the entire rp into the cp, 
     // then there's no more to process.  We've handled Case A.
     if (NULL == pos) { goto _bail_canon; }
 
@@ -119,7 +119,7 @@ int canonicalize_path(char * cp, char * rp, size_t rp_len) {
         // We found a token.  This token signifies the end of a section.
         sec_end = pos;
 
-        // We do our security check and then strncat().
+        // We do our security check and then __strncat().
         sz_copy = sec_end - sec_start;
 #ifdef PATCHED
         sz_consumed += sz_copy;
@@ -135,7 +135,7 @@ int canonicalize_path(char * cp, char * rp, size_t rp_len) {
             goto _bail_canon; 
         }
 
-        strncat(cp, sec_start, sz_copy);
+        __strncat(cp, sec_start, sz_copy);
 
         // We advance pos beyond the token and update sec_start.
         pos += (sizeof(CANON_TOKEN)-sizeof(STRING_TERMINATOR_STR));
@@ -147,9 +147,9 @@ int canonicalize_path(char * cp, char * rp, size_t rp_len) {
     sec_end = rp + rp_len;
     if (sec_start < sec_end) {
         // If sec_start is before the end of the rp, then there's more we need 
-        // to strncat().
+        // to __strncat().
 
-        // We do our (buggy) security check and then strncat().
+        // We do our (buggy) security check and then __strncat().
         sz_copy = sec_end - sec_start;
 #ifdef PATCHED
         sz_consumed += sz_copy;
@@ -165,7 +165,7 @@ int canonicalize_path(char * cp, char * rp, size_t rp_len) {
             goto _bail_canon; 
         }
 
-        strncat(cp, sec_start, sz_copy);
+        __strncat(cp, sec_start, sz_copy);
     }
 
 _bail_canon:
@@ -193,7 +193,7 @@ int request_document(char * path, size_t recusion_depth) {
 #endif    
 
     // Send request to the CRS
-    if (SUCCESS != (ret = transmit_with_term(STDOUT, path, strlen(path), NULL))) { 
+    if (SUCCESS != (ret = transmit_with_term(STDOUT, path, __strlen(path), NULL))) { 
 #ifdef DEBUG
         fprintf(stderr, "[E] during request for '%s'\n", path);
 #endif
@@ -229,7 +229,7 @@ int request_document(char * path, size_t recusion_depth) {
     }
 
     // Check the name of the document against the expected name.
-    if (0 != strcmp(path, buf_recv_tmp)) {
+    if (0 != __strcmp(path, buf_recv_tmp)) {
 #ifdef DEBUG
         fprintf(stderr, "[E] doc name mismatch: got: %s, expected: %s\n", buf_recv_tmp, path);
 #endif
@@ -283,7 +283,7 @@ int request_document(char * path, size_t recusion_depth) {
     while (NULL != (open = strpos(open, TAG_SRC_OPEN))) {
 
         // Advance open beyond the tag.
-        open += strlen(TAG_SRC_OPEN);
+        open += __strlen(TAG_SRC_OPEN);
 
         // We found the opening tag, now find the closing tag.
         clse = strpos(open, TAG_SRC_CLSE);
@@ -294,7 +294,7 @@ int request_document(char * path, size_t recusion_depth) {
             // rp between them into a temporary buffer and allocate our cp.
             size_t rp_len = clse - open + 1;
             char rp[rp_len];
-            strncpy(rp, open, rp_len-1);
+            __strncpy(rp, open, rp_len-1);
             rp[rp_len-1] = STRING_TERMINATOR;
 
             char cp[SZ_MAX_FILEPATH] = { STRING_TERMINATOR };

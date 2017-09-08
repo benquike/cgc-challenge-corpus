@@ -4,7 +4,7 @@ Author: James Nuttall (james@cromulence.co)
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -33,11 +33,11 @@ int bad_login_count;
 
 void print_A()
 {
-	printf("******************\n");
-	printf("1. Create User\n");
-	printf("2. Login\n");
-	printf("3. Exit\n");
-	printf(": \n");
+	__printf("******************\n");
+	__printf("1. Create User\n");
+	__printf("2. Login\n");
+	__printf("3. Exit\n");
+	__printf(": \n");
 }
 
 
@@ -47,10 +47,10 @@ int handle_A_input()
 	// same for all users
 	// handle create user
 	// handle login
-	// handle exit
+	// handle __exit
 	size_t l = 0;
 	while (l < 1)
-		l = receive_until( buf, '\n', 2);
+		l = __receive_until( buf, '\n', 2);
 
 	if (buf[0] == '1')
 	{
@@ -66,11 +66,11 @@ int handle_A_input()
 		char name[MAX_NAME_LEN];
 		char pswd[MAX_PASS_LEN];
 
-		printf("Username: \n");
-		size_t len = receive_until( name, '\n', MAX_NAME_LEN - 1);
+		__printf("Username: \n");
+		size_t len = __receive_until( name, '\n', MAX_NAME_LEN - 1);
 		name[len++] = 0;
-		printf("Password: \n");
-		len = receive_until( pswd, '\n', MAX_PASS_LEN - 1);
+		__printf("Password: \n");
+		len = __receive_until( pswd, '\n', MAX_PASS_LEN - 1);
 		pswd[len++] = 0;
 
 		msg_count_login = 0;
@@ -83,7 +83,7 @@ int handle_A_input()
 		}
 		else
 		{
-			printf("Bad login.\n");
+			__printf("Bad login.\n");
 			bad_login_count++;
 			if (bad_login_count >= 3)
 			{
@@ -95,26 +95,26 @@ int handle_A_input()
 	else if (buf[0] == '3')
 	{
 		// EXIT
-		printf("The end.\n");
+		__printf("The end.\n");
 		_terminate(0);
 	}
 	else
-		printf("unknown input: @c @c\n", buf[0], buf[1]);
+		__printf("unknown input: @c @c\n", buf[0], buf[1]);
 	return 0;
 }
 
 void print_B()
 {
-	printf("********@s********\n", current_user->name);
-	printf("1. Create Message\n");
-	printf("2. Send Message\n");
-	printf("3. List All [@d]\n", get_total_count());
-	printf("4. List Drafts [@d]\n", get_draft_count(current_user->name));
-	printf("5. List Inbox [@d]\n", get_inbox_count(current_user->name));
-	printf("6. Delete Draft\n");
-	printf("7. Logout\n");
-	printf("8. Exit\n");
-	printf(": \n");
+	__printf("********@s********\n", current_user->name);
+	__printf("1. Create Message\n");
+	__printf("2. Send Message\n");
+	__printf("3. List All [@d]\n", get_total_count());
+	__printf("4. List Drafts [@d]\n", get_draft_count(current_user->name));
+	__printf("5. List Inbox [@d]\n", get_inbox_count(current_user->name));
+	__printf("6. Delete Draft\n");
+	__printf("7. Logout\n");
+	__printf("8. Exit\n");
+	__printf(": \n");
 }
 
 int handle_B_input()
@@ -122,19 +122,19 @@ int handle_B_input()
 	char buf[3] = {0};
 	size_t l = 0;
 	while (l < 1)
-		l = receive_until( buf, '\n', 2);
+		l = __receive_until( buf, '\n', 2);
 
 	if (buf[0] == '7')
 	{
 		// LOGOUT
-		printf("Logging out of user @s\n", current_user->name);
+		__printf("Logging out of user @s\n", current_user->name);
 		logout();
 		return 2;
 	}
 	else if (buf[0] == '8')
 	{
 		// EXIT
-		printf("The end.\n");
+		__printf("The end.\n");
 		_terminate(0);
 	}
 	else if (buf[0] == '2')
@@ -142,7 +142,7 @@ int handle_B_input()
 		// SEND MESSAGE from drafts list
 		if (get_draft_count(current_user->name) == 0)
 		{
-			printf("Must create draft first.\n");
+			__printf("Must create draft first.\n");
 			return 0;
 		}
 
@@ -156,23 +156,23 @@ int handle_B_input()
 		// ADD A MESSAGE TO DRAFTS
 		if (msg_count_login >= MAX_MESSAGES_LOGIN)
 		{
-			printf("Reached maximum messages for this session.\n");
+			__printf("Reached maximum messages for this session.\n");
 			return 0;
 		}
 
-		printf("To:\n");
+		__printf("To:\n");
 
 		char dest[MAX_NAME_LEN];
-		size_t len = receive_until( dest, '\n', MAX_NAME_LEN - 1);
+		size_t len = __receive_until( dest, '\n', MAX_NAME_LEN - 1);
 		dest[len++] = 0;
 
-		printf("Message:\n");
+		__printf("Message:\n");
 		char msg_buf[MAX_MSG_LEN];
-		len = receive_until( msg_buf, '\n', MAX_MSG_LEN - 1);
+		len = __receive_until( msg_buf, '\n', MAX_MSG_LEN - 1);
 		msg_buf[len++] = 0;
 
 		if (add_message(dest, current_user->name, msg_buf, 1) != 1)
-			printf("add_message failed\n");
+			__printf("add_message failed\n");
 	}
 	else if (buf[0] == '3')
 	{
@@ -180,7 +180,7 @@ int handle_B_input()
 		// list all messages in summary
 		if (get_total_count() == 0)
 		{
-			printf("No messages.\n");
+			__printf("No messages.\n");
 			return 0;
 		}
 
@@ -201,13 +201,13 @@ int handle_B_input()
 		// DELETE MESSAGE from drafts list
 		if (get_draft_count(current_user->name) == 0)
 		{
-			printf("Must create draft first.\n");
+			__printf("Must create draft first.\n");
 			return 0;
 		}
 		print_draft_for_del(current_user->name);
 	}
 	else
-		printf("unknown input: @c @c", buf[0], buf[1]);
+		__printf("unknown input: @c @c", buf[0], buf[1]);
 	return 0;
 }
 

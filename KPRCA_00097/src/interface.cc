@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -50,7 +50,7 @@ static void print_node(Node *root, int depth)
 {
     char tmp[32];
     Attribute **pattr = nullptr;
-    memset(tmp, '\t', depth);
+    __memset(tmp, '\t', depth);
     tmp[depth] = 0;
     fprintf(stderr, "%s+ %08X [%s] %s\n", tmp, root, root->ns() == nullptr ? "default" : root->ns()->cstr(), root->tag()->cstr());
     if (root->cls() == NodeClass::TEXTNODE)
@@ -66,35 +66,35 @@ static void print_node(Node *root, int depth)
 }
 #endif
 
-Interface::Interface(FILE *input, FILE *output)
+Interface::Interface(__FILE *input, __FILE *output)
     : d_in(input), d_out(output), d_next(0)
 {
-    fbuffered(d_out, 1);
+    __fbuffered(d_out, 1);
 }
 
 void Interface::send_descriptor(unsigned int desc)
 {
-    fwrite(&desc, sizeof(desc), d_out);
+    __fwrite(&desc, sizeof(desc), d_out);
 }
 
 void Interface::send_error(Error error)
 {
     unsigned char code = static_cast<unsigned char>(error);
-    fwrite(&code, sizeof(code), d_out);
+    __fwrite(&code, sizeof(code), d_out);
 }
 
 void Interface::send_string(const char *str)
 {
-    uint16_t size = strlen(str);
+    uint16_t size = __strlen(str);
     uint16_t size_s = swap16(size);
-    fwrite(&size_s, sizeof(size_s), d_out);
-    fwrite(str, size, d_out);
+    __fwrite(&size_s, sizeof(size_s), d_out);
+    __fwrite(str, size, d_out);
 }
 
 Node *Interface::get_node()
 {
     unsigned int desc;
-    if (fread(&desc, sizeof(desc), d_in) != sizeof(desc))
+    if (__fread(&desc, sizeof(desc), d_in) != sizeof(desc))
         return nullptr;
     Node **result = d_descriptors.lookup(desc);
     return result == nullptr ? nullptr : *result;
@@ -104,13 +104,13 @@ unsigned char *Interface::get_string_binary(uint16_t *psize)
 {
     uint16_t size;
     unsigned char *data;
-    if (fread(&size, sizeof(size), d_in) != sizeof(size))
+    if (__fread(&size, sizeof(size), d_in) != sizeof(size))
         return nullptr;
     size = swap16(size);
     data = static_cast<unsigned char *>(safe_malloc(size));
-    if (fread(data, size, d_in) != size)
+    if (__fread(data, size, d_in) != size)
     {
-        free(data);
+        __free(data);
         return nullptr;
     }
     *psize = size;
@@ -121,13 +121,13 @@ char *Interface::get_string()
 {
     uint16_t size;
     char *data;
-    if (fread(&size, sizeof(size), d_in) != sizeof(size))
+    if (__fread(&size, sizeof(size), d_in) != sizeof(size))
         return nullptr;
     size = swap16(size);
     data = static_cast<char *>(safe_malloc(size + 1));
-    if (fread(data, size, d_in) != size)
+    if (__fread(data, size, d_in) != size)
     {
-        free(data);
+        __free(data);
         return nullptr;
     }
     data[size] = 0;
@@ -144,7 +144,7 @@ unsigned int Interface::new_descriptor(Node *node)
 bool Interface::process()
 {
     unsigned char op;
-    if (fread(&op, sizeof(op), d_in) != sizeof(op))
+    if (__fread(&op, sizeof(op), d_in) != sizeof(op))
         return false;
 #define DO_OP(x, y) case Op::x: if (! y ()) return false; break;
     switch (static_cast<Op>(op))
@@ -163,7 +163,7 @@ bool Interface::process()
         break;
     }
 #undef DO_OP
-    fflush(d_out);
+    __fflush(d_out);
     return true;
 }
 
@@ -190,7 +190,7 @@ bool Interface::op_load_data()
     send_error(Error::SUCCESS);
     send_descriptor(new_descriptor(node));
 done:
-    free(data);
+    __free(data);
     return true;
 }
 
@@ -200,14 +200,14 @@ bool Interface::op_get_attr()
     char *name = get_string();
     if (node == nullptr)
     {
-        free(name);
+        __free(name);
         send_error(Error::INVALID_DESC);
         return true;
     }
     if (name == nullptr)
         return false;
     Attribute *attr = node->get_attr(name);
-    free(name);
+    __free(name);
     if (attr == nullptr)
     {
         send_error(Error::NOT_FOUND);
@@ -225,16 +225,16 @@ bool Interface::op_set_attr()
     char *value = get_string();
     if (node == nullptr)
     {
-        free(name);
-        free(value);
+        __free(name);
+        __free(value);
         send_error(Error::INVALID_DESC);
         return true;
     }
     if (name == nullptr || value == nullptr)
         return false;
     node->set_attr(name, String::create(value));
-    free(name);
-    free(value);
+    __free(name);
+    __free(value);
     send_error(Error::SUCCESS);
     return true;
 }
@@ -242,7 +242,7 @@ bool Interface::op_set_attr()
 bool Interface::op_init_parser()
 {
     unsigned char chr[6];
-    if (fread(chr, sizeof(chr), d_in) != sizeof(chr))
+    if (__fread(chr, sizeof(chr), d_in) != sizeof(chr))
         return false;
     // check for duplicates
     for (unsigned int i = 0; i < sizeof(chr) - 1; i++)
@@ -269,7 +269,7 @@ bool Interface::op_list_attr()
     uint16_t size = node->attr().length();
     uint16_t size_s = swap16(size);
     send_error(Error::SUCCESS);
-    fwrite(&size_s, sizeof(size_s), d_out);
+    __fwrite(&size_s, sizeof(size_s), d_out);
     Attribute **pattr = nullptr;
     while ((pattr = node->attr().next(pattr)) != nullptr)
     {

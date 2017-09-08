@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -33,12 +33,12 @@ typedef struct {
     size_t length;
 } buffer_t;
 
-// read functions
+// __read functions
 int buffer_read_bit(buffer_t *);
 unsigned int buffer_read_bits(buffer_t *, unsigned int count);
 void buffer_read_bytes(buffer_t *, uint8_t *, size_t);
 
-// write functions
+// __write functions
 void buffer_write_bit(buffer_t *, int value);
 void buffer_write_bits(buffer_t *, unsigned int value, unsigned int count);
 void buffer_write_bytes(buffer_t *, uint8_t *, size_t);

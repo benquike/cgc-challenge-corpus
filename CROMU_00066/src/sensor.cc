@@ -4,7 +4,7 @@ Author: James Nuttall <james@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -82,7 +82,7 @@ FitnessSensor::FitnessSensor( uint16_t id, uint32_t mac, uint8_t *data, uint32_t
 		if (data_len != 0)
 		{
 			this->data = new uint8_t[ data_len + 1];
-			memcpy(this->data, data, data_len);
+			__memcpy(this->data, data, data_len);
 		}
 	}
 
@@ -239,7 +239,7 @@ uint16_t FitnessSensor::HandleRunSensor( uint16_t dist )
 // test only. prints contents to screen
 void FitnessSensor::Print()
 {
-	printf( "SENSOR ID $x / TYPE: $x / OWNER: $x MAC: $x$x$x\n", this->m_sensorID, this->m_sensorType, this->m_owner, this->m_sensorMAC.Val_1, this->m_sensorMAC.Val_2, this->m_sensorMAC.Val_3 );
+	__printf( "SENSOR ID $x / TYPE: $x / OWNER: $x MAC: $x$x$x\n", this->m_sensorID, this->m_sensorType, this->m_owner, this->m_sensorMAC.Val_1, this->m_sensorMAC.Val_2, this->m_sensorMAC.Val_3 );
 }
 
 

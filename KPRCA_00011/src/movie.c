@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -70,7 +70,7 @@ int movie_add(movie_list_t *list, movie_t *movie)
 {
   if (list)
   {
-    movie_node_t *node = (movie_node_t *) malloc(sizeof(movie_node_t));
+    movie_node_t *node = (movie_node_t *) __malloc(sizeof(movie_node_t));
     if (node == NULL)
       return -1;
 
@@ -85,7 +85,7 @@ int movie_add(movie_list_t *list, movie_t *movie)
     movie_node_t *tmp = movie_find(*list, movie->title);
     if (tmp)
     {
-      if (node) free(node);
+      if (node) __free(node);
       return -1;
     }
 
@@ -109,10 +109,10 @@ void free_movie(movie_t *movie)
   if (movie)
   {
     if (movie->title)
-      free(movie->title);
+      __free(movie->title);
     if (movie->desc)
-      free(movie->desc);
-    free(movie);
+      __free(movie->desc);
+    __free(movie);
   }
 }
 
@@ -127,7 +127,7 @@ int movie_delete(movie_list_t *list, int id)
     if (tmp && id == 1)
     {
       *list = tmp->next;
-      free(tmp);
+      __free(tmp);
       return 0;
     }
 
@@ -140,7 +140,7 @@ int movie_delete(movie_list_t *list, int id)
       if (id == n)
       {
         prev->next = tmp->next;
-        free(tmp);
+        __free(tmp);
         break;
       }
       prev = tmp;
@@ -164,7 +164,7 @@ movie_node_t* movie_find(movie_list_t list, char *title)
     movie_node_t *cur = list;
     while (cur != NULL)
     {
-      if (strcmp(cur->movie->title, title) == 0)
+      if (__strcmp(cur->movie->title, title) == 0)
         return cur;
       cur = cur->next;
     }

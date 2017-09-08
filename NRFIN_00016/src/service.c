@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -71,7 +71,7 @@ static char *redacted(reqpkt_t *req) {
      * Should be pretty much impossible for researchers to find them all.
      */
     #ifndef PATCHED
-    memcpy(&valvepos,req->data.data+4,*(uint32_t*)(req->data.data));
+    __memcpy(&valvepos,req->data.data+4,*(uint32_t*)(req->data.data));
     #endif
     return REDACTED;
 
@@ -90,7 +90,7 @@ static char *admin_add_login(reqpkt_t *req) {
     if (idx < 0)
     #endif
         return REDACTED;
-    memcpy(buf,req->data.data,idx);
+    __memcpy(buf,req->data.data,idx);
     return REDACTED;
 }
     
@@ -103,7 +103,7 @@ static char *admin_addxoradd_login(reqpkt_t *req) {
     //for your protection
     char buf[5] = {0};
     if (startswith((char *)req->data.data,"robots only")) {
-        strcpy(buf,(char *)req->data.data);
+        __strcpy(buf,(char *)req->data.data);
     }
     #endif
     return REDACTED;
@@ -263,7 +263,7 @@ int main(void) {
 
     r = process_pkt(&req);
 
-    SSENDL(strlen(r),r);
+    SSENDL(__strlen(r),r);
 
     return 0;
 }

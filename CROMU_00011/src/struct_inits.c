@@ -4,7 +4,7 @@ Author: John Berry <john.n.berry@gmail.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -34,21 +34,21 @@ void print_set( psetArray psa )
 		goto end;
 	}
 
-	printf("@s = |", psa->varName);
+	__printf("@s = |", psa->varName);
 
 	while ( index < psa->varCount ) {
 		if (psa->sElems[index]->type == SET ) {
-			printf("@s", psa->sElems[index]->value);
+			__printf("@s", psa->sElems[index]->value);
 		} else {
-			printf("\"@s\"", psa->sElems[index]->value);
+			__printf("\"@s\"", psa->sElems[index]->value);
 		}
 		index++;
 		if ( index != psa->varCount ) {
-			printf(",");
+			__printf(",");
 		}
 	}
 
-	printf("|\n");
+	__printf("|\n");
 end:
 	return;
 }
@@ -63,7 +63,7 @@ void free_element( psetElement element )
 		goto end;
 	}
 
-	deallocate( element->value, strlen( element->value) + 1 );
+	deallocate( element->value, __strlen( element->value) + 1 );
 	deallocate( element, sizeof(setElement) );
 
 end:
@@ -89,7 +89,7 @@ psetArray copy_set( psetArray set )
 		goto end;
 	}
 
-	bzero( copy, sizeof(setArray));
+	__bzero( copy, sizeof(setArray));
 
 	while ( index < set->varCount ) {
 		if (add_element_to_set( copy, copy_element( set->sElems[index]) ) != 0 ) {
@@ -118,7 +118,7 @@ void free_set_array( psetArray psa )
 	}
 
 	for ( index = 0; index < psa->varCount; index++){
-		deallocate( psa->sElems[index]->value, strlen(psa->sElems[index]->value) + 1 );
+		deallocate( psa->sElems[index]->value, __strlen(psa->sElems[index]->value) + 1 );
 		deallocate( psa->sElems[index], sizeof( setElement) );
 		psa->sElems[index] = NULL;
 	}
@@ -149,7 +149,7 @@ psetElement copy_element( psetElement element )
 		goto end;
 	}
 
-	vlen = strlen( element->value ) + 1;
+	vlen = __strlen( element->value ) + 1;
 
 	if ( allocate( vlen, 0, (void**)&copy->value) != 0 ) {
 		deallocate( copy, sizeof(psetElement) );
@@ -157,8 +157,8 @@ psetElement copy_element( psetElement element )
 		goto end;
 	}
 
-	bzero( copy->value, vlen );
-	memcpy( copy->value, element->value, vlen-1 );
+	__bzero( copy->value, vlen );
+	__memcpy( copy->value, element->value, vlen-1 );
 	copy->type = element->type;
 
 end:
@@ -187,7 +187,7 @@ int element_in_set( psetArray set, psetElement element )
 	}
 
 	while ( index < set->varCount ) {
-		if ( strcmp( element->value, set->sElems[index]->value) == 0 ) {
+		if ( __strcmp( element->value, set->sElems[index]->value) == 0 ) {
 			if ( element->type == set->sElems[index]->type ) {
 				retval = 1;
 				goto end;
@@ -252,7 +252,7 @@ psetElement create_element( char* value, int type )
                 goto end;
         }
 
-        vlen = strlen(value);
+        vlen = __strlen(value);
 
         if ( allocate( vlen + 1, 0, (void**)&(pse->value)) != 0 ) {
                 deallocate( pse, sizeof(setElement) );
@@ -260,7 +260,7 @@ psetElement create_element( char* value, int type )
                 goto end;
         }
 
-        memcpy( pse->value, value, vlen );
+        __memcpy( pse->value, value, vlen );
 
         pse->value[vlen] = 0x00;
         pse->type = type;

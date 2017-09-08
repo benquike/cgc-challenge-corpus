@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -41,15 +41,15 @@
 #define MAX_NUM_PW 512
 #define MAX_PW_LEN 512
 
-#define NOUN(o,t,r,c) t = nouns_list[r](); strcat(o, t); c = (crc32(t,strlen(t))&0xff<<24)|(c>>8); free(t);
-#define VERB(o,t,r,c) t = verbs_list[r](); strcat(o, t);  c = (crc32(t,strlen(t))&0xff<<24)|(c>>8); free(t);
-#define ADJ(o,t,r,c) t = adjectives_list[r](); strcat(o, t); c = (crc32(t,strlen(t))&0xff<<24)|(c>>8); free(t);
-#define ADV(o,t,r,c) t = adverbs_list[r](); strcat(o, t); c = (crc32(t,strlen(t))&0xff<<24)|(c>>8); free(t);
+#define NOUN(o,t,r,c) t = nouns_list[r](); __strcat(o, t); c = (crc32(t,__strlen(t))&0xff<<24)|(c>>8); __free(t);
+#define VERB(o,t,r,c) t = verbs_list[r](); __strcat(o, t);  c = (crc32(t,__strlen(t))&0xff<<24)|(c>>8); __free(t);
+#define ADJ(o,t,r,c) t = adjectives_list[r](); __strcat(o, t); c = (crc32(t,__strlen(t))&0xff<<24)|(c>>8); __free(t);
+#define ADV(o,t,r,c) t = adverbs_list[r](); __strcat(o, t); c = (crc32(t,__strlen(t))&0xff<<24)|(c>>8); __free(t);
 
-#define NOUNS(o,t,r,c) t = nouns_list[r%4096](); strcat(o, t); c = (crc32(t,strlen(t))&0xff<<24)|(c>>8); free(t);
-#define VERBS(o,t,r,c) t = verbs_list[r%4096](); strcat(o, t);  c = (crc32(t,strlen(t))&0xff<<24)|(c>>8); free(t);
-#define ADJS(o,t,r,c) t = adjectives_list[r%4096](); strcat(o, t); c = (crc32(t,strlen(t))&0xff<<24)|(c>>8); free(t);
-#define ADVS(o,t,r,c) t = adverbs_list[r%4096](); strcat(o, t); c = (crc32(t,strlen(t))&0xff<<24)|(c>>8); free(t);
+#define NOUNS(o,t,r,c) t = nouns_list[r%4096](); __strcat(o, t); c = (crc32(t,__strlen(t))&0xff<<24)|(c>>8); __free(t);
+#define VERBS(o,t,r,c) t = verbs_list[r%4096](); __strcat(o, t);  c = (crc32(t,__strlen(t))&0xff<<24)|(c>>8); __free(t);
+#define ADJS(o,t,r,c) t = adjectives_list[r%4096](); __strcat(o, t); c = (crc32(t,__strlen(t))&0xff<<24)|(c>>8); __free(t);
+#define ADVS(o,t,r,c) t = adverbs_list[r%4096](); __strcat(o, t); c = (crc32(t,__strlen(t))&0xff<<24)|(c>>8); __free(t);
 
 unsigned int seed;
 unsigned int sseeds[4];
@@ -70,7 +70,7 @@ char *gen_rand_pass() {
     unsigned int rand = 0, choice = 0, crc = 0;
     char *temp;
     unsigned int (*get_next)(unsigned int, unsigned int) = prng;
-    char *out = calloc(MAX_PW_LEN);
+    char *out = __calloc(MAX_PW_LEN);
     #ifndef PATCHED_1
     if (custom_prng)
     #else
@@ -123,7 +123,7 @@ char *gen_rand_pass_secure() {
     char *temp;
     int i;
     unsigned int (*get_next)(unsigned int, unsigned int) = prng;
-    char *out = calloc(MAX_PW_LEN);
+    char *out = __calloc(MAX_PW_LEN);
     #ifndef PATCHED_2
     if (custom_prng)
     #else
@@ -176,7 +176,7 @@ char *gen_rand_pass_secure() {
 
 void rc4init(unsigned char *s, unsigned char *k) {
     int i, j = 0, t = 0;
-    int len = strlen((char*)k);
+    int len = __strlen((char*)k);
 
     for (i = 0; i < 256; i++)
         s[i] = i;
@@ -192,7 +192,7 @@ void rc4init(unsigned char *s, unsigned char *k) {
 void rc4crypt(unsigned char *s, unsigned char *d, int len) {
     int i, t, j = 0, k = 0;
     char xor[len];
-    memset(xor, 0, len);
+    __memset(xor, 0, len);
 
     for (i=0; i < len; i++) {
         j = (j+1) % 256;
@@ -231,8 +231,8 @@ int main(void) {
     if (fread_until(temp, '\n', sizeof(temp), stdin) == EXIT_FAILURE)
         return 4;
 
-    count = atoi(temp);
-    fdprintf(STDERR, "count = @b\n", temp);
+    count = __atoi(temp);
+    __fdprintf(STDERR, "count = @b\n", temp);
 
     if (!count)
         count = 1;
@@ -246,7 +246,7 @@ int main(void) {
     if (fread_until(temp, '\n', sizeof(temp), stdin) == EXIT_FAILURE)
         return 7;
 
-    seed = atoi(temp);
+    seed = __atoi(temp);
 
     if (!seed)
         RANDOM(sizeof(seed),&seed);
@@ -257,7 +257,7 @@ int main(void) {
     if (fread_until(temp, '\n', sizeof(temp), stdin) == EXIT_FAILURE)
         return 9;
 
-    custom_prng = (unsigned int (*)(unsigned int, unsigned int))atoi(temp);
+    custom_prng = (unsigned int (*)(unsigned int, unsigned int))__atoi(temp);
 
     if (custom_prng && (unsigned int)custom_prng < 0x08000000)
         return 10;
@@ -268,7 +268,7 @@ int main(void) {
     if (fread_until(temp, '\n', sizeof(temp), stdin) == EXIT_FAILURE)
         return 12;
 
-    if (atoi(temp) == 1) {
+    if (__atoi(temp) == 1) {
         genpass = gen_rand_pass_secure;
 
         if (!SENDSTR(SECUREMODESEEDS))
@@ -278,7 +278,7 @@ int main(void) {
             if (fread_until(temp, '\n', sizeof(temp), stdin) == EXIT_FAILURE)
                 return 14;
             
-            sseeds[i] = atoi(temp);
+            sseeds[i] = __atoi(temp);
         }
 
     } else {
@@ -289,7 +289,7 @@ int main(void) {
     if (!SENDSTR(PLZWAIT))
         return 15;
 
-    pwstore = calloc(count*MAX_PW_LEN);
+    pwstore = __calloc(count*MAX_PW_LEN);
     out = pwstore;
 
     rc4init(rc4state, masterpw);
@@ -304,13 +304,13 @@ int main(void) {
         if (!SENDLINE(pw))
             return 17;
 
-        len = strlen(pw);
+        len = __strlen(pw);
 
         rc4crypt(rc4state, (unsigned char*)pw, len);
 
-        memcpy(out, pw, len);
+        __memcpy(out, pw, len);
 
-        free(pw);
+        __free(pw);
 
         out += len;
         total_len += len;

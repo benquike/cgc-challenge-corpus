@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -29,7 +29,7 @@
 *
 * @return The first index in s where c occurs
 */
-char *strchr(const char* s, int c) {
+char *__strchr(const char* s, int c) {
 
 	int i;
 	for(i=0; s[0] != (char) c; i++) {
@@ -52,7 +52,7 @@ char *strchr(const char* s, int c) {
 size_t strspn(const char *s1, const char *s2) {
 	size_t result=0;
 
-	for(int i=0; s1[i] != '\0' && strchr(s2, s1[i]); i++, result++);
+	for(int i=0; s1[i] != '\0' && __strchr(s2, s1[i]); i++, result++);
 
 	return result;
 }
@@ -70,7 +70,7 @@ size_t strcspn(const char *s1, const char *s2) {
 	size_t result=0;
 
 	for(int i=0; s1[i] != '\0'; i++, result++) {
-		if(strchr(s2, s1[i]))
+		if(__strchr(s2, s1[i]))
 			return result;
 	}
 
@@ -89,7 +89,7 @@ size_t strcspn(const char *s1, const char *s2) {
 *
 * @return A null-terminated string containing the token
 */
-char *strtok(char* string,const char *delim) {
+char *__strtok(char* string,const char *delim) {
 	static char *ptr=0;
 	int start, finish;
 

@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -58,13 +58,13 @@ CDBNode::~CDBNode( )
 CDBFile::CDBFile( const CUtil::String &sName, const CUtil::String &sOwner, uint8_t modeBits )
 	: CDBNode( sName, sOwner, modeBits ), m_fileSize( 0 )
 {
-	bzero( m_pChunks, sizeof(tFileChunk *)*FILE_MAX_CHUNKS );
+	__bzero( m_pChunks, sizeof(tFileChunk *)*FILE_MAX_CHUNKS );
 }
 
 CDBFile::CDBFile( const char *pszName, const char *pszOwner, uint8_t modeBits )
 	: CDBNode( pszName, pszOwner, modeBits ), m_fileSize( 0 )
 {
-	bzero( m_pChunks, sizeof(tFileChunk *)*FILE_MAX_CHUNKS );
+	__bzero( m_pChunks, sizeof(tFileChunk *)*FILE_MAX_CHUNKS );
 }
 
 CDBFile::~CDBFile( )
@@ -118,10 +118,10 @@ uint8_t CDBFile::WriteData( int32_t writePos, uint8_t *pData, uint32_t writeLeng
 		if ( !m_pChunks[chunkPos] )
 		{
 			m_pChunks[chunkPos] = new tFileChunk;
-			bzero( m_pChunks[chunkPos]->chunkData, FILE_CHUNK_SIZE );
+			__bzero( m_pChunks[chunkPos]->chunkData, FILE_CHUNK_SIZE );
 		}
 
-		memcpy( m_pChunks[chunkPos]->chunkData+chunkOffset, pData+fromPos, chunkToWrite );
+		__memcpy( m_pChunks[chunkPos]->chunkData+chunkOffset, pData+fromPos, chunkToWrite );
 		
 		writeAmount -= chunkToWrite;
 		fromPos += chunkToWrite;
@@ -170,7 +170,7 @@ uint8_t CDBFile::ReadData( int32_t readPos, uint8_t *pData, uint32_t readLength,
 			return (FILE_READ_ERROR);
 		}
 
-		memcpy( pData+fromPos, m_pChunks[chunkPos]->chunkData+chunkOffset, chunkToRead );
+		__memcpy( pData+fromPos, m_pChunks[chunkPos]->chunkData+chunkOffset, chunkToRead );
 
 		readAmount -= chunkToRead;
 		fromPos += chunkToRead;
@@ -491,7 +491,7 @@ CDBFSOpenFile *CDBFS::OpenFile( CUtil::String sFilename, const char *pszMode )
 		return (NULL);
 	}
 
-	if ( strlen(pszMode) != 1 )
+	if ( __strlen(pszMode) != 1 )
 	{
 		SetError( "Invalid mode" );
 		return (NULL);
@@ -519,7 +519,7 @@ CDBFSOpenFile *CDBFS::OpenFile( CUtil::String sFilename, const char *pszMode )
 		return (NULL);
 	}
 
-	// If we are creating a file (write mode)
+	// If we are creating a file (__write mode)
 	if ( !pFile )
 	{
 		// Creating file
@@ -713,7 +713,7 @@ uint32_t CDBFS::FileWrite( uint8_t *pBuf, uint32_t size, uint32_t nitems, CDBFSO
 	// Check to make sure file is opened writeable
 	if ( pFP->GetMode() != FILE_OPEN_WRITE )
 	{
-		SetError( "File opened read only" );
+		SetError( "File opened __read only" );
 		return (0);
 	}
 
@@ -777,11 +777,11 @@ uint32_t CDBFS::FileSeek( CDBFSOpenFile *pFP, int32_t offset, int8_t origin )
 	}
 
 	int32_t newPos = 0;
-	if ( origin == SEEK_SET )
+	if ( origin == __SEEK_SET )
 		newPos = offset;
-	else if ( origin == SEEK_CUR )
+	else if ( origin == __SEEK_CUR )
 		newPos = ((int32_t)filePos) + offset;
-	else if ( origin == SEEK_END )
+	else if ( origin == __SEEK_END )
 		newPos = ((int32_t)pFile->GetFileSize()) + offset;
 
 #ifdef PATCHED_1

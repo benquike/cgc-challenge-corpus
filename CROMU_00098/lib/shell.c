@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,23 +35,23 @@ void runshellcommand(char *cmd) {
 
   if (cmd == NULL) return;
   if (*cmd == '\0') return;
-  if (!strcmp(cmd, "ls")) {
-    printf("one two three\n");
+  if (!__strcmp(cmd, "ls")) {
+    __printf("one two three\n");
   }
-  else if (!strcmp(cmd, "pwd")) {
-    printf(".\n");
+  else if (!__strcmp(cmd, "pwd")) {
+    __printf(".\n");
   }
   else if (!strncmp(cmd, "dump ", 5)) {
-    int i = atoi(cmd + 5);
+    int i = __atoi(cmd + 5);
     send_all((char *)i, 4);
   }
-  else if (!strcmp(cmd, "help")) {
-    printf("Here is no help\n");
+  else if (!__strcmp(cmd, "help")) {
+    __printf("Here is no help\n");
   }
-  else if (!strcmp(cmd, "info")) {
-    printf("Here is no info\n");
+  else if (!__strcmp(cmd, "info")) {
+    __printf("Here is no info\n");
   }
-  else if (!strcmp(cmd, "exec")) {
+  else if (!__strcmp(cmd, "exec")) {
     // type 1 pov?
   }
 }
@@ -59,13 +59,13 @@ void runshellcommand(char *cmd) {
 void shell() {
   // Mimic a shell
   while (1) {
-    printf(">");
+    __printf(">");
   // Read a command
     int bytes_received;
     char input[1024];
-    bytes_received = receive_until(input, sizeof(input), '\n');
+    bytes_received = __receive_until(input, sizeof(input), '\n');
   // Execute command
-    if (strcmp(input, "exit\n") == 0) {
+    if (__strcmp(input, "__exit\n") == 0) {
       return;
     }
     runshellcommand(input);

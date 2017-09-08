@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -28,18 +28,18 @@ static ptrlist_t *g_all_courses = NULL;
 void _print_course(course_t *course)
 {
     if (!course) {
-        printf("Bad Course\n");
+        __printf("Bad Course\n");
         return;
     }
 
     char daystr[9];
     daystostr(course->days, daystr);
-    printf("%d|%s %d|%s|CR:%d|CE:%d|MC:%d|%s|%02d:%02d|%02d:%02d|%s",
+    __printf("%d|%s %d|%s|CR:%d|CE:%d|MC:%d|%s|%02d:%02d|%02d:%02d|%s",
             course->course_id, course->dept->name, course->course_num, course->prof->name,
             course->credits, course->current_enrollment, course->max_enrollment, daystr,
             course->start.hour, course->start.minute, course->end.hour, course->end.minute,
             course->title);
-    printf("\n");
+    __printf("\n");
 }
 
 ptrlist_t *find_courses_by_id(int course_id)
@@ -87,14 +87,14 @@ void add_course(course_t *course)
         g_all_courses = create_ptrlist();
 
     if (add_item(g_all_courses, course) != 0) {
-        printf("Out of Memory. Terminating\n");
-        exit(1);
+        __printf("Out of Memory. Terminating\n");
+        __exit(1);
     }
 }
 
 course_t *create_course(unsigned int course_id, char *prof_name, char *dept_name, short course_num,
                         short credits, short current_enrollment, short max_enrollment,
-                        days_t days, time_t start, time_t end, char *title)
+                        days_t days, __time_t_ start, __time_t_ end, char *title)
 {
     if (!prof_name || !dept_name || !title)
         return NULL;
@@ -105,7 +105,7 @@ course_t *create_course(unsigned int course_id, char *prof_name, char *dept_name
     department_t *dept = get_department(dept_name);
     if (!dept)
         return NULL;
-    course_t *course = malloc(sizeof(course_t));
+    course_t *course = __malloc(sizeof(course_t));
     if (!course)
         return NULL;
 
@@ -119,7 +119,7 @@ course_t *create_course(unsigned int course_id, char *prof_name, char *dept_name
     course->days = days;
     course->start = start;
     course->end = end;
-    course->title = strdup(title);
+    course->title = __strdup(title);
     course->print_course = &_print_course;
 
     add_course(course);
@@ -154,7 +154,7 @@ course_t *select_course_id(int course_id, size_t idx)
         course = get_item(course_t, courses, idx);
 
     if (courses)
-        free(courses);
+        __free(courses);
 
     return course;
 }
@@ -168,7 +168,7 @@ course_t *select_course_num(char *name, int course_num, size_t idx)
         course = get_item(course_t, courses, idx);
 
     if (courses)
-        free(courses);
+        __free(courses);
 
     return course;
 }
@@ -178,7 +178,7 @@ void list_courses_by_num(char *name, short course_num)
     ptrlist_t *courses = find_courses_by_num(name, course_num);
     print_course_list(courses);
     if (courses)
-        free(courses);
+        __free(courses);
 }
 
 void list_courses_by_id(int course_id)
@@ -186,12 +186,12 @@ void list_courses_by_id(int course_id)
     ptrlist_t *courses = find_courses_by_id(course_id);
     print_course_list(courses);
     if (courses)
-        free(courses);
+        __free(courses);
 }
 
 void print_course_banner()
 {
-    printf("IDX|CID|Course|Professor|Credits|Enrolled|Max|Days|Start|End|Title\n");
+    __printf("IDX|CID|Course|Professor|Credits|Enrolled|Max|Days|Start|End|Title\n");
 }
 
 void print_course_list(ptrlist_t *courses)
@@ -204,7 +204,7 @@ void print_course_list(ptrlist_t *courses)
     print_course_banner();
     for (i = 0; i < courses->length; i++) {
         iter = get_item(course_t, courses, i);
-        printf("#%d|", i+1);
+        __printf("#%d|", i+1);
         iter->print_course(iter);
     }
 }

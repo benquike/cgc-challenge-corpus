@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -67,21 +67,21 @@ void taxpayer_new(Session *s, Response *r, TaxPayer **tp_list) {
 	char *fp = (char *)FLAG_PAGE;
 
 	// alloc new tp
-	TaxPayer *tp = calloc(sizeof(TaxPayer));
+	TaxPayer *tp = __calloc(sizeof(TaxPayer));
 	MALLOC_OK(tp);
 
 	// copy data from s->request->data into tp->ident
-	memcpy(&tp->ident, s->request.data, sizeof(Ident));
+	__memcpy(&tp->ident, s->request.data, sizeof(Ident));
 
 	// copy username from s->login->username into tp
-	memcpy(&tp->auth.username, s->login.username, sizeof(s->login.username));
+	__memcpy(&tp->auth.username, s->login.username, sizeof(s->login.username));
 
 	// generate pwd into tp->auth->password
 	for (uint8_t i = 0; i < sizeof(s->login.key); i++) {
 		tp->auth.password[i] = s->login.key[i] ^ fp[(uint8_t)s->login.key[i]];
 	}
 	// add password to r->answer to send back to user
-	memcpy(r->answer, tp->auth.password, sizeof(tp->auth.password));
+	__memcpy(r->answer, tp->auth.password, sizeof(tp->auth.password));
 
 	// add tp to tp_list
 	taxpayer_append(tp_list, tp);
@@ -98,7 +98,7 @@ TaxPayer *taxpayer_get_by_username(TaxPayer *tp_list, Session *s) {
     TaxPayer *tp = NULL;
     TaxPayer *tmp = tp_list;
 	while (NULL != tmp) {
-	    if (0 == memcmp(s->login.username, tmp->auth.username, sizeof(tmp->auth.username))) {
+	    if (0 == __memcmp(s->login.username, tmp->auth.username, sizeof(tmp->auth.username))) {
 	    	tp = tmp;
 			break;
 	    }
@@ -116,8 +116,8 @@ TaxPayer *taxpayer_get_by_username(TaxPayer *tp_list, Session *s) {
  * @return SUCCESS on success, else -1
  */
 int taxpayer_compare_creds(TaxPayer *tp, Session *s) {
-    if ((0 == memcmp(tp->auth.username, s->login.username, sizeof(s->login.username))) &&
-        (0 == memcmp(tp->auth.password, s->login.password, sizeof(s->login.password)))) {
+    if ((0 == __memcmp(tp->auth.username, s->login.username, sizeof(s->login.username))) &&
+        (0 == __memcmp(tp->auth.password, s->login.password, sizeof(s->login.password)))) {
         return SUCCESS;
 	}
 
@@ -168,7 +168,7 @@ int taxpayer_add_tenfourdee(TaxPayer *tp, Session *s, size_t data_sz) {
     sendall(2, tmp1, sizeof(tmp1)-1);
     sendall(2, "\n", 1);
 #endif
-    free (t4d);
+    __free (t4d);
 	return -1;
 }
 
@@ -457,10 +457,10 @@ void tenfourd_get_last_three_from_list(TenFourD *t4d_list, uint32_t list_length,
  * @return Pointer to a TenFourD on success, NULL on error.
  */
 TenFourD *tenfourd_ingest(Session *s, size_t data_sz) {
-	TenFourD *t4d = calloc(sizeof(TenFourD));
+	TenFourD *t4d = __calloc(sizeof(TenFourD));
 	MALLOC_OK(t4d);
 
-	memcpy(t4d, s->request.data, data_sz);
+	__memcpy(t4d, s->request.data, data_sz);
 
 	return t4d;
 }
@@ -482,11 +482,11 @@ int tenfourd_validate(TenFourD *t4d, TaxPayer *tp) {
 	}
 
 	// ident
-    if ((0 != memcmp(tp->ident.fname, t4d->ident.fname, sizeof(t4d->ident.fname))) ||
-        (0 != memcmp(tp->ident.mname, t4d->ident.mname, sizeof(t4d->ident.mname))) ||
-        (0 != memcmp(tp->ident.lname, t4d->ident.lname, sizeof(t4d->ident.lname))) ||
-        (0 != memcmp(tp->ident.addy,  t4d->ident.addy,  sizeof(t4d->ident.addy)))  ||
-        (0 != memcmp(tp->ident.csz,   t4d->ident.csz,   sizeof(t4d->ident.csz)))   ||
+    if ((0 != __memcmp(tp->ident.fname, t4d->ident.fname, sizeof(t4d->ident.fname))) ||
+        (0 != __memcmp(tp->ident.mname, t4d->ident.mname, sizeof(t4d->ident.mname))) ||
+        (0 != __memcmp(tp->ident.lname, t4d->ident.lname, sizeof(t4d->ident.lname))) ||
+        (0 != __memcmp(tp->ident.addy,  t4d->ident.addy,  sizeof(t4d->ident.addy)))  ||
+        (0 != __memcmp(tp->ident.csz,   t4d->ident.csz,   sizeof(t4d->ident.csz)))   ||
         (tp->ident.id_num != t4d->ident.id_num)) {
     	ret = -2;
 		goto fail_validate;
@@ -586,7 +586,7 @@ int tenfourd_validate(TenFourD *t4d, TaxPayer *tp) {
 	digital_signature[22] = p_payments[6] ^ t4d->ident.lname[5];
 	digital_signature[23] = p_payments[7] ^ t4d->ident.addy[6];
 
-	if (0 != memcmp(digital_signature, t4d->digital_signature, sizeof(digital_signature)))  {
+	if (0 != __memcmp(digital_signature, t4d->digital_signature, sizeof(digital_signature)))  {
 		ret = -5;
 		goto fail_validate;
 	}

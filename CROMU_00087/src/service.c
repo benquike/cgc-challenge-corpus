@@ -73,12 +73,12 @@ int read_selection( void )
 
 	while ( value ) {
 		if ( receive( STDIN, data + index, value, &bytes) != 0 ) {
-			printf("[ERROR] Failed to read data\n");
+			__printf("[ERROR] Failed to __read data\n");
 			_terminate(-1);
 		}
 
 		if ( bytes == 0 ) {
-			printf("[ERROR] Error with reading selection\n");
+			__printf("[ERROR] Error with reading selection\n");
 			_terminate(-2);
 		}
 
@@ -86,17 +86,17 @@ int read_selection( void )
 		value -= bytes;
 	}
 
-	if ( !isdigit(data[0]) ) {
-		printf("[ERROR] Selection must be a digit\n");
+	if ( !__isdigit(data[0]) ) {
+		__printf("[ERROR] Selection must be a digit\n");
 		return 0;
 	}
 
 	if ( data[1] != '\n') {
-		printf("[ERROR] Only single digits allowed in the selection\n");
+		__printf("[ERROR] Only single digits allowed in the selection\n");
 		return 0;
 	}
 
-	value = atoi( data );
+	value = __atoi( data );
 
 	return value;
 }
@@ -113,12 +113,12 @@ int read_string( char *dest, size_t maxlen )
 
 	while ( index < maxlen ) {
 		if ( receive( STDIN, &c, 1, &bytes_read) != 0 ) {
-			printf("[ERROR] Failed to read string\n");
+			__printf("[ERROR] Failed to __read string\n");
 			_terminate(-3);
 		}
 
 		if ( bytes_read == 0 ) {
-			printf("[ERROR] String read failure\n");
+			__printf("[ERROR] String __read failure\n");
 			_terminate(-4);
 		}
 
@@ -175,72 +175,72 @@ void display_banner( void )
 	minute = ((unsigned char*)magic_page_g)[30] % 60;
 	second = ((unsigned char*)magic_page_g)[40] % 60;
 
-	printf("Today: ");
+	__printf("Today: ");
 
 	switch ( ((unsigned char*)magic_page_g)[50] %7 ) {
 		case 0:
-			printf("Sun ");
+			__printf("Sun ");
 			break;
 		case 1:
-			printf("Mon ");
+			__printf("Mon ");
 			break;
 		case 2:
-			printf("Tue ");
+			__printf("Tue ");
 			break;
 		case 3:
-			printf("Wed ");
+			__printf("Wed ");
 			break;
 		case 4:
-			printf("Thu ");
+			__printf("Thu ");
 			break;
 		case 5:
-			printf("Fri ");
+			__printf("Fri ");
 			break;
 		case 6:
-			printf("Sat ");
+			__printf("Sat ");
 			break;
 	}
 
 	switch (month) {
 		case 0:
-			printf("Jan ");
+			__printf("Jan ");
 			break;
 		case 1:
-			printf("Feb ");
+			__printf("Feb ");
 			break;
 		case 2:
-			printf("Mar ");
+			__printf("Mar ");
 			break;
 		case 3:
-			printf("Apr ");
+			__printf("Apr ");
 			break;
 		case 4:
-			printf("May ");
+			__printf("May ");
 			break;
 		case 5:
-			printf("Jun ");
+			__printf("Jun ");
 			break;
 		case 6:
-			printf("Jul ");
+			__printf("Jul ");
 			break;
 		case 7:
-			printf("Aug ");
+			__printf("Aug ");
 			break;
 		case 8:
-			printf("Sep ");
+			__printf("Sep ");
 			break;
 		case 9:
-			printf("Oct ");
+			__printf("Oct ");
 			break;
 		case 10:
-			printf("Nov ");
+			__printf("Nov ");
 			break;
 		case 11:
-			printf("Dec ");
+			__printf("Dec ");
 			break;
 	}
 
-	printf("$.2d:$.2d:$.2d $d\n\n", hour, minute, second, year);
+	__printf("$.2d:$.2d:$.2d $d\n\n", hour, minute, second, year);
 
 	return;
 }
@@ -249,22 +249,22 @@ pinstruction instruction_prompt()
 {
 	pinstruction pins = NULL;
 
-	pins = (pinstruction)malloc( sizeof( instruction) );
+	pins = (pinstruction)__malloc( sizeof( instruction) );
 
 	if ( pins == NULL ) {
 		return pins;
 	}
 
-	bzero( pins, sizeof(instruction));
+	__bzero( pins, sizeof(instruction));
 
-	printf("Enter Instruction: ");
+	__printf("Enter Instruction: ");
 	if ( read_string( pins->text, 127) == 0 ) {
-		free(pins);
+		__free(pins);
 		return NULL;
 	}
 
-	if ( strcmp( pins->text, "done") == 0 ) {
-		free(pins);
+	if ( __strcmp( pins->text, "done") == 0 ) {
+		__free(pins);
 		return NULL;
 	}
 
@@ -275,14 +275,14 @@ pinstruction instruction_prompt()
 
 void recipe_menu( )
 {
-	printf("1) Add Recipe\n");
-	printf("2) Remove Recipe\n");
-	printf("3) List Recipe\n");
-	printf("4) List All\n");
-	printf("5) Print Name\n");
-	printf("6) Recipe Costs\n");
-	printf("7) Leave Menu\n");
-	printf("-> ");
+	__printf("1) Add Recipe\n");
+	__printf("2) Remove Recipe\n");
+	__printf("3) List Recipe\n");
+	__printf("4) List All\n");
+	__printf("5) Print Name\n");
+	__printf("6) Recipe Costs\n");
+	__printf("7) Leave Menu\n");
+	__printf("-> ");
 
 	return;
 }
@@ -292,65 +292,65 @@ pingredient ingredient_prompt( )
 	pingredient ping = NULL;
 	char data[6];
 
-	ping = ( pingredient )malloc( sizeof( ingredient) );
+	ping = ( pingredient )__malloc( sizeof( ingredient) );
 
 	if ( ping == NULL ) {
 		return ping;
 	}
 
-	bzero( ping, sizeof(ingredient) );
+	__bzero( ping, sizeof(ingredient) );
 
-	printf("Enter ingredient name or a \"done\" to quit.\n");
-	printf(": ");
+	__printf("Enter ingredient name or a \"done\" to quit.\n");
+	__printf(": ");
 
 	if ( read_string( ping->name, 15) == 0 ) {
-		free( ping );
+		__free( ping );
 		return NULL;
 	}
 
-	if ( strcmp( ping->name, "done") == 0 ) {
-		free(ping);
+	if ( __strcmp( ping->name, "done") == 0 ) {
+		__free(ping);
 		return NULL;
 	}
 
-	bzero( data, 6);
+	__bzero( data, 6);
 
-	printf("Enter the amount: ");
+	__printf("Enter the amount: ");
 	if ( read_string( data, 5) == 0 ) {
-		printf("[ERROR] Invalid amount\n");
-		free(ping);
+		__printf("[ERROR] Invalid amount\n");
+		__free(ping);
 		return NULL;
 	}
 
-	ping->amount = atof( data );
+	ping->amount = __atof( data );
 
-	bzero( data, 6);
+	__bzero( data, 6);
 
-	printf("Enter the cost per unit: ");
+	__printf("Enter the cost per unit: ");
 	if ( read_string( data, 5) == 0 ) {
-		printf("[ERROR] Invalid cost\n");
-		free(ping);
+		__printf("[ERROR] Invalid cost\n");
+		__free(ping);
 		return NULL;
 	}
 
-	ping->cost_per_unit = atof( data );
+	ping->cost_per_unit = __atof( data );
 
-	printf("Enter the type (oz/gram): ");
+	__printf("Enter the type (oz/gram): ");
 
-	bzero( data, 6 );
+	__bzero( data, 6 );
 	if ( read_string( data, 5 ) == 0 ) {
-		printf("[ERROR] Failed to read the measurement type.\n");
-		free(ping);
+		__printf("[ERROR] Failed to __read the measurement type.\n");
+		__free(ping);
 		return NULL;
 	}
 
-	if ( strcmp( data, "oz" ) == 0 ) {
+	if ( __strcmp( data, "oz" ) == 0 ) {
 		ping->type = OUNCES;
-	} else if ( strcmp( data, "gram") == 0 ) {
+	} else if ( __strcmp( data, "gram") == 0 ) {
 		ping->type = GRAMS;
 	} else { 
-		printf("[ERROR] Invalid type\n");
-		free(ping);
+		__printf("[ERROR] Invalid type\n");
+		__free(ping);
 		return NULL;
 	}
 
@@ -380,8 +380,8 @@ int check_ingredient_exists( pingredient head, pingredient new)
 	walker = head;
 
 	while ( walker ) {
-		if ( strcmp( walker->name, new->name) == 0) {
-			printf("Ingredient already exists. Adding the additional amount.");
+		if ( __strcmp( walker->name, new->name) == 0) {
+			__printf("Ingredient already exists. Adding the additional amount.");
 			walker->amount += new->amount;
 			return 1;
 		}
@@ -430,18 +430,18 @@ void add_recipe( void )
 	}
 
 	if ( index == RECIPE_COUNT ) {
-		printf("[ERROR] Recipe List is full\n");
+		__printf("[ERROR] Recipe List is full\n");
 		return;
 	}
 
 	pr = &g.recipe_list_g[index];
 
-	bzero( pr, sizeof(recipe) );
+	__bzero( pr, sizeof(recipe) );
 
-	printf("Enter recipe name: ");
+	__printf("Enter recipe name: ");
 
 	if ( read_string( pr->name, 15 ) == 0 ) {
-		printf("[ERROR] Invalid recipe name\n");
+		__printf("[ERROR] Invalid recipe name\n");
 		return;
 	}
 
@@ -457,9 +457,9 @@ void add_recipe( void )
 			continue;
 		}
 
-		if ( strcmp( g.recipe_list_g[index].name, g.recipe_list_g[t].name) == 0 ) {
-			printf("[ERROR] Recipe already exists with that name.\n");
-			bzero(pr->name, 16);
+		if ( __strcmp( g.recipe_list_g[index].name, g.recipe_list_g[t].name) == 0 ) {
+			__printf("[ERROR] Recipe already exists with that name.\n");
+			__bzero(pr->name, 16);
 			return;
 		}
 	}
@@ -470,7 +470,7 @@ void add_recipe( void )
 		ping = ingredient_prompt();
 
 		if ( check_ingredient_exists( pr->ing_list, ping ) ) {
-			free( ping );
+			__free( ping );
 		} else {
 			link_recipe_ingredient( pr, ping );
 		}
@@ -494,44 +494,44 @@ void print_recipe( int index )
 	size_t item = 1;
 
 	if ( RECIPE_COUNT <= index ) {
-		printf("[ERROR] Invalid index: $d\n", index);
+		__printf("[ERROR] Invalid index: $d\n", index);
 		return;
 	}
 
 	if ( g.recipe_list_g[index].cookie == 0 ) {
-		printf("[ERROR] Empty recipe: $d\n", index+1);
+		__printf("[ERROR] Empty recipe: $d\n", index+1);
 		return;
 	}
 
-	printf("Name: $s\n", g.recipe_list_g[index].name);
-	printf("Ingredients:\n");
+	__printf("Name: $s\n", g.recipe_list_g[index].name);
+	__printf("Ingredients:\n");
 
 	ing_walker = g.recipe_list_g[index].ing_list;
 
 	while ( ing_walker ) {
-		printf("\t$f ", ing_walker->amount);
+		__printf("\t$f ", ing_walker->amount);
 		if ( ing_walker->type == OUNCES ) {
-			printf("oz\t");
+			__printf("oz\t");
 		} else {
-			printf("g\t");
+			__printf("g\t");
 		}
 
-		printf("$s\n", ing_walker->name);
+		__printf("$s\n", ing_walker->name);
 
 		ing_walker = ing_walker->next;
 	}
 
 	ins_walker = g.recipe_list_g[index].ins_list;
 
-	printf("\nInstructions:\n");
+	__printf("\nInstructions:\n");
 	while ( ins_walker ) {
-		printf("\t$d) $s\n", item, ins_walker->text);
+		__printf("\t$d) $s\n", item, ins_walker->text);
 
 		item++;
 		ins_walker = ins_walker->next;
 	}
 
-	printf("\n\n");
+	__printf("\n\n");
 
 	return;
 }
@@ -541,18 +541,18 @@ void list_recipe( void )
 	char data[5];
 	int choice = 0;
 
-	bzero(data, 5 );
+	__bzero(data, 5 );
 
-	printf("Recipe Index [1..512]: ");
+	__printf("Recipe Index [1..512]: ");
 	if ( read_string( data, 5 ) == 0 ) {
 		return;
 	}
 
-	choice = atoi( data );
+	choice = __atoi( data );
 
 	if ( choice <= 0 || RECIPE_COUNT < choice)
 	{
-		printf( "[ERROR] Must be between 1 and 512\n");
+		__printf( "[ERROR] Must be between 1 and 512\n");
 		return;
 	}
 
@@ -567,7 +567,7 @@ void list_all( void )
 
 	for ( i = 0; i < RECIPE_COUNT; i++) {
 		if ( g.recipe_list_g[i].cookie != 0 ) {
-			printf("Index: $d\n", i+1);
+			__printf("Index: $d\n", i+1);
 			print_recipe( i );
 		}
 	}
@@ -580,28 +580,28 @@ void remove_recipe( )
 	char data[4];
 	int choice = 0;
 
-	bzero(data, 4 );
+	__bzero(data, 4 );
 
 	list_all();
 
-	printf("Recipe Index [1..512]: ");
+	__printf("Recipe Index [1..512]: ");
 	if ( read_string( data, 4 ) == 0 ) {
 		return;
 	}
 
-	choice = atoi( data );
+	choice = __atoi( data );
 
 	if ( choice <= 0 || RECIPE_COUNT < choice ) {
-		printf( "[ERROR] Must be between 1 and 512\n");
+		__printf( "[ERROR] Must be between 1 and 512\n");
 		return;
 	}
 
 	if ( g.recipe_list_g[choice-1].cookie == 0 ) {
-		printf("[ERROR] Empty recipe\n");
+		__printf("[ERROR] Empty recipe\n");
 		return;
 	}
 
-	bzero( &(g.recipe_list_g[choice-1]), sizeof(recipe) );
+	__bzero( &(g.recipe_list_g[choice-1]), sizeof(recipe) );
 
 	return;
 
@@ -613,7 +613,7 @@ void print_recipe_costs( void )
 	size_t index = 0;
 	pingredient walker = NULL;
 
-	printf("Recipe Costs:\n");
+	__printf("Recipe Costs:\n");
 
 	for ( index = 0; index < RECIPE_COUNT; index++) {
 		total = 0.0;
@@ -626,7 +626,7 @@ void print_recipe_costs( void )
 			total += walker->cost_per_unit * walker->amount;
 		}
 
-		printf("\t$d) $s - $$.5f\n", index+1, g.recipe_list_g[index].name, total);
+		__printf("\t$d) $s - $$.5f\n", index+1, g.recipe_list_g[index].name, total);
 	}
 
 
@@ -638,14 +638,14 @@ void print_recipe_name( void )
 	char data[5];
 	int choice = 0;
 
-	bzero(data, 5 );
+	__bzero(data, 5 );
 
-	printf("Recipe Index [1..512]: ");
+	__printf("Recipe Index [1..512]: ");
 	if ( read_string( data, 5 ) == 0 ) {
 		return;
 	}
 
-	choice = atoi( data );
+	choice = __atoi( data );
 
 #ifdef PATCHED_1
 	if ( choice <= 0 || RECIPE_COUNT < choice)
@@ -653,16 +653,16 @@ void print_recipe_name( void )
 	if ( RECIPE_COUNT < choice )
 #endif
 	{
-		printf("[ERROR] Invalid index: $d\n", choice);
+		__printf("[ERROR] Invalid index: $d\n", choice);
 		return;
 	}
 
 	if ( g.recipe_list_g[choice-1].cookie == 0 ) {
-		printf("[ERROR] Empty recipe: $d\n", choice);
+		__printf("[ERROR] Empty recipe: $d\n", choice);
 		return;
 	}
 
-	printf("Single Name: $s\n", g.recipe_list_g[choice-1].name);
+	__printf("Single Name: $s\n", g.recipe_list_g[choice-1].name);
 
 	return;
 }
@@ -696,11 +696,11 @@ void handle_recipe( )
 				print_recipe_costs();
 				break;
 			case 7:
-				printf("Leave\n");
+				__printf("Leave\n");
 				return;
 				break;
 			default:
-				printf("Invalid selection.\n");
+				__printf("Invalid selection.\n");
 		};
 	}
 
@@ -708,21 +708,21 @@ void handle_recipe( )
 
 void pantry_menu( )
 {
-	printf( "1) Create Pantry\n");
-	printf( "2) Delete Pantry\n");
-	printf( "3) Print Pantry\n");
-	printf( "4) Print All Pantries\n");
-	printf( "5) Update Pantry\n");
-	printf( "6) Leave Menu\n");
-	printf("-> ");
+	__printf( "1) Create Pantry\n");
+	__printf( "2) Delete Pantry\n");
+	__printf( "3) Print Pantry\n");
+	__printf( "4) Print All Pantries\n");
+	__printf( "5) Update Pantry\n");
+	__printf( "6) Leave Menu\n");
+	__printf("-> ");
 
 	return;
 }
 
 void init_globals( char *secret_page )
 {
-	bzero( &g.pantry_g, sizeof(pantry) * PANTRY_COUNT);
-	bzero( &g.recipe_list_g, sizeof(recipe) * RECIPE_COUNT);
+	__bzero( &g.pantry_g, sizeof(pantry) * PANTRY_COUNT);
+	__bzero( &g.recipe_list_g, sizeof(recipe) * RECIPE_COUNT);
 
 	magic_index_g = 0;
 	magic_page_g = secret_page;
@@ -748,34 +748,34 @@ void print_single_pantry( size_t index )
 	size_t item = 1;
 
 	if ( PANTRY_COUNT <= index ) {
-		printf("[ERROR] Invalid index: $d\n", index);
+		__printf("[ERROR] Invalid index: $d\n", index);
 		return;
 	}
 
 	if ( g.pantry_g[index].cookie == 0 ) {
-		printf("[ERROR] Empty pantry: $d\n", index+1);
+		__printf("[ERROR] Empty pantry: $d\n", index+1);
 		return;
 	}
 
-	printf("Name: $s\n", g.pantry_g[index].name);
-	printf("Item:\n");
+	__printf("Name: $s\n", g.pantry_g[index].name);
+	__printf("Item:\n");
 
 	pw = g.pantry_g[index].grocery_list;
 
 	while ( pw ) {
-		printf("\t$f ", pw->amount);
+		__printf("\t$f ", pw->amount);
 		if ( pw->type == OUNCES ) {
-			printf("oz\t");
+			__printf("oz\t");
 		} else {
-			printf("g\t");
+			__printf("g\t");
 		}
 
-		printf("$s\n", pw->name);
+		__printf("$s\n", pw->name);
 
 		pw = pw->next;
 	}
 
-	printf("\n\n");
+	__printf("\n\n");
 
 	return;
 
@@ -786,17 +786,17 @@ void print_pantry( void )
 	char data[4];
 	int choice = 0;
 
-	bzero(data, 4 );
+	__bzero(data, 4 );
 
-	printf("Pantry Index [1..128]: ");
+	__printf("Pantry Index [1..128]: ");
 	if ( read_string( data, 4 ) == 0 ) {
 		return;
 	}
 
-	choice = atoi( data );
+	choice = __atoi( data );
 
 	if ( choice <= 0 || PANTRY_COUNT < choice ) {
-		printf( "[ERROR] Must be between 1 and 128\n");
+		__printf( "[ERROR] Must be between 1 and 128\n");
 		return;
 	}
 
@@ -817,18 +817,18 @@ void create_pantry( void )
 	}
 
 	if ( index == PANTRY_COUNT ) {
-		printf("[ERROR] Pantry List is full\n");
+		__printf("[ERROR] Pantry List is full\n");
 		return;
 	}
 
 	pp = &g.pantry_g[index];
 
-	bzero( pp, sizeof(pantry) );
+	__bzero( pp, sizeof(pantry) );
 
-	printf("Enter pantry name: ");
+	__printf("Enter pantry name: ");
 
 	if ( read_string( pp->name, 15 ) == 0 ) {
-		printf("[ERROR] Invalid pantry name\n");
+		__printf("[ERROR] Invalid pantry name\n");
 		return;
 	}
 
@@ -844,9 +844,9 @@ void create_pantry( void )
 			continue;
 		}
 
-		if ( strcmp( g.pantry_g[index].name, g.pantry_g[t].name) == 0 ) {
-			printf("[ERROR] Pantry already exists with that name.\n");
-			bzero(pp->name, 16);
+		if ( __strcmp( g.pantry_g[index].name, g.pantry_g[t].name) == 0 ) {
+			__printf("[ERROR] Pantry already exists with that name.\n");
+			__bzero(pp->name, 16);
 			return;
 		}
 	}
@@ -857,7 +857,7 @@ void create_pantry( void )
 		ping = ingredient_prompt();
 
 		if ( check_ingredient_exists( pp->grocery_list, ping ) ) {
-			free(ping);
+			__free(ping);
 		} else { 
 			link_pantry_ingredient( pp, ping );
 		}
@@ -872,7 +872,7 @@ void list_all_pantries( void )
 
 	for ( i = 0; i < PANTRY_COUNT; i++) {
 		if ( g.pantry_g[i].cookie != 0 ) {
-			printf("Index: $d\n", i+1);
+			__printf("Index: $d\n", i+1);
 			print_single_pantry( i );
 		}
 	}
@@ -885,28 +885,28 @@ void delete_pantry( void )
 	char data[4];
 	int choice = 0;
 
-	bzero(data, 4 );
+	__bzero(data, 4 );
 
 	list_all_pantries();
 
-	printf("Pantry Index [1..128]: ");
+	__printf("Pantry Index [1..128]: ");
 	if ( read_string( data, 4 ) == 0 ) {
 		return;
 	}
 
-	choice = atoi( data );
+	choice = __atoi( data );
 
 	if ( choice <= 0 || PANTRY_COUNT < choice ) {
-		printf( "[ERROR] Must be between 1 and 128\n");
+		__printf( "[ERROR] Must be between 1 and 128\n");
 		return;
 	}
 
 	if ( g.pantry_g[choice-1].cookie == 0 ) {
-		printf("[ERROR] Empty pantry\n");
+		__printf("[ERROR] Empty pantry\n");
 		return;
 	}
 
-	bzero( &(g.pantry_g[choice-1]), sizeof(pantry) );
+	__bzero( &(g.pantry_g[choice-1]), sizeof(pantry) );
 
 	return;
 }
@@ -918,24 +918,24 @@ void update_pantry( void )
 	ppantry pp = NULL;
 	pingredient ing_walker = NULL;
 
-	bzero(data, 16 );
+	__bzero(data, 16 );
 
 	list_all_pantries();
 
-	printf("Pantry Index [1..128]: ");
+	__printf("Pantry Index [1..128]: ");
 	if ( read_string( data, 4 ) == 0 ) {
 		return;
 	}
 
-	choice = atoi( data );
+	choice = __atoi( data );
 
 	if ( choice <= 0 || PANTRY_COUNT < choice ) {
-		printf( "[ERROR] Must be between 1 and 128\n");
+		__printf( "[ERROR] Must be between 1 and 128\n");
 		return;
 	}
 
 	if ( g.pantry_g[choice-1].cookie == 0 ) {
-		printf("[ERROR] Empty pantry\n");
+		__printf("[ERROR] Empty pantry\n");
 		return;
 	}
 
@@ -943,9 +943,9 @@ void update_pantry( void )
 
 	print_single_pantry( choice-1 );
 
-	printf("Which item to update: ");
+	__printf("Which item to update: ");
 
-	bzero( data, 16 );
+	__bzero( data, 16 );
 
 	if ( read_string( data, 15) == 0 ) {
 		return;
@@ -954,7 +954,7 @@ void update_pantry( void )
 	ing_walker = pp->grocery_list;
 
 	while ( ing_walker ) {
-		if ( strcmp( ing_walker->name, data ) != 0 ) {
+		if ( __strcmp( ing_walker->name, data ) != 0 ) {
 			ing_walker = ing_walker->next;
 		} else {
 			break;
@@ -962,34 +962,34 @@ void update_pantry( void )
 	}
 
 	if ( ing_walker == NULL ) {
-		printf("This pantry does not have $s\n", data );
+		__printf("This pantry does not have $s\n", data );
 		return;
 	}
 
-	bzero( data, 16);
+	__bzero( data, 16);
 
-	printf("Enter the amount: ");
+	__printf("Enter the amount: ");
 	if ( read_string( data, 5) == 0 ) {
-		printf("[ERROR] Invalid amount\n");
+		__printf("[ERROR] Invalid amount\n");
 		return;
 	}
 
-	ing_walker->amount = atof( data );
+	ing_walker->amount = __atof( data );
 
-	printf("Enter the type (oz/gram): ");
+	__printf("Enter the type (oz/gram): ");
 
-	bzero( data, 16 );
+	__bzero( data, 16 );
 	if ( read_string( data, 5 ) == 0 ) {
-		printf("[ERROR] Failed to read the measurement type.\n");
+		__printf("[ERROR] Failed to __read the measurement type.\n");
 		return;
 	}
 
-	if ( strcmp( data, "oz" ) == 0 ) {
+	if ( __strcmp( data, "oz" ) == 0 ) {
 		ing_walker->type = OUNCES;
-	} else if ( strcmp( data, "gram") == 0 ) {
+	} else if ( __strcmp( data, "gram") == 0 ) {
 		ing_walker->type = GRAMS;
 	} else { 
-		printf("[ERROR] Invalid type\n");
+		__printf("[ERROR] Invalid type\n");
 	}
 
 	return;
@@ -1022,11 +1022,11 @@ void handle_pantry( void )
 				update_pantry();
 				break;
 			case 6:
-				printf("Leave.\n");
+				__printf("Leave.\n");
 				return;
 				break;
 			default:
-				printf("Invalid selection\n");
+				__printf("Invalid selection\n");
 				break;
 		};
 	}
@@ -1047,29 +1047,29 @@ void query_recipes( void )
 	/// Pantry ingredient walker
 	pingredient piw = NULL;
 
-	printf("Select a pantry:\n");
+	__printf("Select a pantry:\n");
 
 	for ( index = 0; index < PANTRY_COUNT; index++) {
 		if ( g.pantry_g[index].cookie != 0 ) {
-			printf("$d) $s\n", index+1, g.pantry_g[index].name);
+			__printf("$d) $s\n", index+1, g.pantry_g[index].name);
 		}
 	}
 
-	printf("-> ");
+	__printf("-> ");
 
 	if ( read_string( data, 4 ) == 0 ) {
 		return;
 	}
 
-	selection = atoi( data );
+	selection = __atoi( data );
 
 	if ( selection <= 0 || PANTRY_COUNT < selection) {
-		printf("[ERROR] Invalid selection\n");
+		__printf("[ERROR] Invalid selection\n");
 		return;
 	}
 
 	if ( g.pantry_g[selection-1].cookie == 0 ) {
-		printf("[ERROR] Empty pantry\n");
+		__printf("[ERROR] Empty pantry\n");
 		return;
 	}
 
@@ -1089,7 +1089,7 @@ void query_recipes( void )
 
 			found = 0;
 			for ( piw = g.pantry_g[selection-1].grocery_list; piw != NULL && found == 0; piw = piw->next ) {
-				if ( strcmp( piw->name, riw->name) != 0 ) {
+				if ( __strcmp( piw->name, riw->name) != 0 ) {
 					continue;
 				}
 
@@ -1107,7 +1107,7 @@ void query_recipes( void )
 		}
 
 		if ( found != 0 ) {
-			printf("You can make: $s\n", g.recipe_list_g[index].name);
+			__printf("You can make: $s\n", g.recipe_list_g[index].name);
 		}
 
 	}
@@ -1123,17 +1123,17 @@ void query_by_price( void )
 	pingredient walker = NULL;
 	double total = 0.0;
 
-	bzero( data, 10);
+	__bzero( data, 10);
 
-	printf("How much can you spend: ");
+	__printf("How much can you spend: ");
 
 	if ( read_string( data, 9 ) == 0 ) {
 		return;
 	}
 
-	max = atof( data );
+	max = __atof( data );
 
-	printf("You can make: \n");
+	__printf("You can make: \n");
 	for ( index = 0; index < RECIPE_COUNT; index++) {
 		total = 0.0;
 
@@ -1146,7 +1146,7 @@ void query_by_price( void )
 		}
 
 		if ( total <= max ) {
-			printf("\t$d) $s\n", index+1, g.recipe_list_g[index].name);
+			__printf("\t$d) $s\n", index+1, g.recipe_list_g[index].name);
 		}
 	}
 	return;
@@ -1182,9 +1182,9 @@ void print_cheapest( void )
 	}
 
 	if ( cheapest_index == 0 ) {
-		printf("No cheapest recipe found\n");
+		__printf("No cheapest recipe found\n");
 	} else {
-		printf("Cheapest: $d at $f\n", cheapest_index, cheapest_value);
+		__printf("Cheapest: $d at $f\n", cheapest_index, cheapest_value);
 	}
 
 	return;
@@ -1221,9 +1221,9 @@ void print_expensivest( void )
 	}
 
 	if ( expensivest_index == 0 ) {
-		printf("The most expensive recipe was not found\n");
+		__printf("The most expensive recipe was not found\n");
 	} else {
-		printf("Most expensive: $d at $f\n", expensivest_index, expensivest_value);
+		__printf("Most expensive: $d at $f\n", expensivest_index, expensivest_value);
 	}
 
 	return;
@@ -1235,12 +1235,12 @@ void query_menu( void )
 	int value = 0;
 
 	while ( 1 ) {
-		printf("1) List Doable Recipes by Pantry\n");
-		printf("2) List Doable Recipes by Cost\n");
-		printf("3) Print Cheapest Recipe\n");
-		printf("4) Print Most Expensive Recipe\n");
-		printf("5) Leave Menu\n");
-		printf("-> ");
+		__printf("1) List Doable Recipes by Pantry\n");
+		__printf("2) List Doable Recipes by Cost\n");
+		__printf("3) Print Cheapest Recipe\n");
+		__printf("4) Print Most Expensive Recipe\n");
+		__printf("5) Leave Menu\n");
+		__printf("-> ");
 
 		value = read_selection();
 
@@ -1258,11 +1258,11 @@ void query_menu( void )
 				print_expensivest();
 				break;
 			case 5:
-				printf("Leaving..\n");
+				__printf("Leaving..\n");
 				return;
 				break;
 			default:
-				printf("[ERROR] Invalid selection\n");
+				__printf("[ERROR] Invalid selection\n");
 				break;
 		};
 
@@ -1283,11 +1283,11 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
 	display_banner();
 
 	while ( 1 ) {
-		printf( "1) Recipe Menu\n");
-		printf( "2) Pantry Menu\n");
-		printf( "3) Query Recipe\n");
-		printf( "4) Quit\n");
-		printf( "-> ");
+		__printf( "1) Recipe Menu\n");
+		__printf( "2) Pantry Menu\n");
+		__printf( "3) Query Recipe\n");
+		__printf( "4) Quit\n");
+		__printf( "-> ");
 	
 		value = read_selection( );
 
@@ -1302,11 +1302,11 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
 				query_menu();
 				break;
 			case 4:
-				printf("Quit\n");
+				__printf("Quit\n");
 				_terminate(0);
 				break;
 			default:
-				printf("unknown\n");
+				__printf("unknown\n");
 				break;
 		};
 	}

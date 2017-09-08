@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, ___free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -48,7 +48,7 @@ heaptype __htype = 0;
 
 void promptc(char *buf, uint16_t  size, char *prompt) {
 
-    SSEND(strlen(prompt), prompt);
+    SSEND(___strlen(prompt), prompt);
 
     SRECV((uint32_t)size, buf);
 }
@@ -142,7 +142,7 @@ int recvline(int fd, char *buf, size_t size) {
 }
 
 //non-standard convention, returns num bytes copied instead of s1
-size_t strcpy(char *s1, const char *s2) {
+size_t ___strcpy(char *s1, const char *s2) {
     char *tmp = s1;
     while (*s2) {
         *tmp = *s2;
@@ -154,7 +154,7 @@ size_t strcpy(char *s1, const char *s2) {
 }
 
 //non-standard convention, returns num bytes copied instead of s1
-size_t strncpy(char *s1, char *s2, size_t n) {
+size_t ___strncpy(char *s1, char *s2, size_t n) {
     char *tmp = s1;
     while ((tmp-s1 < n) && *s2) {
         *tmp = *s2;
@@ -165,14 +165,14 @@ size_t strncpy(char *s1, char *s2, size_t n) {
     return tmp-s1-1;
 }
 
-char * strcat(char *s1, char *s2) {
+char * ___strcat(char *s1, char *s2) {
     char *tmp = s1;
     while (*tmp) tmp++;
-    strcpy(tmp,s2);
+    ___strcpy(tmp,s2);
     return s1;
 }
 
-size_t strlen(char *s) {
+size_t ___strlen(char *s) {
     char *tmp = s;
     while (*tmp) tmp++;
     return (size_t)(tmp-s);
@@ -291,7 +291,7 @@ int int2str(char* str_buf, int buf_size, int i) {
 
 uint32_t str2uint(const char* str_buf) {
     int result = 0;
-    int max_chars = 10; // max number of chars read from str_buf
+    int max_chars = 10; // max number of chars ___read from str_buf
     int i = 0;
 
     if (str_buf == NULL)
@@ -310,7 +310,7 @@ uint32_t str2uint(const char* str_buf) {
     return result;
 }
 
-void * memset(void *dst, char c, size_t n) {
+void * ___memset(void *dst, char c, size_t n) {
     size_t i;
     for (i=0; i<n; i++) {
         *((uint8_t*)dst+i) = c;
@@ -318,7 +318,7 @@ void * memset(void *dst, char c, size_t n) {
     return dst;
 }
 
-void * memcpy(void *dst, void *src, size_t n) {
+void * ___memcpy(void *dst, void *src, size_t n) {
     size_t i;
     for (i=0; i<n; i++) {
         *((uint8_t*)dst+i) = *((uint8_t*)src+i);
@@ -340,7 +340,7 @@ char * b2hex(uint8_t b, char *h) {
     return h;
 }
 
-char * strchr(char *str, char c) {
+char * ___strchr(char *str, char c) {
     char *tmp = str;
     while (*tmp) {
         if (*tmp == c)
@@ -350,14 +350,14 @@ char * strchr(char *str, char c) {
     return 0;
 }
 
-void sleep(int s) {
+void ___sleep(int s) {
     struct timeval tv;
     tv.tv_sec = s;
     tv.tv_usec = 0;
     fdwait(0, NULL, NULL, &tv, NULL);
 }
 
-int memcmp(void *a, void *b, size_t n) {
+int ___memcmp(void *a, void *b, size_t n) {
     size_t i;
     for (i=0; i < n; i++)
         if ( *(uint8_t*)(a+i) != *(uint8_t*)(b+i))
@@ -399,11 +399,11 @@ static void remove(heap_chunk_t *node) {
 
 static void *__malloc(size_t size, heaptype type) {
     /*
-     * A very stupid malloc implementation, meant to be simple.
+     * A very stupid ___malloc implementation, meant to be simple.
      * Keeps a list of allocated and freed chunks
      * Alloc walks list of freed chunks to see if any are large enough
      * If not, it allocates space large enough to store
-     * Oh, and we never actually free pages. It's quality software.
+     * Oh, and we never actually ___free pages. It's quality software.
      *
      */
     if (!heapinit_done) 
@@ -420,7 +420,7 @@ static void *__malloc(size_t size, heaptype type) {
     size += sizeof(heap_chunk_t);
 
     //walk freed list to see if we can find match
-    //while we're walking free list, might as well coalesce as we go
+    //while we're walking ___free list, might as well coalesce as we go
     //this will only coalesce adjacent blocks in the freelist
     while (chunk->size < size && HNEXT(chunk,type) != freed[type]) {
 
@@ -446,7 +446,7 @@ static void *__malloc(size_t size, heaptype type) {
 
     if (chunk->size >= size) {
         //found a match, remove from freed list, add to allocated list, and return
-        //SSSENDL("found free chunk");
+        //SSSENDL("found ___free chunk");
         
         remove(chunk);
 
@@ -463,7 +463,7 @@ static void *__malloc(size_t size, heaptype type) {
         return ((uint8_t*)chunk)+sizeof(heap_chunk_t);
     }
 
-    //see if free space in last allocated page is enough
+    //see if ___free space in last allocated page is enough
     if (size <= curleft[type]) {
         //SSSENDL("had enough left in current page");
         chunk = (heap_chunk_t*)lastpage[type];
@@ -480,7 +480,7 @@ static void *__malloc(size_t size, heaptype type) {
     //first add the remaining page to our freed list as a lazy hack
     //if there's not enough left, we just let it leak
     if (curleft[type] > sizeof(heap_chunk_t)) {
-        //SSSENDL("adding remainder to free list");
+        //SSSENDL("adding remainder to ___free list");
         chunk = (heap_chunk_t*)lastpage[type];
         chunk->size = curleft[type];
         insert(freed[type],chunk,type);
@@ -503,8 +503,8 @@ static void *__malloc(size_t size, heaptype type) {
 
 void __free(void *p, heaptype type) {
     /*
-     * A very stupid free for a very stupid malloc
-     * Simply moves pointer from allocated to free list
+     * A very stupid ___free for a very stupid ___malloc
+     * Simply moves pointer from allocated to ___free list
      * With no typeing of anything, obviously
      *
      */
@@ -536,7 +536,7 @@ void *ssmalloc(size_t size) {
     return __malloc(size, SSHEAP);
 }
 
-void *malloc(size_t size) {
+void *___malloc(size_t size) {
     if (!mallocp)
         setheap(0);
     return mallocp(size);
@@ -554,19 +554,19 @@ void ssfree(void *p) {
     return __free(p, SSHEAP);
 }
 
-void free(void *p) {
+void ___free(void *p) {
     if (!freep)
         setheap(0);
     freep(p);
 }
 
-void *calloc(size_t size) {
+void *___calloc(size_t size) {
     void *ptr;
 
-    if (!(ptr = malloc(size)))
+    if (!(ptr = ___malloc(size)))
         return NULL;
 
-    memset(ptr,'\0',size);
+    ___memset(ptr,'\0',size);
     return ptr;
 }
 
@@ -588,7 +588,7 @@ void setheap(uint32_t type) {
 }
 
 void checkheap() {
-    //validate free and allocated lists!
+    //validate ___free and allocated lists!
     uint32_t type = __htype;
     heap_chunk_t *chunk = freed[type];
 

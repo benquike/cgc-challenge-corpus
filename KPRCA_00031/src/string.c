@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -30,25 +30,25 @@
 
 string *new_string(char *d)
 {
-  string *s = calloc(1, sizeof(string));
+  string *s = __calloc(1, sizeof(string));
   if (!s)
     error(EALLOC);
 
-  s->d = calloc(1, DEFAULT_S_SZ);
+  s->d = __calloc(1, DEFAULT_S_SZ);
   if (!s->d)
     error(EALLOC);
   s->cap = DEFAULT_S_SZ;
 
   if (d) {
 #ifdef PATCHED
-    size_t nz = (strlen(d) + 1) * 2;
-    s->d = realloc(s->d, nz);
+    size_t nz = (__strlen(d) + 1) * 2;
+    s->d = __realloc(s->d, nz);
     if (!s->d)
       error(EALLOC);
     s->d[nz] = '\0';
     s->cap = nz;
 #endif
-    strcpy(s->d, d);
+    __strcpy(s->d, d);
   }
 
   return s;
@@ -59,16 +59,16 @@ int set_string(string *s, char *d)
   if (!d || !s)
     return -1;
 
-  memset(s->d, '\0', s->cap);
+  __memset(s->d, '\0', s->cap);
 
-  if (strlen(d) + 1 > s->cap) {
-    s->cap = (strlen(d) + strlen(s->d) + 1) * 2;
-    s->d = realloc(s->d, s->cap);
+  if (__strlen(d) + 1 > s->cap) {
+    s->cap = (__strlen(d) + __strlen(s->d) + 1) * 2;
+    s->d = __realloc(s->d, s->cap);
     if (!s->d)
       error(EALLOC);
   }
 
-  strncpy(s->d, d, s->cap);
+  __strncpy(s->d, d, s->cap);
   return 0;
 }
 
@@ -77,14 +77,14 @@ int append_string(string *s, const char *d)
   if (!d || !s)
     return -1;
 
-  if (strlen(d) + strlen(s->d) + 1 > s->cap) {
-    s->cap = (strlen(d) + strlen(s->d) + 1) * 2;
-    s->d = realloc(s->d, s->cap);
+  if (__strlen(d) + __strlen(s->d) + 1 > s->cap) {
+    s->cap = (__strlen(d) + __strlen(s->d) + 1) * 2;
+    s->d = __realloc(s->d, s->cap);
     if (!s->d)
       error(EALLOC);
   }
 
-  strcat(s->d, d);
+  __strcat(s->d, d);
   return 0;
 }
 
@@ -95,8 +95,8 @@ int contains_string(string *s, const char *sub)
 
   const char *s1 = s->d;
   const char *s2 = sub;
-  size_t sub_len = strlen(sub);
-  size_t dom_len = strlen(s->d);
+  size_t sub_len = __strlen(sub);
+  size_t dom_len = __strlen(s->d);
 
   if (dom_len < sub_len)
     return 0;
@@ -105,11 +105,11 @@ int contains_string(string *s, const char *sub)
     return (dom_len == sub_len) && (*s1 == *s2);
 
   if (dom_len == sub_len)
-    return strcmp((char *)s1, s2) == 0;
+    return __strcmp((char *)s1, s2) == 0;
 
   while (*s1) {
     s2 = sub;
-    dom_len = strlen(s1);
+    dom_len = __strlen(s1);
     const char *s3 = s1;
     size_t matched = 0;
 
@@ -131,5 +131,5 @@ void free_string(string *s)
     return;
 
   if (s->d)
-    free(s->d);
+    __free(s->d);
 }

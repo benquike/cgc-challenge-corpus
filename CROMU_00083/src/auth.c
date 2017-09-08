@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -86,7 +86,7 @@ unsigned int maxEntries;
 		}
 	}
 
-	if (strcmp(name, "GUEST") == 0) {
+	if (__strcmp(name, "GUEST") == 0) {
 
 		if ( token > 1 & token < 8 && token % 2 == 0 ) {
 		
@@ -139,7 +139,7 @@ unsigned int maxEntries;
 
 			userID[7] = 0;
 
-			strcpy(name, userID);
+			__strcpy(name, userID);
 
 			return 0;
 
@@ -150,7 +150,7 @@ unsigned int maxEntries;
 
 	if (ID > 2 && ID < 8 ) {
 
-		strcpy(name, "GUEST");
+		__strcpy(name, "GUEST");
 		name[5] = ID + '0';
 		name[6] = 0;
 

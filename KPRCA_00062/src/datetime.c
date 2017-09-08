@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -75,7 +75,7 @@ bool is_valid_date(date_t *date)
     return true;
 }
 
-bool is_valid_time(time_t *time)
+bool is_valid_time(__time_t_ *time)
 {
     return (time && time->hour >= 0 && time->hour <= 23 && time->minute >= 0 && time->minute <= 59);
 }
@@ -96,7 +96,7 @@ bool set_date(date_t *date, char month, char day, short year)
     return true;
 }
 
-bool set_time(time_t *time, char hour, char minute)
+bool set_time(__time_t_ *time, char hour, char minute)
 {
     if (!time || hour < 0 || hour > 23 || minute < 0 || minute > 59)
         return false;
@@ -106,7 +106,7 @@ bool set_time(time_t *time, char hour, char minute)
     return true;
 }
 
-bool set_datetime(datetime_t *dt, date_t date, time_t time)
+bool set_datetime(datetime_t *dt, date_t date, __time_t_ time)
 {
     if (!dt || !is_valid_date(&date) || !is_valid_time(&time))
         return false;
@@ -158,8 +158,8 @@ int compare_date(void *_date1, void *_date2)
 
 int compare_time(void *_time1, void *_time2)
 {
-    time_t *time1 = (time_t *)_time1;
-    time_t *time2 = (time_t *)_time2;
+    __time_t_ *time1 = (__time_t_ *)_time1;
+    __time_t_ *time2 = (__time_t_ *)_time2;
 
     if (!time1 || !time2)
         return -1;
@@ -229,11 +229,11 @@ bool datetime_within(duration_t d, datetime_t dt)
 
 bool strtodate(char *datestr, date_t *date)
 {
-    if (!datestr || !date || strlen(datestr) < 8)
+    if (!datestr || !date || __strlen(datestr) < 8)
         return false;
 
     date_t temp;
-    memset(&temp, 0, sizeof(date_t));
+    __memset(&temp, 0, sizeof(date_t));
     char *year, *month, *day;
     if ((month = strsep(&datestr, "-")) == NULL)
         return false;
@@ -242,9 +242,9 @@ bool strtodate(char *datestr, date_t *date)
     if ((year = strsep(&datestr, "-")) == NULL)
         return false;
 
-    temp.year = strtol(year, NULL, 10);
-    temp.month = strtol(month, NULL, 10);
-    temp.day = strtol(day, NULL, 10);
+    temp.year = __strtol(year, NULL, 10);
+    temp.month = __strtol(month, NULL, 10);
+    temp.day = __strtol(day, NULL, 10);
 
     if (is_valid_date(&temp)) {
         *date = temp;
@@ -254,24 +254,24 @@ bool strtodate(char *datestr, date_t *date)
     }
 }
 
-bool strtotime(char *timestr, time_t *time)
+bool strtotime(char *timestr, __time_t_ *time)
 {
-    if (!timestr || !time || strlen(timestr) < 4)
+    if (!timestr || !time || __strlen(timestr) < 4)
         return false;
 
-    time_t temp;
+    __time_t_ temp;
     char *hour, *minute;
     if ((hour = strsep(&timestr, ":")) == NULL)
         return false;
     if ((minute = strsep(&timestr, "-")) == NULL)
         return false;
 
-    temp.hour = strtol(hour, NULL, 10);
-    temp.minute = strtol(minute, NULL, 10);
+    temp.hour = __strtol(hour, NULL, 10);
+    temp.minute = __strtol(minute, NULL, 10);
 
     if (temp.hour == 0) {
         int i;
-        for (i = 0; i < strlen(hour); i++) {
+        for (i = 0; i < __strlen(hour); i++) {
             if (hour[i] != '0')
                 return false;
         }
@@ -279,7 +279,7 @@ bool strtotime(char *timestr, time_t *time)
 
     if (temp.minute == 0) {
         int i;
-        for (i = 0; i < strlen(minute); i++) {
+        for (i = 0; i < __strlen(minute); i++) {
             if (minute[i] != '0')
                 return false;
         }
@@ -295,7 +295,7 @@ bool strtotime(char *timestr, time_t *time)
 
 void print_date(date_t *date)
 {
-    printf("%d-%d-%d", date->month, date->day, date->year);
+    __printf("%d-%d-%d", date->month, date->day, date->year);
 }
 
 void get_date_str(char *date_str, date_t *date)
@@ -338,7 +338,7 @@ char *get_month(date_t *date)
     }
 }
 
-void print_time(time_t *time)
+void print_time(__time_t_ *time)
 {
     char *zero = "0";
     char *emptystr = "";
@@ -348,10 +348,10 @@ void print_time(time_t *time)
     else
         min_pad = emptystr;
 
-    printf("%d:%s%d", time->hour, min_pad, time->minute);
+    __printf("%d:%s%d", time->hour, min_pad, time->minute);
 }
 
-void get_time_str(char *time_str, time_t *time)
+void get_time_str(char *time_str, __time_t_ *time)
 {
     char *zero = "0";
     char *emptystr = "";

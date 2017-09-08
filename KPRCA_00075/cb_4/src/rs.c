@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -67,7 +67,7 @@ static uint8_t gf_poly_eval(const poly_t *poly, uint8_t x)
 static void gf_poly_copy(poly_t *dst, const poly_t *a)
 {
     dst->degree = a->degree;
-    memcpy(dst->terms, a->terms, dst->degree);
+    __memcpy(dst->terms, a->terms, dst->degree);
 }
 
 static void gf_poly_reduce(poly_t *dst)
@@ -89,7 +89,7 @@ static void gf_poly_add(poly_t *dst, poly_t *a, const poly_t *b)
 static void gf_poly_mul(poly_t *dst, const poly_t *a, const poly_t *b)
 {
     dst->degree = a->degree + b->degree - 1;
-    memset(dst->terms, 0, dst->degree);
+    __memset(dst->terms, 0, dst->degree);
 
     for (int i = 0; i < a->degree; i++)
     for (int j = 0; j < b->degree; j++)
@@ -205,7 +205,7 @@ static void print_poly(poly_t *p)
 int rs_decode(uint8_t *encoded, int n_parity)
 {
     poly_t tmp, synd, sigma, pos;
-    memcpy(tmp.terms, encoded, 255);
+    __memcpy(tmp.terms, encoded, 255);
     tmp.degree = 255;
     rs_calc_synd(&synd, &tmp, n_parity);
 
@@ -222,7 +222,7 @@ int rs_decode(uint8_t *encoded, int n_parity)
     }
 
     // test result for errors
-    memcpy(tmp.terms, encoded, 255);
+    __memcpy(tmp.terms, encoded, 255);
     tmp.degree = 255;
     rs_calc_synd(&synd, &tmp, n_parity);
     gf_poly_reduce(&synd);

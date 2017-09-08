@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -35,14 +35,14 @@
 #define ERRNO_CANON BASE_ID+4
 #define ERRNO_RECUSION BASE_ID+5
 
-unsigned char * memset(void *b, char c, size_t len);
+unsigned char * __memset(void *b, char c, size_t len);
 int recv_until_delim(int fd, char *buf, size_t size);
-int strcmp(const char *s1, const char *s2);
+int __strcmp(const char *s1, const char *s2);
 int strncmp(const char *s1, const char *s2, size_t len);
-size_t strlen(const char *str);
+size_t __strlen(const char *str);
 char * strpos(char * haystack, char * needle);
-char * strncat(char *s1, const char *s2, size_t n);
-char * strncpy(char *dest, const char *src, size_t n);
+char * __strncat(char *s1, const char *s2, size_t n);
+char * __strncpy(char *dest, const char *src, size_t n);
 int transmit_with_term(int fd, const void *buf, size_t count, size_t *tx_bytes);
 int receive_with_term(int fd, void *buf, size_t count, size_t *rx_bytes);
 
@@ -67,13 +67,13 @@ typedef struct _FILE {
    int fd;
    int state;
    int last;
-} FILE;
+} __FILE;
 
-extern FILE *stdin;
-extern FILE *stdout;
-extern FILE *stderr;
+extern __FILE *stdin;
+extern __FILE *stdout;
+extern __FILE *stderr;
 
-int fprintf(FILE * stream, const char *format, ...);
+int fprintf(__FILE * stream, const char *format, ...);
 
 #endif
 // ^ DEBUG

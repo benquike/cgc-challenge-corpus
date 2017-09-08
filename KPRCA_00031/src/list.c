@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -31,7 +31,7 @@
 
 list *init_list(const DATA d)
 {
-  list *new = calloc(1, sizeof(list));
+  list *new = __calloc(1, sizeof(list));
   if (!new)
     error(EALLOC);
   new->d = d;
@@ -49,7 +49,7 @@ void append_list(list **l, const DATA d, int dups)
   list *i = *l;
   if (!dups) {
     while (i) {
-      if (!strcmp((char *)d, (char *)i->d))
+      if (!__strcmp((char *)d, (char *)i->d))
         return;
       i = i->n;
     }
@@ -154,11 +154,11 @@ void free_list(const list *l, int leave_data)
   const list *it;
   for (it = l; it; it = it->n) {
     if (!leave_data)
-      free((void *)it->d);
+      __free((void *)it->d);
     if (it->p)
-      free(it->p);
+      __free(it->p);
   }
-  free((void *)it);
+  __free((void *)it);
 }
 
 void free_list_of_lists(const list *l, int leave_data)
@@ -167,9 +167,9 @@ void free_list_of_lists(const list *l, int leave_data)
   for (it = l; it; it = it->n) {
     free_list((list *)l->d, leave_data - 1);
     if (it->p)
-      free(it->p);
+      __free(it->p);
   }
-  free((void *)it);
+  __free((void *)it);
 }
 
 const void *random_element(list *l)

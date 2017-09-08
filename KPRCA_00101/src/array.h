@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -62,7 +62,7 @@ void Array<T>::Append(const T &item)
     if (length_ == size_) {
         size_ *= 2;
         T *data_copy = new T[size_];
-        memcpy(data_copy, data_, sizeof(T) * length_);
+        __memcpy(data_copy, data_, sizeof(T) * length_);
         delete[] data_;
         data_ = data_copy;
     }

@@ -41,8 +41,8 @@ template <typename T>
 List<T>::List()
 {
     len = 0;
-    head = NULL;
-    tail = NULL;
+    head = nullptr;
+    tail = nullptr;
 }
 
 template <typename T>
@@ -78,7 +78,7 @@ bool List<T>::add(T item)
         return false;
 
     new_node->prev = tail;
-    new_node->next = NULL;
+    new_node->next = nullptr;
     new_node->data = item;
 
     if(!head)
@@ -99,23 +99,23 @@ bool List<T>::remove(size_t idx)
 
     if (len == 1) {
         delete head;
-        head = NULL;
-        tail = NULL;
+        head = nullptr;
+        tail = nullptr;
 
         len--;
         return true;
     }
 
     int i = 0;
-    node *iter = NULL;
+    node *iter = nullptr;
     for (iter = head; i != idx; iter=iter->next, i++);
 
     if (iter == head) {
         head = head->next;
-        head->prev = NULL;
+        head->prev = nullptr;
     } else if (iter == tail) {
         tail = tail->prev;
-        tail->next = NULL;
+        tail->next = nullptr;
     } else {
         iter->prev->next = iter->next;
         iter->next->prev = iter->prev;
@@ -136,14 +136,14 @@ bool List<T>::pop(T &item)
     item = tail->data;
     if (len == 1) {
         delete head;
-        head = NULL;
-        tail = NULL;
+        head = nullptr;
+        tail = nullptr;
         return true;
     }
 
     temp = tail;
     tail = tail->prev;
-    tail->next = NULL;
+    tail->next = nullptr;
 
     delete temp;
     len--;
@@ -173,7 +173,7 @@ T List<T>::operator[](size_t idx) const
         return T();
 
     int i = 0;
-    node *iter = NULL;
+    node *iter = nullptr;
     for (iter = head; i != idx; iter=iter->next, i++);
 
     return iter->data;

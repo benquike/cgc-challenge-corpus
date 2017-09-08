@@ -4,32 +4,32 @@
 
 void print_menu(User *current_user)
 {
-    printf("Select an option\n");
+    __printf("Select an option\n");
     if (!current_user) {
-        printf("1. Register\n");
-        printf("2. Log in\n");
-        printf("3. View a user's posts\n");
-        printf("4. View a user's profile\n");
-        printf("5. Quit\n");
+        __printf("1. Register\n");
+        __printf("2. Log in\n");
+        __printf("3. View a user's posts\n");
+        __printf("4. View a user's profile\n");
+        __printf("5. Quit\n");
     } else {
-        printf("1. Add new blog post\n");
-        printf("2. Delete blog post\n");
-        printf("3. Update profile\n");
-        printf("4. Add a friend\n");
-        printf("5. View my friends\n");
-        printf("6. Unfriend someone\n");
-        printf("7. View my posts\n");
-        printf("8. View my profile\n");
-        printf("9. View a user's posts\n");
-        printf("10. View a user's profile\n");
-        printf("11. Log out\n");
+        __printf("1. Add new blog post\n");
+        __printf("2. Delete blog post\n");
+        __printf("3. Update profile\n");
+        __printf("4. Add a friend\n");
+        __printf("5. View my friends\n");
+        __printf("6. Unfriend someone\n");
+        __printf("7. View my posts\n");
+        __printf("8. View my profile\n");
+        __printf("9. View a user's posts\n");
+        __printf("10. View a user's profile\n");
+        __printf("11. Log out\n");
     }
 }
 
 bool make_selection(User *&current_user)
 {
     size_t selection = 0;
-    printf("Selection: ");
+    __printf("Selection: ");
     selection = IO::readnum();
     if (!current_user) {
         switch(selection) {
@@ -42,10 +42,10 @@ bool make_selection(User *&current_user)
         case 4:
             Blog::view_user_profile(); break;
         case 5:
-            printf("Quitting\n");
+            __printf("Quitting\n");
             return false;
         default:
-            printf("Bad Selection\n");
+            __printf("Bad Selection\n");
         }
     } else {
         switch(selection) {
@@ -70,11 +70,11 @@ bool make_selection(User *&current_user)
         case 10:
             Blog::view_user_profile(); break;
         case 11:
-            printf("Logging Out\n");
+            __printf("Logging Out\n");
             current_user = NULL;
             break;
         default:
-            printf("Bad Selection\n");
+            __printf("Bad Selection\n");
         }
     }
 

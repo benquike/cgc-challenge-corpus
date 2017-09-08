@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -21,7 +21,7 @@
 */
 #include "memcpy.h"
 
-unsigned int memcpy(void *dst, const void *src, unsigned int cnt) {
+unsigned int __memcpy(void *dst, const void *src, unsigned int cnt) {
 	unsigned char *p_dst = (unsigned char *)dst;
 	unsigned char *p_src = (unsigned char *)src;
 

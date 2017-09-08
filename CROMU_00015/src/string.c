@@ -4,7 +4,7 @@ Author: John Berry <hj@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -27,7 +27,7 @@ THE SOFTWARE.
 #include "string.h"
 
 /**
- * Frees a string and its buffer. The calling function does not need to free the structure
+ * Frees a string and its buffer. The calling function does not need to __free the structure
  * @param str Pointer to a string structure
  * @return Returns nothing
  **/ 
@@ -37,7 +37,7 @@ void freeString( pstring str )
 		return;
 	}
 
-	/// If buffer is not NULL then free it. The length should be maxlength
+	/// If buffer is not NULL then __free it. The length should be maxlength
 	if ( str->buffer ) {
 		deallocate( str->buffer, str->maxlength );
 	}
@@ -70,7 +70,7 @@ int skipUrl( pstring str )
 	while ( index < str->maxlength ) {
 		c = str->buffer[index];
 
-		if ( !isalnum(c) && c != '.' && c != '/' && c != ':' ) {
+		if ( !__isalnum(c) && c != '.' && c != '/' && c != ':' ) {
 			/// Set the new index past to the invalid character
 			str->index = index;
 
@@ -123,7 +123,7 @@ int skipInt( pstring str )
 	while( index < str->maxlength ) {
 		c = str->buffer[index];
 
-		if ( c == '+' || c == '-' || isdigit(c) ) {
+		if ( c == '+' || c == '-' || __isdigit(c) ) {
 			index++;
 			continue;
 		} else {
@@ -156,7 +156,7 @@ int skipFloat( pstring str )
 	while( index < str->maxlength ) {
 		c = str->buffer[index];
 
-		if ( c == '.' || c == '+' || c == '-' || isdigit(c) ) {
+		if ( c == '.' || c == '+' || c == '-' || __isdigit(c) ) {
 			index++;
 		} else {
 			str->index = index;
@@ -213,9 +213,9 @@ char *copyData( pstring str, int start, int end )
 		return data;
 	}
 
-	bzero( data, length + 1 );
+	__bzero( data, length + 1 );
 
-	memcpy( data, str->buffer + start, length );
+	__memcpy( data, str->buffer + start, length );
 
 	return data;
 }
@@ -237,7 +237,7 @@ int skipAlpha( pstring str )
 	index = str->index;
 
 	while ( index < str->maxlength ) {
-		if ( !isalpha( str->buffer[index] ) ) {
+		if ( !__isalpha( str->buffer[index] ) ) {
 			str->index = index;
 			retval = str->index;
 			return retval;
@@ -265,7 +265,7 @@ int skipToNonAlphaNumSpace( pstring str )
 
 	index = str->index;
 	while ( index < str->maxlength ) {
-		if ( !isalnum( str->buffer[index] ) && str->buffer[index] != ' ') {
+		if ( !__isalnum( str->buffer[index] ) && str->buffer[index] != ' ') {
 			str->index = index;
 			retval = str->index;
 			return retval;
@@ -293,7 +293,7 @@ int skipToNonAlphaNum( pstring str )
 
 	index = str->index;
 	while ( index < str->maxlength ) {
-		if ( !isalnum( str->buffer[index] ) ) {
+		if ( !__isalnum( str->buffer[index] ) ) {
 			str->index = index;
 			retval = str->index;
 			return retval;
@@ -416,7 +416,7 @@ pstring initString( char *data )
 		goto end;
 	}	
 
-	length = strlen(data)+1;
+	length = __strlen(data)+1;
 
 	if ( allocate( sizeof(string), 0, (void**)&newString) != 0 ) {
 		newString = NULL;
@@ -428,8 +428,8 @@ pstring initString( char *data )
 		newString = NULL;
 	}
 
-	bzero( newString->buffer, length );
-	memcpy( newString->buffer, data, length-1 );
+	__bzero( newString->buffer, length );
+	__memcpy( newString->buffer, data, length-1 );
 
 	newString->maxlength = length;
 	newString->index = 0;

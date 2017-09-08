@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -258,14 +258,14 @@ static uintptr_t my_htbl_set(htbl_t *tbl, const char *key, uintptr_t value)
         if (tbl->nodes == NULL)
             return NULL;
 
-        node = malloc(sizeof(htbl_node_t));
+        node = __malloc(sizeof(htbl_node_t));
         if (node == NULL)
             return NULL;
 
         node->key = CALL(STRDUP, key);
         if (node->key == NULL)
         {
-            free(node);
+            __free(node);
             return NULL;
         }
         node->value = value;
@@ -910,10 +910,10 @@ funptr_t funcs[] = {
     REGISTER(ANALYZE_TEXT, my_analyze_text),
     REGISTER(GENERATE_TEXT, my_generate_text),
     REGISTER(STRNCPY, my_strncpy),
-    REGISTER(PRINTF, fdprintf),
+    REGISTER(PRINTF, __fdprintf),
     REGISTER(STRDUP, my_strdup),
-    REGISTER(CALLOC, calloc),
-    REGISTER(FREE, free),
+    REGISTER(CALLOC, __calloc),
+    REGISTER(FREE, __free),
     REGISTER(HASH_STRING, my_hash_string),
     REGISTER(HTBL_INIT, my_htbl_init),
     REGISTER(HTBL_ENLARGE, my_htbl_enlarge),
@@ -922,7 +922,7 @@ funptr_t funcs[] = {
     REGISTER(HTBL_FREE, my_htbl_free),
     REGISTER(HTBL_FIRST, my_htbl_first),
     REGISTER(HTBL_NEXT, my_htbl_next),
-    REGISTER(IS_ALPHA, isalpha),
+    REGISTER(IS_ALPHA, __isalpha),
     REGISTER(TO_LOWER, my_to_lower),
     REGISTER(RANDOM_WORD, my_random_word),
     REGISTER(RANDINT, my_randint),

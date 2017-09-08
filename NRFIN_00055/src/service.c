@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -74,36 +74,36 @@ main(void)
         if (fread_until(buf, '\n', sizeof(buf), stdin) < 0)
             continue;
 
-        if ((p = strchr(buf, '\n')) != NULL)
+        if ((p = __strchr(buf, '\n')) != NULL)
             *p = '\0';
         else
             continue;
 
 
         if (buf[0] == '%') {
-            if (strcmp(buf + 1, "tokens") == 0)
+            if (__strcmp(buf + 1, "tokens") == 0)
                 dump_tokens = !dump_tokens;
-            else if (strcmp(buf + 1, "ast") == 0)
+            else if (__strcmp(buf + 1, "ast") == 0)
                 dump_ast = !dump_ast;
-            else if (strcmp(buf + 1, "quit") == 0)
+            else if (__strcmp(buf + 1, "quit") == 0)
                 quit = 1;
             else
-                printf("INVALID COMMAND\n");
+                __printf("INVALID COMMAND\n");
             continue;
         }
     
         if ((num_tokens = tokenize(buf, tokens)) < 0) {
-            printf("ERROR!\n");
+            __printf("ERROR!\n");
             continue;
         }
     
         if (parse(tokens, num_tokens, &ast) < 0) {
-            printf("ERROR!\n");
+            __printf("ERROR!\n");
             continue;
         }
     
         if (eval(&ast, &ns, &result) < 0) {
-            printf("ERROR!\n");
+            __printf("ERROR!\n");
             continue;
         }
 
@@ -117,9 +117,9 @@ main(void)
             pretty_print_ast(&ast);
 
         if (result.type == VAR_INTEGER)
-            printf("_ = %d\n%x\n", last->val.i, calculate_csum(last->val.i));
+            __printf("_ = %d\n%x\n", last->val.i, calculate_csum(last->val.i));
         else
-            printf("_ = %d\n%x\n", (unsigned int)last->val.p,
+            __printf("_ = %d\n%x\n", (unsigned int)last->val.p,
                     calculate_csum((unsigned int)last->val.p));
     
         ast_destroy(&ast);

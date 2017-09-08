@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -30,7 +30,7 @@
 #define F_READ 1
 #define F_WRITE 2
 
-struct FILE {
+struct __FILE {
     int fd;
     int rw;
     int idx;
@@ -79,7 +79,7 @@ static inline int transmit_xlat(int fd,  const unsigned char *map, const void *b
         size_t cnt = count - i;
         if (cnt > sizeof(tmp)) cnt = sizeof(tmp);
 
-        memcpy(tmp, cbuf + i, cnt);
+        __memcpy(tmp, cbuf + i, cnt);
         xlat(map, tmp, cnt);
         if (transmit_all(fd, tmp, cnt) != 0)
             return -1;

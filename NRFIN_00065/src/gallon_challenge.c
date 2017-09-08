@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -36,24 +36,24 @@ do_gallon_challenge(void)
     if (game_state.games.gallon_challenge.tank_size == 0)
         game_state.games.gallon_challenge.tank_size = 100;
 
-    printf("Give me a countdown!\n");
+    __printf("Give me a countdown!\n");
     if (fread_until(buf, '\n', sizeof(buf), stdin) == EXIT_FAILURE)
         return EXIT_FAILURE;
-    if (strlen(buf) == 0 || strtou(buf, 16, &countdown) == EXIT_FAILURE)
+    if (__strlen(buf) == 0 || strtou(buf, 16, &countdown) == EXIT_FAILURE)
         return EXIT_FAILURE;
 
     for (i = 0; i < game_state.games.gallon_challenge.tank_size; i++) {
         if (i < 100)
-            printf("CHUG! ");
+            __printf("CHUG! ");
 
         *(unsigned int *)&game_state.spew[i & ~(sizeof(unsigned int) - 1)] = countdown;
     }
-    printf("\n");
+    __printf("\n");
 
     if (!check_cookie(game_state.games.gallon_challenge.cookie))
-        printf("Woah... bleh.\n");
+        __printf("Woah... bleh.\n");
     else
-        printf("Nice!\n");
+        __printf("Nice!\n");
 
     return EXIT_SUCCESS;
 }

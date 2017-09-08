@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -55,7 +55,7 @@ void __attribute__((regparm(2))) rider_health_check(Rider *r, uint32_t r_id) {
  */
 int32_t rider_new(Rider **rider, uint32_t settings[4]) {
 
-	Rider *new = calloc(sizeof(Rider));
+	Rider *new = __calloc(sizeof(Rider));
 	MALLOC_OK(new);
 
 	new->id = settings[0];
@@ -67,7 +67,7 @@ int32_t rider_new(Rider **rider, uint32_t settings[4]) {
 
 	if ((new->energy_level == 0) ||
 		((new->r_type != SKIER) && (new->r_type != BOARDER))) {
-		free(new);
+		__free(new);
 		return -1;
 	}	
 
@@ -81,7 +81,7 @@ int32_t rider_new(Rider **rider, uint32_t settings[4]) {
  * @param rider 	Rider
  */
 void rider_destroy(Rider **rider) {
-	free(*rider);
+	__free(*rider);
 	*rider = NULL;
 }
 

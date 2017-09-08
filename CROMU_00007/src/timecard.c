@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -42,16 +42,16 @@ void atom(pmoney amount, char *str)
 		negative = 1;
 		i++;
 	}
-	for(; isdigit(str[i]); i++)
+	for(; __isdigit(str[i]); i++)
 	{
 		amount->dollars = (amount->dollars * 10) + (str[i] - '0');
 	}
 	if (str[i] == '.')
 	{
-		if (isdigit(str[i+1]))
+		if (__isdigit(str[i+1]))
 		{
 			amount->cents = 10 * (str[i+1] - '0');
-			if (isdigit(str[i+2]))
+			if (__isdigit(str[i+2]))
 			{
 				amount->cents += (str[i+2] - '0');
 			}
@@ -118,7 +118,7 @@ void atoh(ptime t, char *str)
 	int value = 0;
 	t->hours = 0;
 	t->minutes = 0;
-	while(isdigit(str[pos]))
+	while(__isdigit(str[pos]))
 	{
 		value = (value * 10) + (str[pos] - '0');
 		pos++;
@@ -129,7 +129,7 @@ void atoh(ptime t, char *str)
 		pos++;
 	}
 	value = 0;
-	while(isdigit(str[pos]))
+	while(__isdigit(str[pos]))
 	{
 		value = (value * 10) + (str[pos] - '0');
 		pos++;
@@ -204,7 +204,7 @@ void initialize_employee(pemployee empl)
 		empl->paychecks[i].calculate_overtime = &exempt_overtime;
 		empl->paychecks[i].payroll_tax.dollars = 0;
 		empl->paychecks[i].payroll_tax.cents = 0;
-		memset(empl->paychecks[i].paycheck, 0, sizeof(empl->paychecks[i].paycheck));
+		__memset(empl->paychecks[i].paycheck, 0, sizeof(empl->paychecks[i].paycheck));
 	}
 }
 
@@ -367,7 +367,7 @@ int get_key_value(char *inbuf, size_t length, char **key, char **value)
 {
 	char buffer[80];
 	size_t bytes_read;
-	if (receive_until((char *)&buffer, length, '`', &bytes_read) != 0)
+	if (__receive_until((char *)&buffer, length, '`', &bytes_read) != 0)
 	{
 		return READ_ERROR;
 	}
@@ -375,7 +375,7 @@ int get_key_value(char *inbuf, size_t length, char **key, char **value)
 	{
 		return READ_ERROR;
 	}
-	memcpy((char *)inbuf, (char *)&buffer, 80);
+	__memcpy((char *)inbuf, (char *)&buffer, 80);
 
 	if (inbuf[0] == '\n')
 	{
@@ -409,11 +409,11 @@ void process_key_value(pemployee empl, char *key, char *value, int *week)
 {
 	if (equals(key, "employee_id"))
 	{
-		empl->id = atoi(value);
+		empl->id = __atoi(value);
 	}
 	if (equals(key, "employee_name"))
 	{
-		strncpy(empl->name, value, EMPLOYEE_NAME_LEN);
+		__strncpy(empl->name, value, EMPLOYEE_NAME_LEN);
 	}
 	if (equals(key, "wage"))
 	{
@@ -434,7 +434,7 @@ void process_key_value(pemployee empl, char *key, char *value, int *week)
 	}
 	if (equals(key, "week"))
 	{
-		*week = atoi(value);
+		*week = __atoi(value);
 		if ((*week < 0) || (*week >= 52))
 		{
 			*week = 0;
@@ -476,7 +476,7 @@ void merge_employee_records(pemployee empl, pemployee temp)
 	// Only populate employee record the first time a name is given
 	if ((empl->id == -1) && (temp->name[0] != '\0'))
 	{
-		strncpy(empl->name, temp->name, EMPLOYEE_NAME_LEN);
+		__strncpy(empl->name, temp->name, EMPLOYEE_NAME_LEN);
 		empl->id = temp->id;
 		empl->wage.dollars = temp->wage.dollars;
 		empl->wage.cents = temp->wage.cents;
@@ -600,7 +600,7 @@ void output_paycheck(pemployee empl, int week)
 	print("employee-");
 	print(empl->name);
 	print("`week-");
-	itoa((char *)outbuf, week);
+	__itoa((char *)outbuf, week);
 	print(outbuf);
 	print("`standardtime-");
 	htoa((char *)&outbuf, &empl->paychecks[week].standardtime);

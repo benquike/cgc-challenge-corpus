@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -64,10 +64,10 @@ lsimp_msg_t* parse_msg(char *buf, unsigned int buf_len)
   if (buf_len < 4)
     goto fail;
 
-  msg = (lsimp_msg_t *)malloc(sizeof(lsimp_msg_t));
+  msg = (lsimp_msg_t *)__malloc(sizeof(lsimp_msg_t));
   if (msg == NULL)
     goto fail;
-  memset(msg, 0, sizeof(lsimp_msg_t));
+  __memset(msg, 0, sizeof(lsimp_msg_t));
 
   while (buf_len >= 4)
   {
@@ -116,7 +116,7 @@ lsimp_msg_t* parse_msg(char *buf, unsigned int buf_len)
           goto fail;
         if (msg->keyx.key_len > 0)
         {
-          msg->keyx.key = malloc(msg->keyx.key_len);
+          msg->keyx.key = __malloc(msg->keyx.key_len);
           if (msg->keyx.key == NULL)
             goto fail;
           memmove(msg->keyx.key, pos, msg->keyx.key_len);
@@ -144,10 +144,10 @@ lsimp_msg_t* parse_msg(char *buf, unsigned int buf_len)
           goto fail;
         if (msg->data.data_len > 0)
         {
-          msg->data.data = malloc(msg->data.data_len + 1);
+          msg->data.data = __malloc(msg->data.data_len + 1);
           if (msg->data.data == NULL)
             goto fail;
-          memset(msg->data.data, 0, msg->data.data_len + 1);
+          __memset(msg->data.data, 0, msg->data.data_len + 1);
           memmove(msg->data.data, pos, msg->data.data_len);
           pos += msg->data.data_len;
           buf_len -= msg->data.data_len;
@@ -165,10 +165,10 @@ lsimp_msg_t* parse_msg(char *buf, unsigned int buf_len)
           goto fail;
         if (msg->text.msg_len > 0)
         {
-          msg->text.msg = malloc(msg->text.msg_len + 1);
+          msg->text.msg = __malloc(msg->text.msg_len + 1);
           if (msg->text.msg == NULL)
             goto fail;
-          memset(msg->text.msg, 0, msg->text.msg_len + 1);
+          __memset(msg->text.msg, 0, msg->text.msg_len + 1);
           memmove(msg->text.msg, pos, msg->text.msg_len);
           pos += msg->text.msg_len;
           buf_len -= msg->text.msg_len;
@@ -189,6 +189,6 @@ lsimp_msg_t* parse_msg(char *buf, unsigned int buf_len)
 
 fail:
   if (msg)
-    free(msg);
+    __free(msg);
   return NULL;
 }

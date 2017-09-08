@@ -38,7 +38,7 @@ extern "C" {
 
 extern "C" {
 	int __cxa_atexit(void (*func)(void *), void *, void *);
-	void *__dso_handle;
+	extern void *__dso_handle;
 };
 
 struct __cxa_exits {
@@ -56,7 +56,7 @@ int
 __cxa_atexit(void (*func)(void *), void *arg, void *dso) {
 	struct __cxa_exits *p, *q;
 
-	q = (struct __cxa_exits *)malloc(sizeof(*q));
+	q = (struct __cxa_exits *)__malloc(sizeof(*q));
 	if (q == NULL)
 		return (-1);
 	q->next = NULL;
@@ -84,7 +84,7 @@ terminate(int ex) {
 		p = __cxa_exits->next;
 		fn = __cxa_exits->func;
 		arg = __cxa_exits->arg;
-		free(__cxa_exits);
+		__free(__cxa_exits);
 		__cxa_exits = p;
 		fn(arg);
 	}

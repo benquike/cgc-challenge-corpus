@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -89,7 +89,7 @@ int retval;
 	}
 
 	// if we got here, we have a suitable block of memory
-	bzero(fileSystem, totalSize);
+	__bzero(fileSystem, totalSize);
 
 	// put the masterBlocks into the first block of the filesystem
 	masterBlocks = (mbStructType *)fileSystem;
@@ -120,17 +120,17 @@ int retval;
 
 	// make sure these blocks are marked as in use
 	setBlockInUse(0);  // master block
-	setBlockInUse(1);  // free list block
+	setBlockInUse(1);  // __free list block
 	setBlockInUse(2);  // root directory
 
 	// now setup the root directory
 
-	// calculate the max number of entries given the size of a block, minus the space for a link to the next block
+	// calculate the max number of entries given the size of a block, minus the space for a __link to the next block
 	rootDir->maxEntries = (blockSize - 8)/sizeof(directoryEntryType);
 
 	rootDir->numEntries = 0;
 
-	bzero( fileCursors, sizeof(fileCursors));
+	__bzero( fileCursors, sizeof(fileCursors));
 
 	return NO_ERROR;
 
@@ -158,7 +158,7 @@ int i;
 
 	for ( i = 0; i < rootDir->maxEntries; ++i ) {
 
-		if ( strcmp(rootDir->entry[i].name, name) == 0) {
+		if ( __strcmp(rootDir->entry[i].name, name) == 0) {
 
 
 			if (info != 0 ) {
@@ -169,7 +169,7 @@ int i;
 
 			return NO_ERROR;
 
-		} // if strcmp
+		} // if __strcmp
 
 	}  // for
 
@@ -191,7 +191,7 @@ int x;
 	for ( i = 0; i < rootDir->maxEntries; ++i ) {
 
 		// found a matching name in the directory
-		if ( strcmp(rootDir->entry[i].name, name) == 0) {
+		if ( __strcmp(rootDir->entry[i].name, name) == 0) {
 
 
 			// if this file doesn't belong to this user and the user isn't "root"
@@ -214,7 +214,7 @@ int x;
 
 			}
 
-			// find a free fileCursor and assign it to this file
+			// find a __free fileCursor and assign it to this file
 			for ( x = 0; x < MAX_OPEN_FILES; ++x ) {
 
 				if (fileCursors[x].inUse == 0)
@@ -236,7 +236,7 @@ int x;
 			fileCursors[x].othersPermissions = rootDir->entry[i].othersPermissions;
 			fileCursors[x].fileType = rootDir->entry[i].fileType;
 
-			// if the file has data in it, position the write cursor at the end
+			// if the file has data in it, position the __write cursor at the end
 			if (rootDir->entry[i].fileSize > 0) {
 				
 				fileCursors[x].writeBlockNum = rootDir->entry[i].fileSize / masterBlocks->mblock0.blockSize;
@@ -246,7 +246,7 @@ int x;
 
 			return x;
 
-		} // if strcmp
+		} // if __strcmp
 
 	}  // for
 
@@ -340,7 +340,7 @@ unsigned int catalogBlock;
 
 		if ( rootDir->entry[i].name[0] == 0) {
 
-			strncpy(rootDir->entry[i].name, name, MAX_FILENAME_LEN);
+			__strncpy(rootDir->entry[i].name, name, MAX_FILENAME_LEN);
 			rootDir->entry[i].fileSize = 0;
 			rootDir->entry[i].fileType = type;
 			rootDir->entry[i].securityID = securityID;
@@ -366,7 +366,7 @@ unsigned int catalogBlock;
 			rootDir->numEntries++;
 			return NO_ERROR;
 
-		} // if strcmp
+		} // if __strcmp
 
 	}  // for
 
@@ -457,10 +457,10 @@ int retcode;
 
 		}
 
-		// read block where writing will happen and go from there
+		// __read block where writing will happen and go from there
 		dirEntry = fileCursors[fh].dirEntryNum;
 
-		// read the catalog for this file
+		// __read the catalog for this file
 		if (readBlock(rootDir->entry[dirEntry].firstCatalogBlock, (void **)&catalogBlock) != 0) {
 
 			return ERROR_READ_ERROR;
@@ -479,11 +479,11 @@ int retcode;
 
 		}
 
-		memcpy(blockForWrite+blockOffset, buffer, writeLength);
+		__memcpy(blockForWrite+blockOffset, buffer, writeLength);
 
 		writeBlock(blockForWrite, blockNumForWrite);
 
-		// free the memory for the buffer
+		// __free the memory for the buffer
 		deallocate(blockForWrite, blockSize);
 
 		leftToWrite -= writeLength;
@@ -500,8 +500,8 @@ int retcode;
 
 }
 
-// read up to size bytes from the file.  Stops reading if the end of file is reached.
-// returns the actual number of bytes read, or -1 on error
+// __read up to size bytes from the file.  Stops reading if the end of file is reached.
+// returns the actual number of bytes __read, or -1 on error
 int readFile(fileHandleType fh, char *buffer, unsigned int size, int relPosition, unsigned int *numRead, securityIdType securityID) {
 
 int i;
@@ -577,7 +577,7 @@ int retcode;
 
 	}
 
-	// read the catalog of blocks for this file
+	// __read the catalog of blocks for this file
 	dirEntry = fileCursors[fh].dirEntryNum;
 	
 	readPos = fileCursors[fh].readPos;
@@ -598,8 +598,8 @@ int retcode;
 		// the later will be looked up in the block catalog for this file
 		blockIndexToRead = readPos / blockSize;
 
-		// read the catalog for this file
-		// re-read it every time because it could also get written to, extending the EOF
+		// __read the catalog for this file
+		// re-__read it every time because it could also get written to, extending the EOF
 		if (readBlock(rootDir->entry[dirEntry].firstCatalogBlock, (void **)&catalogBlock)!= 0) {
 
 			return ERROR_READ_ERROR;
@@ -618,7 +618,7 @@ int retcode;
 
 		// now there are three cases on how much memory to copy--the smallest of:
 		// 1) the remaining data in this block from the calculated offset
-		// 2) the remaining data in this read request
+		// 2) the remaining data in this __read request
 		// 3) until the end of file is reached
 
 		readOffset = readPos % blockSize;
@@ -628,7 +628,7 @@ int retcode;
 
 		amountToRead = minimum( minimum(remainingInFile, remainingInBlock), leftToRead);
 
-		memcpy(buffer+bytesRead, blockToRead+readOffset, amountToRead);
+		__memcpy(buffer+bytesRead, blockToRead+readOffset, amountToRead);
 
 		// we are done with this block so release the memory
 		deallocate((void *)blockToRead, blockSize);
@@ -677,7 +677,7 @@ struct memoryFileInfo {
 
 	memoryInfo= (struct memoryFileInfo *)catalogBlock;
 
-	// validate that the request is valid in terms of size and read position in the block
+	// validate that the request is valid in terms of size and __read position in the block
 	if (fileCursors[fh].readPos >= fileCursors[fh].fileSize ) {
 
 		return ERROR_EOF;
@@ -688,13 +688,13 @@ struct memoryFileInfo {
 	copySize = minimum(size, fileCursors[fh].fileSize - fileCursors[fh].readPos);
 
 	// copy the memory into the buffer and return
-	memcpy(buffer, (void *)memoryInfo->address+fileCursors[fh].readPos, copySize);
+	__memcpy(buffer, (void *)memoryInfo->address+fileCursors[fh].readPos, copySize);
 
 	*numRead = copySize;
 
 	fileCursors[fh].readPos += copySize;
 
-	// free the catalog block
+	// __free the catalog block
 	deallocate(catalogBlock, masterBlocks->mblock0.blockSize);
 
 	if (fileCursors[fh].readPos >= fileCursors[fh].fileSize ) {
@@ -732,7 +732,7 @@ struct memoryFileInfo {
 
 	memoryInfo= (struct memoryFileInfo *)catalogBlock;
 
-	// validate that the request is valid in terms of size and read position in the block
+	// validate that the request is valid in terms of size and __read position in the block
 	if (size > fileCursors[fh].fileSize ) {
 
 		return ERROR_BAD_SIZE;
@@ -740,12 +740,12 @@ struct memoryFileInfo {
 	}
 
 	// copy the memory into the buffer and return
-	memcpy((void *)memoryInfo->address, buffer, size);
+	__memcpy((void *)memoryInfo->address, buffer, size);
 
 
 	fileCursors[fh].fileSize = size;
 
-	// free the catalog block
+	// __free the catalog block
 	deallocate(catalogBlock, masterBlocks->mblock0.blockSize);
 
 	return NO_ERROR;
@@ -776,7 +776,7 @@ int flushFile(fileHandleType fh) {
 	return NO_ERROR;
 }
 
-// update the fileCursor's read pointer to the offset specified
+// update the fileCursor's __read pointer to the offset specified
 int fileReadPosition(fileHandleType fh, unsigned int offset) {
 
 	if (fh > MAX_OPEN_FILES) {
@@ -800,7 +800,7 @@ int fileReadPosition(fileHandleType fh, unsigned int offset) {
 
 }
 
-// update the fileCursor's read pointer relative to the current value
+// update the fileCursor's __read pointer relative to the current value
 int fileReadPosRelative(fileHandleType fh, int offset) {
 
 	if (fh > MAX_OPEN_FILES) {
@@ -833,7 +833,7 @@ int fileReadPosRelative(fileHandleType fh, int offset) {
 	return NO_ERROR;
 }
 
-// update the fileCursor's write pointer to the absolute value
+// update the fileCursor's __write pointer to the absolute value
 // going beyond the end of file is an error
 int fileWritePosition(fileHandleType fh, unsigned int offset) {
 
@@ -857,7 +857,7 @@ int fileWritePosition(fileHandleType fh, unsigned int offset) {
 	return NO_ERROR;
 }
 
-// update the write position relative to the current value
+// update the __write position relative to the current value
 int fileWritePosRelative(fileHandleType fh, int offset) {
 
 	if (fh > MAX_OPEN_FILES) {
@@ -921,10 +921,10 @@ struct memoryFileInfo {
 
 	}
 
-	// read the catalog of blocks for this file
+	// __read the catalog of blocks for this file
 	dirEntry = fileCursors[fh].dirEntryNum;
 	
-	// read the catalog for this file
+	// __read the catalog for this file
 	retval = readBlock(rootDir->entry[dirEntry].firstCatalogBlock, (void **)&catalogBlock);
 
 	if (retval != 0) {
@@ -939,7 +939,7 @@ struct memoryFileInfo {
 
 		if (memoryInfo->address > 0 ) {
 
-			free((void *)memoryInfo->address);
+			__free((void *)memoryInfo->address);
 
 		}
 
@@ -1007,10 +1007,10 @@ int retval;
 
 	}
 
-	// read the catalog of blocks for this file
+	// __read the catalog of blocks for this file
 	dirEntry = fileCursors[fh].dirEntryNum;
 	
-	// read the catalog for this file
+	// __read the catalog for this file
 	retval = readBlock(rootDir->entry[dirEntry].firstCatalogBlock, (void **)&catalogBlock);
 
 	if (retval != 0) {
@@ -1069,7 +1069,7 @@ static findFileHandleType fileHandle;
 
 			// nulls aren't necessariy stored in the directory if the filename has max length
 			// so make a copy that we can use with the wildcard search function
-			strncpy(strcmpbuffer, currentFile->name, MAX_FILENAME_LEN);
+			__strncpy(strcmpbuffer, currentFile->name, MAX_FILENAME_LEN);
 			strcmpbuffer[MAX_FILENAME_LEN] = 0;
 
 			// now match against the filespec
@@ -1082,7 +1082,7 @@ static findFileHandleType fileHandle;
 			// access to the real directory structure
 
 			fileHandle.currentFile = currentFile;
-			strncpy(fileHandle.filespec, filespec, MAX_FILENAME_LEN);
+			__strncpy(fileHandle.filespec, filespec, MAX_FILENAME_LEN);
 
 			*findFileHandle = &fileHandle;
 
@@ -1129,7 +1129,7 @@ void eraseBlock( unsigned int blockNum) {
 unsigned int blockSize;
 
 	blockSize = masterBlocks->mblock0.blockSize;
-	bzero((unsigned char *)(fileSystem + (blockSize * blockNum)), blockSize);
+	__bzero((unsigned char *)(fileSystem + (blockSize * blockNum)), blockSize);
 
 }
 
@@ -1257,7 +1257,7 @@ int retval;
 
 	}
 
-	memcpy(blockData, (fileSystem + (blockSize * blockNum)), blockSize);
+	__memcpy(blockData, (fileSystem + (blockSize * blockNum)), blockSize);
 
 	*buffer = blockData;
 
@@ -1277,7 +1277,7 @@ unsigned int blockSize;
 	
 	blockSize = masterBlocks->mblock0.blockSize;
 
-	memcpy(fileSystem + (blockSize * blockNum), blockData, blockSize);
+	__memcpy(fileSystem + (blockSize * blockNum), blockData, blockSize);
 
 	return NO_ERROR;
 
@@ -1306,7 +1306,7 @@ int retval;
 
 	dirEntry = fileCursors[fh].dirEntryNum;
 
-	// read the catalog for this file
+	// __read the catalog for this file
 	retval = readBlock(rootDir->entry[dirEntry].firstCatalogBlock, &catalogBlock);
 
 	if (retval != 0) {
@@ -1338,7 +1338,7 @@ int retval;
 	// add this new block to the catalog for this file
 	*((unsigned int *)catalogBlock+i) = newBlockNum;
 
-	// and write the block back 
+	// and __write the block back 
 	writeBlock(catalogBlock, rootDir->entry[dirEntry].firstCatalogBlock);
 
 	// release the memory allocated by readBlock
@@ -1386,7 +1386,7 @@ struct {
 
 		if ( rootDir->entry[i].name[0] == 0) {
 
-			strncpy(rootDir->entry[i].name, name, MAX_FILENAME_LEN);
+			__strncpy(rootDir->entry[i].name, name, MAX_FILENAME_LEN);
 			rootDir->entry[i].fileSize = length;
 			rootDir->entry[i].fileType = 0x3 + accessType;
 			rootDir->entry[i].securityID = securityID;
@@ -1421,7 +1421,7 @@ struct {
 
 			return NO_ERROR;
 
-		} // if strcmp
+		} // if __strcmp
 
 	}  // for
 

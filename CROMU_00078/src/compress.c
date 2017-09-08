@@ -4,7 +4,7 @@ Copyright (c) 2016 Cromulence LLC
 
 Authors: Dan Czarnecki <cgc@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -90,20 +90,20 @@ void Compress(t3DCPixel **px_list, uint8_t *compressed_data, uint16_t *data_len)
     // blue
     color += (ClosestMatch(B, px->b) << 0);
 
-    memcpy(compressed_data+i, &px->x, sizeof(int16_t));
+    __memcpy(compressed_data+i, &px->x, sizeof(int16_t));
     i += sizeof(int16_t);
 
-    memcpy(compressed_data+i, &px->y, sizeof(int16_t));
+    __memcpy(compressed_data+i, &px->y, sizeof(int16_t));
     i += sizeof(int16_t);
 
-    memcpy(compressed_data+i, &px->z, sizeof(int16_t));
+    __memcpy(compressed_data+i, &px->z, sizeof(int16_t));
     i += sizeof(int16_t);
 
-    memcpy(compressed_data+i, &color, 1);
+    __memcpy(compressed_data+i, &color, 1);
     i++;
   }
 
-  memcpy(data_len, &i, 2);
+  __memcpy(data_len, &i, 2);
 
   return;
 }
@@ -118,15 +118,15 @@ void Decompress(uint8_t *in_data, uint8_t *out_data, uint16_t *data_len) {
   uint8_t r,g,b;
 
   while (in_offset < *data_len) {
-    memcpy(out_data+out_offset, in_data+in_offset, sizeof(int16_t));
+    __memcpy(out_data+out_offset, in_data+in_offset, sizeof(int16_t));
     out_offset += sizeof(int16_t);
     in_offset += sizeof(int16_t);
 
-    memcpy(out_data+out_offset, in_data+in_offset, sizeof(int16_t));
+    __memcpy(out_data+out_offset, in_data+in_offset, sizeof(int16_t));
     out_offset += sizeof(int16_t);
     in_offset += sizeof(int16_t);
 
-    memcpy(out_data+out_offset, in_data+in_offset, sizeof(int16_t));
+    __memcpy(out_data+out_offset, in_data+in_offset, sizeof(int16_t));
     out_offset += sizeof(int16_t);
     in_offset += sizeof(int16_t);
 
@@ -149,7 +149,7 @@ void Decompress(uint8_t *in_data, uint8_t *out_data, uint16_t *data_len) {
 
   }
 
-  memcpy(data_len, &out_offset, 2);
+  __memcpy(data_len, &out_offset, 2);
 
   return;
 }
@@ -170,11 +170,11 @@ void WriteOut(t3DCPixel **px_list, uint8_t *data, uint16_t data_len) {
 
     offset += 6;
 
-    memcpy(&tmp->r, data+offset, 1);
+    __memcpy(&tmp->r, data+offset, 1);
     offset++;
-    memcpy(&tmp->g, data+offset, 1);
+    __memcpy(&tmp->g, data+offset, 1);
     offset++;
-    memcpy(&tmp->b, data+offset, 1);
+    __memcpy(&tmp->b, data+offset, 1);
     offset++;
     tmp->a = 0xff;
     offset++;

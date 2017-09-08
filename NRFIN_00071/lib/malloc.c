@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -51,12 +51,12 @@ static void _rmchunk(chunk_t *c) {
     c->next->prev = c->prev;
 }
 
-void *malloc(size_t s) {
+void *__malloc(size_t s) {
     void *p;
     chunk_t *c = &freel;
     size_t total = s;
     debug("alloc of size: @h\n",s);
-    //printf("Alloc @h\n",s);
+    //__printf("Alloc @h\n",s);
 
     if (s == 0) {
         return NULL;
@@ -77,12 +77,12 @@ void *malloc(size_t s) {
 
     total += sizeof(chunk_t);
 
-    //check free list to see if we have any matches
+    //check __free list to see if we have any matches
     do {
         if (c->size >= total) {
             RMFREE(c);
             ADDHEAP(c);
-            //printf("Return 2 @h\n",c);
+            //__printf("Return 2 @h\n",c);
             return (char*)c+sizeof(chunk_t);
         }
         c = c->next;
@@ -98,12 +98,12 @@ void *malloc(size_t s) {
             page += total;
             page_remaining -= total;
             ADDHEAP(c);
-            //printf("Return 1 @h\n",c);
+            //__printf("Return 1 @h\n",c);
             return ((char*)c+sizeof(chunk_t));
         } else {
-            //we don't have enough for a useful allocation. add remaining to free list
+            //we don't have enough for a useful allocation. add remaining to __free list
             if (page_remaining > sizeof(chunk_t)) {
-                //we add page to free list
+                //we add page to __free list
                 ADDFREE((chunk_t*)page);
                 page = NULL;
             } else {
@@ -115,13 +115,13 @@ void *malloc(size_t s) {
 
 
 
-    //no suitable free chunk
+    //no suitable __free chunk
     //we need a new page, and will have returned at this point if we don't
     ALLOCRWX(total,p);
 
     page = (char *)p + total;
     page = (char *)((uint32_t)page & ~(PAGE_SIZE-1));
-    //printf("@h\n",page);
+    //__printf("@h\n",page);
     page_remaining = PAGE_SIZE - ((size_t)((char *)p+total) - (size_t)page);
     page += PAGE_SIZE-page_remaining;
 
@@ -131,21 +131,21 @@ void *malloc(size_t s) {
     c = (chunk_t*)p;
     c->size = s;
     ADDHEAP(c);
-    //printf("Return 3 @h\n",c);
+    //__printf("Return 3 @h\n",c);
 
     return (char*)c + sizeof(chunk_t);
 }
 
-void free(void *p) {
-    //printf("Free @h\n",((char*)p - sizeof(chunk_t)));
+void __free(void *p) {
+    //__printf("Free @h\n",((char*)p - sizeof(chunk_t)));
     RMHEAP((chunk_t*)((char*)p - sizeof(chunk_t)));
     ADDFREE((chunk_t*)((char*)p - sizeof(chunk_t)));
 }
 
-void *calloc(size_t s) {
-    void *p = malloc(s);
+void *__calloc(size_t s) {
+    void *p = __malloc(s);
     if (!p)
         return NULL;
-    memset(p, '\0', s);
+    __memset(p, '\0', s);
     return p;
 }

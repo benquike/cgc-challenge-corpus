@@ -57,11 +57,11 @@ void free_command(command_t* cmd)
   {
     for (size_t i = 0; i < cmd->arity; i++)
       if (cmd->argv[i])
-        free(cmd->argv[i]);
-    free(cmd->argv);
+        __free(cmd->argv[i]);
+    __free(cmd->argv);
   }
 
-  free(cmd);
+  __free(cmd);
 }
 
 #endif /* _COMMAND _H */

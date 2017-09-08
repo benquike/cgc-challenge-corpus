@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -27,7 +27,7 @@ THE SOFTWARE.
 #include <stdlib.h>
 #include <stdint.h>
 
-int memcpy( void *dest, void *src, size_t n )
+int __memcpy( void *dest, void *src, size_t n )
 {
 	size_t index = 0;
 
@@ -39,7 +39,7 @@ int memcpy( void *dest, void *src, size_t n )
 	return index;
 }
 
-int islower( int c )
+int __islower( int c )
 {
 	if ( c >= 0x61 && c <= 0x7a )
 		return 1;
@@ -47,7 +47,7 @@ int islower( int c )
 		return 0;
 }
 
-int isupper( int c )
+int __isupper( int c )
 {
 	if ( c >= 0x41 && c <= 0x5a )
 		return 1;
@@ -55,17 +55,17 @@ int isupper( int c )
 		return 0;
 }
 
-int isalpha( int c )
+int __isalpha( int c )
 {
-	return islower( c ) | isupper( c );
+	return __islower( c ) | __isupper( c );
 }
 
-int isalnum( int c )
+int __isalnum( int c )
 {
-	return isalpha( c ) | isdigit( c );
+	return __isalpha( c ) | __isdigit( c );
 }
 
-int isspace( int c )
+int __isspace( int c )
 {
     if ( c == ' ' ||
          c == '\t' ||
@@ -78,7 +78,7 @@ int isspace( int c )
         return 0;
 }
 
-int isdigit( int c )
+int __isdigit( int c )
 {
     if ( c >= '0' && c <= '9' )
         return 1;
@@ -86,17 +86,17 @@ int isdigit( int c )
         return 0;
 }
 
-int isnan( double val )
+int __isnan( double val )
 {
     return __builtin_isnan( val );
 }
 
-int isinf( double val )
+int __isinf( double val )
 {
     return __builtin_isinf( val );
 }
 
-double atof(const char* str)
+double __atof(const char* str)
 {
     if ( str == NULL )
         return 0.0;
@@ -107,7 +107,7 @@ double atof(const char* str)
     int part;
 
     // Skip whitespace
-    while ( isspace( str[0] ) )
+    while ( __isspace( str[0] ) )
         str++;
 
     part = 0; // First part (+/-/./number is acceptable)
@@ -136,7 +136,7 @@ double atof(const char* str)
             else
                 return 0.0;
         }
-        else if ( isdigit( *str ) )
+        else if ( __isdigit( *str ) )
         {
             if ( part == 0 || part == 1 )
             {
@@ -165,7 +165,7 @@ double atof(const char* str)
 }
 
 
-int atoi(const char* str)
+int __atoi(const char* str)
 {
     if ( str == NULL )
         return 0;
@@ -176,7 +176,7 @@ int atoi(const char* str)
     int digit_count = 0;
 
     // Skip whitespace
-    while ( isspace( str[0] ) )
+    while ( __isspace( str[0] ) )
         str++;
 
     part = 0; // First part (+/-/number is acceptable)
@@ -198,7 +198,7 @@ int atoi(const char* str)
 
             part++;
         }
-        else if ( isdigit( *str ) )
+        else if ( __isdigit( *str ) )
         {
             if ( part == 0 || part == 1 )
             {
@@ -226,7 +226,7 @@ int atoi(const char* str)
     return (sign * integer_part);
 }
 
-char *strncpy( char *dest, char *src, size_t n )
+char *__strncpy( char *dest, char *src, size_t n )
 {
     size_t i;
 
@@ -242,7 +242,7 @@ char *strncpy( char *dest, char *src, size_t n )
     return (dest);
 }
 
-char *strcpy( char *dest, char *src )
+char *__strcpy( char *dest, char *src )
 {
     size_t i;
 
@@ -258,7 +258,7 @@ char *strcpy( char *dest, char *src )
     return (dest);
 }
 
-void memset( void *buff, char ch, size_t len )
+void __memset( void *buff, char ch, size_t len )
 {
     size_t index = 0;
     unsigned char *c = buff;
@@ -279,7 +279,7 @@ end:
     return;
 }
 
-void bzero( void *buff, size_t len )
+void __bzero( void *buff, size_t len )
 {
     size_t index = 0;
     unsigned char *c = buff;
@@ -320,7 +320,7 @@ int memcmp( void *s1, void *s2, size_t n )
     return (*(const unsigned char *)c1 - *(const unsigned char *)c2);
 }
 
-int strcmp( const char *s1, const char *s2 ) 
+int __strcmp( const char *s1, const char *s2 ) 
 {
     while ( *s1 && (*s1 == *s2) ) 
     {
@@ -329,9 +329,9 @@ int strcmp( const char *s1, const char *s2 )
     return (*(const unsigned char *)s1 - *(const unsigned char *)s2);
 }
 
-char *strncat ( char *dest, const char *src, size_t n ) 
+char *__strncat ( char *dest, const char *src, size_t n ) 
 {
-    size_t dest_len = strlen(dest);
+    size_t dest_len = __strlen(dest);
     size_t i;
 
     if (dest == NULL || src == NULL) 
@@ -347,7 +347,7 @@ char *strncat ( char *dest, const char *src, size_t n )
     return(dest);
 }
 
-size_t receive_until( char *dst, char delim, size_t max )
+size_t __receive_until( char *dst, char delim, size_t max )
 {
     size_t len = 0;
     size_t rx = 0;
@@ -372,7 +372,7 @@ end:
     return len;
 }
 
-size_t strcat( char *dest, char*src )
+size_t __strcat( char *dest, char*src )
 {
     size_t length = 0;
     size_t start = 0;
@@ -381,7 +381,7 @@ size_t strcat( char *dest, char*src )
         goto end;
     }
 
-    start = strlen( dest );
+    start = __strlen( dest );
 
     for ( ; src[length] != 0x00 ; start++, length++ ) {
         dest[start] = src[length];
@@ -392,7 +392,7 @@ end:
     return length;
 }
 
-size_t strlen( char * str )
+size_t __strlen( char * str )
 {
     size_t length = 0;
 
@@ -406,7 +406,7 @@ end:
     return length;
 }
 
-size_t itoa( char *out, size_t val, size_t max )
+size_t __itoa( char *out, size_t val, size_t max )
 {
     size_t length = 0;
     size_t end = 0;
@@ -444,8 +444,8 @@ end:
     return length;
 }
 
-void puts( char *t )
+void __puts( char *t )
 {
     size_t size;
-    transmit(STDOUT, t, strlen(t), &size);
+    transmit(STDOUT, t, __strlen(t), &size);
 }

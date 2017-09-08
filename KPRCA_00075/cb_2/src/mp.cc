@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -25,13 +25,13 @@
 static void _MsgSend(int fd, int id, int selector, int next_fd, int next_id, int next_selector, int nargs, ...)
 {
     va_list ap;
-    FILE *fp = fopen(fd, 1);
-    fwrite(&id, sizeof(int), fp);
-    fwrite(&selector, sizeof(int), fp);
-    fwrite(&nargs, 1, fp);
-    fwrite(&next_fd, sizeof(int), fp);
-    fwrite(&next_id, sizeof(int), fp);
-    fwrite(&next_selector, sizeof(int), fp);
+    __FILE *fp = __fopen(fd, 1);
+    __fwrite(&id, sizeof(int), fp);
+    __fwrite(&selector, sizeof(int), fp);
+    __fwrite(&nargs, 1, fp);
+    __fwrite(&next_fd, sizeof(int), fp);
+    __fwrite(&next_id, sizeof(int), fp);
+    __fwrite(&next_selector, sizeof(int), fp);
 
     va_start(ap, nargs);
     for (int i = 0; i < nargs; i++)
@@ -41,7 +41,7 @@ static void _MsgSend(int fd, int id, int selector, int next_fd, int next_id, int
         arg->send(fp);
     }
     va_end(ap);
-    fflush(fp);
+    __fflush(fp);
 }
 
 void MsgSend1(const object& obj, int selector)

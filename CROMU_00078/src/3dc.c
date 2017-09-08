@@ -4,7 +4,7 @@ Copyright (c) 2016 Cromulence LLC
 
 Authors: Dan Czarnecki <cgc@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,9 +37,9 @@ void Push(t3DCPixel **px_list, t3DCPixel *px) {
 
     int i;
 
-    t3DCPixel *new = malloc(sizeof(t3DCPixel));
+    t3DCPixel *new = __malloc(sizeof(t3DCPixel));
 
-    memcpy(new, px, sizeof(t3DCPixel));
+    __memcpy(new, px, sizeof(t3DCPixel));
 
     for (i = 0; i <= MAX_PIXELS; i++) {
       if (px_list[i] == NULL) {
@@ -71,7 +71,7 @@ void ReadFile(t3DCPixel **px_list) {
   uint32_t offset = 0;
 
   while(dataSize > 0) {
-    px = malloc(sizeof(t3DCPixel));
+    px = __malloc(sizeof(t3DCPixel));
 
     px->x = (int16_t) prng();
     px->y = (int16_t) prng();
@@ -85,14 +85,14 @@ void ReadFile(t3DCPixel **px_list) {
 
     dataSize -= sizeof(t3DCPixel);
 
-    free(px);
+    __free(px);
   }
 
 }
 
 void NewFile(t3DCPixel **px_list, char *buf) {
   uint16_t maxSize = MAX_FILE_SIZE;
-  printf("Please submit your new file data ($d bytes):\n", maxSize);
+  __printf("Please submit your new file data ($d bytes):\n", maxSize);
   receive_bytes(buf, maxSize);
 
   uint16_t offset = 0;
@@ -102,38 +102,38 @@ void NewFile(t3DCPixel **px_list, char *buf) {
   while (offset < maxSize) {
     tmp = px_list[i++];
 
-    memcpy(&tmp->x, buf+offset, sizeof(int16_t));
+    __memcpy(&tmp->x, buf+offset, sizeof(int16_t));
     offset += sizeof(int16_t);
 
-    memcpy(&tmp->y, buf+offset, sizeof(int16_t));
+    __memcpy(&tmp->y, buf+offset, sizeof(int16_t));
     offset += sizeof(int16_t);
 
-    memcpy(&tmp->z, buf+offset, sizeof(int16_t));
+    __memcpy(&tmp->z, buf+offset, sizeof(int16_t));
     offset += sizeof(int16_t);
 
-    memcpy(&tmp->r, buf+offset, sizeof(uint8_t));
+    __memcpy(&tmp->r, buf+offset, sizeof(uint8_t));
     offset += sizeof(uint8_t);
 
-    memcpy(&tmp->g, buf+offset, sizeof(uint8_t));
+    __memcpy(&tmp->g, buf+offset, sizeof(uint8_t));
     offset += sizeof(uint8_t);
 
-    memcpy(&tmp->b, buf+offset, sizeof(uint8_t));
+    __memcpy(&tmp->b, buf+offset, sizeof(uint8_t));
     offset += sizeof(uint8_t);
 
-    memcpy(&tmp->a, buf+offset, sizeof(uint8_t));
+    __memcpy(&tmp->a, buf+offset, sizeof(uint8_t));
     offset += sizeof(uint8_t);
 
   }
 
-  printf("New file loaded\n");
+  __printf("New file loaded\n");
 
 }
 
 void ShowPixel(t3DCPixel *px) {
 
-  printf("XYZ:  ($d, $d, $d)\n", px->x, px->y, px->z);
-  printf("RGBA: (#$02x$02x$02x$02x)\n", px->r, px->g, px->b, px->a);
-  printf("\n");
+  __printf("XYZ:  ($d, $d, $d)\n", px->x, px->y, px->z);
+  __printf("RGBA: (#$02x$02x$02x$02x)\n", px->r, px->g, px->b, px->a);
+  __printf("\n");
 
   return;
 }
@@ -144,9 +144,9 @@ void CheckFile(t3DCPixel **px, int16_t num) {
     return;
 
   for (int i=0; i < num; i++) {
-    printf("XYZ:  ($d, $d, $d)\n", px[i]->x, px[i]->y, px[i]->z);
-    printf("RGBA: (#$02x$02x$02x$02x)\n", px[i]->r, px[i]->g, px[i]->b, px[i]->a);
-    printf("\n");
+    __printf("XYZ:  ($d, $d, $d)\n", px[i]->x, px[i]->y, px[i]->z);
+    __printf("RGBA: (#$02x$02x$02x$02x)\n", px[i]->r, px[i]->g, px[i]->b, px[i]->a);
+    __printf("\n");
   }
 
 }

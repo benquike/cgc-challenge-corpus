@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -26,16 +26,16 @@ THE SOFTWARE.
 #ifndef LIBC_H
 #define LIBC_H
 
-int receive_until(char *dest, size_t length, char end, size_t *bytes_read);
-size_t strlen(char *buf);
+int __receive_until(char *dest, size_t length, char end, size_t *bytes_read);
+size_t __strlen(char *buf);
 void print(char *buf);
 int equals(char *one, char *two);
-void strncpy(char *dst, char *src, size_t length);
-int isdigit(char c);
-int atoi(char *str);
-void itoa(char *str, int i);
-void memcpy(char *dst, char *src, size_t size);
-void memset(char *dst, char c, size_t size);
+void __strncpy(char *dst, char *src, size_t length);
+int __isdigit(char c);
+int __atoi(char *str);
+void __itoa(char *str, int i);
+void __memcpy(char *dst, char *src, size_t size);
+void __memset(char *dst, char c, size_t size);
 
 
 #endif // LIBC_H

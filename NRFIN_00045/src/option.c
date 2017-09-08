@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -30,7 +30,7 @@ uint32_t ORDER_ID = 1;
 option_holding_t * match_holding(uint32_t acct_id, option_order_t *order){
 	for(int i =0; i < MAX_HOLDINGS; i++){
 		option_holding_t *h = &(ACCOUNTS[acct_id].holdings[i]);
-		int mcp = memcmp(order->symbol, h->symbol, SYM_SIZE);
+		int mcp = __memcmp(order->symbol, h->symbol, SYM_SIZE);
 		if(mcp == 0)
 			return h;
 
@@ -116,7 +116,7 @@ OP_ERR fill_order(uint32_t acct_id, option_order_t *order, orderbook_order_t *ma
 }
 
 int match_symbol(option_order_t *l, option_order_t *r){
-	return memcmp(l->symbol, r->symbol, SYM_SIZE);
+	return __memcmp(l->symbol, r->symbol, SYM_SIZE);
 }
 
 float get_current_ask(char * sym){
@@ -124,7 +124,7 @@ float get_current_ask(char * sym){
 	uint32_t low_oid = 0;
 	for(int i = 0; i < NUM_ORDERS; i++){
 		if(ORDERBOOK[i].direction == SELL){
-			int mc = memcmp(ORDERBOOK[i].contract.symbol, sym, SYM_SIZE);
+			int mc = __memcmp(ORDERBOOK[i].contract.symbol, sym, SYM_SIZE);
 			if(mc == 0 && ORDERBOOK[i].contract.qty > 0){
 				if(ORDERBOOK[i].order_id < low_oid || low_oid == 0){
 					low_oid = ORDERBOOK[i].order_id;
@@ -173,7 +173,7 @@ OP_ERR add_to_order_book(option_order_t *o, uint32_t acct_id, OP_TYPE direction)
 	for(int i = 0; i < NUM_ORDERS; ++i){
 		if(ORDERBOOK[i].contract.symbol[0] == 0x0){
 			char * obsym = ORDERBOOK[i].contract.symbol;
-			memcpy(o->symbol, obsym, SYM_SIZE);
+			__memcpy(o->symbol, obsym, SYM_SIZE);
 			ORDERBOOK[i].contract.qty = o->qty;
 			ORDERBOOK[i].contract.price = o->price;
 			ORDERBOOK[i].acct_id = acct_id;
@@ -214,7 +214,7 @@ size_t gen_order_fill_msg(packet_t *resp, OP_TYPE ot, char * sym, uint32_t qty, 
 	if(ot != BUY && ot != SELL)
 		_terminate(99);
 	orderfill_t *of = (orderfill_t *) &(resp->op_data);
-	memcpy(sym, &(of->symbol), SYM_SIZE);
+	__memcpy(sym, &(of->symbol), SYM_SIZE);
 	of->qty = qty;
 	return sizeof(orderfill_t)-sizeof(void *);
 }
@@ -223,7 +223,7 @@ OP_ERR check_account_holding_in_qty_sell(option_order_t *sell_order, uint32_t ac
 	account_record_t *ar = &(ACCOUNTS[acct_id]);
 	for(int i = 0; i < MAX_HOLDINGS; i++){
 		option_holding_t *h = &(ar->holdings[i]);
-		if(memcmp(h->symbol, sell_order->symbol, SYM_SIZE) == OK){
+		if(__memcmp(h->symbol, sell_order->symbol, SYM_SIZE) == OK){
 			if(sell_order->qty <= h->qty){
 				return OK;
 			}

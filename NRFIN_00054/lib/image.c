@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -35,7 +35,7 @@ image_init(struct image *img, unsigned width, unsigned height)
 
     img->width = width;
     img->height = height;
-    memset(img->data, '\0', sizeof(struct pixel) * width * height);
+    __memset(img->data, '\0', sizeof(struct pixel) * width * height);
     return EXIT_SUCCESS;
 }
 

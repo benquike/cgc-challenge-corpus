@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -83,7 +83,7 @@ int remove_node(alloc_head_t *head, alloc_node_t *t){
     alloc_node_t *n = get_head(head);
     while(n != NULL){    
         if(n == t){
-            // ensure p is not null before unlink and if it is we're at head
+            // ensure p is not null before __unlink and if it is we're at head
             if(p)
                 p->next = n->next;
             else

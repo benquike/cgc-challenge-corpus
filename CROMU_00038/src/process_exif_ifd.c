@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -52,11 +52,11 @@ unsigned int remaining_size;
 
     if (entry_count *12 + sizeof(entry_count) > remaining_size) {
 
-        printf("Invalid IFD count value\n");
+        __printf("Invalid IFD count value\n");
         _terminate(-1);
     }
 
-	printf("# of arrays: @d\n", entry_count);
+	__printf("# of arrays: @d\n", entry_count);
 
     for (i=0; i< entry_count; ++i) {
 
@@ -65,14 +65,14 @@ unsigned int remaining_size;
     	count = swap_word(ifd_ptr->Entry[i].Count);
     	value = swap_word(ifd_ptr->Entry[i].Value);
 
-        printf("Tag: @x (", tag);
+        __printf("Tag: @x (", tag);
         print_xif_tag_text(tag);
-        printf(")\n");
-        printf("Type: @x (", type);
+        __printf(")\n");
+        __printf("Type: @x (", type);
         print_type(type);
-        printf(")\n");
+        __printf(")\n");
 
-        printf("Count: @d\n", count);
+        __printf("Count: @d\n", count);
 
 #ifdef PATCHED
 
@@ -82,7 +82,7 @@ unsigned int remaining_size;
                 ((char *)ifd_ptr+value < (char *)ifd_ptr ))
         {
 
-                printf("Value: 0\n");
+                __printf("Value: 0\n");
                 return;
             }
         }
@@ -90,15 +90,15 @@ unsigned int remaining_size;
 
         if (type == 2) {
 #ifdef PATCHED
-	    if ( strlen( (char*)(ifd_ptr) + value ) > 2048 ) {
+	    if ( __strlen( (char*)(ifd_ptr) + value ) > 2048 ) {
 		((char*)(ifd_ptr))[value+2048] = '\x00';
 	    }
 #endif
 
-            printf("Value: @s\n", (char *)(ifd_ptr) + value);
+            __printf("Value: @s\n", (char *)(ifd_ptr) + value);
         }
         else {
-            printf("Value: @u\n", value);
+            __printf("Value: @u\n", value);
         }
 
     }

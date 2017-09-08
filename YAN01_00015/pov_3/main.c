@@ -14,7 +14,7 @@ char* msgs[25] = {
 "Can you give me an example?\n",
 "Ohh I see. Why don't you tell me about the lights.\n",
 "Is there a pattern to them?\n",
-"Well why don't you read some lights to me.\n",
+"Well why don't you __read some lights to me.\n",
 "4347C003\n", //14
 "Sure\n",
 "4347C002\n", //16
@@ -92,7 +92,7 @@ void receive_all(int fd, void* buf, size_t len)
   }
 }
 
-size_t receive_until(int fd, char* buf, size_t len, char delim)
+size_t __receive_until(int fd, char* buf, size_t len, char delim)
 {
 
   int ret = 0;
@@ -140,18 +140,18 @@ int main(void)
 
 
   //Read in the original Hello, message
-  receive_until(STDIN, buf, 512, '\n');
+  __receive_until(STDIN, buf, 512, '\n');
 
   for (i = 0; i < 25; i++)
   {
-    transmit_all(STDOUT, msgs[i], strlen(msgs[i]));
-    receive_until(STDIN, buf, 512, '\n');
+    transmit_all(STDOUT, msgs[i], __strlen(msgs[i]));
+    __receive_until(STDIN, buf, 512, '\n');
 
     if ( (i == 14) || (i == 16) || (i == 18) || (i == 20) )
     {
       temp = (temp << 8) | parseByte(buf);
-      transmit_all(STDERR, buf, strlen(buf));
-      receive_until(STDIN, buf, 512, '\n');
+      transmit_all(STDERR, buf, __strlen(buf));
+      __receive_until(STDIN, buf, 512, '\n');
     }
 
     if ( i == 20 )

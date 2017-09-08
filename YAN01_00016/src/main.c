@@ -219,9 +219,9 @@ int main(void)
   while (1)
   {
 #ifdef PATCHED_2
-    sret = receive_until(STDIN, cmd, 64, '\n');
+    sret = __receive_until(STDIN, cmd, 64, '\n');
 #else
-    sret = receive_until(STDIN, cmd, 128, '\n');
+    sret = __receive_until(STDIN, cmd, 128, '\n');
 #endif
     cmd[63] = '\0'; //always end the cstr
     cmd[sret-1] = '\0'; //always end the cstr

@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -130,8 +130,8 @@ int main(void) {
 	// send the List Codes command to dump the magic page
 	SendBytes(STDOUT, "\x08", 1); // CMD_LIST_ALARM_CODES
 	SendBytes(STDOUT, "\xff\xff", 2); // Our fake device entry's ID
-	ReadBytes(STDIN, Req, 1); // read the number of alarm codes we'll be receiving
-	ReadBytes(STDIN, Req, 4); // read the first 4 bytes of the first code
+	ReadBytes(STDIN, Req, 1); // __read the number of alarm codes we'll be receiving
+	ReadBytes(STDIN, Req, 4); // __read the first 4 bytes of the first code
 	
 	// Send the value
 	SendBytes(FRAMEWORK, Req, 4);

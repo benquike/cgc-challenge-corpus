@@ -4,7 +4,7 @@ Author: Bryce Kerley <bryce@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -32,7 +32,7 @@ THE SOFTWARE.
 unsigned char t2buf[4];
 type2_vals t2_vals;
 
-unsigned char atoi(unsigned char* buf, uint16 len) {
+unsigned char __atoi(unsigned char* buf, uint16 len) {
   unsigned char run = 0;
   uint16 i = 0;
   while ((i < len) && (0 != buf[i])) {
@@ -53,7 +53,7 @@ int main(void) {
   transmit(STDERR, "\n", 1, NULL);
   protocol_with_recv_string(^(uint16 len, char* str) {
       unsigned char* ustr = (unsigned char*)str;
-      t2buf[0] = atoi(ustr, len);
+      t2buf[0] = __atoi(ustr, len);
     });
   
   transmit(STDERR, "2", 1, NULL);
@@ -61,7 +61,7 @@ int main(void) {
   transmit(STDERR, "\n", 1, NULL);
   protocol_with_recv_string(^(uint16 len, char* str) {
       unsigned char* ustr = (unsigned char*)str;
-      t2buf[1] = atoi(ustr, len);
+      t2buf[1] = __atoi(ustr, len);
     });
 
   transmit(STDERR, "3", 1, NULL);
@@ -69,7 +69,7 @@ int main(void) {
   transmit(STDERR, "\n", 1, NULL);
   protocol_with_recv_string(^(uint16 len, char* str) {
       unsigned char* ustr = (unsigned char*)str;
-      t2buf[2] = atoi(ustr, len);
+      t2buf[2] = __atoi(ustr, len);
     });
 
   transmit(STDERR, "4", 1, NULL);
@@ -77,7 +77,7 @@ int main(void) {
   transmit(STDERR, "\n", 1, NULL);
   protocol_with_recv_string(^(uint16 len, char* str) {
       unsigned char* ustr = (unsigned char*)str;
-      t2buf[3] = atoi(ustr, len);
+      t2buf[3] = __atoi(ustr, len);
     });
 
   const unsigned char* t2buf_addr = (unsigned char*) &t2buf;

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -121,8 +121,8 @@ typedef struct {
 } session_t;
 
 /**
- * Look up a session based on its session ID.  Backing memory is memset() to 
- * \x00, so this function is also used to look up the next free session slot 
+ * Look up a session based on its session ID.  Backing memory is __memset() to 
+ * \x00, so this function is also used to look up the next __free session slot 
  * (the first session with a session ID of \x00\x00\x00\x00).
  *
  * @param id The requested session ID.
@@ -149,9 +149,9 @@ int do_init(session_t **session);
  * Session instance negotiation is complete and we continue with session 
  * negotiation, setting up session memory for bytecode execution. At a high 
  * level, this function is responsible for the following:
- * 0) read & verify (if PATCHED) session ID
+ * 0) __read & verify (if PATCHED) session ID
  * 1) populate BASE_ADDR
- * 2) read opcode buffer off the wire into the session's opcode buffer
+ * 2) __read opcode buffer off the wire into the session's opcode buffer
  * 3) execute bytecode
  * 4) transmit the session's scratch buffer back to the CRS
  *

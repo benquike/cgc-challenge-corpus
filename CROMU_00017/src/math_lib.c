@@ -4,7 +4,7 @@ Author: James Nuttall (james@cromulence.co)
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -42,7 +42,7 @@ char acceptable_char[] = {"1234567890()*-+/"};
 int get_user_answer(int *answer)
 {
 	char buf[15];
-	bzero(buf, 15);
+	__bzero(buf, 15);
 
 	int status;
 	status = receive(STDIN, buf, sizeof(buf) - 1, NULL);
@@ -51,27 +51,27 @@ int get_user_answer(int *answer)
 		// Error on receive
 		return FAIL;
 	}
-	int str_len = strlen(buf);
+	int str_len = __strlen(buf);
 	if (buf[str_len-1] == '\n')
 	{
 		str_len -= 1;
 	}
 	for (int i = 0; i < str_len; i++) 
 	{
-		if (!isdigit(buf[i])&&!(buf[i]=='-'))
+		if (!__isdigit(buf[i])&&!(buf[i]=='-'))
 		{
-			printf("incorrect item entered\n");
+			__printf("incorrect item entered\n");
 			return FAIL;
 		}
 	}
-	*answer = atoi(buf);
+	*answer = __atoi(buf);
 	return SUCCESS;
 }
 
 int get_user_equation(char *equation)
 {
 	char buf[256];
-	bzero(buf, sizeof(buf));
+	__bzero(buf, sizeof(buf));
 
 	int status;
 	status = receive(STDIN, buf, sizeof(buf) - 1, NULL);
@@ -81,13 +81,13 @@ int get_user_equation(char *equation)
 		return FAIL;
 	}
 
-	if (buf[strlen(buf)-1]=='\n')
+	if (buf[__strlen(buf)-1]=='\n')
 	{
-		strncpy(equation, buf, strlen(buf) - 1);
+		__strncpy(equation, buf, __strlen(buf) - 1);
 	}
 	else
 	{
-		strncpy(equation, buf, strlen(buf));
+		__strncpy(equation, buf, __strlen(buf));
 	}
 	return SUCCESS;
 
@@ -245,22 +245,22 @@ int generate_equation()
 	char equation[256];
 	int answer = generate_one_equation(equation);
 	int user_answer = 0;
-	printf("Equation: @s\n", equation);
-	printf("gimme answer: ");
+	__printf("Equation: @s\n", equation);
+	__printf("gimme answer: ");
 	if (get_user_answer(&user_answer) != SUCCESS)
 	{
-		printf("Bad input\n");
+		__printf("Bad input\n");
 		return FAIL;
 	}
 
 	if (user_answer == answer)
 	{
-		printf("success!!\n");
+		__printf("success!!\n");
 		return SUCCESS;
 	}
 	else
 	{
-		printf("Incorrect answer\n");
+		__printf("Incorrect answer\n");
 		return FAIL;
 	}
 
@@ -271,10 +271,10 @@ int generate_equation()
 int seed_prng()
 {
 	char buf[256];
-	bzero(buf, sizeof(buf));
+	__bzero(buf, sizeof(buf));
  	int status;
  	size_t bytes_received;
- 	printf("Enter some data\n");
+ 	__printf("Enter some data\n");
 
 	status = receive(STDIN, buf, sizeof(buf) - 1, &bytes_received);
 	if (status != 0)
@@ -299,7 +299,7 @@ int prompt_for_equation()
 {
 	char str[256]; 
 	int ret = 0;
-	bzero(str, sizeof(str));
+	__bzero(str, sizeof(str));
 	
 	int goal_parens = random_in_range(0, 5);
 	int goal_answer = random_in_range(0, 32768);
@@ -310,9 +310,9 @@ int prompt_for_equation()
 		goal_num_list[i] = random_in_range(1, 256);
 	}
 
-	printf("Enter an equation that has @d sets of parenthesis\n", goal_parens);
-	printf("It must evaluate to @d and contain the @c operator\n", goal_answer, goal_operator);
-	printf("and must use the numbers: @d @d @d and @d\n", goal_num_list[0], goal_num_list[1], goal_num_list[2], goal_num_list[3]);
+	__printf("Enter an equation that has @d sets of parenthesis\n", goal_parens);
+	__printf("It must evaluate to @d and contain the @c operator\n", goal_answer, goal_operator);
+	__printf("and must use the numbers: @d @d @d and @d\n", goal_num_list[0], goal_num_list[1], goal_num_list[2], goal_num_list[3]);
 
 	// this is where we parse their answer and make sure it passes our requirements
 	int num_parens_found = 0; 
@@ -323,10 +323,10 @@ int prompt_for_equation()
 		return FAIL;
 
 	ret = parse_input(str);
-	printf("string is formatted @s\n", (ret == 1 ? "correct":"incorrect"));
+	__printf("string is formatted @s\n", (ret == 1 ? "correct":"incorrect"));
 
 	// scan the user's string and check for each requirement
-	for (int i = 0; i < strlen(str); i++)
+	for (int i = 0; i < __strlen(str); i++)
 	{
 		if (str[i] == '(')
 			num_parens_found++;
@@ -351,19 +351,19 @@ int prompt_for_equation()
 
 	if (num_parens_found != goal_parens)
 	{
-		printf("Incorrect number of parenthesis\n");
+		__printf("Incorrect number of parenthesis\n");
 		return FAIL;
 	}
 	if (goal_operator_found == 0)
 	{
-		printf("Did not use @c operator\n", goal_operator);
+		__printf("Did not use @c operator\n", goal_operator);
 		return FAIL;
 	}
 	for (int j = 0; j<4; j++)
 	{
 		if (goal_nums_found[j] == 0)
 		{
-			printf("Did not use number @d\n", goal_num_list[j]);
+			__printf("Did not use number @d\n", goal_num_list[j]);
 			return FAIL;
 		}
 	}
@@ -373,17 +373,17 @@ int prompt_for_equation()
 	int success = solve_equation(str, &answer);
 	if (success != SUCCESS)
 	{
-		printf("Invalid equation format\n");
+		__printf("Invalid equation format\n");
 		return FAIL;
 	}
 
 	if (answer != goal_answer)
 	{
-		printf("incorrect answer: @d\n", answer);
+		__printf("incorrect answer: @d\n", answer);
 		return FAIL;
 	}
 
-	printf("@s does resolve to @d, good!\n", str, answer);
+	__printf("@s does resolve to @d, good!\n", str, answer);
 	return SUCCESS;
 	
 }

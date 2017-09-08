@@ -3,7 +3,7 @@
  * 
  * Copyright (c) 2014 Kaprica Security, Inc.
  * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -40,7 +40,7 @@ static int allocate_span()
     
     free_block_t *block = (free_block_t *)span;
     block->hdr.size = SPAN_SIZE;
-    block->hdr.free = 1;
+    block->hdr.__free = 1;
     block->hdr.mmap = 0;
     block->next = g_malloc.free_list[NUM_BUCKETS-1];
     block->prev = NULL;
@@ -64,7 +64,7 @@ static free_block_t *pop_block(int i)
     return blk;
 }
 
-void *malloc(size_t size)
+void *__malloc(size_t size)
 {
     size_t min_size = size + OVERHEAD_BYTES;
 
@@ -74,7 +74,7 @@ void *malloc(size_t size)
         if (allocate(min_size, 0, &ret) != 0)
             return NULL;
         block_t *block = (block_t *)ret;
-        block->free = 0;
+        block->__free = 0;
         block->mmap = 1;
         block->size = min_size;
         return (void *)((intptr_t)ret + OVERHEAD_BYTES);
@@ -84,7 +84,7 @@ void *malloc(size_t size)
     int order;
     for (order = 0; min_size > (MIN_ALLOC << order); order++) ;
 
-    /* find first free bucket */
+    /* find first __free bucket */
     int i;
     for (i = order; i < NUM_BUCKETS && g_malloc.free_list[i] == NULL; i++) ;
 
@@ -119,8 +119,8 @@ void *malloc(size_t size)
 
     /* we are now guaranteed that g_malloc.free_list[order] != NULL */
     free_block_t *blk = pop_block(order);
-    blk->hdr.free = 0;
+    blk->hdr.__free = 0;
 
-    //printf("malloc(%d) = %08X\n", size, ((intptr_t)blk + OVERHEAD_BYTES));
+    //__printf("__malloc(%d) = %08X\n", size, ((intptr_t)blk + OVERHEAD_BYTES));
     return (void *)((intptr_t)blk + OVERHEAD_BYTES);
 }

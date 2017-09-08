@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -41,7 +41,7 @@ int main(void) {
 
 	// init the filesystem
         if (!InitFilesystem(MaxFiles, "rootpasswd")) {
-                puts(FsError());
+                __puts(FsError());
                 _terminate(0);
         }
 
@@ -49,7 +49,7 @@ int main(void) {
 	seed_prng(*(unsigned int *)rand_page);
 
 	// generate a random user password
-	bzero(user_password, 11);
+	__bzero(user_password, 11);
 	for (i = 0; i < 10; i++) {
 		user_password[i] = (char)random_in_range(65,122);
 	}

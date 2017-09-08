@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.co>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,7 +35,7 @@ int is_an_ace(char card)
 }
 
 // Returns the total value of the hand.
-// Aces are given point value of 11 unless that puts the hand over 21, in which
+// Aces are given point value of 11 unless that __puts the hand over 21, in which
 // case they are given point value of 1. 
 int hand_total(char *hand, size_t size, int running_total)
 {
@@ -69,8 +69,8 @@ void blackjack(player_info *player)
 {
     char player_hand[11];
     char dealer_hand[11];
-    bzero(player_hand, sizeof(player_hand));
-    bzero(dealer_hand, sizeof(dealer_hand));
+    __bzero(player_hand, sizeof(player_hand));
+    __bzero(dealer_hand, sizeof(dealer_hand));
 
     player_info placeholder;
     if (player == 0)
@@ -92,26 +92,26 @@ void blackjack(player_info *player)
     player_hand[1] = draw(&deck);
     dealer_hand[1] = draw(&deck);
 
-    printf("D: * @s \n", card_names[dealer_hand[1]]);
-    printf("P: @s @s \n", card_names[player_hand[0]], card_names[player_hand[1]]);
+    __printf("D: * @s \n", card_names[dealer_hand[1]]);
+    __printf("P: @s @s \n", card_names[player_hand[0]], card_names[player_hand[1]]);
 
     // Handle Blackjacks
     if (hand_total(dealer_hand, sizeof(dealer_hand), 0) == 21)
     {
         if (hand_total(player_hand, sizeof(player_hand), 0) == 21)
         {
-            printf("Dealer Blackjack! Player Blackjack! You Tie :/\n");
+            __printf("Dealer Blackjack! Player Blackjack! You Tie :/\n");
             player->wallet += payouts[BLACKJACK_PUSH];
             return;
         }
 
-        printf("Dealer Blackjack! You Lose!\n");
+        __printf("Dealer Blackjack! You Lose!\n");
         return;
     }
 
     if (hand_total(player_hand, sizeof(player_hand), 0) == 21)
     {
-        printf("Blackjack! You Win!\n");
+        __printf("Blackjack! You Win!\n");
         player->wallet += payouts[BLACKJACK_BLACKJACK];
         return;
     }
@@ -121,16 +121,16 @@ void blackjack(player_info *player)
     int hand_position = 2;
     while( 1 )
     {
-        printf("Enter h for hit or s for stand:");
+        __printf("Enter h for hit or s for stand:");
         receive_fixed_input(&input, '\n', sizeof(input));
         if (input == 'h')
         {
             player_hand[hand_position++] = draw(&deck);
-            printf("P: ");
+            __printf("P: ");
             print_hand(player_hand, sizeof(player_hand));
             if (hand_total(player_hand, sizeof(player_hand), 0) > 21)
             {
-                printf("Bust\n");
+                __printf("Bust\n");
                 break;
             }
         } 
@@ -142,42 +142,42 @@ void blackjack(player_info *player)
     
     // Play Dealer hand
     hand_position = 2;
-    printf("D: ");
+    __printf("D: ");
     print_hand(dealer_hand, sizeof(dealer_hand));
     while ( hand_total(dealer_hand, sizeof(dealer_hand), 0) < 17 )
     {
         dealer_hand[hand_position++] = draw(&deck);
-        printf("D: ");
+        __printf("D: ");
         print_hand(dealer_hand, sizeof(dealer_hand));
     }
 
     // Resolve
-    printf("P:@d D:@d\n", hand_total(player_hand, sizeof(player_hand), 0),
+    __printf("P:@d D:@d\n", hand_total(player_hand, sizeof(player_hand), 0),
         hand_total(dealer_hand, sizeof(dealer_hand), 0));
 
     if ( hand_total(player_hand, sizeof(player_hand), 0) > 21 )
     {
-        printf("Player Bust. You Lose.\n");
+        __printf("Player Bust. You Lose.\n");
     }
     else if ( hand_total(dealer_hand, sizeof(dealer_hand), 0) > 21)
     {
-        printf("Dealer Bust. You Win.\n");
+        __printf("Dealer Bust. You Win.\n");
         player->wallet += payouts[BLACKJACK_WIN];
     }
     else if (hand_total(player_hand, sizeof(player_hand), 0) > 
         hand_total(dealer_hand, sizeof(dealer_hand), 0) )
     {
-        printf("You Win.\n");
+        __printf("You Win.\n");
         player->wallet += payouts[BLACKJACK_WIN];
     }
     else if (hand_total(player_hand, sizeof(player_hand), 0) == 
          hand_total(dealer_hand, sizeof(dealer_hand), 0) )
     {
-        printf("Push.\n");
+        __printf("Push.\n");
         player->wallet += payouts[BLACKJACK_PUSH];
     }
     else
     {
-        printf("You Lose.\n");
+        __printf("You Lose.\n");
     }
 }

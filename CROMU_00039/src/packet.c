@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.co>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -88,7 +88,7 @@ int32_t ReceivePacket(unsigned char *pkt) {
 	}
 	pkt_len = pkt[1]+2;
 
-	// read in the rest of the packet as determined by the provided length
+	// __read in the rest of the packet as determined by the provided length
 	while (total_bytes != pkt_len) {
 		if (receive(0, pkt+total_bytes, pkt_len-total_bytes, &rx_bytes) < 0) {
 			// receive failure
@@ -114,7 +114,7 @@ int SendError(uint8_t request_id, uint8_t error) {
 
 	pkt[4] = error;
 
-	if (write(pkt, 5) != 5) {
+	if (__write(pkt, 5) != 5) {
 		return(0);
 	}
 
@@ -130,21 +130,21 @@ int SendResponse(uint8_t request_id, vars_t *pm) {
 	pkt[3] = request_id;  
 
 	if (pm->type == STRING) {
-		if (strlen((char *)pm->value) > 252) {
+		if (__strlen((char *)pm->value) > 252) {
 			return(SendError(request_id, ERROR_BADLEN));
 		}
-		strcpy((char *)pkt+4, (char *)pm->value);
+		__strcpy((char *)pkt+4, (char *)pm->value);
 		// pkt length
-		pkt[1] = 2+strlen((char *)pm->value);
+		pkt[1] = 2+__strlen((char *)pm->value);
 	} else if (pm->type == INT32) {
-		memcpy(pkt+4, pm->value, 4);
+		__memcpy(pkt+4, pm->value, 4);
 		// pkt length
 		pkt[1] = 6;
 	} else {
 		return(SendError(request_id, ERROR_NOTFOUND));
 	}
 
-	if (write(pkt, pkt[1]+2) != pkt[1]+2) {
+	if (__write(pkt, pkt[1]+2) != pkt[1]+2) {
 		return(0);
 	}
 
@@ -164,7 +164,7 @@ int HandleReadRequest(unsigned char *pkt, uint8_t pkt_len) {
 	request_id = pkt[3];
 
 	// copy the name string out of the packet
-	bzero(name, MAX_NAME_LEN);
+	__bzero(name, MAX_NAME_LEN);
 	name_len = pkt[4];
 	// name_len should equal the remaining bytes in the packet
 	// since only the name var is left in a READ request
@@ -178,7 +178,7 @@ int HandleReadRequest(unsigned char *pkt, uint8_t pkt_len) {
 		return(0);
 	}
 #endif
-	strncpy(name, (char *)pkt+5, name_len);
+	__strncpy(name, (char *)pkt+5, name_len);
 
 	// find the requested name
 	if ((pm = SearchVARS(name)) == NULL) {
@@ -208,7 +208,7 @@ int HandleWriteRequest(unsigned char *pkt, uint8_t pkt_len) {
 	curr_len = 4;
 
 	// copy the name string out of the packet	
-	bzero(name, MAX_NAME_LEN);
+	__bzero(name, MAX_NAME_LEN);
 	name_len = pkt[4];
 	curr_len++;
 	// the name field should leave at least 3 bytes at the end
@@ -221,7 +221,7 @@ int HandleWriteRequest(unsigned char *pkt, uint8_t pkt_len) {
 		SendError(request_id, ERROR_BADLEN);
 		return(0);
 	}
-	memcpy(name, pkt+5, name_len);
+	__memcpy(name, pkt+5, name_len);
 	curr_len += name_len;
 
 	// copy the type
@@ -230,7 +230,7 @@ int HandleWriteRequest(unsigned char *pkt, uint8_t pkt_len) {
 	curr_len++;
 
 	// copy the value
-	bzero(value, MAX_VALUE_LEN);
+	__bzero(value, MAX_VALUE_LEN);
 	value_len = pkt[COMMON_HDR_LEN+1+name_len+1];
 	curr_len++;
 	// the value field can't be larger than the 
@@ -243,7 +243,7 @@ int HandleWriteRequest(unsigned char *pkt, uint8_t pkt_len) {
 		SendError(request_id, ERROR_BADLEN);
 		return(0);
 	}
-	memcpy(value, pkt+5+name_len+2, value_len);
+	__memcpy(value, pkt+5+name_len+2, value_len);
 
 	if ((pm = UpdateVARSObject(name, type, value)) == NULL) {
 		SendError(request_id, ERROR_WRITEFAILED);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -63,7 +63,7 @@ static void _session_send(unsigned short dest_channel, unsigned short length, un
     size_t full_length = length + 4, offset = 0;
     g_temp_packet.hdr.length = length;
     g_temp_packet.hdr.channel = dest_channel;
-    memcpy(g_temp_packet.hdr.payload, data, length);
+    __memcpy(g_temp_packet.hdr.payload, data, length);
 
     while (offset < full_length)
     {
@@ -93,7 +93,7 @@ static channel_t *session_new_channel(unsigned short id)
             return NULL;
     }
 
-    channel_t *ch = malloc(sizeof(channel_t));
+    channel_t *ch = __malloc(sizeof(channel_t));
     ch->state = CLOSED;
     ch->local = id;
     ch->local_mtu = 672;
@@ -230,7 +230,7 @@ static void session_configuration_request(command_t *cmd)
         return;
     }
 
-    resp = malloc(sizeof(struct configuration_response) + cmd->hdr.length); // allocate enough for option data
+    resp = __malloc(sizeof(struct configuration_response) + cmd->hdr.length); // allocate enough for option data
     if (resp == NULL)
     {
         session_send_reject(cmd->hdr.id, 0);
@@ -283,7 +283,7 @@ static void session_configuration_request(command_t *cmd)
             resp->result = 3;
             resp->config[resp_offset] = type;
             resp->config[resp_offset+1] = length;
-            memcpy(&resp->config[resp_offset+2], &req->config[req_offset+2], length);
+            __memcpy(&resp->config[resp_offset+2], &req->config[req_offset+2], length);
         }
 
         req_offset += 2 + length;
@@ -291,7 +291,7 @@ static void session_configuration_request(command_t *cmd)
 
     resp->hdr.length = sizeof(*resp) - sizeof(control_hdr_t) + resp_offset;
     _session_send(0x0001, resp->hdr.length + sizeof(control_hdr_t), (unsigned char *)resp);
-    free(resp);
+    __free(resp);
 
     if (resp->result == 0)
         if ((resp->flags & 1) == 0 && ch->state != OPEN)
@@ -502,7 +502,7 @@ void session_loop()
         if (channel == LINK_CH_START)
         {
             offset = 0;
-            memset(g_current_packet.rawdata, 0, SESSION_MAX_PACKET_SIZE);
+            __memset(g_current_packet.rawdata, 0, SESSION_MAX_PACKET_SIZE);
         }
         else if (channel == LINK_CH_CONTINUE)
         {
@@ -524,7 +524,7 @@ void session_loop()
             continue;
         }
 
-        memcpy(g_current_packet.rawdata + offset, link_packet, length);
+        __memcpy(g_current_packet.rawdata + offset, link_packet, length);
         offset += length;
 
         if (offset >= sizeof(g_current_packet.hdr))
@@ -547,7 +547,7 @@ void session_register_psm(unsigned int id, connect_handler_t handler)
     psm = session_find_psm(id);
     if (psm == NULL)
     {
-        psm = malloc(sizeof(psm_t));
+        psm = __malloc(sizeof(psm_t));
         if (psm == NULL)
             return;
         psm->id = id;

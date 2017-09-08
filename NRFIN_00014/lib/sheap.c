@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -236,7 +236,7 @@ void malloc_init(){
 
 
 
-void * malloc(size_t s){
+void * __malloc(size_t s){
 
 	HEAP_MEM_T * heap_head = get_chunk_head_for_sz(s);
 	if(heap_head == NULL)
@@ -252,7 +252,7 @@ void * malloc(size_t s){
 }
 
 
-void free(void *pz){
+void __free(void *pz){
 	HEAP_MEM_T * current_heap_head;
 	void *pp = pz - sizeof(alloc_node_t);
 	int x;

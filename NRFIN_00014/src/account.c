@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -66,7 +66,7 @@ void lazy_account_init(){
 
 alloc_node_t * alloc_txn_head(){
 
-	return (alloc_node_t *) malloc(sizeof(alloc_node_t));
+	return (alloc_node_t *) __malloc(sizeof(alloc_node_t));
 }
 
 size_t vendor_calc(vendor_t *v){
@@ -230,15 +230,15 @@ txn_entry_t * open_txn(account_entry_t * ae, packet_head_t * ph){
 	
 
 
-	an->contents = malloc(sizeof(txn_entry_t));
+	an->contents = __malloc(sizeof(txn_entry_t));
 	txn_entry_t *le = an->contents;
 	le->is_open = TXN_OPEN;
 	le->transaction_id = register_transaction();
 	ph->transaction_id = le->transaction_id;
-	le->p = malloc(sizeof(packet_head_t));
+	le->p = __malloc(sizeof(packet_head_t));
 	if(le->p == NULL)
 		return NULL;
-	memcpy(le->p, ph, sizeof(packet_head_t));
+	__memcpy(le->p, ph, sizeof(packet_head_t));
 	
 	add_node(ae->txn_log, an);
 	return le;
@@ -256,11 +256,11 @@ txn_entry_t * remove_transaction_log_entry(account_entry_t * ae, txn_entry_t * t
 		if(te->transaction_id == ti->transaction_id){
 			// begin removal
 			if(te->p != NULL)
-				free(te->p);
+				__free(te->p);
 			if(te->data_sz != 0)
-				free(te->data);
+				__free(te->data);
 
-			free(te);
+			__free(te);
 			remove_node(ae->txn_log, an);
 
 			return te;
@@ -285,7 +285,7 @@ txn_entry_t * add_transaction_log_entry(account_entry_t * ae,  pack_and_data_t *
 
 
 	if(le->p == NULL)
-		le->p = (packet_head_t *) malloc(sizeof(packet_head_t));
+		le->p = (packet_head_t *) __malloc(sizeof(packet_head_t));
 	
 	if(le->p == NULL)
 		return NULL;
@@ -296,17 +296,17 @@ txn_entry_t * add_transaction_log_entry(account_entry_t * ae,  pack_and_data_t *
 
 
 	// copy in original packet header and packet data ...
-	memcpy(le->p, (void *) ph, sizeof(packet_head_t));
+	__memcpy(le->p, (void *) ph, sizeof(packet_head_t));
 
 	size_t data_sz = pad->pay_data_l;
 	le->data_sz = data_sz;
 
 
 	if(data_sz != 0){
-		le->data = malloc(data_sz);
+		le->data = __malloc(data_sz);
 		if(txn_data == NULL)
 			return NULL;
-		memcpy(le->data, txn_data, data_sz);	
+		__memcpy(le->data, txn_data, data_sz);	
 	}
 	
 	return le;
@@ -314,7 +314,7 @@ txn_entry_t * add_transaction_log_entry(account_entry_t * ae,  pack_and_data_t *
 
 alloc_head_t * init_ll_heap(){
     alloc_head_t * h;
-    h = (alloc_head_t *) malloc(sizeof(alloc_head_t));
+    h = (alloc_head_t *) __malloc(sizeof(alloc_head_t));
     if(h == NULL)
         return NULL;
     h->n_nodes = 0;
@@ -327,8 +327,8 @@ int create_account(uint32_t card_id,	uint32_t auth_code, packet_data_balance_t *
 	uint32_t initial_balance = b->balance;
 	// accounts should be created by init messages so card id and auth code should be clean
 	lazy_account_init();
-	alloc_node_t *an = malloc(sizeof(alloc_node_t));
-	account_entry_t * ae = malloc(sizeof(account_entry_t));
+	alloc_node_t *an = __malloc(sizeof(alloc_node_t));
+	account_entry_t * ae = __malloc(sizeof(account_entry_t));
 
 	if(ae == NULL || an == NULL)
 		return ERRNO_MP_ALLOC;
@@ -396,7 +396,7 @@ account_entry_t * get_account(uint32_t card_id, uint32_t auth_code){
 void init_account_register(){
 
 
-	accounts_listing_t *a = malloc(sizeof(accounts_listing_t));
+	accounts_listing_t *a = __malloc(sizeof(accounts_listing_t));
 	a->accounts = init_ll();
 	ACCOUNTS = a;
 }

@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,8 +35,8 @@ THE SOFTWARE.
 void msls_handle_heartbeat(SLS_MESSAGE *msg)
 {
   debug_print("Handling Heartbeat\n");
-  SLS_MESSAGE *response = calloc(sizeof(SLS_MESSAGE));
-  SLS_HEARTBEAT_MESSAGE *hb_response = calloc(sizeof(SLS_HEARTBEAT_MESSAGE));
+  SLS_MESSAGE *response = __calloc(sizeof(SLS_MESSAGE));
+  SLS_HEARTBEAT_MESSAGE *hb_response = __calloc(sizeof(SLS_HEARTBEAT_MESSAGE));
   response->type = SLS_TYPE_HEARTBEAT;
   response->version = SLS_VERSION;
   response->connection_id = msg->connection_id;
@@ -56,9 +56,9 @@ void msls_handle_heartbeat(SLS_MESSAGE *msg)
 #endif 
   if (hb_response->payload_length > 0)
   {
-    hb_response->payload = calloc(hb_response->payload_length);
+    hb_response->payload = __calloc(hb_response->payload_length);
     debug_print("Reading heartbeats from $x to $x\n", request_payload, request_payload + hb_response->payload_length );
-    memcpy(hb_response->payload, request_payload, hb_response->payload_length);
+    __memcpy(hb_response->payload, request_payload, hb_response->payload_length);
   }
   
   response->msg_length =  hb_response->payload_length + SLS_HEARTBEAT_HEADER_LEN;

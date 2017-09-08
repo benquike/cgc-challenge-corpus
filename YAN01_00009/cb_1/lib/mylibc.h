@@ -3,10 +3,10 @@
 
 #include "inttypes.h"
 #include "string.h"
-#include "printf.h"
+#include "__printf.h"
 
-//reads in a new line and returns the number of characters read
-// Returns the number of characters read otherwise it will return 0
+//reads in a new line and returns the number of characters __read
+// Returns the number of characters __read otherwise it will return 0
 // or an errno on error
 // errno can be
 // The errno from fdwait or receive

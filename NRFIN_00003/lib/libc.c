@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -25,7 +25,7 @@
 // NOTE: not POSIX
 // MOD: it works in reverse
 // RETURN: void
-void memcpy(unsigned char *dst, const unsigned char *src, size_t n) {
+void __memcpy(unsigned char *dst, const unsigned char *src, size_t n) {
 
     while (n) {
         dst[n-1] = src[n-1];
@@ -36,7 +36,7 @@ void memcpy(unsigned char *dst, const unsigned char *src, size_t n) {
 // NOTE: not POSIX
 // MOD: returns +/- i (the iterator)
 // RETURN: +/- i
-int memcmp(const char *s1, const char *s2, size_t n) {
+int __memcmp(const char *s1, const char *s2, size_t n) {
 
     int i = 1;
     while (i < n) {
@@ -54,7 +54,7 @@ int memcmp(const char *s1, const char *s2, size_t n) {
 // NOTE: not POSIX
 // MOD: it works in reverse
 // RETURN: the first argument
-unsigned char * memset(unsigned char *b, unsigned char c, size_t len) {
+unsigned char * __memset(unsigned char *b, unsigned char c, size_t len) {
 
     size_t i = 0;
     while (len) {
@@ -64,7 +64,7 @@ unsigned char * memset(unsigned char *b, unsigned char c, size_t len) {
     return b;
 }
 
-// Like strtok, except it's dumb and only finds the first instance.
+// Like __strtok, except it's dumb and only finds the first instance.
 // RETURN: location of the needle, -1 on error
 size_t findchar(char *haystack, char needle) {
 
@@ -76,8 +76,8 @@ size_t findchar(char *haystack, char needle) {
     return -1;
 }
 
-// Emulate sleep() via a timeout given to fdwait().
-void pause(size_t usec) {
+// Emulate __sleep() via a timeout given to fdwait().
+void __pause(size_t usec) {
 
     struct timeval tv;
 
@@ -178,7 +178,7 @@ int recvline(int fd, char *buf, size_t size) {
     if (!buf)
         return -2;
 
-    // While we still have bytes to read...
+    // While we still have bytes to __read...
     while (0 != cursize) {
 
         bytes_read = 0;
@@ -188,13 +188,13 @@ int recvline(int fd, char *buf, size_t size) {
         receive(fd, buf, 1, &bytes_read);
         buf += bytes_read;
 
-        // If we read 0 bytes, we assume EOF; break.
+        // If we __read 0 bytes, we assume EOF; break.
         if (0 == bytes_read) { break; }
 
-        // If we just read a newline, we're done; break.
+        // If we just __read a newline, we're done; break.
         if ( *(buf-1) == '\n' ) { break; }
 
-        // Subtract cursize by the number of bytes read.
+        // Subtract cursize by the number of bytes __read.
         // This shouldn't underflow because we only request 1 byte at a time.
         cursize -= bytes_read;
     }

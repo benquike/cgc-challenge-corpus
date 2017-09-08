@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -74,23 +74,23 @@ int i;
 int x;
 
 	
-	printf("Dealer:");
+	__printf("Dealer:");
 
 	for (i=0; i< MAX_CARDS && dealer_cards[i]!= 0; ++i)
-		printf(" $s", cardType[dealer_cards[i]]);
+		__printf(" $s", cardType[dealer_cards[i]]);
 
-	printf(" ($d)\n", score_cards(dealer_cards));
+	__printf(" ($d)\n", score_cards(dealer_cards));
 
 	for (i = 0; i < MAX_PLAYERS; ++i) {
 
 		if (playerList[i].player_name[0] != 0) {
 
-			printf("$s:", playerList[i].player_name);
+			__printf("$s:", playerList[i].player_name);
 
 			for (x=0; x < MAX_CARDS && playerList[i].cards[x] != 0; ++x)
-				printf(" $s", cardType[playerList[i].cards[x]]);
+				__printf(" $s", cardType[playerList[i].cards[x]]);
 
-			printf(" ($d)\n", score_cards(playerList[i].cards));
+			__printf(" ($d)\n", score_cards(playerList[i].cards));
 		}
 
 	}	
@@ -129,7 +129,7 @@ int bet;
 
 	if (player_count == 0) {
 
-		printf("No players\n");
+		__printf("No players\n");
 		return -1;
 	}
 
@@ -140,9 +140,9 @@ int bet;
 			continue;
 
 		finished = 0;
-		printf("Player: $s\n", playerList[i].player_name);
+		__printf("Player: $s\n", playerList[i].player_name);
 
-		printf("Place your bet (1-$d)\n", playerList[i].funds);
+		__printf("Place your bet (1-$d)\n", playerList[i].funds);
 
 		if (playerList[i].computerPlayer==1) {
 
@@ -151,10 +151,10 @@ int bet;
 		}
 		else {
 
-			if(receive_until( buffer, '\n', sizeof(buffer) ) == 0)
+			if(__receive_until( buffer, '\n', sizeof(buffer) ) == 0)
 				return -1;
 
-			bet = atoi(buffer);
+			bet = __atoi(buffer);
 
 			playerList[i].bet = bet;
 		}
@@ -197,7 +197,7 @@ int bet;
 	}
 
  	show_cards(dealer_cards, playerList);
-	//printf("Dealer shows: $d $d\n", dealer_cards[0], dealer_cards[1]);
+	//__printf("Dealer shows: $d $d\n", dealer_cards[0], dealer_cards[1]);
 
 
  	// Now each player gets to play in turn
@@ -207,20 +207,20 @@ int bet;
 			continue;
 
 		finished = 0;
-		printf("Player: $s\n", playerList[i].player_name);
+		__printf("Player: $s\n", playerList[i].player_name);
 
 		while (!finished) {
 
 			for (x=0; x < MAX_CARDS && playerList[i].cards[x] != 0; ++x)
-				printf("$s ", cardType[playerList[i].cards[x]]);		
+				__printf("$s ", cardType[playerList[i].cards[x]]);		
 
-			printf("($d)\n", score_cards(playerList[i].cards));	
+			__printf("($d)\n", score_cards(playerList[i].cards));	
 
 			if (playerList[i].useHints == 1) {
 
-				printf("Do you want a hint?\n");
+				__printf("Do you want a hint?\n");
 
-				if(receive_until( buffer, '\n', sizeof(buffer) ) == 0)
+				if(__receive_until( buffer, '\n', sizeof(buffer) ) == 0)
 					return -1;
 
 				if (buffer[0] == 'y' || buffer[0] == 'Y') {
@@ -232,16 +232,16 @@ int bet;
 
 						case 'S':
 
-							printf("You should Stand\n");
+							__printf("You should Stand\n");
 							break;
 
 						case 'H':
 
-							printf("You should Hit\n");
+							__printf("You should Hit\n");
 							break;
 
 						default:
-							printf("Uh.... it didn't say\n");
+							__printf("Uh.... it didn't say\n");
 
 					} //switch
 
@@ -250,7 +250,7 @@ int bet;
 
 			} // if useHints
 
-			printf("Do you wish to H)it or S)tand\n");
+			__printf("Do you wish to H)it or S)tand\n");
 
 			if (playerList[i].computerPlayer==1) {
 
@@ -259,7 +259,7 @@ int bet;
 
 			}
 			else {
-				if(receive_until( buffer, '\n', sizeof(buffer) ) == 0)
+				if(__receive_until( buffer, '\n', sizeof(buffer) ) == 0)
 					return -1;
 			}
 			if (buffer[0] == 'S')
@@ -269,7 +269,7 @@ int bet;
 				playerList[i].cards[x] = (deck[*next_card] % 13) +1;
 				*next_card = (*next_card < CARD_DATA_LEN - 1) ? (*next_card + 1) : 0;
 
-				printf("$s draws $s\n", playerList[i].player_name, cardType[playerList[i].cards[x]]);
+				__printf("$s draws $s\n", playerList[i].player_name, cardType[playerList[i].cards[x]]);
 				score = score_cards(playerList[i].cards);
 
 				if (score > 21)
@@ -295,7 +295,7 @@ int bet;
 			break;
 
 		dealer_cards[x] = (deck[*next_card] % 13) +1;
-		printf("Dealer draws $s\n", cardType[dealer_cards[x]]);
+		__printf("Dealer draws $s\n", cardType[dealer_cards[x]]);
 
 		*next_card = (*next_card < CARD_DATA_LEN - 1) ? (*next_card + 1) : 0;
 		++x;
@@ -308,24 +308,24 @@ int bet;
 		if (playerList[i].player_name[0] == 0)
 			continue;
 
-		printf("$s: ", playerList[i].player_name);
+		__printf("$s: ", playerList[i].player_name);
 
 		score = score_cards(playerList[i].cards);
 
 		if (dealer_score > 21 && score < 22) {
-			printf("wins!\n");
+			__printf("wins!\n");
 			playerList[i].funds += playerList[i].bet;
 			playerList[i].wins++;
 		}
 		else if ( score < 22 && score > dealer_score) {
-			printf("wins!\n");
+			__printf("wins!\n");
 			playerList[i].wins++;
 			playerList[i].funds += playerList[i].bet;
 		}
 		else if ( score == dealer_score)
-			printf("pushes\n");
+			__printf("pushes\n");
 		else  {
-			printf("loses\n");
+			__printf("loses\n");
 			playerList[i].funds -= playerList[i].bet;
 			playerList[i].losses++;
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -67,7 +67,7 @@ char *read_line(silk_t *silk)
                 goto fail;
             char *tmp;
             cnt += 1024;
-            tmp = realloc(result, cnt);
+            tmp = __realloc(result, cnt);
             if (tmp == NULL)
                 goto fail;
             result = tmp;
@@ -81,7 +81,7 @@ char *read_line(silk_t *silk)
     {
         char *tmp;
         cnt++;
-        tmp = realloc(result, cnt);
+        tmp = __realloc(result, cnt);
         if (tmp == NULL)
             goto fail;
         result = tmp;
@@ -90,17 +90,17 @@ char *read_line(silk_t *silk)
     return result;
 
 fail:
-    free(result);
+    __free(result);
     return NULL;
 }
 
 static int parse_request(char *line, char **method, char **resource)
 {
     char *tmp;
-    tmp = strchr(line, '\t');
+    tmp = __strchr(line, '\t');
     if (tmp == NULL)
     {
-        tmp = strchr(line, '\b');
+        tmp = __strchr(line, '\b');
         if (tmp == NULL)
             return FAILURE;
         *tmp = 0;
@@ -113,7 +113,7 @@ static int parse_request(char *line, char **method, char **resource)
     *method = line;
     line = tmp+1;
 
-    tmp = strchr(line, '\b');
+    tmp = __strchr(line, '\b');
     if (tmp != NULL)
         *tmp = 0;
     *resource = line;
@@ -122,22 +122,22 @@ static int parse_request(char *line, char **method, char **resource)
 
 static void free_product(product_t *p)
 {
-    free(p->seller);
-    free(p->name);
-    free(p);
+    __free(p->seller);
+    __free(p->name);
+    __free(p);
 }
 
 static int send_response(priv_t *priv, unsigned int code, char *text)
 {
     char tmp[1024];
-    if (strlen(text) + 64 < sizeof(tmp))
+    if (__strlen(text) + 64 < sizeof(tmp))
     {
         sprintf(tmp, "%d\t%s\b", code, text);
-        return silk_send(&priv->silk, (unsigned char *)tmp, strlen(tmp));
+        return silk_send(&priv->silk, (unsigned char *)tmp, __strlen(tmp));
     }
     else
     {
-        char *tmp2 = malloc(strlen(text) + 64);
+        char *tmp2 = __malloc(__strlen(text) + 64);
         int result;
 
 #ifndef PATCHED
@@ -152,8 +152,8 @@ static int send_response(priv_t *priv, unsigned int code, char *text)
             return FAILURE;
 
         sprintf(tmp2, "%d\t%s\b", code, text);
-        result = silk_send(&priv->silk, (unsigned char *)tmp2, strlen(tmp2));
-        free(tmp2);
+        result = silk_send(&priv->silk, (unsigned char *)tmp2, __strlen(tmp2));
+        __free(tmp2);
         return result;
     }
 }
@@ -161,13 +161,13 @@ static int send_response(priv_t *priv, unsigned int code, char *text)
 /* convert %XX to \xXX */
 static void unescape(char *s)
 {
-    unsigned int i, j, len = strlen(s);
+    unsigned int i, j, len = __strlen(s);
     for (i = 0, j = 0; i < len; i++, j++)
     {
         if (s[i] == '%' && i + 2 < len && isxdigit(s[i+1]) && isxdigit(s[i+2]))
         {
-            int s1 = isdigit(s[i+1]) ? s[i+1] - '0' : tolower(s[i+1]) - 'a' + 10;
-            int s2 = isdigit(s[i+2]) ? s[i+2] - '0' : tolower(s[i+2]) - 'a' + 10;
+            int s1 = __isdigit(s[i+1]) ? s[i+1] - '0' : tolower(s[i+1]) - 'a' + 10;
+            int s2 = __isdigit(s[i+2]) ? s[i+2] - '0' : tolower(s[i+2]) - 'a' + 10;
             s[j] = (s1 << 4) | s2;
             i += 2;
         }
@@ -211,22 +211,22 @@ int do_sell(priv_t *priv, char *resource)
 
     name = resource;
     
-    seller = strchr(name, ';');
+    seller = __strchr(name, ';');
     if (seller == NULL)
         goto bad_request;
     *seller++ = 0;
 
-    s_price = strchr(seller, ';');
+    s_price = __strchr(seller, ';');
     if (s_price == NULL)
         goto bad_request;
     *s_price++ = 0;
-    price = strtoul(s_price, NULL, 10);
+    price = __strtoul(s_price, NULL, 10);
 
-    s_quantity = strchr(s_price, ';');
+    s_quantity = __strchr(s_price, ';');
     if (s_quantity == NULL)
         goto bad_request;
     *s_quantity++ = 0;
-    quantity = strtoul(s_quantity, NULL, 10);
+    quantity = __strtoul(s_quantity, NULL, 10);
 
     unescape(seller);
     unescape(name);
@@ -244,14 +244,14 @@ int do_sell(priv_t *priv, char *resource)
         return send_response(priv, RESP_UPDATED, "Record updated");
     }
     
-    p = malloc(sizeof(product_t));
+    p = __malloc(sizeof(product_t));
     if (p == NULL)
         goto internal_error;
 
     p->price = price;
     p->quantity = quantity;
-    p->name = strdup(name);
-    p->seller = strdup(seller);
+    p->name = __strdup(name);
+    p->seller = __strdup(seller);
 
     if (p->name == NULL || p->seller == NULL)
     {
@@ -286,10 +286,10 @@ int do_list(priv_t *priv, char *resource)
     for (iter = ht_first(&priv->products); iter != NULL; iter = ht_next(&priv->products, iter))
     {
         product_t *p = ht_node_value(iter);
-        unsigned int new_buf_size = strlen(p->name) + strlen(p->seller) + 128;
+        unsigned int new_buf_size = __strlen(p->name) + __strlen(p->seller) + 128;
         if (new_buf_size > buf_size)
         {
-            char *new_buf = realloc(buf, new_buf_size);
+            char *new_buf = __realloc(buf, new_buf_size);
             if (new_buf == NULL)
                 break;
             buf = new_buf;
@@ -298,10 +298,10 @@ int do_list(priv_t *priv, char *resource)
         sprintf(buf, "%s;%s;%d;%d", p->name, p->seller, p->price, p->quantity);
         if (send_response(priv, RESP_CONTINUE, buf) != SUCCESS)
             break;
-        //if (silk_send(&priv->silk, (unsigned char *)buf, strlen(buf)) != SUCCESS)
+        //if (silk_send(&priv->silk, (unsigned char *)buf, __strlen(buf)) != SUCCESS)
         //    break;
     }
-    free(buf);
+    __free(buf);
 
     if (iter != NULL)
         return send_response(priv, RESP_INTERNAL_ERROR, "Internal error");
@@ -372,7 +372,7 @@ int main()
             // XXX
         }
 
-        free(line);
+        __free(line);
     }
 
     return 0;

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -120,9 +120,9 @@ static int seat_customer(Customer *c) {
  * @return Pointer to a new Order or NULL if no order
  */
 static Order *take_customer_order(Customer *c) {
-	Order *o = malloc(sizeof(Order));
+	Order *o = __malloc(sizeof(Order));
 	MALLOC_OK(o);
-	memset(o, '\0', sizeof(Order));
+	__memset(o, '\0', sizeof(Order));
 
 	o->t_id = table.id;
 	o->c_id = c->id;
@@ -145,14 +145,14 @@ static Order *take_customer_order(Customer *c) {
 			break;
 		default:		// WAIT => already ordered, VACANT, FINISHED
 			DBG("Customer %U NOT ordering\n", c->id);
-			free(o);
+			__free(o);
 			return NULL;
 	}
 	return o;
 }
 
 void table_setup(void) {
-	memset(&table, '\0', sizeof(Table));
+	__memset(&table, '\0', sizeof(Table));
 	table.id = TABLE_ID;
 	table.status = VACANT;
 	table.seats = calculate_seats_count();
@@ -168,7 +168,7 @@ void table_clean_and_set(void) {
 	c = pop_customer_from_list(&c_list);
 	while (NULL != c) {
 		DBG("Customer %U left the table\n", c->id);
-		free(c);
+		__free(c);
 		c = pop_customer_from_list(&c_list);
 	}
 
@@ -295,7 +295,7 @@ static char give_food_to_customer(Customer *c, FoodTypes ftype, void *food) {
 
 #ifndef PATCHED_1
 	// VULN: table.status can be mismatched with ftype provided by user.
-	// Use table.status to get location to write food into Customer and the proper food inspection function
+	// Use table.status to get location to __write food into Customer and the proper food inspection function
 	ftype = get_delivery_foodtype_from_tablestatus(table.status);
 #endif
 	switch (ftype) {
@@ -362,13 +362,13 @@ unsigned char deliver_customer_orders(Order **o_list) {
 		// get customer having c_id from order
 		c = get_customer_by_id(table.customers, o->c_id);
 		if (NULL != c) {
-			// write food to customer
+			// __write food to customer
 			if (SUCCESS == give_food_to_customer(c, o->ftype, o->item)) {
 				d_count++;
 			}
 		}
-		free(o->item);
-		free(o);
+		__free(o->item);
+		__free(o);
 		o = pop_order_from_list(o_list);
 	}
 

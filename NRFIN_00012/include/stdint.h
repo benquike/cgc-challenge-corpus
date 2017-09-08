@@ -9,6 +9,10 @@
 #define bool uint8_t
 #define int32_t int
 #define int16_t short
+
+#ifndef __int8_t_defined
+#define __int8_t_defined
 #define int8_t char
+#endif
 
 #endif

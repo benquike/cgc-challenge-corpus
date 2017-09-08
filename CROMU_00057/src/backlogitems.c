@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -48,7 +48,7 @@ backlogItemType *PBIPtr;
 	}
 
 
-	newPBI = (backlogItemType *)calloc(sizeof(backlogItemType));
+	newPBI = (backlogItemType *)__calloc(sizeof(backlogItemType));
 
 	if (newPBI == 0) 
 		_terminate(-1);
@@ -59,13 +59,13 @@ backlogItemType *PBIPtr;
 	newPBI->story_points = message->user_story_points;
 	newPBI->next = 0;
 
-	newPBI->description = calloc(strlen(&message->title)+1);
+	newPBI->description = __calloc(__strlen(&message->title)+1);
 
 	if (newPBI->description == 0)
 		_terminate(-1);
 
 
-	strcpy(newPBI->description, &message->title);
+	__strcpy(newPBI->description, &message->title);
 
 
 	if (database->productBacklog == 0) {
@@ -127,9 +127,9 @@ backlogItemType *PBIPtr;
 	}
 
 	if (PBIPtr->description != 0) 
-		free(PBIPtr->description);
+		__free(PBIPtr->description);
 
-	free(PBIPtr);
+	__free(PBIPtr);
 
 	return 0;
 
@@ -372,16 +372,16 @@ backlogItemType *sprintBIPtr;
 
 #ifdef PATCHED_1
 
-	free(SBIPtr->description);
+	__free(SBIPtr->description);
 
-	SBIPtr->description = malloc(strlen(&message->desc)+1);
+	SBIPtr->description = __malloc(__strlen(&message->desc)+1);
 
 	if (SBIPtr->description == 0)
 		_terminate(-1);
 
 #endif
 
-	strcpy(SBIPtr->description, &message->desc);
+	__strcpy(SBIPtr->description, &message->desc);
 
 	return 0;
 

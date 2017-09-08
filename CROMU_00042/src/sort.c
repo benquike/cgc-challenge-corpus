@@ -9,27 +9,27 @@ void sort_command( char *pszLine )
 
     if ( pszLine == NULL )
     {
-        printf( "Empty command.\n" );
+        __printf( "Empty command.\n" );
         return;
     }
 
     // BUG:: Overflow possible here
 #ifdef PATCHED
-    unsigned char itemCount = atoi( pszLine );
+    unsigned char itemCount = __atoi( pszLine );
 #else
-    char itemCount = atoi( pszLine );
+    char itemCount = __atoi( pszLine );
 #endif
 
     if ( itemCount == 0 )
     {
-        printf( "0 items sorted.\n" );
+        __printf( "0 items sorted.\n" );
         return;
     }
     else if ( itemCount <= 64 )
-        printf( "Enter @d items to sort:\n", itemCount );
+        __printf( "Enter @d items to sort:\n", itemCount );
     else
     {
-        printf( "Maximum of 64 items allowed to sort.\n" );
+        __printf( "Maximum of 64 items allowed to sort.\n" );
 
         return;
     }
@@ -40,7 +40,7 @@ void sort_command( char *pszLine )
     {
         getline( szTempBuf, 128 );
 
-        sortList[idx] = atoi( szTempBuf );
+        sortList[idx] = __atoi( szTempBuf );
     }
 
     // Begin sorting
@@ -65,11 +65,11 @@ void sort_command( char *pszLine )
             break;
     }
 
-    printf( "@d items sorted.\n", itemTotal );
+    __printf( "@d items sorted.\n", itemTotal );
 
     for ( idx = 0; idx < itemTotal; idx++ )
     {
-        printf( "@d\n", sortList[idx] );
+        __printf( "@d\n", sortList[idx] );
     }
 
     // Exit

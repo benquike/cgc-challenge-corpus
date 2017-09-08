@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -45,7 +45,7 @@
 #define BADJOKEERROR "\nThat joke you gave me is crap! " \
         "For that, you get to start over!\n"
 #define JOKEDBFULL "Lordy, lordy, I've had enough Chuck Norris jokes. Go away.\n"
-#define SHOWWHICHID "Give me the ID of the joke you want to read. Or better yet, " \
+#define SHOWWHICHID "Give me the ID of the joke you want to __read. Or better yet, " \
         "enter RANDOM and I'll choose one for you.\n" 
 #define BADIDERROR "\nWhat do you take me for? That ID is bogus! Try again.\n"
 #define BADSTRERROR "\nAre you kidding me? What is that garbage? "\

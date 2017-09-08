@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -31,7 +31,7 @@ read_board(char *board)
 {
     int i;
 
-    if (fread(board, 8 * 9, stdin) != 8 * 9)
+    if (__fread(board, 8 * 9, stdin) != 8 * 9)
         return EXIT_FAILURE;
 
     for (i = 0; i < 8 * 9; i++) {
@@ -39,7 +39,7 @@ read_board(char *board)
             if (board[i] != '\n')
                 return EXIT_FAILURE;
         } else {
-            if (strchr("prnbqk ", board[i]) == NULL)
+            if (__strchr("prnbqk ", board[i]) == NULL)
                 return EXIT_FAILURE;
         }
     }
@@ -76,9 +76,9 @@ set_move(int x0, int y0, int x1, int y1)
 static void
 move_pawn(char *board, int x, int y)
 {
-    if (isupper(get_piece(board, x - 1, y)))
+    if (__isupper(get_piece(board, x - 1, y)))
         set_move(x, y, x - 1, y);
-    else if (isupper(get_piece(board, x + 1, y)))
+    else if (__isupper(get_piece(board, x + 1, y)))
         set_move(x, y, x + 1, y);
     else if (get_piece(board, x, y + 2) == ' ')
         set_move(x, y, x, y + 2);
@@ -89,68 +89,68 @@ move_pawn(char *board, int x, int y)
 static void
 move_rook(char *board, int x, int y)
 {
-    if (isupper(get_piece(board, x, y + 1)) || get_piece(board, x, y + 1) == ' ')
+    if (__isupper(get_piece(board, x, y + 1)) || get_piece(board, x, y + 1) == ' ')
         set_move(x, y, x, y + 1);
-    else if (isupper(get_piece(board, x - 1, y)) || get_piece(board, x - 1, y) == ' ')
+    else if (__isupper(get_piece(board, x - 1, y)) || get_piece(board, x - 1, y) == ' ')
         set_move(x, y, x - 1, y);
-    else if (isupper(get_piece(board, x + 1, y)) || get_piece(board, x + 1, y) == ' ')
+    else if (__isupper(get_piece(board, x + 1, y)) || get_piece(board, x + 1, y) == ' ')
         set_move(x, y, x + 1, y);
-    else if (isupper(get_piece(board, x, y - 1)) || get_piece(board, x, y - 1) == ' ')
+    else if (__isupper(get_piece(board, x, y - 1)) || get_piece(board, x, y - 1) == ' ')
         set_move(x, y, x, y - 1);
 }
 
 static void
 move_knight(char *board, int x, int y)
 {
-    if (isupper(get_piece(board, x + 1, y + 2)) || get_piece(board, x + 1, y + 2) == ' ')
+    if (__isupper(get_piece(board, x + 1, y + 2)) || get_piece(board, x + 1, y + 2) == ' ')
         set_move(x, y, x + 1, y + 2);
-    else if (isupper(get_piece(board, x + 2, y + 1)) || get_piece(board, x + 2, y + 1) == ' ')
+    else if (__isupper(get_piece(board, x + 2, y + 1)) || get_piece(board, x + 2, y + 1) == ' ')
         set_move(x, y, x + 2, y + 1);
-    else if (isupper(get_piece(board, x + 2, y - 1)) || get_piece(board, x + 2, y - 1) == ' ')
+    else if (__isupper(get_piece(board, x + 2, y - 1)) || get_piece(board, x + 2, y - 1) == ' ')
         set_move(x, y, x + 2, y - 1);
-    else if (isupper(get_piece(board, x + 1, y - 2)) || get_piece(board, x + 1, y - 2) == ' ')
+    else if (__isupper(get_piece(board, x + 1, y - 2)) || get_piece(board, x + 1, y - 2) == ' ')
         set_move(x, y, x + 1, y - 2);
-    else if (isupper(get_piece(board, x - 1, y + 2)) || get_piece(board, x - 1, y + 2) == ' ')
+    else if (__isupper(get_piece(board, x - 1, y + 2)) || get_piece(board, x - 1, y + 2) == ' ')
         set_move(x, y, x - 1, y + 2);
-    else if (isupper(get_piece(board, x - 2, y + 1)) || get_piece(board, x - 2, y + 1) == ' ')
+    else if (__isupper(get_piece(board, x - 2, y + 1)) || get_piece(board, x - 2, y + 1) == ' ')
         set_move(x, y, x - 2, y + 1);
-    else if (isupper(get_piece(board, x - 2, y - 1)) || get_piece(board, x - 2, y - 1) == ' ')
+    else if (__isupper(get_piece(board, x - 2, y - 1)) || get_piece(board, x - 2, y - 1) == ' ')
         set_move(x, y, x - 2, y - 1);
-    else if (isupper(get_piece(board, x - 1, y - 2)) || get_piece(board, x - 1, y - 2) == ' ')
+    else if (__isupper(get_piece(board, x - 1, y - 2)) || get_piece(board, x - 1, y - 2) == ' ')
         set_move(x, y, x - 1, y - 2);
 }
 
 static void
 move_bishop(char *board, int x, int y)
 {
-    if (isupper(get_piece(board, x - 1, y + 1)) || get_piece(board, x - 1, y + 1) == ' ')
+    if (__isupper(get_piece(board, x - 1, y + 1)) || get_piece(board, x - 1, y + 1) == ' ')
         set_move(x, y, x - 1, y + 1);
-    else if (isupper(get_piece(board, x + 1, y + 1)) || get_piece(board, x + 1, y + 1) == ' ')
+    else if (__isupper(get_piece(board, x + 1, y + 1)) || get_piece(board, x + 1, y + 1) == ' ')
         set_move(x, y, x + 1, y + 1);
-    else if (isupper(get_piece(board, x - 1, y - 1)) || get_piece(board, x - 1, y - 1) == ' ')
+    else if (__isupper(get_piece(board, x - 1, y - 1)) || get_piece(board, x - 1, y - 1) == ' ')
         set_move(x, y, x - 1, y - 1);
-    else if (isupper(get_piece(board, x + 1, y - 1)) || get_piece(board, x + 1, y - 1) == ' ')
+    else if (__isupper(get_piece(board, x + 1, y - 1)) || get_piece(board, x + 1, y - 1) == ' ')
         set_move(x, y, x + 1, y - 1);
 }
 
 static void
 move_queen(char *board, int x, int y)
 {
-    if (isupper(get_piece(board, x, y + 1)) || get_piece(board, x, y + 1) == ' ')
+    if (__isupper(get_piece(board, x, y + 1)) || get_piece(board, x, y + 1) == ' ')
         set_move(x, y, x, y + 1);
-    else if (isupper(get_piece(board, x - 1, y)) || get_piece(board, x - 1, y) == ' ')
+    else if (__isupper(get_piece(board, x - 1, y)) || get_piece(board, x - 1, y) == ' ')
         set_move(x, y, x - 1, y);
-    else if (isupper(get_piece(board, x + 1, y)) || get_piece(board, x + 1, y) == ' ')
+    else if (__isupper(get_piece(board, x + 1, y)) || get_piece(board, x + 1, y) == ' ')
         set_move(x, y, x + 1, y);
-    else if (isupper(get_piece(board, x, y - 1)) || get_piece(board, x, y - 1) == ' ')
+    else if (__isupper(get_piece(board, x, y - 1)) || get_piece(board, x, y - 1) == ' ')
         set_move(x, y, x, y - 1);
-    else if (isupper(get_piece(board, x - 1, y + 1)) || get_piece(board, x - 1, y + 1) == ' ')
+    else if (__isupper(get_piece(board, x - 1, y + 1)) || get_piece(board, x - 1, y + 1) == ' ')
         set_move(x, y, x - 1, y + 1);
-    else if (isupper(get_piece(board, x + 1, y + 1)) || get_piece(board, x + 1, y + 1) == ' ')
+    else if (__isupper(get_piece(board, x + 1, y + 1)) || get_piece(board, x + 1, y + 1) == ' ')
         set_move(x, y, x + 1, y + 1);
-    else if (isupper(get_piece(board, x - 1, y - 1)) || get_piece(board, x - 1, y - 1) == ' ')
+    else if (__isupper(get_piece(board, x - 1, y - 1)) || get_piece(board, x - 1, y - 1) == ' ')
         set_move(x, y, x - 1, y - 1);
-    else if (isupper(get_piece(board, x + 1, y - 1)) || get_piece(board, x + 1, y - 1) == ' ')
+    else if (__isupper(get_piece(board, x + 1, y - 1)) || get_piece(board, x + 1, y - 1) == ' ')
         set_move(x, y, x + 1, y - 1);
 }
 
@@ -203,15 +203,15 @@ do_chess()
     // 8 rows of 8 chars + newlines for each row
     char board[9 * 8];
 
-    printf("Welcome to chessmaster 0x8000, enter your board:\n");
+    __printf("Welcome to chessmaster 0x8000, enter your board:\n");
 
     if (read_board(board) != EXIT_SUCCESS) {
-        printf("Invalid board\n");
+        __printf("Invalid board\n");
         return EXIT_SUCCESS;
     }
 
     find_move(board);
-    printf("Muahhaha, I move to %c%c%c%c\n",
+    __printf("Muahhaha, I move to %c%c%c%c\n",
             game_state.games.chess.move[0],
             game_state.games.chess.move[1],
             game_state.games.chess.move[2],

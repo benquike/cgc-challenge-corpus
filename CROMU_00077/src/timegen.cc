@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -40,7 +40,7 @@ CTimeGen::CTimeGen( uint32_t *pGeneratorSource, uint32_t generatorSize )
 {
 	m_pGeneratorSource = new uint32_t[generatorSize];
 
-	memcpy( m_pGeneratorSource, pGeneratorSource, sizeof(uint32_t)*generatorSize );
+	__memcpy( m_pGeneratorSource, pGeneratorSource, sizeof(uint32_t)*generatorSize );
 }
 
 CTimeGen::~CTimeGen( )

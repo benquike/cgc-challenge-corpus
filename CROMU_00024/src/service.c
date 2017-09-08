@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -63,21 +63,21 @@ int main(void) {
         if (args[0][0]=='a' && arg_count==2 ) {
 
             // if the string to add is less than 10 chars, ignore the add command
-            if (strlen(args[1]) < 10) {
+            if (__strlen(args[1]) < 10) {
 
-                free(args);
+                __free(args);
                 continue;
             }
 
-            item=calloc(1, sizeof(data_item_type));
+            item=__calloc(1, sizeof(data_item_type));
 
             if (!item) {
 
-                printf("Unable to allocate memory\n");
+                __printf("Unable to allocate memory\n");
                 return(-1);
             }
 
-            strncpy(item->name, args[1], sizeof(item->name)-1);
+            __strncpy(item->name, args[1], sizeof(item->name)-1);
             item->next = 0;
 
             insert_node(&head, item, make_key_from_name);
@@ -95,7 +95,7 @@ int main(void) {
             delete_matches(&head, arg_count, args);
 
         }
-        // time to exit
+        // time to __exit
         else if (args[0][0]=='x') {
 
             return(0);
@@ -108,17 +108,17 @@ int main(void) {
         else if (args[0][0]=='s' ) {
 
             // clear the stats
-            bzero(&stats, sizeof(stats));
+            __bzero(&stats, sizeof(stats));
 
             count_bst_stats(head, &stats);
 
-            printf("# of Nodes: @d\n", stats.node_count);
-            printf("\% left nodes: @d\n", stats.percent_left);
-            printf("\% right nodes: @d\n", stats.percent_right);
+            __printf("# of Nodes: @d\n", stats.node_count);
+            __printf("\% left nodes: @d\n", stats.percent_left);
+            __printf("\% right nodes: @d\n", stats.percent_right);
 
         }
         
-        free(args);
+        __free(args);
     }
 
  

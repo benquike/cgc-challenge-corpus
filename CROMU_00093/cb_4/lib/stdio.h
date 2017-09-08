@@ -4,7 +4,7 @@ Copyright (c) 2015 Cromulence LLC
 
 Authors: Cromulence <cgc@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -31,11 +31,11 @@ THE SOFTWARE.
 
 int putchar( int c );
 
-int printf( const char *format, ... );
+int __printf( const char *format, ... );
 int fprintf( int fd, const char *format, ... );
 int vprintf( int fd, const char *format, va_list args );
-int sprintf( char *buf, const char *format, ... );
-int vsprintf( char *buf, const char *format, va_list args );
-int puts( const char *s );
+int __sprintf( char *buf, const char *format, ... );
+int __vsprintf( char *buf, const char *format, va_list args );
+int __puts( const char *s );
 
 #endif // __STDIO_H__

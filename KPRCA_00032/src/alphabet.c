@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -27,7 +27,7 @@
 
 void ftab_init1(freqtab_t *ftab)
 {
-    memset(ftab, 0, sizeof(freqtab_t));
+    __memset(ftab, 0, sizeof(freqtab_t));
 }
 
 void ftab_init(freqtab_t *ftab, const char *word)
@@ -41,6 +41,6 @@ void ftab_add(freqtab_t *ftab, const char *word)
     unsigned int i;
 
     for (i = 0; word[i] != '\0'; i++)
-        if (isalpha(word[i]))
+        if (__isalpha(word[i]))
             ftab->freq[toupper(word[i]) - ALPHABET_START]++;
 }

@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -39,7 +39,7 @@ uint8_t FindUsername(char *Username) {
 	uint8_t i;
 
 	for (i = 0; i < MAX_USERS; i++) {
-		if (!strcmp(Users[i].Username, Username)) {
+		if (!__strcmp(Users[i].Username, Username)) {
 			break;
 		}
 	}
@@ -51,10 +51,10 @@ uint8_t FindCode(char *code) {
 	uint8_t i;
 
 	for (i = 0; i < MAX_USERS; i++) {
-		if (!strcmp(Users[i].Pin, code)) {
+		if (!__strcmp(Users[i].Pin, code)) {
 			return(1);
 		}
-		if (!strcmp(Users[i].AccessCode, code)) {
+		if (!__strcmp(Users[i].AccessCode, code)) {
 			return(1);
 		}
 	}
@@ -104,10 +104,10 @@ uint8_t AddUser(void) {
 	}
 
 	// Make sure the selected pin and access code are of the correct lengths
-	if (strlen(NewUser.Pin) != PIN_LEN) {
+	if (__strlen(NewUser.Pin) != PIN_LEN) {
 		return(0);
 	}
-	if (strlen(NewUser.AccessCode) != ACCESS_CODE_LEN) {
+	if (__strlen(NewUser.AccessCode) != ACCESS_CODE_LEN) {
 		return(0);
 	}
 
@@ -117,7 +117,7 @@ uint8_t AddUser(void) {
 	}
 
 	// Add the user to the list
-	memcpy(&Users[TargetUser], &NewUser, sizeof(User));
+	__memcpy(&Users[TargetUser], &NewUser, sizeof(User));
 
 	NumUsers++;
 
@@ -129,7 +129,7 @@ uint8_t DelUser(void) {
 	uint8_t UserIndex;
 
 	// Read in the username
-	bzero(Username, 32);
+	__bzero(Username, 32);
 	if (!ReadBytes((unsigned char *)Username, 32)) {
 		return(0);
 	}
@@ -144,7 +144,7 @@ uint8_t DelUser(void) {
 	RevokeAccess(UserIndex);
 
 	// Zero that entry
-	bzero(&Users[UserIndex], sizeof(User));
+	__bzero(&Users[UserIndex], sizeof(User));
 	NumUsers--;
 
 	return(1);

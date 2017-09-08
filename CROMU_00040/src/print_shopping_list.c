@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -52,11 +52,11 @@ Ingredient_Type *ingredient;
 
 		if (list_head==0) {
 
-			list_head = malloc(sizeof(Shopping_List_Type));
+			list_head = __malloc(sizeof(Shopping_List_Type));
 
 			if (list_head == 0) {
 
-				printf("unable to malloc memory\n");
+				__printf("unable to __malloc memory\n");
 				_terminate(-1);
 			}
 
@@ -72,11 +72,11 @@ Ingredient_Type *ingredient;
 			list->item = ingredient->item;
 			ingredient=ingredient->next;
 
-			list->next = malloc(sizeof(Shopping_List_Type));
+			list->next = __malloc(sizeof(Shopping_List_Type));
 
 			if (list->next == 0) {
 
-				printf("unable to malloc memory\n");
+				__printf("unable to __malloc memory\n");
 				_terminate(-1);
 
 			}
@@ -91,7 +91,7 @@ Ingredient_Type *ingredient;
 	}
 
 	if (list) {
-		free(list);
+		__free(list);
 		list = previous;
 		list->next = 0;
 	}
@@ -109,9 +109,9 @@ Shopping_List_Type *tmp_list;
 	// first build a linked list of items from tagged recipes
 	my_list = build_shopping_list(book);
 
-	printf("\n");
-	printf("Shopping List\n");
-	printf("-------------\n");
+	__printf("\n");
+	__printf("Shopping List\n");
+	__printf("-------------\n");
 
 	if (my_list != 0) {
 
@@ -120,17 +120,17 @@ Shopping_List_Type *tmp_list;
 
 		while (tmp_list) {
 
-			printf("@s\n", tmp_list->item);
+			__printf("@s\n", tmp_list->item);
 
 			tmp_list= tmp_list->next;
 		}
 
-		// now free the linked list to hold the shopping list
+		// now __free the linked list to hold the shopping list
 		tmp_list = my_list->next;
 
 		while( my_list) {
 
-			free(my_list);
+			__free(my_list);
 
 			my_list = tmp_list;
 
@@ -141,5 +141,5 @@ Shopping_List_Type *tmp_list;
 
 	}
 
-	printf("\n");
+	__printf("\n");
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -22,14 +22,14 @@
  */
 #include "stdio_private.h"
 
-int fflush(FILE *stream)
+int __fflush(__FILE *stream)
 {
     if (stream->idx == INVALID_IDX)
         return 0;
 
     if (stream->rw == F_READ)
     {
-        /* drop the contents of the read buffer */
+        /* drop the contents of the __read buffer */
         stream->idx = stream->length = 0;
         return 0;
     }
@@ -47,10 +47,10 @@ int fflush(FILE *stream)
     }
 }
 
-void fbuffered(FILE *stream, int enabled)
+void __fbuffered(__FILE *stream, int enabled)
 {
     if (stream->idx != INVALID_IDX)
-        fflush(stream);
+        __fflush(stream);
 
     if (enabled)
     {

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -42,11 +42,11 @@
 #define DefineClass(name,parent) \
     static void __init_##name () { \
         if (sizeof(__default_vtable_##parent)) \
-        memcpy(&__default_vtable_##name, &__default_vtable_##parent, sizeof(__default_vtable_##parent)); \
+        __memcpy(&__default_vtable_##name, &__default_vtable_##parent, sizeof(__default_vtable_##parent)); \
     }; \
     const __init_array_t __init_array_##cls##_##name __attribute__((section(".rodata.init"))) = { __level_##name, __init_##name }; \
     name * __new_##name () { \
-        name *o = malloc(sizeof(name)); \
+        name *o = __malloc(sizeof(name)); \
         ASSERT_ALLOC(o); \
         o->__vtable = & __default_vtable_##name ; \
         if (o->__vtable->$init) $(o, $init); \
@@ -112,7 +112,7 @@ static void __delete(Object *X)
 {
     if (X->__vtable->$destroy)
         X->__vtable->$destroy(X);
-    free(X);
+    __free(X);
 }
 
 // exception support

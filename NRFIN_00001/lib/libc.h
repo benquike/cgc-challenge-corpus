@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -35,7 +35,7 @@ typedef __builtin_va_list va_list;
 #define va_copy(d, s)       __builtin_va_copy(d, s)
 
 
-#define isdigit(c)  ((c) >= '0' && (c) <= '9')
+#define __isdigit(c)  ((c) >= '0' && (c) <= '9')
 
 // syslog priorities
 #define LOG_DEBUG 7		// debug-level message
@@ -56,11 +56,11 @@ int vsnprintf(char* buf, size_t buf_size, const char* fmt, va_list args);
 int snprintf(char* buf, size_t buf_size, const char* fmt, ...);
 int sendall(int fd, const char *buf, const size_t size);
 int streq(const char* str1, const char* str2);
-unsigned int strlen(const char *str);
-char * strncpy(char* dest, const char* src, size_t size);
-char * strchr(char *str, char ch);
-void * memset(void* str, int ch, size_t n);
-void * memcpy(void* dst, const void* src, size_t cnt);
+unsigned int __strlen(const char *str);
+char * __strncpy(char* dest, const char* src, size_t size);
+char * __strchr(char *str, char ch);
+void * __memset(void* str, int ch, size_t n);
+void * __memcpy(void* dst, const void* src, size_t cnt);
 uint32_t str2uint32(const char* str_buf);
 int str2int(const char* str_buf);
 int int2str(char* str_buf, int buf_size, int i);

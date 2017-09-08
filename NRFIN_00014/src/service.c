@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -32,9 +32,9 @@ pack_and_data_t *PAD;
 void * BACKING_DATA;
 
 void init_recv_structs(){
-    PAD = (pack_and_data_t *) malloc(sizeof(pack_and_data_t));
+    PAD = (pack_and_data_t *) __malloc(sizeof(pack_and_data_t));
     
-    BACKING_DATA = malloc(sizeof(packet_head_t) + sizeof(packet_data_recharge_t) + 1024);
+    BACKING_DATA = __malloc(sizeof(packet_head_t) + sizeof(packet_data_recharge_t) + 1024);
 
     PAD->ph = BACKING_DATA;
     PAD->data = PAD->ph + 1;
@@ -160,13 +160,13 @@ void free_pad(pack_and_data_t *pad){
     void * data = pad->data;
     if(data-ph == sizeof(packet_head_t)){
 
-        free(ph);
+        __free(ph);
         return;
        
     }
-    free(ph);
+    __free(ph);
     if(data != NULL)
-        free(data);
+        __free(data);
 
 };
 

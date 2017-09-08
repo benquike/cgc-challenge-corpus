@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -30,7 +30,7 @@
 #define IS_ALPHA(c) (((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z')))
 #define IS_UPPER(c) ((c >= 'A') && (c <= 'Z'))
 
-long int strtol(const char *nptr, char **endptr, int base)
+long int __strtol(const char *nptr, char **endptr, int base)
 {
     int limit;
     int neg = 0, val = 0, consumed = 0, n, a;
@@ -124,9 +124,9 @@ done:
 
 }
 
-long unsigned int strtoul(const char *nptr, char **endptr, int base)
+long unsigned int __strtoul(const char *nptr, char **endptr, int base)
 {
-    return (long unsigned int)strtol(nptr, endptr, base);
+    return (long unsigned int)__strtol(nptr, endptr, base);
 }
 
 #pragma GCC diagnostic pop

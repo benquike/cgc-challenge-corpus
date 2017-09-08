@@ -4,7 +4,7 @@ Author: James Connor (jymbo@cromulence.co)
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,19 +35,19 @@ THE SOFTWARE.
 #define DELIM 0x0A 	//\n
 
 int strict_atoi(char *a){
-	for(int i = 0;i<strlen(a);i++){
+	for(int i = 0;i<__strlen(a);i++){
 		if ( ( a[i] > 0x39 ) || ( a[i] < 0x30 ) ){
 			return 0x0;
 		}
 	}
-	return atoi(a);
+	return __atoi(a);
 }
 
 unsigned int get_int(char *prompt){
 	//get number from user as unsigned int
 	char numBuf[10];
-	printf("@s :",prompt);
-	int result = receive_until(numBuf, DELIM, 9);
+	__printf("@s :",prompt);
+	int result = __receive_until(numBuf, DELIM, 9);
 	numBuf[result] = 0;
 	//bad way to clear signs, but unique(hopefully)
 	for (int i = 0; i<result; i++ ){
@@ -55,14 +55,14 @@ unsigned int get_int(char *prompt){
 			numBuf[i] = 0x30;
 		}
 	}
-	result = atoi(numBuf);
+	result = __atoi(numBuf);
 	return result;	
 }
 
 
 unsigned int get_string(char *strBuf, unsigned int size, char *prompt){
-	printf("@s >",prompt);
-	int result = receive_until(strBuf, DELIM, size);
+	__printf("@s >",prompt);
+	int result = __receive_until(strBuf, DELIM, size);
 	strBuf[result] = 0;
 	return result;
 }
@@ -70,18 +70,18 @@ unsigned int get_string(char *strBuf, unsigned int size, char *prompt){
 
 void print_prompt(pDataStruct workingData){
 	char temp[MAXPATH];
-	bzero(temp,MAXPATH);
+	__bzero(temp,MAXPATH);
 	str_of_path( temp, workingData, workingData->workingDir);
-	printf("@s@@SPIFF:@s/",workingData->currentUser->name, temp );
+	__printf("@s@@SPIFF:@s/",workingData->currentUser->name, temp );
 	return;
 }
 
 void print_help(char **commandList, int size){
-	printf("< ");
+	__printf("< ");
 	for (int i = 0;i < size-1; i++){
-		printf("@s, ",commandList[i]);
+		__printf("@s, ",commandList[i]);
 	}
-	printf("@s >\n",commandList[size-1]);
+	__printf("@s >\n",commandList[size-1]);
 }
 
 int parse_arg(char arg[16][MAXCOMMAND], char *command){
@@ -89,13 +89,13 @@ int parse_arg(char arg[16][MAXCOMMAND], char *command){
 		int lpos = 0;
 		int lspace = 1; //last position was space
 		int i;
-		int cmdSize = strlen(command);
+		int cmdSize = __strlen(command);
 		//tokenize command 
 		for (i = 0;i < cmdSize;i++){
 			if (command[i] == 32){
 				if ( lspace == 0 ) {//was in a word
-					bzero(arg[argnum],sizeof(arg[argnum]));
-					strncpy(arg[argnum],&command[lpos], (i-lpos));
+					__bzero(arg[argnum],sizeof(arg[argnum]));
+					__strncpy(arg[argnum],&command[lpos], (i-lpos));
 					if (argnum == 15){break;}
 					argnum += 1;
 				} 
@@ -110,8 +110,8 @@ int parse_arg(char arg[16][MAXCOMMAND], char *command){
 			}
 		}
 		if (lpos < i ){
-			bzero(arg[argnum],sizeof(arg[argnum]));
-			strncpy(arg[argnum],&command[lpos],(i-lpos));
+			__bzero(arg[argnum],sizeof(arg[argnum]));
+			__strncpy(arg[argnum],&command[lpos],(i-lpos));
 			argnum += 1;
 		} 
 
@@ -123,10 +123,10 @@ void print_perms(pNode node, pDataStruct workingData){
 	validate_current_perms(node, workingData);
 	while(tempPerms != NULL){
 		if (tempPerms->user != NULL){
-			printf(" @s",tempPerms->user->name);
+			__printf(" @s",tempPerms->user->name);
 		}
 		if (tempPerms->group != NULL){
-			printf(" @s",tempPerms->group->name);
+			__printf(" @s",tempPerms->group->name);
 		}
 		tempPerms = tempPerms->next;
 	}
@@ -135,9 +135,9 @@ void print_perms(pNode node, pDataStruct workingData){
 void print_user_list(pDataStruct workingData){
 	pUser last = workingData->user;
 	int count = 0;
-	printf("UID    NAME\n__________\n");//10 underscores
+	__printf("UID    NAME\n__________\n");//10 underscores
 	while ( last != NULL ){
-		printf("@d @s\n",count,last->name);
+		__printf("@d @s\n",count,last->name);
 		count += 1;
 		last = last->next;
 	}
@@ -147,9 +147,9 @@ void print_user_list(pDataStruct workingData){
 void print_group_list( pDataStruct workingData ){
 	pGroup last = workingData->group;
 	int count = 0;
-	printf("GUID     NAME\n____________________\n");//20 underscores
+	__printf("GUID     NAME\n____________________\n");//20 underscores
 	while ( last != NULL ){
-		printf("@d @s\n",count,last->name);
+		__printf("@d @s\n",count,last->name);
 		count += 1;
 		last = last->next;
 	}
@@ -159,9 +159,9 @@ void print_group_list( pDataStruct workingData ){
 void print_users_in_group( pGroup group ){
 	pGroupUserList temp = group->userList;
 	int count = 0;
-	printf("Count Name\n____________________\n");
+	__printf("Count Name\n____________________\n");
 	while ( temp != NULL ){
-		printf("@d @s\n",count, temp->user->name);
+		__printf("@d @s\n",count, temp->user->name);
 		count += 1;
 		temp = temp->next;
 	}
@@ -171,7 +171,7 @@ void print_users_in_group( pGroup group ){
 pGroup find_group(char *nameNum, pDataStruct workingData){
 	pGroup tempGroup = NULL;
 	int tempNum = strict_atoi(nameNum);
-	if ( ( strcmp(nameNum,"root") == 0 ) || ( strcmp(nameNum,"0") == 0 )){
+	if ( ( __strcmp(nameNum,"root") == 0 ) || ( __strcmp(nameNum,"0") == 0 )){
 		return workingData->group;
 	}
 	if ( tempNum != 0 ){
@@ -188,7 +188,7 @@ pGroup find_group(char *nameNum, pDataStruct workingData){
 pUser find_user(char *nameNum, pDataStruct workingData){
 	pUser tempUser = NULL;
 	int tempNum = strict_atoi(nameNum);
-	if (    (  ( strcmp(nameNum,"root") ) && ( strcmp(nameNum,"0") )  ) == 0    ){
+	if (    (  ( __strcmp(nameNum,"root") ) && ( __strcmp(nameNum,"0") )  ) == 0    ){
 		return workingData->user;
 	}
 	if ( tempNum != 0 ){
@@ -204,17 +204,17 @@ pUser find_user(char *nameNum, pDataStruct workingData){
 
 void print_working_dir(pDataStruct workingData){
 	pNode temp = workingData->workingDir->directoryHeadNode;
-	printf("Type  Size     Date     Name       Perms\n_______________________________________\n");//40_
+	__printf("Type  Size     Date     Name       Perms\n_______________________________________\n");//40_
 	while ( temp != NULL ){
-		if(temp->type == FILE){
-			printf("FILE @d  @x   @s  ",get_file_size(temp->file), temp->date, temp->name);
+		if(temp->type == __FILE){
+			__printf("__FILE @d  @x   @s  ",get_file_size(temp->file), temp->date, temp->name);
 			print_perms(temp,workingData);
-			printf("\n");
+			__printf("\n");
 		}
 		if(temp->type == DIRECTORY){
-			printf("DIR  @d  @x   @s ",sizeof(sNode), temp->date, temp->name);
+			__printf("DIR  @d  @x   @s ",sizeof(sNode), temp->date, temp->name);
 			print_perms(temp,workingData);
-			printf("\n");
+			__printf("\n");
 		}
 
 		temp = temp->next;
@@ -223,7 +223,7 @@ void print_working_dir(pDataStruct workingData){
 }
 
 void main_loop(pDataStruct workingData){
-	char *commandList[] = {"set", "get", "add", "delete","exit","help","ls","cat","cd"};
+	char *commandList[] = {"set", "get", "add", "delete","__exit","help","ls","cat","cd"};
 	char *setList[] = {"date", "user", "group","help"};
 	char *getList[] = {"date", "user", "group", "workingDir","help", "userlist", "grouplist", "usersingroup"};
 	char *addList[] = {"user", "group", "file", "directory", "usertogroup","perm", "appendfile","help"};
@@ -246,7 +246,7 @@ void main_loop(pDataStruct workingData){
 	while(1){
 		argnum = i = j = tempNum = cmd = 0;
 		c = 0;
-		bzero(temp, sizeof(temp));
+		__bzero(temp, sizeof(temp));
 		tempBuf = NULL;
 		tempNode = NULL;
 		tempUser = NULL;
@@ -255,18 +255,18 @@ void main_loop(pDataStruct workingData){
 		tempPerms = NULL;
 		tempFileChunk = NULL;
 		tempGroupUserList = NULL;		
-		bzero(command, sizeof(command));
+		__bzero(command, sizeof(command));
 		print_prompt(workingData);
 		get_string(command, MAXCOMMAND-1, "");
 		for (j = 0;j<16;j++){
-			bzero(arg[j],MAXCOMMAND);
+			__bzero(arg[j],MAXCOMMAND);
 		}
 		argnum = parse_arg(arg, command);
 		tempNum = 0;
 		cmd = 100;
 
 		for (i=0;i<sizeof(commandList)/4;i++){
-			if (strcmp(commandList[i],arg[0]) == 0 ){
+			if (__strcmp(commandList[i],arg[0]) == 0 ){
 				cmd = i;
 			}
 		}
@@ -275,7 +275,7 @@ void main_loop(pDataStruct workingData){
 			case 0x0 : //set
 				cmd = 100;
 				for (i=0;i<sizeof(setList)/4;i++){
-					if (strcmp(setList[i],arg[1]) == 0){
+					if (__strcmp(setList[i],arg[1]) == 0){
 						cmd = i;
 					}
 				}
@@ -288,29 +288,29 @@ void main_loop(pDataStruct workingData){
 
 					case 1 : //set user
 
-						if ( strcmp(arg[2],"") == 0){
-							puts("missing user name or number");
+						if ( __strcmp(arg[2],"") == 0){
+							__puts("missing user name or number");
 							break;
 						}
 						tempUser = find_user(arg[2],workingData);
 						if ( tempUser != NULL ){
 							workingData->currentUser = tempUser;
 						} else { 
-							printf("unknown user: @s\n",arg[2]);
+							__printf("unknown user: @s\n",arg[2]);
 						}
 						break;//end set user
 
 					case 2 : //set group
 
-						if ( strcmp(arg[2], "") == 0){
-							puts("missing group name or number");
+						if ( __strcmp(arg[2], "") == 0){
+							__puts("missing group name or number");
 							break;
 						}
 						tempGroup = find_group(arg[2], workingData);
 						if ( tempGroup != NULL){
 							workingData->currentGroup = tempGroup;
 						} else {
-							printf("unknown group: @s\n",arg[2]);
+							__printf("unknown group: @s\n",arg[2]);
 						}
 						break;
 
@@ -319,7 +319,7 @@ void main_loop(pDataStruct workingData){
 						break;//end set help
 
 					default :
-						printf("Invalid command: @s\n",arg[1]);
+						__printf("Invalid command: @s\n",arg[1]);
 
 				}
 
@@ -328,7 +328,7 @@ void main_loop(pDataStruct workingData){
 			case 1 ://get
 				cmd = 100;
 				for (i=0;i<sizeof(getList)/4;i++){
-					if (strcmp(getList[i],arg[1]) == 0){
+					if (__strcmp(getList[i],arg[1]) == 0){
 						cmd = i;
 					}
 				}
@@ -340,17 +340,17 @@ void main_loop(pDataStruct workingData){
 						break;//end get date
 
 					case 1 : //get user
-						printf("@s\n",workingData->currentUser->name);
+						__printf("@s\n",workingData->currentUser->name);
 						break;//end get user
 
 					case 2 : //get group
-						printf("@s\n",workingData->currentGroup->name);
+						__printf("@s\n",workingData->currentGroup->name);
 						break;//end get group
 
 					case 3 : //get workingDir
-						bzero(temp,MAXPATH);
+						__bzero(temp,MAXPATH);
 						str_of_path( temp, workingData, workingData->workingDir);
-						printf("@s/\n",temp);
+						__printf("@s/\n",temp);
 						break;//end get workingDir
 
 					case 4 : //get help
@@ -367,8 +367,8 @@ void main_loop(pDataStruct workingData){
 						break;//end get grouplist
 
 					case 7 : //get usersingroup
-						if ( strcmp(arg[2], "") == 0){
-							puts("missing group name or number");
+						if ( __strcmp(arg[2], "") == 0){
+							__puts("missing group name or number");
 							break;
 						}
 						tempGroup = find_group(arg[2], workingData);
@@ -376,11 +376,11 @@ void main_loop(pDataStruct workingData){
 							print_users_in_group(tempGroup);
 							break;
 						}
-						printf("unknown group: @s\n",arg[2]);
+						__printf("unknown group: @s\n",arg[2]);
 						break;//end get useringroup						
 
 					default :
-						printf("Invalid command: @s\n",arg[1]);
+						__printf("Invalid command: @s\n",arg[1]);
 				}
 
 				break;//end get
@@ -388,7 +388,7 @@ void main_loop(pDataStruct workingData){
 			case 2 ://add
 				cmd = 100;
 				for (i=0;i<sizeof(addList)/4;i++){
-					if ( strcmp(addList[i],arg[1]) == 0 ){
+					if ( __strcmp(addList[i],arg[1]) == 0 ){
 						cmd = i;
 					}
 				}
@@ -396,51 +396,51 @@ void main_loop(pDataStruct workingData){
 				{
 					case 0 : //add user
 
-						if ( strcmp(arg[2],"") == 0 ){
-							bzero(temp,MAXPATH);
+						if ( __strcmp(arg[2],"") == 0 ){
+							__bzero(temp,MAXPATH);
 							get_string(temp, 128, "UserName");
-							strcpy(arg[2],temp);
+							__strcpy(arg[2],temp);
 						}
 						tempUser = find_user( arg[2], workingData);
 						if ( tempUser == NULL ){
 							add_user( arg[2], workingData );
 						} else {
-							puts("Username already in use");
+							__puts("Username already in use");
 						}
 						break;//end add user
 
 					case 1 : //add group
-						if ( strcmp(arg[2],"") == 0 ){
-							bzero(temp,MAXPATH);
+						if ( __strcmp(arg[2],"") == 0 ){
+							__bzero(temp,MAXPATH);
 							get_string(temp, 128, "GroupName");
-							strcpy(arg[2], temp);
+							__strcpy(arg[2], temp);
 						}
 						tempGroup = find_group( arg[2], workingData);
 						if ( tempGroup == NULL ){
 							add_group( arg[2], workingData );
 						} else {
-							puts("Groupname already in use");
+							__puts("Groupname already in use");
 						}
 						break;//end add group
 
 					case 2 : //add file
 						//add file name size
-						tempNum = atoi(arg[3]);
-						if (strcmp(arg[2],"") == 0){
-							puts("Filename required");
+						tempNum = __atoi(arg[3]);
+						if (__strcmp(arg[2],"") == 0){
+							__puts("Filename required");
 							break;
 						}
 						if ( tempNum > MAXUPLOAD ){
-							puts("Too big");
+							__puts("Too big");
 							break;
 						}
 						if ( find_node_by_name(arg[2],workingData->workingDir->directoryHeadNode) != NULL ){
-							puts("There is another file or directory with that name");
+							__puts("There is another file or directory with that name");
 							break;
 						}
 						if ( tempNum > 0){
 							rcvBuf = mallocOrDie(tempNum,"Failed to allocate tempBuf");
-							puts("-----Begin File-----");//five - 
+							__puts("-----Begin File-----");//five - 
 							if ( tempNum != receive_bytes(rcvBuf,tempNum) ){
 								die("Failed to reveive file");
 								break;
@@ -451,20 +451,20 @@ void main_loop(pDataStruct workingData){
 
 					case 3 : //add directory
 
-						if (strcmp(arg[2],"") == 0){
-							puts("Directory name required");
+						if (__strcmp(arg[2],"") == 0){
+							__puts("Directory name required");
 							break;
 						}
 						if ( find_node_by_name(arg[2],workingData->workingDir->directoryHeadNode) != NULL ){
-							puts("There is another file or directory with that name");
+							__puts("There is another file or directory with that name");
 							break;
 						}
 						tempNode = add_directory( workingData->date, arg[2], workingData->workingDir, workingData->currentUser );
 						break;//end add directory
 
 					case 4 : //add useringroup
-						if (strcmp(arg[2],"") == 0){
-							puts("username or number required");
+						if (__strcmp(arg[2],"") == 0){
+							__puts("username or number required");
 							break;
 						}
 						tempUser = find_user( arg[2], workingData);
@@ -472,47 +472,47 @@ void main_loop(pDataStruct workingData){
 							tempGroupUserList = is_user_in_group( tempUser, workingData->currentGroup );
 							if ( tempGroupUserList == NULL ){//user is not already in group	
 								add_user_to_group( tempUser, workingData->currentGroup );
-							} else {printf("@s is already in @s\n",arg[2], workingData->currentGroup->name);}
+							} else {__printf("@s is already in @s\n",arg[2], workingData->currentGroup->name);}
 						} else {
-							puts("User does not exist, add user first");
+							__puts("User does not exist, add user first");
 						}
 
 						break;//end add useringroup
 						
 					case 5 : //add perm
-						if (  ( strcmp(arg[2],"") == 0 )||( strcmp(arg[2]," ") == 0 )  ){//arg[2] name of file or dir
-							puts("name of file or directory required");
+						if (  ( __strcmp(arg[2],"") == 0 )||( __strcmp(arg[2]," ") == 0 )  ){//arg[2] name of file or dir
+							__puts("name of file or directory required");
 							break;
 						}
-						if (!(  (strcmp(arg[3],"user") == 0) ^ (strcmp(arg[3],"group") == 0) )) {//arg[3] user, group
-							puts("'user' or 'group'");
+						if (!(  (__strcmp(arg[3],"user") == 0) ^ (__strcmp(arg[3],"group") == 0) )) {//arg[3] user, group
+							__puts("'user' or 'group'");
 							break;
 						}
-						if (strcmp(arg[4],"") == 0){
-							puts("user name, group name, or number required");//arg[4] name or number of user or group
+						if (__strcmp(arg[4],"") == 0){
+							__puts("user name, group name, or number required");//arg[4] name or number of user or group
 							break;
 						}
 						tempNode = find_node_by_name(arg[2],workingData->workingDir->directoryHeadNode );//validate file or dir
 						if (tempNode == NULL){
-							puts("Invalid file or directory");
+							__puts("Invalid file or directory");
 							break;
 						}
 						if (tempNode->type == LINK){
 							tempNode = tempNode->directoryHeadNode;
 							break;
 						}
-						if (strcmp(arg[3],"user") == 0){
+						if (__strcmp(arg[3],"user") == 0){
 							tempUser = find_user(arg[4],workingData);
 							tempGroup = NULL;
 							if (tempUser == NULL){
-								printf("user @s not found\n",arg[4]);
+								__printf("user @s not found\n",arg[4]);
 								break;
 							}
 						} else {
 							tempGroup = find_group(arg[4],workingData);
 							tempUser = NULL;
 							if (tempGroup == NULL){
-								printf("group @s not found\n",arg[4]);
+								__printf("group @s not found\n",arg[4]);
 								break;
 							}
 						}
@@ -522,30 +522,30 @@ void main_loop(pDataStruct workingData){
 						break;//end add perm
 
 					case 6 : //add appendfile
-						tempNum = atoi(arg[3]);
-						if (strcmp(arg[2],"") == 0){
-							puts("Filename required");
+						tempNum = __atoi(arg[3]);
+						if (__strcmp(arg[2],"") == 0){
+							__puts("Filename required");
 							break;
 						}
 						if ( tempNum > MAXUPLOAD ){
-							puts("Too big");
+							__puts("Too big");
 							break;
 						}
 						tempFile = find_file_by_name(arg[2],workingData->workingDir);
 						if (  tempFile == NULL ){
-							puts("No file in working directory by that name");
+							__puts("No file in working directory by that name");
 							break;
 						}
 						if ( tempNum > 0){
 							tempBuf = mallocOrDie(tempNum,"Failed to allocate tempBuf");
-							puts("-----Begin File-----");//five - 
+							__puts("-----Begin File-----");//five - 
 							if ( tempNum != receive_bytes((unsigned char *)tempBuf,tempNum) ){
 								die("Failed to reveive file");
 								break;
 							}
 						} else {
 							tempBuf = NULL;
-							puts("Can not add 0 bytes to file");
+							__puts("Can not add 0 bytes to file");
 							break;
 						}
 						tempFileChunk = add_file_chunk( tempBuf, tempFile, tempNum );
@@ -556,14 +556,14 @@ void main_loop(pDataStruct workingData){
 						break;//end add help
 
 					default :
-						printf("Invalid command: @s\n",arg[1]);
+						__printf("Invalid command: @s\n",arg[1]);
 				}
 
 				break;//end add
 			case 3 ://delete 	
 				cmd = 100;
 				for (i=0;i<sizeof(deleteList)/4;i++){
-					if ( strcmp(deleteList[i],arg[1]) == 0 ){
+					if ( __strcmp(deleteList[i],arg[1]) == 0 ){
 						cmd = i;
 					}
 				}
@@ -571,129 +571,129 @@ void main_loop(pDataStruct workingData){
 				{
 
 					case 0 : //delete user
-						bzero(temp,MAXPATH);
-						if ( strcmp(arg[2],"") == 0 ){
+						__bzero(temp,MAXPATH);
+						if ( __strcmp(arg[2],"") == 0 ){
 							get_string(temp, 128, "User Name or number");
-							strcpy(arg[2],temp);
+							__strcpy(arg[2],temp);
 						}
 						tempUser = find_user( arg[2], workingData);
 						if ( tempUser != NULL ){
 							remove_user(tempUser , workingData );
 						} else {
-							puts("No such user found");
+							__puts("No such user found");
 						}
 						break;//end delete user
 
 					case 1 : //delete group
-						bzero(temp,MAXPATH);
-						if ( strcmp(arg[2],"") == 0 ){
+						__bzero(temp,MAXPATH);
+						if ( __strcmp(arg[2],"") == 0 ){
 							get_string(temp, 128, "Group Name or number");
-							strcpy(arg[2],temp);
+							__strcpy(arg[2],temp);
 						}
 						tempGroup = find_group( arg[2], workingData);
 						if ( tempGroup != NULL ){
 							remove_group(tempGroup , workingData );
 						} else {
-							puts("no such group found");
+							__puts("no such group found");
 						}
 						break;//end delete group 
 
 					case 2 : //delete file 
-						if (strcmp(arg[2],"") == 0){
-							puts("Filename required");
+						if (__strcmp(arg[2],"") == 0){
+							__puts("Filename required");
 							break;
 						}
 						tempNode = find_file_node_by_name(arg[2],workingData->workingDir);
 						if (tempNode == NULL){
-							puts("No such file");
+							__puts("No such file");
 							break;
 						}
 						delete_node(tempNode, workingData);
 						break;//end delete file 
 
 					case 3 : //delete directory
-						if (strcmp(arg[2],"") == 0){
-							puts("Directory name required");
+						if (__strcmp(arg[2],"") == 0){
+							__puts("Directory name required");
 							break;
 						}
 						tempNode = find_directory_by_name(arg[2],workingData->workingDir);
 						if (tempNode == NULL){
-							puts("No such directory");
+							__puts("No such directory");
 							break;
 						}
 						delete_node(tempNode, workingData);
 						break;//end delete directory
 
 					case 4 : //delete usertogroup
-						if (strcmp(arg[2],"") == 0){
-							puts("User name required");
+						if (__strcmp(arg[2],"") == 0){
+							__puts("User name required");
 							break;
 						}
-						if (strcmp(arg[3],"") == 0){
-							puts("group name required");
+						if (__strcmp(arg[3],"") == 0){
+							__puts("group name required");
 							break;
 						}
 						tempUser = find_user(arg[2],workingData);
 						if (tempUser == NULL){
-							puts("No such user");
+							__puts("No such user");
 							break;
 						}
 						tempGroup = find_group(arg[3],workingData);
 						if (tempGroup == NULL){
-							puts("No such group");
+							__puts("No such group");
 							break;
 						}
 						tempGroupUserList = is_user_in_group(tempUser, tempGroup);
 						if (tempGroupUserList == NULL){
-							puts("User is not in group");
+							__puts("User is not in group");
 							break;
 						}
 						remove_user_from_group(tempUser, tempGroup);
 						break;//end delete usertogroup
 
 					case 5 : //delete perm
-						if (strcmp(arg[3],"") == 0){
-							puts("User or group name required");
+						if (__strcmp(arg[3],"") == 0){
+							__puts("User or group name required");
 							break;
 						}
-						if (strcmp(arg[2],"") == 0){
-							puts("file name required");
+						if (__strcmp(arg[2],"") == 0){
+							__puts("file name required");
 							break;
 						}
 						tempNode = find_node_by_name(arg[2],workingData->workingDir->directoryHeadNode);
 						if (tempNode == NULL){
-							puts("No such file");
+							__puts("No such file");
 							break;
 						}
 						tempPerms = find_perm_by_name(arg[3],tempNode,workingData);
 						if (tempPerms != NULL){
 							delete_perms(tempNode, tempPerms);
 						} else {
-							puts("No such user permission on file");
+							__puts("No such user permission on file");
 						}
 						break;//end delete perm
 
 					case 6 : //delete filebytes [file] [numbytes]
-						if (strcmp(arg[2],"") == 0){
-							puts("Filename required");
+						if (__strcmp(arg[2],"") == 0){
+							__puts("Filename required");
 							break;
 						}
 						size = strict_atoi(arg[3]);
 						if (size == 0){
-							puts("zero bytes deleted");
+							__puts("zero bytes deleted");
 							break;
 						}
 						//validate file						
 						tempNode = find_file_node_by_name(arg[2],workingData->workingDir);
 						tempFile = tempNode->file;
 						if (tempNode == NULL){
-							puts("No such file");
-							printf("@s\n",arg[2]);
+							__puts("No such file");
+							__printf("@s\n",arg[2]);
 							break;
 						}
 						tempNum = get_file_size(tempFile);
 						if (size > tempNum){
-							puts("Too many bytes");
+							__puts("Too many bytes");
 						} 
 						//tempNum is new file size
 						tempNum = tempNum - size;
@@ -712,9 +712,9 @@ void main_loop(pDataStruct workingData){
 				break;//end delete
 				
 
-			case 4 ://exit
-				puts("exiting");
-				goto exit;
+			case 4 ://__exit
+				__puts("exiting");
+				goto __exit;
 				break;
 
 			case 5 ://help
@@ -724,36 +724,36 @@ void main_loop(pDataStruct workingData){
 				print_working_dir(workingData);
 				break;
 			case 7 ://cat
-				if (strcmp(arg[1],"") == 0){
-					puts("Filename required");
+				if (__strcmp(arg[1],"") == 0){
+					__puts("Filename required");
 					break;
 				}
 				tempFile = find_file_by_name(arg[1], workingData->workingDir);							
 				if ( tempFile != NULL ){
 					tempFileChunk = tempFile->head;
-					puts("-----Begin File-----");//five - 
+					__puts("-----Begin File-----");//five - 
 					while ( tempFileChunk != NULL ){
-						if (tempFileChunk->chunkSize != write(tempFileChunk,tempFileChunk->chunkSize)){
-							puts("file write failed");
+						if (tempFileChunk->chunkSize != __write(tempFileChunk,tempFileChunk->chunkSize)){
+							__puts("file __write failed");
 						}
 /*
 						c = tempFileChunk->chunk;
-						for ( i = 0; i < tempFileChunk->chunkSize; i++ ){//putc each byte of every chunk
-							putc( *c);
+						for ( i = 0; i < tempFileChunk->chunkSize; i++ ){//__putc each byte of every chunk
+							__putc( *c);
 							c++;
 						}
 */						
 						tempFileChunk = tempFileChunk->next;	
 					}
-					puts("-----END File-----");//five - 
+					__puts("-----END File-----");//five - 
 				}
 				break;
 			case 8 ://cd
-				if (strcmp(arg[1],"") == 0){
-					puts("directory required");
+				if (__strcmp(arg[1],"") == 0){
+					__puts("directory required");
 					break;
 				}
-				if (strcmp(arg[1],"..") == 0){
+				if (__strcmp(arg[1],"..") == 0){
 					if (workingData->workingDir->parent != NULL){
 						workingData->workingDir = workingData->workingDir->parent;
 					}
@@ -764,16 +764,16 @@ void main_loop(pDataStruct workingData){
 					workingData->workingDir = tempNode;
 					break;
 				}
-				puts("No such directory in working directory");
+				__puts("No such directory in working directory");
 				break;//end cd
 
 			default :
-				printf("Invalid command @s\n",arg[0]);
+				__printf("Invalid command @s\n",arg[0]);
 				print_help(commandList, (sizeof(commandList)/4));
 				
 		}
 	}
-	exit:
+	__exit:
 	return;
 }
 
@@ -846,7 +846,7 @@ void strofdate( unsigned int epoch ){
 	unsigned int dayOfWeek = ( ( epoch/86400 ) % 7 );
 	char *weekday = days[dayOfWeek];
 	char *month = months[date[1]-1];
-	printf( "@s, @s @d @d @d:@d:@d GMT\n", weekday, month, date [0], date[2], date[3], date[4], date[5] );
+	__printf( "@s, @s @d @d @d:@d:@d GMT\n", weekday, month, date [0], date[2], date[3], date[4], date[5] );
 	return;
 }
 
@@ -889,18 +889,18 @@ unsigned int get_time(){
 	int hour = 100;
 	int minute = 100;
 	int second = 100;
-	puts("Please enter the date as prompted");
+	__puts("Please enter the date as prompted");
 	while ( year == 0 ){
 		year = get_int("Enter year between 1970 and 2105");
 		if (  ( year < 1970 ) || ( year > 2105 )  ){
-			puts("Bad value for year");
+			__puts("Bad value for year");
 			year = 0;
 		}
 	}
 	while ( month == 0 ){
 		month = get_int("Enter month");
 		if (  ( month < 1 ) || ( month > 12 )  ){
-			puts("Bad value for month");
+			__puts("Bad value for month");
 			month = 0;
 		}
 	}
@@ -938,7 +938,7 @@ unsigned int get_time(){
 }
 
 void start_UI(pDataStruct workingData){
-	puts("Welcome to SPIFFS (Somewhat Poorly Implemented Fast File System)");
+	__puts("Welcome to SPIFFS (Somewhat Poorly Implemented Fast File System)");
 	workingData->date = get_time();
 	main_loop(workingData);
 	return;

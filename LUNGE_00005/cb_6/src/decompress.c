@@ -9,7 +9,7 @@ int write_fd = 12;
 
 char read_buf[BUFSIZE];
 
-void exit(int i) {
+void __exit(int i) {
     transmit_all(write_fd, "\x00\n", 2);
     _terminate(i);
 }
@@ -20,7 +20,7 @@ char get_byte(int fd) {
 
     size = receive_all(fd, (char *) &value, sizeof(value));
     if (size != sizeof(value))
-        exit(0);
+        __exit(0);
     
     return value;
 }
@@ -53,13 +53,13 @@ void decompress(void) {
         write_offset = 0;
         write_count = 0;
 
-        memset(read_buf, 0, sizeof(read_buf));
-        memset(write_buf, 0, sizeof(write_buf));
+        __memset(read_buf, 0, sizeof(read_buf));
+        __memset(write_buf, 0, sizeof(write_buf));
 
         ret = read_until(read_fd, read_buf, sizeof(read_buf) - 1, '\n');
 
         if (read_buf[0] == 0) {
-            exit(1);
+            __exit(1);
         }
 
         for (i = 0; i < ret; i++) {
@@ -102,10 +102,10 @@ void decompress(void) {
 
 int main(void) {
     setup();
-    sleep(2);
+    __sleep(2);
     if (read_fd == 0) {
-        exit(0);
+        __exit(0);
     }
     decompress();
-    exit(0);
+    __exit(0);
 }

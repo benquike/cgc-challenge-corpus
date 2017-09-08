@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -30,16 +30,16 @@ static char *get_no_ws_line(char *line)
     if (line == NULL)
         return NULL;
 
-    size_t size = strlen(line) + 1, i;
+    size_t size = __strlen(line) + 1, i;
     char *nline = NULL, *iter;
-    nline = malloc(size);
+    nline = __malloc(size);
     if (nline == NULL)
         return NULL;
 
-    memset(nline, 0, size);
+    __memset(nline, 0, size);
     iter = nline;
     for (i = 0; i < size; i++) {
-        if (strchr(" \t\n", line[i]) == NULL)
+        if (__strchr(" \t\n", line[i]) == NULL)
             *iter++ = line[i];
     }
 
@@ -51,10 +51,10 @@ static size_t count_words(char *str) {
     if (!str)
         return 0;
 
-    int i, len = strlen(str);
+    int i, len = __strlen(str);
     size_t words = 0;
     for (i = 0; i < len; i++) {
-        if (strchr(" \t\r\n", str[i]) == NULL)
+        if (__strchr(" \t\r\n", str[i]) == NULL)
             words++;
     }
 
@@ -72,14 +72,14 @@ lcll_t *pre_process(SFILE *sfp, size_t *wordc, size_t *linec)
     lcll_t *head = NULL, *iter, *next;
 
     line = strsep(&data, "\n");
-    while (line && (strlen(line) || (data && strlen(data)))) {
-        next = malloc(sizeof(lcll_t));
+    while (line && (__strlen(line) || (data && __strlen(data)))) {
+        next = __malloc(sizeof(lcll_t));
         if (!next)
             return NULL;
 
         new_lc = new_linecmp(line);
         if (new_lc == NULL) {
-            free(next);
+            __free(next);
             next = NULL;
             break;
         }
@@ -105,7 +105,7 @@ lc_t *new_linecmp(char *line)
     if (!line)
         return NULL;
 
-    lc_t *new_lc = malloc(sizeof(lc_t));
+    lc_t *new_lc = __malloc(sizeof(lc_t));
     if (!new_lc)
         return NULL;
 
@@ -124,9 +124,9 @@ void free_linecmp_list(lcll_t **head)
         prev = iter;
         iter = iter->next;
         if (prev->lc->no_ws_line)
-            free(prev->lc->no_ws_line);
-        free(prev->lc);
-        free(prev);
+            __free(prev->lc->no_ws_line);
+        __free(prev->lc);
+        __free(prev);
     }
 
     *head = NULL;

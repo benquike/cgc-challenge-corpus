@@ -1,7 +1,7 @@
 /*
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -24,9 +24,9 @@ THE SOFTWARE.
 #include "service.h"
 
 /**
- * Reads two bytes from a user which specify length to read.
+ * Reads two bytes from a user which specify length to __read.
  * If that length is less than 4096 then allocate a buffer and
- * read the specified size.
+ * __read the specified size.
  * @param data Pointer to a char *that will receive the newly allocated buffer. Null on failure
  * @return Returns the length of the new buffer. Zero length on failure and the pointer is set to NULL
  **/
@@ -93,10 +93,10 @@ int selectRenderer( pimage_meta img )
 	image = img->data;
 	image_length = img->len;
 
-	memcpy( &magic, image, 4 );
+	__memcpy( &magic, image, 4 );
 
 	if ( magic == FPAI_MAGIC ) {
-		memset( &fpai, 0, sizeof(tpai_image_data) );
+		__memset( &fpai, 0, sizeof(tpai_image_data) );
 		fpai.buffer = image;
 		fpai.max = image_length;
 
@@ -104,7 +104,7 @@ int selectRenderer( pimage_meta img )
 			return 0;
 		}
 	} else if ( magic == 0x85eec724 ) { /// FPTI 
-		memset( &fpti, 0, sizeof(fpti_image_data) );
+		__memset( &fpti, 0, sizeof(fpti_image_data) );
 		fpti.buffer = image;
 		fpti.max = image_length;
 
@@ -112,7 +112,7 @@ int selectRenderer( pimage_meta img )
 			return 0;
 		}
 	} else if ( magic == RPTI_MAGIC ) {
-		memset( &rpti, 0, sizeof(rpti_image_data) );
+		__memset( &rpti, 0, sizeof(rpti_image_data) );
 		rpti.buffer = image;
 		rpti.max = image_length;
 
@@ -120,7 +120,7 @@ int selectRenderer( pimage_meta img )
 			return 0;
 		}
 	} else if ( magic == 0x76dfc4b0 ) { /// TBIR_MAGIC
-		memset( &tbir, 0, sizeof(tbir_image_data) );
+		__memset( &tbir, 0, sizeof(tbir_image_data) );
 		tbir.buffer = image;
 		tbir.max = image_length;
 
@@ -128,7 +128,7 @@ int selectRenderer( pimage_meta img )
 			return 0;
 		}
 	} else if ( magic == 0x310f59cb ) { /// TPAI_MAGIC
-		memset( &tpai, 0, sizeof(tpai_image_data) );
+		__memset( &tpai, 0, sizeof(tpai_image_data) );
 		tpai.buffer = image;
 		tpai.max = image_length;
 
@@ -137,7 +137,7 @@ int selectRenderer( pimage_meta img )
 		}
 
 	} else {
-		printf("[ERROR] Unknown Format\n");
+		__printf("[ERROR] Unknown Format\n");
 	}
 	
 	return 1;
@@ -154,20 +154,20 @@ int menu( void )
 	pimage_meta newimage;
 	pimage_meta prev;
 
-	bzero( &root, sizeof(image_meta));
+	__bzero( &root, sizeof(image_meta));
 	
 	while ( 1 ) {
-		printf("1- Upload Image\n");
-		printf("2- List Images\n");
-		printf("3- Remove Image\n");
-		printf("4- Display Image\n");
-		printf("5- Leave\n");
-		printf("} ");
+		__printf("1- Upload Image\n");
+		__printf("2- List Images\n");
+		__printf("3- Remove Image\n");
+		__printf("4- Display Image\n");
+		__printf("5- Leave\n");
+		__printf("} ");
 
 		selection = 0;
 
-		if ( receive_until( (char*)&selection, '\n', 2 ) == 0 ) {
-			printf("[ERROR] Failed to read choice\n");
+		if ( __receive_until( (char*)&selection, '\n', 2 ) == 0 ) {
+			__printf("[ERROR] Failed to __read choice\n");
 			return 0;
 		}
 
@@ -177,44 +177,44 @@ int menu( void )
 			case 1:
 				/// Allocate the meta structure to hold the image data
 				if ( allocate( sizeof( image_meta ), 0, (void**)&newimage) != 0 ) {
-					printf("[ERROR] Failed to allocate buffer\n");
+					__printf("[ERROR] Failed to allocate buffer\n");
 					return 0;
 				}
 
-				memset( newimage, 0x00, sizeof(image_meta) );
+				__memset( newimage, 0x00, sizeof(image_meta) );
 
 				/// Receive the name
-				printf("Image Name: ");
-				if ( receive_until ( newimage->name, '\n', 15) == 0 ) {
-					printf("[ERROR] Receive name failed\n");
+				__printf("Image Name: ");
+				if ( __receive_until ( newimage->name, '\n', 15) == 0 ) {
+					__printf("[ERROR] Receive name failed\n");
 					deallocate( newimage, sizeof(image_meta));
 					return 0;
 				}
 
 				/// Receive the length of the image
 				if ( receive( 0, &image_length, 2, &bytes_read) != 0 ) {
-					printf("[ERROR] Receive length failed\n");
+					__printf("[ERROR] Receive length failed\n");
 					deallocate( newimage, sizeof(image_meta));
 					return 0;
 				}
 
 				/// No images greater than 2k
 				if ( image_length > 2048 ) {
-					printf("[ERROR] Image length to large\n");
+					__printf("[ERROR] Image length to large\n");
 					deallocate( newimage, sizeof(image_meta));
 					continue;
 				}
 
 				/// Allocate the image data buffer
 				if ( allocate( image_length + 1, 0, (void**)(&newimage->data)) != 0 ) {
-					printf("[ERROR] Failed to allocate image buffer\n");
+					__printf("[ERROR] Failed to allocate image buffer\n");
 					deallocate( newimage, sizeof(image_meta));
 					return 0;
 				}
 	
 				/// Receive the image data
 				if ( receive( 0,  newimage->data, image_length, &bytes_read ) != 0 ) {
-					printf("[ERROR] Failed to receive image data\n");
+					__printf("[ERROR] Failed to receive image data\n");
 					deallocate( newimage->data, image_length + 1 );
 					deallocate( newimage, sizeof(image_meta));
 					return 0;
@@ -230,16 +230,16 @@ int menu( void )
 				newimage = root.next;
 
 				while ( newimage ) {
-					printf("@s\n", newimage->name);
+					__printf("@s\n", newimage->name);
 					newimage = newimage->next;
 				}
 				break;
 			case 3:
-				printf("Image Name: ");
-				bzero( name, 16 );
+				__printf("Image Name: ");
+				__bzero( name, 16 );
 
-				if ( receive_until ( name, '\n', 15) == 0 ) {
-					printf("[ERROR] Failed to receive name\n");
+				if ( __receive_until ( name, '\n', 15) == 0 ) {
+					__printf("[ERROR] Failed to receive name\n");
 					continue;
 				}
 
@@ -247,7 +247,7 @@ int menu( void )
 				prev = &root;
 
 				while ( newimage ) {
-					if ( strcmp( newimage->name, name) == 0 ) {
+					if ( __strcmp( newimage->name, name) == 0 ) {
 						deallocate(newimage->data, newimage->len + 1);
 						prev->next = newimage->next;
 						deallocate(newimage, sizeof(image_meta));
@@ -259,18 +259,18 @@ int menu( void )
 				}
 				break;
 			case 4:
-				printf("Image Name: ");
-				bzero( name, 16 );
+				__printf("Image Name: ");
+				__bzero( name, 16 );
 
-				if ( receive_until ( name, '\n', 15) == 0 ) {
-					printf("[ERROR] Failed to receive name\n");
+				if ( __receive_until ( name, '\n', 15) == 0 ) {
+					__printf("[ERROR] Failed to receive name\n");
 					continue;
 				}
 
 				newimage = root.next;
 
 				while ( newimage ) {
-					if ( strcmp( newimage->name, name) == 0 ) {
+					if ( __strcmp( newimage->name, name) == 0 ) {
 						break;
 					} else {
 						newimage = newimage->next;
@@ -279,11 +279,11 @@ int menu( void )
 
 				if ( newimage != NULL ) {
 					if ( selectRenderer( newimage) == 0 ) {
-						printf("[ERROR] Failed to render image\n");
+						__printf("[ERROR] Failed to render image\n");
 						return 0;
 					}
 				} else {
-					printf("[ERROR] Failed to locate image\n");
+					__printf("[ERROR] Failed to locate image\n");
 				}
 
 				break;
@@ -291,7 +291,7 @@ int menu( void )
 				return 0;
 				break;
 			default:
-				printf("[ERROR] Invalid option: @d\n", selection);
+				__printf("[ERROR] Invalid option: @d\n", selection);
 				break;
 		};
 
@@ -311,7 +311,7 @@ int main(void)
 	image_length = readData( &image );
 
 	if ( image_length == 0 ) {
-		printf("[ERROR] Failed to read image\n");
+		__printf("[ERROR] Failed to __read image\n");
 		return 0;
 	}
 

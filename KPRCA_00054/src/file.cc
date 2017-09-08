@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -27,7 +27,7 @@ BaseFile::~BaseFile() {}
 
 File::File(const char* name, FileType type, size_t size, File* parent)
 {
-  strcpy(this->name, name);
+  __strcpy(this->name, name);
   this->type = type;
   this->size = size;
   this->parent = parent;
@@ -40,7 +40,7 @@ File::File(const char* name, FileType type, size_t size, File* parent)
 File::~File()
 {
   if (type == FT_REG && info.content)
-    free(info.content);
+    __free(info.content);
   else if (type == FT_DIR && info.files)
     delete info.files;
 }
@@ -76,10 +76,10 @@ int File::Read(size_t pos, size_t len, char **outBuf)
   if (len == 0)
     len = size;
   len = (len > size - pos) ? (size - pos) : len;
-  *outBuf = (char *) calloc(len, sizeof(char));
+  *outBuf = (char *) __calloc(len, sizeof(char));
   if (!*outBuf)
     return -20;
-  memcpy(*outBuf, &info.content[pos], len);
+  __memcpy(*outBuf, &info.content[pos], len);
   return len;
 }
 
@@ -95,7 +95,7 @@ int File::Write(size_t pos, char *inBuf, size_t len)
     return 0;
   if (pos >= size || pos + len > size)
   {
-    info.content = (char *) realloc(info.content, pos + len);
+    info.content = (char *) __realloc(info.content, pos + len);
     if (info.content == NULL)
     {
       size = 0;
@@ -103,7 +103,7 @@ int File::Write(size_t pos, char *inBuf, size_t len)
     }
     size = pos + len;
   }
-  memcpy(&info.content[pos], inBuf, len);
+  __memcpy(&info.content[pos], inBuf, len);
   return len;
 }
 
@@ -111,14 +111,14 @@ void File::PrintFileInfo()
 {
   if (type == FT_REG)
   {
-    printf("<FILE> ");
-    printf("%s ", (opened ? "O" : "C"));
+    __printf("<__FILE> ");
+    __printf("%s ", (opened ? "O" : "C"));
   }
   else
   {
-    printf("<DIR> D ");
+    __printf("<DIR> D ");
   }
-  printf("%d ", size);
-  printf("%s", name);
-  printf("\n");
+  __printf("%d ", size);
+  __printf("%s", name);
+  __printf("\n");
 }

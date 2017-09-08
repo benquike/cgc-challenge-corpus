@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -60,13 +60,13 @@ int main(void) {
         fprintf(stderr, "sent GIMME\n");
         #endif
 
-        memset(input, 0, INBUFSZ);
-        memset(&r, 0, sizeof(r));
+        __memset(input, 0, INBUFSZ);
+        __memset(&r, 0, sizeof(r));
 
         // get input
         // bug: 1048 > INBUFSZ
-        //  Allows overwrite of VA of _start and write OOB beyond input buf to cause SEGFAULT.
-        //  The bytes are read by the input parsing code, but not written to registers.
+        //  Allows overwrite of VA of _start and __write OOB beyond input buf to cause SEGFAULT.
+        //  The bytes are __read by the input parsing code, but not written to registers.
         //  Not a CFE POV.
         if (0 > (bytes_recv = recv_until_delim_n(STDIN, TERM, input, 1048))) {
             _terminate(20);

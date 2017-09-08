@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -43,7 +43,7 @@ unsigned int databaseCheck;
 	// compare the consistency of the database (magic page)
 	databaseCheck = check_db();
 
-	printf("Database checksum: @d\n", databaseCheck);
+	__printf("Database checksum: @d\n", databaseCheck);
 
 	// load data from the magic page
 	if (loadDB(&airports) == -1)
@@ -61,54 +61,54 @@ unsigned int databaseCheck;
 
 			case COMMAND_OK:
 
-				printf("OK\n");
+				__printf("OK\n");
 				break;
 
 			case BAD_COMMAND:
 
-				printf("BAD COMMAND FORMAT\n");
+				__printf("BAD COMMAND FORMAT\n");
 				break;
 
 			case DUPLICATE_CODE:
 
-				printf("AIRPORT CODE EXISTS\n");
+				__printf("AIRPORT CODE EXISTS\n");
 				break;
 
 			case UNKN_CODE:
 
-				printf("UNKNOWN AIRPORT\n");
+				__printf("UNKNOWN AIRPORT\n");
 				break;
 
 			case DATABASE_EMPTY:
 
-				printf("EMPTY DB\n");
+				__printf("EMPTY DB\n");
 				break;
 
 			case COMMAND_TERMINATED:
 
-				printf("COMMAND TERMINATED\n");
+				__printf("COMMAND TERMINATED\n");
 				break;
 
 			case NO_RESULTS:
 
-				printf("NO RESULTS\n");
+				__printf("NO RESULTS\n");
 				break;
 
 			case UNRECOVERABLE_ERROR:
 
-				printf("TERMINATING\n");
+				__printf("TERMINATING\n");
 				_terminate(-1);
 				break;
 
 				// quit command
 			case -99:
 
-				printf("OK\n");
+				__printf("OK\n");
 				break;
 
 			default:
 
-				printf("UNSPECIFIED ERROR\n");
+				__printf("UNSPECIFIED ERROR\n");
 
 
 		} // switch

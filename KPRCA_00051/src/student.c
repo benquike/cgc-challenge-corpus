@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -31,12 +31,12 @@ int _add_course(student_t *student, course_t *course)
 
     int i = 0;
     if (course->current_enrollment >= course->max_enrollment) {
-        //printf("Class is full\n");
+        //__printf("Class is full\n");
         return FALSE;
     }
 
     if (student->total_credits + course->credits > MAX_CREDITS) {
-        //printf("You've exceeded your semester credit limit\n");
+        //__printf("You've exceeded your semester credit limit\n");
         return FALSE;
     }
 #ifdef PATCHED
@@ -46,23 +46,23 @@ int _add_course(student_t *student, course_t *course)
 
     for (i = 0; i < student->num_courses; i++) {
         if (check_time_conflict(student->courses[i], course) != 0 || student->courses[i] == course) {
-            //printf("Timing conflict\n");
+            //__printf("Timing conflict\n");
             return FALSE;
         }
         if (student->courses[i]->course_id == course->course_id) {
-            //printf("Cannot enroll in the same class multiple times\n");
+            //__printf("Cannot enroll in the same class multiple times\n");
             return FALSE;
         }
     }
 
     if (student->major != course->dept && course->credits < 3) {
-        //printf("Only minor classes are allowed in major\n");
+        //__printf("Only minor classes are allowed in major\n");
         return FALSE;
     }
 
     if (student->major == course->dept) {
         if (student->num_major_courses >= MAJOR_COURSE_MAX) {
-            //printf("Cannot exceed more than 4 in major courses.\n");
+            //__printf("Cannot exceed more than 4 in major courses.\n");
             return FALSE;
         } else {
             student->num_major_courses++;
@@ -97,7 +97,7 @@ int _remove_course(student_t *student, size_t idx)
         student->num_major_courses--;
 
     if (idx < student->num_courses - 1) {
-        memcpy(&student->courses[idx], &student->courses[idx+1],
+        __memcpy(&student->courses[idx], &student->courses[idx+1],
                 sizeof(void *) * (student->num_courses - idx - 1));
     }
 
@@ -114,7 +114,7 @@ void _list_classes(student_t *student)
     int i = 0;
     print_course_banner();
     for (i = 0; i < student->num_courses; i++) {
-        printf("#%d|", i+1);
+        __printf("#%d|", i+1);
         student->courses[i]->print_course(student->courses[i]);
     }
 }
@@ -127,7 +127,7 @@ void _print_schedule(student_t *student)
     int i = 0;
     print_course_banner();
     for (i = 0; i < student->num_courses; i++) {
-        printf("#%d|", i+1);
+        __printf("#%d|", i+1);
         student->courses[i]->print_course(student->courses[i]);
     }
 }
@@ -137,8 +137,8 @@ student_t *create_student(char *name)
     if (!name)
         return NULL;
 
-    student_t *student = malloc(sizeof(student_t));
-    student->name = strdup(name);
+    student_t *student = __malloc(sizeof(student_t));
+    student->name = __strdup(name);
     student->major = NULL;
     student->num_courses = 0;
     student->total_credits = 0;

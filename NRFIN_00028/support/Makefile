@@ -1,6 +1,6 @@
 CC = /usr/i386-linux-cgc/bin/clang
 LD = /usr/i386-linux-cgc/bin/ld
-MKDIR = mkdir -p
+MKDIR = __mkdir -p
 
 CFLAGS = -fno-builtin -nostdinc
 LDFLAGS = --nostdlib --static --oformat=binary

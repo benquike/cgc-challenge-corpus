@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -52,9 +52,9 @@ DefineFunction(Map, void, init, unsigned int w, unsigned int h)
     this->m_width = w;
     this->m_height = h;
 
-    this->m_map = malloc(sizeof(unsigned char) * w * h);
+    this->m_map = __malloc(sizeof(unsigned char) * w * h);
     ASSERT_ALLOC(this->m_map);
-    memset(this->m_map, MAP_WALL_ID, sizeof(unsigned char) * w * h);
+    __memset(this->m_map, MAP_WALL_ID, sizeof(unsigned char) * w * h);
 
     // starting point
     this->m_start_x = w/2;
@@ -160,13 +160,13 @@ DefineFunction(Map, unsigned char, new_id, MapObject *obj)
 DefineFunction(Map, void, display)
 {
     int x, y;
-    char *buf = calloc(this->m_height * 2, this->m_width);
+    char *buf = __calloc(this->m_height * 2, this->m_width);
     if  (!buf)
         _terminate(1);
 
     char *buf_w = buf;
 
-    printf("\x1B[2J"); // clear the screen
+    __printf("\x1B[2J"); // clear the screen
     $($io, format, "Money: %6d\n", this->m_player->m_money);
     for (y = 0; y < this->m_height; y++)
     {
@@ -174,16 +174,16 @@ DefineFunction(Map, void, display)
         {
             if (x == this->m_player->m_x && y == this->m_player->m_y) {
                 sprintf(buf_w++, "%c", this->m_player->m_icon);
-                // printf("%c", this->m_player->m_icon);
+                // __printf("%c", this->m_player->m_icon);
             } else {
                 sprintf(buf_w++, "%c", this->m_objects[this->m_map[x + y * this->m_width]]->m_icon);
-                // printf("%c", this->m_objects[this->m_map[x + y * this->m_width]]->m_icon);
+                // __printf("%c", this->m_objects[this->m_map[x + y * this->m_width]]->m_icon);
             }
         }
         sprintf(buf_w++, "\n");
     }
-    send_n_bytes(STDOUT, strlen(buf), buf);
-    free(buf);
+    send_n_bytes(STDOUT, __strlen(buf), buf);
+    __free(buf);
 }
 
 DefineFunction(Map, void, move, int diffx, int diffy)
@@ -289,8 +289,8 @@ DefineFunction(Map, void, deserialize, Buffer *buf)
     ASSERT_OR_RAISE(this->m_width < 0x1000, EXC_BAD_STATE);
     ASSERT_OR_RAISE(this->m_height < 0x1000, EXC_BAD_STATE);
 
-    free(this->m_map);
-    this->m_map = malloc(sizeof(unsigned char) * this->m_width * this->m_height);
+    __free(this->m_map);
+    this->m_map = __malloc(sizeof(unsigned char) * this->m_width * this->m_height);
     ASSERT_OR_RAISE(this->m_map != NULL, EXC_BAD_STATE);
 #endif
 
@@ -312,7 +312,7 @@ DefineFunction(Map, void, deserialize, Buffer *buf)
 #endif
         ASSERT_OR_RAISE(count + i <= this->m_width * this->m_height, EXC_BAD_STATE);
 
-        memset(&this->m_map[i], id, count);
+        __memset(&this->m_map[i], id, count);
         i += count;
     }
     // decode the objects

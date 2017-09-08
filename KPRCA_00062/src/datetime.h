@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,11 +37,11 @@ typedef struct {
 typedef struct {
     char hour;
     char minute;
-} time_t;
+} __time_t_;
 
 typedef struct {
     date_t date;
-    time_t time;
+    __time_t_ time;
 } datetime_t;
 
 typedef struct {
@@ -50,8 +50,8 @@ typedef struct {
 } duration_t;
 
 bool set_date(date_t *date, char month, char day, short year);
-bool set_time(time_t *time, char hour, char minute);
-bool set_datetime(datetime_t *dt, date_t date, time_t time);
+bool set_time(__time_t_ *time, char hour, char minute);
+bool set_datetime(datetime_t *dt, date_t date, __time_t_ time);
 bool set_duration(duration_t *d, datetime_t dt1, datetime_t dt2);
 int compare_date(void *_date1, void *_date2);
 int compare_time(void *_time1, void *_time2);
@@ -60,11 +60,11 @@ bool durations_overlap(duration_t d1, duration_t d2);
 bool date_within(duration_t d, date_t date);
 bool datetime_within(duration_t d, datetime_t dt);
 bool strtodate(char *datestr, date_t *date);
-bool strtotime(char *timestr, time_t *time);
+bool strtotime(char *timestr, __time_t_ *time);
 void print_date(date_t *date);
-void print_time(time_t *time);
+void print_time(__time_t_ *time);
 char *get_month(date_t *date);
-void get_time_str(char *time_str, time_t *time);
+void get_time_str(char *time_str, __time_t_ *time);
 void get_date_str(char *date_str, date_t *date);
 
 #endif

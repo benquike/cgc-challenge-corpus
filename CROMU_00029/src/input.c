@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -48,7 +48,7 @@ ssize_t read_until(char *buf, char *delim, size_t max) {
 			return(-1);
 		}
 
-		if (strchr(delim, c)) {
+		if (__strchr(delim, c)) {
 			break;
 		}
 
@@ -90,7 +90,7 @@ int8_t read_temps(double *grid) {
 				}
 
 				if (StoreTemp(grid, x, y, z, buf)) {
-					puts("Invalid temperature");
+					__puts("Invalid temperature");
 					return(-1);
 				}
 			}

@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -45,13 +45,13 @@ void run_parser( void )
 
     do
     {
-        printf( "> " );
+        __printf( "> " );
 
         iRetVal = readLine( STDIN, (char *)commandBuffer, COMMAND_BUFFER_MAX );
 
         if ( iRetVal == -1 )
         {
-            printf( "Connection failed. Exiting.\n" );
+            __printf( "Connection failed. Exiting.\n" );
             done = 1;
         }
         else
@@ -67,22 +67,22 @@ void test( void )
 {
     // Tests exception handler subroutines
     //
-    printf( "Enter test function\n" );
+    __printf( "Enter test function\n" );
     TRY
     {
         THROW(1);
     }
     CATCH( 1 )
     {
-        printf( "Got 1\n" );
+        __printf( "Got 1\n" );
         THROW( 1 );
     }
     FINALLY
     {
-        printf( "Blah\n" );
+        __printf( "Blah\n" );
     }
     ETRY
-    printf( "Exit test function\n" );
+    __printf( "Exit test function\n" );
 }
 
 int main(void)

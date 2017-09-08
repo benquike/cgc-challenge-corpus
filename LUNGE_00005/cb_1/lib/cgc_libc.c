@@ -1,7 +1,7 @@
 #include "cgc_libc.h"
 #include "cgc_malloc.h"
 
-void *memset(void *b, int c, size_t len) {
+void *__memset(void *b, int c, size_t len) {
     if (!b)
         return NULL;
 
@@ -17,7 +17,7 @@ void *memset(void *b, int c, size_t len) {
     return b;
 }
 
-int strcmp(const char *s1, const char *s2) {
+int __strcmp(const char *s1, const char *s2) {
     if (!s1)
         return 0;
 
@@ -86,11 +86,11 @@ size_t strlcat(char *dst, const char *src, const size_t dstsize) {
     if (!dstsize)
         return 0;
 
-    current_dst_len = strlen(dst);
+    current_dst_len = __strlen(dst);
     return current_dst_len + strlcpy(dst + current_dst_len, src, dstsize - current_dst_len);
 }
 
-size_t strlen(const char *s) {
+size_t __strlen(const char *s) {
     const char *p;
 
     /* less than good. */
@@ -105,7 +105,7 @@ size_t strlen(const char *s) {
     return (size_t)(s - p);
 }
 
-char *strchr(const char *s, int c) {
+char *__strchr(const char *s, int c) {
     if (!s)
         return 0;
 
@@ -132,7 +132,7 @@ size_t strspn(const char *s1, const char *s2) {
     if (!s2)
         return 0;
 
-    while (*s1 && strchr(s2, *s1++))
+    while (*s1 && __strchr(s2, *s1++))
         ret++;
 
     return ret;
@@ -148,7 +148,7 @@ size_t strcspn(const char *s1, const char *s2) {
         return 0;
 
     while (*s1) {
-        if (strchr(s2, *s1))
+        if (__strchr(s2, *s1))
             return ret;
         else {
             s1++;
@@ -159,7 +159,7 @@ size_t strcspn(const char *s1, const char *s2) {
     return ret;
 }
 
-char *strtok(char *str, const char *sep) {
+char *__strtok(char *str, const char *sep) {
     static char *p = NULL;
 
     if (str)
@@ -186,18 +186,18 @@ char *strtok(char *str, const char *sep) {
     return str;
 }
 
-char *strdup(const char *src) {
+char *__strdup(const char *src) {
     size_t len = 0;
     char *dst = NULL;
 
     if (!src)
         return 0;
 
-    len = strlen(src) + 1;
-    dst = malloc(len);
+    len = __strlen(src) + 1;
+    dst = __malloc(len);
 
     if (dst)
-        memcpy(dst, src, len);
+        __memcpy(dst, src, len);
 
     return dst;
 }
@@ -210,7 +210,7 @@ int transmit_all(int fd, const char *s, size_t size) {
     while (total_sent < size) {
         ret = transmit(fd, s + total_sent, size - total_sent, &sent);
         if (ret > 0) {
-            printf(3, "tried writing to %d\n", fd);
+            __printf(3, "tried writing to %d\n", fd);
             return -1;
         }
         total_sent += sent;
@@ -220,7 +220,7 @@ int transmit_all(int fd, const char *s, size_t size) {
 }
 
 int transmit_str(int fd, char *s) {
-    return transmit_all(fd, s, strlen(s));
+    return transmit_all(fd, s, __strlen(s));
 }
 
 size_t receive_all(int fd, char *buf, const size_t size) {
@@ -231,12 +231,12 @@ size_t receive_all(int fd, char *buf, const size_t size) {
     while (offset< size) {
         ret = receive(fd, buf + offset, 1, &received);
         if (ret != 0) {
-            printf(STDERR, "got error reading from %u: %u\n", fd, ret);
+            __printf(STDERR, "got error reading from %u: %u\n", fd, ret);
             err(4, "receive failed (got err)\n");
         }
 
         if (received == 0) {
-            printf(STDERR, "received nothing from %u: %u\n", fd, ret);
+            __printf(STDERR, "received nothing from %u: %u\n", fd, ret);
             err(5, "receive failed\n");
         }
        
@@ -265,7 +265,7 @@ void err(unsigned int id, char *str) {
     _terminate(id);
 }
 
-void *memcpy(void *dst, const void *src, size_t size) {
+void *__memcpy(void *dst, const void *src, size_t size) {
     char *dst_char = (char *)dst;
     char *src_char = (char *)src;
 
@@ -275,7 +275,7 @@ void *memcpy(void *dst, const void *src, size_t size) {
     return dst;
 }
 
-int memcmp(const void *buf1, const void *buf2, size_t size) {
+int __memcmp(const void *buf1, const void *buf2, size_t size) {
     char *buf1_char = (char *)buf1;
     char *buf2_char = (char *)buf2;
 
@@ -290,7 +290,7 @@ int memcmp(const void *buf1, const void *buf2, size_t size) {
     return 0;
 }
 
-void sleep(int seconds) {
+void __sleep(int seconds) {
     struct timeval tv;
     tv.tv_sec = seconds;
     tv.tv_usec = 0;

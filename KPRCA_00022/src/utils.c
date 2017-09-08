@@ -24,10 +24,10 @@ static int verify_choice(char **valid_choices, char *choice, size_t num_elements
     size_t i;
     for (i = 0; i < num_elements; i++) {
 #ifdef PATCHED
-        if (strlen(valid_choices[i]) == strlen(choice) &&
-                memcmp(valid_choices[i], choice, strlen(valid_choices[i])) == 0)
+        if (__strlen(valid_choices[i]) == __strlen(choice) &&
+                memcmp(valid_choices[i], choice, __strlen(valid_choices[i])) == 0)
 #else
-        if (memcmp(valid_choices[i], choice, strlen(valid_choices[i])) == 0)
+        if (memcmp(valid_choices[i], choice, __strlen(valid_choices[i])) == 0)
 #endif
             return 0;
     }
@@ -57,12 +57,12 @@ int verify_education(char *str, size_t size) {
 }
 
 int verify_month(char *str, size_t size) {
-    int len = strlen(str) + 1;
+    int len = __strlen(str) + 1;
     if (len != size)
         return -1;
 
     int month;
-    month = strtol(str, NULL, 10);
+    month = __strtol(str, NULL, 10);
     if (month <= 0 || month > 12)
         return -1;
 
@@ -70,11 +70,11 @@ int verify_month(char *str, size_t size) {
 }
 
 int verify_day(char *str, size_t size) {
-    int len = strlen(str) + 1;
+    int len = __strlen(str) + 1;
     if (len != size)
         return -1;
 
-    int day = strtol(str, NULL, 10);
+    int day = __strtol(str, NULL, 10);
     if (day <= 0 || day > 31)
         return -1;
 
@@ -82,11 +82,11 @@ int verify_day(char *str, size_t size) {
 }
 
 int verify_year(char *str, size_t size) {
-    int len = strlen(str) + 1;
+    int len = __strlen(str) + 1;
     if (len != size)
         return -1;
 
-    int year = strtol(str, NULL, 10);
+    int year = __strtol(str, NULL, 10);
     if (year < 1900 || year > 2014)
         return -1;
 
@@ -94,11 +94,11 @@ int verify_year(char *str, size_t size) {
 }
 
 int verify_height_feet(char *str, size_t size) {
-    int len = strlen(str) + 1;
+    int len = __strlen(str) + 1;
     if (len > size)
         return -1;
 
-    int feet = strtol(str, NULL, 10);
+    int feet = __strtol(str, NULL, 10);
     if (feet < 1 || feet > 9)
         return -1;
 
@@ -106,11 +106,11 @@ int verify_height_feet(char *str, size_t size) {
 }
 
 int verify_height_inches(char *str, size_t size) {
-    int len = strlen(str) + 1;
+    int len = __strlen(str) + 1;
     if (len > size)
         return -1;
 
-    int inches = strtol(str, NULL, 10);
+    int inches = __strtol(str, NULL, 10);
     if (inches < 0 || inches > 11)
         return -1;
 
@@ -118,11 +118,11 @@ int verify_height_inches(char *str, size_t size) {
 }
 
 int verify_weight(char *str, size_t size) {
-    int len = strlen(str) + 1;
+    int len = __strlen(str) + 1;
     if (len > size)
         return -1;
 
-    int weight = strtol(str, NULL, 10);
+    int weight = __strtol(str, NULL, 10);
     if (weight < 50 || weight > 500)
         return -1;
 
@@ -130,7 +130,7 @@ int verify_weight(char *str, size_t size) {
 }
 
 int verify_sex(char *str, size_t size) {
-    int len = strlen(str) + 1;
+    int len = __strlen(str) + 1;
     if (len != size)
         return -1;
 
@@ -141,7 +141,7 @@ int verify_sex(char *str, size_t size) {
 }
 
 int verify_yes_no(char *str, size_t size) {
-    int len = strlen(str) + 1;
+    int len = __strlen(str) + 1;
     if (len != size)
         return -1;
 
@@ -153,13 +153,13 @@ int verify_yes_no(char *str, size_t size) {
 
 int verify_name(char *str, size_t size)
 {
-    int i, len = strlen(str) + 1;
+    int i, len = __strlen(str) + 1;
     if (len > size || len < 2)
         return -1;
     len--;
 
     for (i = 0; i < len; i++)
-        if (!isalpha(str[i]) && str[i] != '\'')
+        if (!__isalpha(str[i]) && str[i] != '\'')
             return -1;
 
     return 0;
@@ -167,14 +167,14 @@ int verify_name(char *str, size_t size)
 
 int verify_street(char *str, size_t size)
 {
-    int i, len = strlen(str) + 1;
+    int i, len = __strlen(str) + 1;
     if (len > size || len < 5)
         return -1;
     len--;
 
     for (i = 0; i < len; i++) {
         char c = str[i];
-        if (!isalnum(c) && c != '\'' && c != ' ' && c != ',')
+        if (!__isalnum(c) && c != '\'' && c != ' ' && c != ',')
             return -1;
     }
 
@@ -183,14 +183,14 @@ int verify_street(char *str, size_t size)
 
 int verify_city(char *str, size_t size)
 {
-    int i, len = strlen(str) + 1;
+    int i, len = __strlen(str) + 1;
     if (len > size || len < 5)
         return -1;
     len--;
 
     for (i = 0; i < len; i++) {
         char c = str[i];
-        if (!isalpha(c) && c != '\'' && c != ' ')
+        if (!__isalpha(c) && c != '\'' && c != ' ')
             return -1;
     }
 
@@ -199,7 +199,7 @@ int verify_city(char *str, size_t size)
 
 int verify_zip_code(char *str, size_t size)
 {
-    int i, len = strlen(str) + 1;
+    int i, len = __strlen(str) + 1;
     if (len != size)
         return -1;
     len--;
@@ -209,7 +209,7 @@ int verify_zip_code(char *str, size_t size)
 
     for (i = 0; i < len; i++) {
         char c = str[i];
-        if (!isdigit(c))
+        if (!__isdigit(c))
             return -1;
     }
 
@@ -219,7 +219,7 @@ int verify_zip_code(char *str, size_t size)
 
 int verify_gpa(char *str, size_t size)
 {
-    int i, len = strlen(str) + 1;
+    int i, len = __strlen(str) + 1;
     if (len > size)
         return -1;
     len--;
@@ -232,7 +232,7 @@ int verify_gpa(char *str, size_t size)
             else
                 continue;
         }
-        if (!isdigit(c)) {
+        if (!__isdigit(c)) {
             return -1;
         }
     }
@@ -242,14 +242,14 @@ int verify_gpa(char *str, size_t size)
 
 int verify_email(char *str, size_t size)
 {
-    int i, len = strlen(str) + 1, at_count = 0;
+    int i, len = __strlen(str) + 1, at_count = 0;
     if (len > size || len < 3)
         return -1;
     len--;
 
     for (i = 0; i < len; i++) {
         char c = str[i];
-        if (!isalnum(c) && c != '@' && c != '-' && c != '.' && c != '_')
+        if (!__isalnum(c) && c != '@' && c != '-' && c != '.' && c != '_')
             return -1;
         if (c == '@' && ++at_count == 2)
             return -1;
@@ -263,7 +263,7 @@ int verify_email(char *str, size_t size)
 
 int verify_phone(char *str, size_t size)
 {
-    int i, len = strlen(str) + 1, at_count = 0;
+    int i, len = __strlen(str) + 1, at_count = 0;
     if (len != size)
         return -1;
     len--;
@@ -276,7 +276,7 @@ int verify_phone(char *str, size_t size)
             else
                 continue;
         }
-        if (!isdigit(c)) {
+        if (!__isdigit(c)) {
             return -1;
         }
     }
@@ -286,13 +286,13 @@ int verify_phone(char *str, size_t size)
 
 int verify_number(char *str, size_t size)
 {
-    int i, len = strlen(str) + 1;
+    int i, len = __strlen(str) + 1;
     if (len > size)
         return -1;
     len--;
 
     for (i = 0; i < len; i++)
-        if (!isdigit(str[i]))
+        if (!__isdigit(str[i]))
             return -1;
 
     return 0;
@@ -300,7 +300,7 @@ int verify_number(char *str, size_t size)
 
 int verify_text(char *str, size_t size)
 {
-    int i, len = strlen(str) + 1;
+    int i, len = __strlen(str) + 1;
     if (len > size)
         return -1;
     len--;

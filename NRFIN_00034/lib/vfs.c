@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -28,7 +28,7 @@
 int
 vfs_init(struct vfs *vfs)
 {
-    if ((vfs->root = calloc(sizeof(struct directory))) == NULL)
+    if ((vfs->root = __calloc(sizeof(struct directory))) == NULL)
         return -1;
 
     // Unnecessary, but do this explicitly anyway
@@ -43,14 +43,14 @@ directory_destroy(struct directory *dir)
     struct directory *cur_dir, *n_dir;
 
     list_for_each_entry_safe(struct file, list, &dir->files, n_file, cur_file) {
-        free(cur_file->contents);
-        free(cur_file);
+        __free(cur_file->contents);
+        __free(cur_file);
     }
 
     list_for_each_entry_safe(struct directory, list, &dir->subdirectories, n_dir, cur_dir)
         directory_destroy(cur_dir);
 
-    free(dir);
+    __free(dir);
 }
 
 void
@@ -87,23 +87,23 @@ lookup_dir(const struct vfs *vfs, const char *path, int follow_links)
     size_t path_len;
     char *path_dup, *cur;
 
-    path_len = strlen(path);
+    path_len = __strlen(path);
     if (path_len == 0)
         return vfs->root;
 
-    if ((path_dup = calloc(path_len + 1)) == NULL)
+    if ((path_dup = __calloc(path_len + 1)) == NULL)
         return NULL;
 
-    strncpy(path_dup, path, path_len);
-    for (cur = strtok(path_dup, '/'); cur != NULL; cur = strtok(NULL, '/'))
+    __strncpy(path_dup, path, path_len);
+    for (cur = __strtok(path_dup, '/'); cur != NULL; cur = __strtok(NULL, '/'))
     {
         if (dir == NULL)
             break;
 
-        if (strcmp(cur, ".") == 0)
+        if (__strcmp(cur, ".") == 0)
             continue;
 
-        if (strcmp(cur, "..") == 0) {
+        if (__strcmp(cur, "..") == 0) {
             dir = dir->parent;
             continue;
         }
@@ -123,7 +123,7 @@ lookup_dir(const struct vfs *vfs, const char *path, int follow_links)
     ret = dir;
 
 free_path:
-    free(path_dup);
+    __free(path_dup);
     return ret;
 }
 
@@ -135,14 +135,14 @@ lookup_file(const struct vfs *vfs, const char *path, int follow_links)
     size_t path_len;
     char *path_dup, *name;
 
-    path_len = strlen(path);
+    path_len = __strlen(path);
     if (path[path_len - 1] == '/')
         return NULL;
 
-    if ((path_dup = calloc(path_len + 1)) == NULL)
+    if ((path_dup = __calloc(path_len + 1)) == NULL)
         return NULL;
 
-    strncpy(path_dup, path, path_len + 1);
+    __strncpy(path_dup, path, path_len + 1);
 
     if ((name = strrchr(path_dup, '/')) != NULL) {
         *name++ = '\0';
@@ -154,7 +154,7 @@ lookup_file(const struct vfs *vfs, const char *path, int follow_links)
     if (dir != NULL)
         ret = list_find_entry(struct file, list, &dir->files, file_eq, (void *)name);
 
-    free(path_dup);
+    __free(path_dup);
     return (ret && follow_links && ret->is_symlink) ? lookup_file(vfs, (const char *)ret->contents, follow_links) : ret;
 }
 
@@ -165,20 +165,20 @@ get_path_from_dir(const struct vfs *vfs, const struct directory *dir)
     size_t cur_len, path_len = 1;
     const struct directory *cur = dir;
 
-    if ((ret = calloc(1)) == NULL)
+    if ((ret = __calloc(1)) == NULL)
         return NULL;
 
     while (cur != vfs->root) {
         cur_len = strnlen(cur->name, MAX_FILE_NAME_LENGTH);
-        if ((tmp = realloc(ret, path_len + cur_len + 1)) == NULL) {
-            free(ret);
+        if ((tmp = __realloc(ret, path_len + cur_len + 1)) == NULL) {
+            __free(ret);
             return NULL;
         }
         ret = tmp;
 
         memmove(ret + cur_len + 1, ret, path_len);
         ret[cur_len] = '/';
-        memcpy(ret, cur->name, cur_len);
+        __memcpy(ret, cur->name, cur_len);
 
         path_len += cur_len + 1;
         cur = cur->parent;
@@ -186,14 +186,14 @@ get_path_from_dir(const struct vfs *vfs, const struct directory *dir)
 
     // Prepend leading slash
     if (path_len > 0) {
-        if ((tmp = realloc(ret, path_len + 1)) == NULL) {
-            free(ret);
+        if ((tmp = __realloc(ret, path_len + 1)) == NULL) {
+            __free(ret);
             return NULL;
         }
         ret = tmp;
         memmove(ret + 1, ret, path_len);
     } else {
-        if ((ret = calloc(2)) == NULL)
+        if ((ret = __calloc(2)) == NULL)
             return NULL;
     }
     ret[0] = '/';
@@ -211,13 +211,13 @@ get_path_from_file(const struct vfs *vfs, const struct file *file)
     if ((ret = get_path_from_dir(vfs, file->parent)) == NULL)
         return NULL;
 
-    if ((tmp = realloc(ret, strlen(ret) + name_len + 1)) == NULL) {
-        free(ret);
+    if ((tmp = __realloc(ret, __strlen(ret) + name_len + 1)) == NULL) {
+        __free(ret);
         return NULL;
     }
     ret = tmp;
 
-    strncat(ret, file->name, name_len);
+    __strncat(ret, file->name, name_len);
     return ret;
 }
 
@@ -240,7 +240,7 @@ read_file(const struct vfs *vfs, uid_t user, const char *path, unsigned char **c
 {
     struct file *file;
 
-    // We can read any file in our current model, so suppress unused warning
+    // We can __read any file in our current model, so suppress unused warning
     (void)(user);
 
     if ((file = lookup_file(vfs, path, 1)) == NULL)
@@ -272,7 +272,7 @@ write_file(struct vfs *vfs, uid_t user, const char *path, unsigned char *content
     if (user != file->owner && user != ROOT_UID)
         return -1;
 
-    free(file->contents);
+    __free(file->contents);
     file->contents = contents;
     file->size = size;
 
@@ -287,11 +287,11 @@ create_dir(struct vfs *vfs, const char *path)
     size_t path_len;
     char *path_dup, *name;
 
-    path_len = strlen(path);
-    if ((path_dup = calloc(path_len + 1)) == NULL)
+    path_len = __strlen(path);
+    if ((path_dup = __calloc(path_len + 1)) == NULL)
         return NULL;
 
-    strncpy(path_dup, path, path_len + 1);
+    __strncpy(path_dup, path, path_len + 1);
     while (path_dup[path_len - 1] == '/')
         path_dup[(path_len--) - 1] = '\0';
 
@@ -305,7 +305,7 @@ create_dir(struct vfs *vfs, const char *path)
     if (dir != NULL)
         ret = create_dir_in_dir(vfs, dir, name);
 
-    free(path_dup);
+    __free(path_dup);
     return ret;
 }
 
@@ -327,8 +327,8 @@ create_dir_in_dir(struct vfs *vfs, struct directory *dir, const char *name)
         return ret;
     }
 
-    if ((ret = calloc(sizeof(struct directory))) != NULL) {
-        strncpy(ret->name, name, MAX_FILE_NAME_LENGTH);
+    if ((ret = __calloc(sizeof(struct directory))) != NULL) {
+        __strncpy(ret->name, name, MAX_FILE_NAME_LENGTH);
         ret->owner = dir->owner;
         ret->parent = dir;
         list_push_entry_front(struct directory, list, &dir->subdirectories, ret);
@@ -345,14 +345,14 @@ create_file(struct vfs *vfs, const char *path)
     size_t path_len;
     char *path_dup, *name;
 
-    path_len = strlen(path);
+    path_len = __strlen(path);
     if (path[path_len - 1] == '/')
         return NULL;
 
-    if ((path_dup = calloc(path_len + 1)) == NULL)
+    if ((path_dup = __calloc(path_len + 1)) == NULL)
         return NULL;
 
-    strncpy(path_dup, path, path_len + 1);
+    __strncpy(path_dup, path, path_len + 1);
     if ((name = strrchr(path_dup, '/')) != NULL) {
         *name++ = '\0';
         dir = lookup_dir(vfs, path_dup, 1);
@@ -363,7 +363,7 @@ create_file(struct vfs *vfs, const char *path)
     if (dir != NULL)
         ret = create_file_in_dir(vfs, dir, name);
 
-    free(path_dup);
+    __free(path_dup);
     return ret;
 }
 
@@ -385,8 +385,8 @@ create_file_in_dir(struct vfs *vfs, struct directory *dir, const char *name)
         return ret;
     }
 
-    if ((ret = calloc(sizeof(struct file))) != NULL) {
-        strncpy(ret->name, name, MAX_FILE_NAME_LENGTH);
+    if ((ret = __calloc(sizeof(struct file))) != NULL) {
+        __strncpy(ret->name, name, MAX_FILE_NAME_LENGTH);
         ret->owner = dir->owner;
         ret->parent = dir;
         list_push_entry_front(struct file, list, &dir->files, ret);
@@ -406,17 +406,17 @@ create_symlink(struct vfs *vfs, uid_t user, const char *src_path, const char *ds
     char *path_dup, *name;
     uid_t owner;
 
-    src_path_len = strlen(src_path);
+    src_path_len = __strlen(src_path);
     if (src_path[src_path_len - 1] == '/')
         return -1;
 
     if (lookup_file(vfs, src_path, 0) != NULL)
         return -1;
 
-    if ((path_dup = calloc(src_path_len + 1)) == NULL)
+    if ((path_dup = __calloc(src_path_len + 1)) == NULL)
         return -1;
 
-    strncpy(path_dup, src_path, src_path_len + 1);
+    __strncpy(path_dup, src_path, src_path_len + 1);
     if ((name = strrchr(path_dup, '/')) != NULL) {
         *name++ = '\0';
 #ifdef PATCHED
@@ -441,11 +441,11 @@ create_symlink(struct vfs *vfs, uid_t user, const char *src_path, const char *ds
     if (user != owner && user != ROOT_UID)
         goto free_path;
 
-    dst_path_len = strlen(dst_path);
-    if ((contents = calloc(dst_path_len + 1)) == NULL)
+    dst_path_len = __strlen(dst_path);
+    if ((contents = __calloc(dst_path_len + 1)) == NULL)
         goto free_path;
 
-    strncpy((char *)contents, dst_path, dst_path_len + 1);
+    __strncpy((char *)contents, dst_path, dst_path_len + 1);
 
     file = create_file(vfs, src_path);
     if (file == NULL)
@@ -475,7 +475,7 @@ create_symlink(struct vfs *vfs, uid_t user, const char *src_path, const char *ds
     ret = 0;
 
 free_path:
-    free(path_dup);
+    __free(path_dup);
     return ret;
 }
 
@@ -485,13 +485,13 @@ delete_file(struct vfs *vfs, uid_t user, struct file *file)
     // Suppress unused warning
     (void)vfs;
 
-    // Do we have permission to write to the file?
+    // Do we have permission to __write to the file?
     if (user != file->owner && user != ROOT_UID)
         return -1;
 
     list_remove_entry(struct file, list, &file->parent->files, file);
-    free(file->contents);
-    free(file);
+    __free(file->contents);
+    __free(file);
 
     return 0;
 }
@@ -506,22 +506,22 @@ dump_directory(const struct directory *dir, unsigned int level)
 
     list_for_each_entry(struct directory, list, &dir->subdirectories, cur_dir) {
         for (i = 0; i < level; i++)
-            printf("\t");
-        printf("%s/\n", cur_dir->name);
+            __printf("\t");
+        __printf("%s/\n", cur_dir->name);
         dump_directory(cur_dir, level + 1);
     }
 
     list_for_each_entry(struct file, list, &dir->files, cur_file) {
         for (i = 0; i < level; i++)
-            printf("\t");
-        printf("%s\n", cur_file->name);
+            __printf("\t");
+        __printf("%s\n", cur_file->name);
     }
 }
 
 void
 dump_vfs(const struct vfs *vfs)
 {
-    printf("/\n");
+    __printf("/\n");
     dump_directory(vfs->root, 1);
 }
 #endif

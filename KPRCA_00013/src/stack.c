@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -38,7 +38,7 @@ int push(stack_t **stack, char *data)
     if (data == NULL)
         return -1;
 
-    stack_t *top = malloc(sizeof(stack_t));
+    stack_t *top = __malloc(sizeof(stack_t));
     top->data = data;
 
     if(*stack == NULL) {
@@ -57,13 +57,13 @@ int push_copy(stack_t **stack, char *data, size_t size)
     if (data == NULL)
         return -1;
 
-    int data_len = strlen(data) + 1;
+    int data_len = __strlen(data) + 1;
     if (data_len > size)
         return -1;
 
-    stack_t *top = malloc(sizeof(stack_t));
-    top->data = malloc(data_len);
-    memcpy(top->data, data, data_len);
+    stack_t *top = __malloc(sizeof(stack_t));
+    top->data = __malloc(data_len);
+    __memcpy(top->data, data, data_len);
 
     if(*stack == NULL) {
         top->next = NULL;
@@ -84,7 +84,7 @@ char *pop_copy(stack_t **stack)
     stack_t *top = *stack;
     char *popped_data = top->data;
     *stack = top->next;
-    free(top);
+    __free(top);
 
     return popped_data;
 }
@@ -97,12 +97,12 @@ void clear_stack(stack_t **stack)
 
     stack_t *top = *stack, *old_top;
     while(top->next != NULL) {
-        free(top->data);
+        __free(top->data);
         old_top = top;
         top = top->next;
-        free(old_top);
+        __free(old_top);
     }
-    free(top->data);
-    free(top);
+    __free(top->data);
+    __free(top);
     *stack = NULL;
 }

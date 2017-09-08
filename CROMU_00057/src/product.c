@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -45,7 +45,7 @@ productDefType *newProduct;
 	// special case if this is the first product
 	if (*database == 0) {
 
-		*database = calloc(sizeof(productDefType));
+		*database = __calloc(sizeof(productDefType));
 
 		if (*database == 0)
 			_terminate(-1);
@@ -66,7 +66,7 @@ productDefType *newProduct;
 			return(-1);
 
 		// otherwise add this new product to the end of the list
-		newProduct->next = (productDefType *)calloc(sizeof(productDefType));
+		newProduct->next = (productDefType *)__calloc(sizeof(productDefType));
 
 		if (newProduct->next == 0)
 			_terminate(-1);
@@ -81,13 +81,13 @@ productDefType *newProduct;
 	newProduct->sprintList = 0;
 
 	// allocate memory for the title
-	newProduct->title = calloc(strlen((char *)&msg->title)+1);
+	newProduct->title = __calloc(__strlen((char *)&msg->title)+1);
 
 	if (newProduct->title == 0)
 		_terminate(-1);
 
 
-	strncpy(newProduct->title, (char *)&msg->title, strlen(&msg->title));
+	__strncpy(newProduct->title, (char *)&msg->title, __strlen(&msg->title));
 
 	return 0;
 }
@@ -114,61 +114,61 @@ backlogItemType *PBIPtr, *tmpPBIPtr;
 		tmpProduct = *database;
 		*database = (*database)->next;
 
-		// if there's a title, free that memory
+		// if there's a title, __free that memory
 		if (tmpProduct->title)
-			free(tmpProduct->title);
+			__free(tmpProduct->title);
 
-		// now free the Sprint list
+		// now __free the Sprint list
 		sprintPtr = tmpProduct->sprintList;
 
 		while (sprintPtr!= 0) {
 
 			PBIPtr = sprintPtr->sprintBacklogList;
 
-			// first free the backlog items tied to this Sprint
+			// first __free the backlog items tied to this Sprint
 			while (PBIPtr != 0) {
 
 				if (PBIPtr->description != 0)
-					free(PBIPtr->description);
+					__free(PBIPtr->description);
 
 				tmpPBIPtr = PBIPtr;
 				PBIPtr = PBIPtr->next;
 
-				free(tmpPBIPtr);
+				__free(tmpPBIPtr);
 			}
 
-			// free the memory for the sprint title
+			// __free the memory for the sprint title
 			if (sprintPtr->title != 0)
-				free(sprintPtr->title);
+				__free(sprintPtr->title);
 
 
-			// now free the sprint memory itself
+			// now __free the sprint memory itself
 			tmpSprintPtr = sprintPtr;
 
 			sprintPtr = sprintPtr->next;
 
-			free(tmpSprintPtr);
+			__free(tmpSprintPtr);
 
 		}
 
-		// now free the PBI list
+		// now __free the PBI list
 		PBIPtr = tmpProduct->productBacklog;
 
 		while (PBIPtr != 0) {
 
 
 			if (PBIPtr->description != 0)
-				free(PBIPtr->description);
+				__free(PBIPtr->description);
 
 			tmpPBIPtr = PBIPtr;
 			PBIPtr = PBIPtr->next;
 
-			free(tmpPBIPtr);
+			__free(tmpPBIPtr);
 
 		}
 
-		// now free the final object
-		free(tmpProduct);
+		// now __free the final object
+		__free(tmpProduct);
 
 		return(0);
 
@@ -191,15 +191,15 @@ backlogItemType *PBIPtr, *tmpPBIPtr;
 		return(-1);
 	}
 
-	// link around the entry to be deleted
+	// __link around the entry to be deleted
 	lastProduct->next = tmpProduct->next;
 
-	// free the title memory
+	// __free the title memory
 	if (tmpProduct->title)
-		free(tmpProduct->title);
+		__free(tmpProduct->title);
 
 
-	// now free the PBI
+	// now __free the PBI
 	PBIPtr = tmpProduct->productBacklog;
 
 	while (PBIPtr != 0) {
@@ -207,48 +207,48 @@ backlogItemType *PBIPtr, *tmpPBIPtr;
 		tmpPBIPtr = PBIPtr;
 
 		if (PBIPtr->description != 0)
-			free(PBIPtr->description);
+			__free(PBIPtr->description);
 
 		PBIPtr = PBIPtr->next;
 
-		free(tmpPBIPtr);
+		__free(tmpPBIPtr);
 
 	}
 
-	// now free the Sprints
+	// now __free the Sprints
 	sprintPtr = tmpProduct->sprintList;
 
 	while (sprintPtr!= 0) {
 
 		PBIPtr = sprintPtr->sprintBacklogList;
 
-		// first free the backlog items tied to this Sprint
+		// first __free the backlog items tied to this Sprint
 		while (PBIPtr != 0) {
 
 			if (PBIPtr->description != 0)
-				free(PBIPtr->description);
+				__free(PBIPtr->description);
 
 			tmpPBIPtr = PBIPtr;
 			PBIPtr = PBIPtr->next;
 
-			free(tmpPBIPtr);
+			__free(tmpPBIPtr);
 		}
 
-		// free the memory for the sprint title
+		// __free the memory for the sprint title
 		if (sprintPtr->title != 0)
-			free(sprintPtr->title);
+			__free(sprintPtr->title);
 
 
-		// now free the sprint memory itself
+		// now __free the sprint memory itself
 		tmpSprintPtr = sprintPtr;
 
 		sprintPtr = sprintPtr->next;
 
-		free(tmpSprintPtr);
+		__free(tmpSprintPtr);
 
 	}
 
-	free(tmpProduct);
+	__free(tmpProduct);
 
 	return 0;
 }
@@ -262,12 +262,12 @@ int list_all_products( productDefType *database) {
 	while (database != 0 ) {
 
 
-		printf(obf_strings(List_Products), database->title);
+		__printf(obf_strings(List_Products), database->title);
 
 		database = database->next;
 
 	}
-	printf("\n");
+	__printf("\n");
 
 	return 0;
 
@@ -295,47 +295,47 @@ backlogItemType *PBIPtr;
 		return(-1);
 	}
 
-	printf("\n");
-	printf(obf_strings(Prod_Title), database->title);
-	printf(obf_strings(Prod_ID), database->ID);
-	printf("\n");
+	__printf("\n");
+	__printf(obf_strings(Prod_Title), database->title);
+	__printf(obf_strings(Prod_ID), database->ID);
+	__printf("\n");
 
 	PBIPtr = database->productBacklog;
 
-	printf(obf_strings(Prod_Backlog));
-	printf(obf_strings(Prod_Backlog2));
+	__printf(obf_strings(Prod_Backlog));
+	__printf(obf_strings(Prod_Backlog2));
 	
 	while (PBIPtr != 0) {
 
-		// printf(obf_strings(Prod_Backlog3), PBIPtr->ID, PBIPtr->story_points, PBIPtr->description);
-		printf(obf_strings(Prod_Backlog3), PBIPtr->ID, PBIPtr->story_points);
+		// __printf(obf_strings(Prod_Backlog3), PBIPtr->ID, PBIPtr->story_points, PBIPtr->description);
+		__printf(obf_strings(Prod_Backlog3), PBIPtr->ID, PBIPtr->story_points);
 		PBIPtr = PBIPtr->next;
 	}
 
-	printf("\n");
+	__printf("\n");
 
 	sprintPtr = database->sprintList;
-	printf(obf_strings(Sprints_Title));
+	__printf(obf_strings(Sprints_Title));
 
 	while (sprintPtr != 0) {
 
-		printf(obf_strings(Sprint_Entry), sprintPtr->ID, sprintPtr->title);
+		__printf(obf_strings(Sprint_Entry), sprintPtr->ID, sprintPtr->title);
 
 		PBIPtr = sprintPtr->sprintBacklogList;
 
 		while (PBIPtr != 0) {
-			// printf(obf_strings(SBI_Entry), PBIPtr->ID, PBIPtr->story_points, PBIPtr->status, PBIPtr->description);
-			printf(obf_strings(SBI_Entry), PBIPtr->ID, PBIPtr->story_points, PBIPtr->status);
+			// __printf(obf_strings(SBI_Entry), PBIPtr->ID, PBIPtr->story_points, PBIPtr->status, PBIPtr->description);
+			__printf(obf_strings(SBI_Entry), PBIPtr->ID, PBIPtr->story_points, PBIPtr->status);
 
 			PBIPtr = PBIPtr->next;
 		}
 
-		printf("\n");
+		__printf("\n");
 		sprintPtr = sprintPtr->next;
 
 	}
 
-	printf("\n");
+	__printf("\n");
 	return(0);
 
 }

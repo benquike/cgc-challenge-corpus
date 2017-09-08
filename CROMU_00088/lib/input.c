@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -63,9 +63,9 @@ size_t rxbytes;
 }
 
 
-// Buffered receive_until function.  Will return up to "limit" characters in "buffer", but
+// Buffered __receive_until function.  Will return up to "limit" characters in "buffer", but
 // note that buffer[limit] will have a null written so ensure the incoming buffer is limit+1 in size
-size_t receive_until( char *buffer, char delim, size_t limit )
+size_t __receive_until( char *buffer, char delim, size_t limit )
 {
     const int maxLen = 512;
     static char circ_buffer[maxLen];

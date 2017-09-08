@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -32,14 +32,14 @@
 #endif
 #define err(s, ...) ({ \
     fprintf(stderr, "ERROR:\t" s "\n", ##__VA_ARGS__); \
-    exit(1); \
+    __exit(1); \
 })
 #define assert(__x) ({ \
     if (!(__x)) err("failed assertion"); \
 })
 #define min(__x, __y) (__x) < (__y) ? (__x) : (__y)
 #define BUFFER_SZ 0x1000
-typedef ssize_t off_t;
+typedef ssize_t __off_t_;
 typedef uint32_t buffer_id_t;
 typedef enum
 {
@@ -80,7 +80,7 @@ class ArrayList
       if (length_ == capacity_)
       {
         capacity_ *= 2;
-        array_ = static_cast<T**>(realloc(array_, sizeof(T *) * capacity_));
+        array_ = static_cast<T**>(__realloc(array_, sizeof(T *) * capacity_));
       }
 
       return 0;
@@ -177,7 +177,7 @@ class Buffer
         return -1;
       }
 
-      memcpy(data + offset, bytes, len);
+      __memcpy(data + offset, bytes, len);
       if (BUFFER_SZ - offset - len < left_)
       {
         left_ = BUFFER_SZ - offset - len;
@@ -292,8 +292,8 @@ class Chunk
     Chunk(uint8_t* bytes, size_t len)
     {
       len_ = len;
-      bytes_ = (uint8_t*)calloc(sizeof(uint8_t), len);
-      memcpy(bytes_, bytes, len);
+      bytes_ = (uint8_t*)__calloc(sizeof(uint8_t), len);
+      __memcpy(bytes_, bytes, len);
     }
 
     ~Chunk(void)
@@ -366,7 +366,7 @@ class BytesReader
       else
       {
         ret = new uint8_t(len + 1);
-        memcpy(ret, (*chunk_)[index_], len);
+        __memcpy(ret, (*chunk_)[index_], len);
         ret[len] = '\x00';
       }
 
@@ -408,7 +408,7 @@ class Response
         return -1;
       }
 
-      memcpy(Bytes + Length, bytes, len);
+      __memcpy(Bytes + Length, bytes, len);
       Length += len;
 
       return 0;
@@ -471,12 +471,12 @@ class Pathname
   public:
     Pathname(const char* pathname)
     {
-      size_ = strlen((char *)pathname);
+      size_ = __strlen((char *)pathname);
       size_t i;
       size_t start;
 
       data_ = new uint8_t[size_ + 1];
-      memcpy(data_, pathname, size_);
+      __memcpy(data_, pathname, size_);
       start = i = 0;
       for (;i < size_; ++i)
       {
@@ -506,7 +506,7 @@ class Pathname
     {
       Pair<size_t>* p =  components_->Get(index);
       char* cpy = new char[p->snd - p->fst + 1];
-      memcpy(cpy, data_ + p->fst, p->snd - p->fst);
+      __memcpy(cpy, data_ + p->fst, p->snd - p->fst);
       cpy[p->snd - p->fst] = '\0';
       return cpy;
     }
@@ -514,7 +514,7 @@ class Pathname
     char* AsString(void)
     {
       char* s = new char[size_ + 1];
-      memcpy(s, data_, size_);
+      __memcpy(s, data_, size_);
       s[size_] = '\0';
       return s;
     }
@@ -551,7 +551,7 @@ class File
 
     bool operator ==(const File &b) const
     {
-      return strcmp(name, b.name) == 0;
+      return __strcmp(name, b.name) == 0;
     }
 
     virtual size_t Size(void)
@@ -631,7 +631,7 @@ class File
           cpy = min(len, BUFFER_SZ - (offset % BUFFER_SZ));
           if (bufp->SetContents(bytes + cnt, offset % BUFFER_SZ, cpy) != 0)
           {
-            err("Bad buffer write");
+            err("Bad buffer __write");
           }
         }
         else
@@ -639,7 +639,7 @@ class File
           cpy = min((len - cnt), BUFFER_SZ);
           if (bufp->SetContents(bytes + cnt, 0, cpy) != 0)
           {
-            err("Bad buffer write");
+            err("Bad buffer __write");
           }
         }
 
@@ -674,10 +674,10 @@ class File
         if (offset && buf == (offset / BUFFER_SZ))
         {
           cpy = min(len, BUFFER_SZ - (offset % BUFFER_SZ));
-          memcpy(bytes + cnt, bufp->data + (offset % BUFFER_SZ), cpy);
+          __memcpy(bytes + cnt, bufp->data + (offset % BUFFER_SZ), cpy);
         } else {
           cpy = min((len - cnt), BUFFER_SZ);
-          memcpy(bytes + cnt, bufp->data, cpy);
+          __memcpy(bytes + cnt, bufp->data, cpy);
         }
 
         cnt += cpy;
@@ -753,14 +753,14 @@ class DirTree
         auto E = children.Get(i);
         if (E->IsLeft())
         {
-          if (strcmp(E->l->name, s) == 0)
+          if (__strcmp(E->l->name, s) == 0)
           {
             return E;
           };
         }
         else
         {
-          if (strcmp(E->r->name, s) == 0)
+          if (__strcmp(E->r->name, s) == 0)
           {
             return E;
           }
@@ -776,7 +776,7 @@ class FileHandle
 {
   public:
     File& file_;
-    off_t offset_;
+    __off_t_ offset_;
     open_flags_t flags_;
 
   FileHandle(File& file, open_flags_t flags) : file_(file), flags_(flags)
@@ -801,7 +801,7 @@ class FileHandle
   {
     if (file_.Read(bytes, offset_, len) != 0)
     {
-      err("Bad fh read");
+      err("Bad fh __read");
     }
 
     offset_ += len;
@@ -822,7 +822,7 @@ class FileHandle
 
     if (file_.Write(bytes, offset_, len) != 0)
     {
-      err("Bad fh write");
+      err("Bad fh __write");
     }
 
     offset_ += len;
@@ -880,7 +880,7 @@ int api_open(const char* pathname, open_flags_t flags, uint32_t mode)
     }
   }
 
-  if (!node || node->IsLeft() || strcmp(node->r->name, pn->Get(pn->Size() - 1)) != 0)
+  if (!node || node->IsLeft() || __strcmp(node->r->name, pn->Get(pn->Size() - 1)) != 0)
   {
     goto done;
   }
@@ -944,10 +944,10 @@ ssize_t api_write(int fd, uint8_t* buffer, size_t count)
   return FH->Write(buffer, count);
 }
 
-off_t api_lseek(int fd, off_t offset, int whence)
+__off_t_ api_lseek(int fd, __off_t_ offset, int whence)
 {
   dbg("Called lseek(%d, %u, %d)", fd, offset, whence);
-  off_t position = -1;
+  __off_t_ position = -1;
 
 #define SEEK_SET  0
 #define SEEK_CUR  1
@@ -1062,14 +1062,14 @@ int api_creat(const char* pathname, int mode)
     auto c = node->l->children.Get(i);
     if (c->IsLeft())
     {
-      if (strcmp(c->l->name, name) == 0)
+      if (__strcmp(c->l->name, name) == 0)
       {
         goto done;
       }
     }
     else
     {
-      if (strcmp(c->r->name, name) == 0)
+      if (__strcmp(c->r->name, name) == 0)
       {
         goto done;
       }
@@ -1086,7 +1086,7 @@ done:
 
 int api_unlink(const char* pathname)
 {
-  dbg("Called unlink(%s)", pathname);
+  dbg("Called __unlink(%s)", pathname);
 
   int ret = -1;
 
@@ -1132,13 +1132,13 @@ done:
  return ret;
 }
 
-int load_req(FILE* fd, Request** req)
+int load_req(__FILE* fd, Request** req)
 {
   uint32_t f_num;
   uint32_t size;
   *req = nullptr;
 
-  if (fread(&f_num, sizeof(f_num), fd) != sizeof(f_num))
+  if (__fread(&f_num, sizeof(f_num), fd) != sizeof(f_num))
   {
     return -1;
   }
@@ -1149,7 +1149,7 @@ int load_req(FILE* fd, Request** req)
     return -1;
   }
 
-  if (fread(&size, sizeof(size), fd) != sizeof(size))
+  if (__fread(&size, sizeof(size), fd) != sizeof(size))
   {
     return -1;
   }
@@ -1157,7 +1157,7 @@ int load_req(FILE* fd, Request** req)
 
   uint8_t* data = new uint8_t[size];
 
-  if (fread(data, size, fd) != size)
+  if (__fread(data, size, fd) != size)
   {
     return -1;
   }
@@ -1241,9 +1241,9 @@ Response* process_req(Request* req)
     case LSEEK_F_NUM:
       {
         int fd = *(int *)br->ReadN(sizeof(fd));
-        off_t offset = *(off_t *)br->ReadN(sizeof(offset));
+        __off_t_ offset = *(__off_t_ *)br->ReadN(sizeof(offset));
         int whence = *(int *)br->ReadN(sizeof(whence));
-        off_t noffset = api_lseek(fd, offset, whence);
+        __off_t_ noffset = api_lseek(fd, offset, whence);
         resp = new Response();
         if (noffset >= 0)
         {
@@ -1294,15 +1294,15 @@ Response* process_req(Request* req)
   }
   return resp;
 }
-void send_resp(FILE* fd, Response* resp)
+void send_resp(__FILE* fd, Response* resp)
 {
   if (!fd || !resp)
   {
     err("Bad send_resp");
   }
-  fwrite(&resp->Status, sizeof(resp->Status), stdout);
-  fwrite(&resp->Length, sizeof(resp->Length), stdout);
-  fwrite(resp->Bytes, resp->Length, stdout);
+  __fwrite(&resp->Status, sizeof(resp->Status), stdout);
+  __fwrite(&resp->Length, sizeof(resp->Length), stdout);
+  __fwrite(resp->Bytes, resp->Length, stdout);
 }
 extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
 {
@@ -1316,12 +1316,12 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
       sig ^= *(secret_page + i);
     }
     Request* cur_req;
-    printf("FSAAS\n");
-    printf("%x\n", sig);
+    __printf("FSAAS\n");
+    __printf("%x\n", sig);
     fbuffered(stdout, 1);
     while (1)
     {
-      printf("QQQ\n");
+      __printf("QQQ\n");
       fflush(stdout);
       if (load_req(stdin, &cur_req) != 0)
       {
@@ -1333,7 +1333,7 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
         break;
       }
       send_resp(stdout, resp);
-      fwrite(&delim, sizeof(delim), stdout);
+      __fwrite(&delim, sizeof(delim), stdout);
     }
     fflush(stdout);
     return 0;

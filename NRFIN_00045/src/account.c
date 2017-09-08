@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -41,7 +41,7 @@ option_holding_t * next_holding(uint32_t acct_id){
 void init_holding(uint32_t acct_id, uint32_t holding_idx, char *sym, uint32_t qty){
 	option_holding_t *t = &(ACCOUNTS[acct_id].holdings[holding_idx]);
 	t->qty = qty;
-	memcpy(sym, t->symbol, strlen(sym));
+	__memcpy(sym, t->symbol, __strlen(sym));
 
 
 }

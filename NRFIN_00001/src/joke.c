@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -38,7 +38,7 @@ void load_default_jokes(jokedb_struct *jokedb) {
 	insert_joke(jokedb, "Chuck Norris can cut through a hot knife with butter");
 	insert_joke(jokedb, "Chuck Norris counted to infinity - twice.");
 	insert_joke(jokedb, "Chuck Norris is the reason why Waldo is hiding.");
-	insert_joke(jokedb, "When the Boogeyman goes to sleep every night, he checks his closet for Chuck Norris.");
+	insert_joke(jokedb, "When the Boogeyman goes to __sleep every night, he checks his closet for Chuck Norris.");
 	insert_joke(jokedb, "Death once had a near-Chuck Norris experience");
 	insert_joke(jokedb, "Chuck Norris can slam a revolving door.");
 	insert_joke(jokedb, "Chuck Norris once kicked a horse in the chin. Its decendants are known today as Giraffes.");
@@ -51,7 +51,7 @@ void load_default_jokes(jokedb_struct *jokedb) {
 	insert_joke(jokedb, "Chuck Norris is so fast, he can dodge raindrops.");
 	insert_joke(jokedb, "Chuck Norris doesn't wear a watch. HE decides what time it is.");
 	insert_joke(jokedb, "The original title for Alien vs. Predator was Alien and Predator vs Chuck Norris.");
-	insert_joke(jokedb, "Chuck Norris doesn't read books. He stares them down until he gets the information he wants.");
+	insert_joke(jokedb, "Chuck Norris doesn't __read books. He stares them down until he gets the information he wants.");
 	insert_joke(jokedb, "If Chuck Norris were to ever run out of ammo, his weapon would continue to fire out of fear of disappointing Chuck Norris.");
 	insert_joke(jokedb, "Chuck Norris' hand is the only hand that can beat a Royal Flush.");
 	insert_joke(jokedb, "Chuck Norris made a Happy Meal cry.");
@@ -61,7 +61,7 @@ void load_default_jokes(jokedb_struct *jokedb) {
 	insert_joke(jokedb, "Chuck Norris destroyed the periodic table, because Chuck Norris only recognizes the element of surprise.");
 	insert_joke(jokedb, "Some people wear Superman pajamas. Superman wears Chuck Norris pajamas.");
 	insert_joke(jokedb, "Einstein said you can't move at the speed of light. Obviously he was never kicked by Chuck Norris...");
-	insert_joke(jokedb, "Chuck Norris does not sleep. He waits.");
+	insert_joke(jokedb, "Chuck Norris does not __sleep. He waits.");
 	insert_joke(jokedb, "Chuck Norris has no shadow....nothing's stupid enough to follow Chuck Norris.");
 	insert_joke(jokedb, "Chuck Norris is so intimidating even his reflection won't look back at him.");
 	insert_joke(jokedb, "When Chuck Norris throws you into a bottomless pit, you hit the bottom.");
@@ -83,7 +83,7 @@ int insert_joke(jokedb_struct *jokedb, const char *joke_str) {
 		return -1;
 	
 	// return error (-2) if the joke_str is too long.
-	} else if (strlen(joke_str) >= MAX_JOKE_STRING_LEN - 1) {
+	} else if (__strlen(joke_str) >= MAX_JOKE_STRING_LEN - 1) {
 		if (LOGLEVEL >= LOG_INFO) {
 			syslog(LOG_ERROR, "Joke was too long -->\n");
 
@@ -98,7 +98,7 @@ int insert_joke(jokedb_struct *jokedb, const char *joke_str) {
 	} else {
 		int idx = jokedb->count;
 		// copy joke_str into next slot in joke db
-		strncpy(jokedb->jokes[idx].joke_string, joke_str, strlen(joke_str));
+		__strncpy(jokedb->jokes[idx].joke_string, joke_str, __strlen(joke_str));
 		// assign id to that joke
 		jokedb->jokes[idx].joke_id = idx;
 		// update joke count

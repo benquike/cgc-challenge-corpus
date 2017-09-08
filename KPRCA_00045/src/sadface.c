@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -55,7 +55,7 @@ int sadface_init(sadface_ctx_t **ctx, faces_t *faces, char *content, dict_t **va
   sadface_ctx_t *sctx = NULL;
   if (ctx)
   {
-    sctx = (sadface_ctx_t *) malloc(sizeof(sadface_ctx_t));
+    sctx = (sadface_ctx_t *) __malloc(sizeof(sadface_ctx_t));
     if (sctx)
     {
       if (faces == NULL)
@@ -75,10 +75,10 @@ int sadface_init(sadface_ctx_t **ctx, faces_t *faces, char *content, dict_t **va
           sctx->faces.close_face = faces->close_face;
       }
 
-      sctx->content = strdup(content);
+      sctx->content = __strdup(content);
       if (sctx->content == NULL)
         goto fail;
-      sctx->content_len = strlen(content);
+      sctx->content_len = __strlen(content);
 
       sctx->idx = 0;
       sctx->vars = vars;
@@ -92,8 +92,8 @@ fail:
   if (sctx)
   {
     if (sctx->content)
-      free(sctx->content);
-    free(sctx);
+      __free(sctx->content);
+    __free(sctx);
   }
   return -1;
 }
@@ -105,13 +105,13 @@ char* sadface_var2str(sad_var_t *var)
   int f1, f2;
   float fp;
   unsigned char b;
-  char *ret = calloc(sizeof(char), 256);
+  char *ret = __calloc(sizeof(char), 256);
   if (ret)
   {
     switch (var->type)
     {
       case SAD_VAR_STR:
-        free(ret);
+        __free(ret);
         return var->value.s;
       case SAD_VAR_INT:
         i = var->value.i;
@@ -129,9 +129,9 @@ char* sadface_var2str(sad_var_t *var)
       case SAD_VAR_BOOL:
         b = var->value.b;
         if (b)
-          strcpy(ret, "true");
+          __strcpy(ret, "true");
         else
-          strcpy(ret, "false");
+          __strcpy(ret, "false");
         break;
       default:
         break;
@@ -147,12 +147,12 @@ int _find_sadface(sadface_ctx_t *ctx, size_t *sf_start, size_t *sf_end)
   start = strstr(ctx->content + ctx->idx, ctx->faces.open_face);
   if (start == NULL)
     return 0;
-  end = strstr(start + strlen(ctx->faces.open_face), ctx->faces.close_face);
+  end = strstr(start + __strlen(ctx->faces.open_face), ctx->faces.close_face);
   if (end == NULL)
     return -1;
 
   *sf_start = start - ctx->content;
-  *sf_end = end - ctx->content + strlen(ctx->faces.close_face);
+  *sf_end = end - ctx->content + __strlen(ctx->faces.close_face);
   return 1;
 }
 
@@ -163,10 +163,10 @@ sad_node_t* parse_sadface(sadface_ctx_t *ctx)
   stack_t *stack;
 
   stack = stack_new(64);
-  root = (sad_node_t *) malloc(sizeof(sad_node_t));
+  root = (sad_node_t *) __malloc(sizeof(sad_node_t));
   if (stack == NULL || root == NULL)
     goto fail;
-  memset(root, 0, sizeof(sad_node_t));
+  __memset(root, 0, sizeof(sad_node_t));
   root->type = SAD_NODE_ROOT;
   stack_push(stack, root);
 
@@ -174,10 +174,10 @@ sad_node_t* parse_sadface(sadface_ctx_t *ctx)
   {
     if (_find_sadface(ctx, &start, &end) <= 0)
     {
-      sad_node_t *node = (sad_node_t *) malloc(sizeof(sad_node_t));
+      sad_node_t *node = (sad_node_t *) __malloc(sizeof(sad_node_t));
       if (node == NULL)
         goto fail;
-      memset(node, 0, sizeof(sad_node_t));
+      __memset(node, 0, sizeof(sad_node_t));
       node->type = SAD_NODE_NORMAL;
       node->next = NULL;
       node->idx = ctx->idx;
@@ -193,10 +193,10 @@ sad_node_t* parse_sadface(sadface_ctx_t *ctx)
 
     if (ctx->idx != start)
     {
-      sad_node_t *node = (sad_node_t *) malloc(sizeof(sad_node_t));
+      sad_node_t *node = (sad_node_t *) __malloc(sizeof(sad_node_t));
       if (node == NULL)
         goto fail;
-      memset(node, 0, sizeof(sad_node_t));
+      __memset(node, 0, sizeof(sad_node_t));
       node->type = SAD_NODE_NORMAL;
       node->next = NULL;
       node->idx = ctx->idx;
@@ -209,8 +209,8 @@ sad_node_t* parse_sadface(sadface_ctx_t *ctx)
       ctx->idx = start;
     }
 
-    size_t var_len = (end - start) - strlen(ctx->faces.open_face) - strlen(ctx->faces.close_face);
-    char *var_name = &ctx->content[start + strlen(ctx->faces.open_face)];
+    size_t var_len = (end - start) - __strlen(ctx->faces.open_face) - __strlen(ctx->faces.close_face);
+    char *var_name = &ctx->content[start + __strlen(ctx->faces.open_face)];
 
     switch (var_name[0])
     {
@@ -219,16 +219,16 @@ sad_node_t* parse_sadface(sadface_ctx_t *ctx)
         {
           sad_node_t *section, *tmp, *child;
 
-          child = (sad_node_t *) malloc(sizeof(sad_node_t));
-          section = (sad_node_t *) malloc(sizeof(sad_node_t));
+          child = (sad_node_t *) __malloc(sizeof(sad_node_t));
+          section = (sad_node_t *) __malloc(sizeof(sad_node_t));
           if (child == NULL || section == NULL)
             goto fail;
-          memset(child, 0, sizeof(sad_node_t));
+          __memset(child, 0, sizeof(sad_node_t));
           child->type = SAD_NODE_ROOT;
-          memset(section, 0, sizeof(sad_node_t));
+          __memset(section, 0, sizeof(sad_node_t));
           section->type = SAD_NODE_SECTION;
 
-          section->idx = start + strlen(ctx->faces.open_face) + 1;
+          section->idx = start + __strlen(ctx->faces.open_face) + 1;
           section->len = var_len - 1;
           section->child = child;
 
@@ -267,23 +267,23 @@ sad_node_t* parse_sadface(sadface_ctx_t *ctx)
           char *tmp_name;
           sad_node_t *variable, *tmp;
 
-          tmp_name = calloc(var_len + 1, sizeof(char));
+          tmp_name = __calloc(var_len + 1, sizeof(char));
           if (tmp_name == NULL)
             goto fail;
-          memset(tmp_name, 0, var_len + 1);
-          idx = start + strlen(ctx->faces.open_face);
-          strncpy(tmp_name, &ctx->content[idx], var_len);
+          __memset(tmp_name, 0, var_len + 1);
+          idx = start + __strlen(ctx->faces.open_face);
+          __strncpy(tmp_name, &ctx->content[idx], var_len);
 
-          variable = (sad_node_t *) malloc(sizeof(sad_node_t));
+          variable = (sad_node_t *) __malloc(sizeof(sad_node_t));
           if (variable == NULL)
             goto fail;
-          memset(variable, 0, sizeof(sad_node_t));
+          __memset(variable, 0, sizeof(sad_node_t));
           variable->type = SAD_NODE_VAR;
 
           variable->idx = idx;
           variable->len = var_len;
           variable->var = (sad_var_t *) dict_find(ctx->vars, tmp_name);
-          free(tmp_name);
+          __free(tmp_name);
 
           tmp = stack_pop(stack);
           tmp->next = variable;
@@ -333,7 +333,7 @@ int sadface_render(sadface_ctx_t *ctx, char *out, size_t *out_len)
         if (total_len + cur->len > *out_len)
           goto fail;
 #endif
-        memcpy(&out[total_len], &ctx->content[cur->idx], cur->len);
+        __memcpy(&out[total_len], &ctx->content[cur->idx], cur->len);
         total_len += cur->len;
         break;
       case SAD_NODE_VAR:
@@ -345,13 +345,13 @@ int sadface_render(sadface_ctx_t *ctx, char *out, size_t *out_len)
           if (var_s)
           {
 #if PATCHED
-            if (total_len + strlen(var_s) > *out_len)
+            if (total_len + __strlen(var_s) > *out_len)
               goto fail;
 #endif
-            memcpy(&out[total_len], var_s, strlen(var_s));
-            total_len += strlen(var_s);
+            __memcpy(&out[total_len], var_s, __strlen(var_s));
+            total_len += __strlen(var_s);
             if (var->type != SAD_VAR_STR)
-              free(var_s);
+              __free(var_s);
           }
         }
         break;
@@ -360,13 +360,13 @@ int sadface_render(sadface_ctx_t *ctx, char *out, size_t *out_len)
           char *tmp_name;
           sad_var_t *var;
 
-          tmp_name = calloc(cur->len + 1, sizeof(char));
+          tmp_name = __calloc(cur->len + 1, sizeof(char));
           if (tmp_name == NULL)
             goto fail;
-          memset(tmp_name, 0, cur->len + 1);
-          strncpy(tmp_name, &ctx->content[cur->idx], cur->len);
+          __memset(tmp_name, 0, cur->len + 1);
+          __strncpy(tmp_name, &ctx->content[cur->idx], cur->len);
           var = (sad_var_t *) dict_find(ctx->vars, tmp_name);
-          free(tmp_name);
+          __free(tmp_name);
 
           if (var == NULL || (var->type == SAD_VAR_BOOL && !var->value.b))
             break;
@@ -393,7 +393,7 @@ void sadface_destroy(sadface_ctx_t *ctx)
   if (ctx)
   {
     if (ctx->content)
-      free(ctx->content);
-    free(ctx);
+      __free(ctx->content);
+    __free(ctx);
   }
 }

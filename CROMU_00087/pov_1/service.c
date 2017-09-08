@@ -4,7 +4,7 @@ Author: John Berry <hj@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -333,9 +333,9 @@ int main(void) {
 		ReadBytes( 0, buf, 10);
 
 		index = -1;
-		// Check that the read worked and that there wasn't a null
+		// Check that the __read worked and that there wasn't a null
 		for ( i = 0; i < 4; i++) {
-			/// If the value is "\n1" then assume that the read failed
+			/// If the value is "\n1" then assume that the __read failed
 			if ( buf[i] == 0x0a && buf[i+1] == '1') {
 				index = i;
 				break;

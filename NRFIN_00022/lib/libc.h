@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -81,9 +81,9 @@ unsigned int read_all(int fd, char *buf, unsigned int size);
 int recvline(int fd, char *buf, size_t size);
 
 // stdlib
-unsigned int strlen(const char * str);
-void * memset(void * str, int ch, unsigned int n);
-void * memcpy(void * dst, const void * src, size_t cnt);
+unsigned int __strlen(const char * str);
+void * __memset(void * str, int ch, unsigned int n);
+void * __memcpy(void * dst, const void * src, size_t cnt);
 int rand(char *res, size_t len);
 int vsnprintf(char * buf, size_t buf_size, const char * fmt, va_list args);
 int snprintf(char * buf, size_t buf_size, const char * fmt, ...);

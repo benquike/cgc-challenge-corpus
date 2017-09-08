@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -309,21 +309,21 @@ void resort_destroy_digraph(void) {
 		d = resort.deciders[--resort.decider_count];
 		decider_destroy(&d, &resort.riders);
 	}
-	if (NULL != resort.deciders) free(resort.deciders);
+	if (NULL != resort.deciders) __free(resort.deciders);
 	resort.deciders = NULL;
 
 	while (0 < resort.lift_count) {
 		l = resort.lifts[--resort.lift_count];
 		lift_destroy(&l, &resort.riders);
 	}
-	if (NULL != resort.lifts) free(resort.lifts);
+	if (NULL != resort.lifts) __free(resort.lifts);
 	resort.lifts = NULL;
 
 	while (0 < resort.trail_count) {
 		t = resort.trails[--resort.trail_count];
 		trail_destroy(&t, &resort.riders);
 	}
-	if (NULL != resort.trails) free(resort.trails);
+	if (NULL != resort.trails) __free(resort.trails);
 	resort.trails = NULL;
 
 	r = resort.riders;
@@ -445,20 +445,20 @@ int32_t load_resort_digraph(void) {
 	RECV(&resort, RESORT_COUNTS_SZ);
 
 	// TODO: bounds checking on counts to prevent int overflow when * 4 (have fun :) )
-	resort.deciders = calloc(resort.decider_count * sizeof(Decider *));
+	resort.deciders = __calloc(resort.decider_count * sizeof(Decider *));
 	MALLOC_OK(resort.deciders);
 
-	resort.lifts = calloc(resort.lift_count * sizeof(Lift *));
+	resort.lifts = __calloc(resort.lift_count * sizeof(Lift *));
 	MALLOC_OK(resort.lifts);
 
-	resort.trails = calloc(resort.trail_count * sizeof(Trail *));
+	resort.trails = __calloc(resort.trail_count * sizeof(Trail *));
 	MALLOC_OK(resort.trails);
 
 	read_sz =  resort.decider_count * DECIDER_IO_SZ;
 	read_sz += resort.lift_count * LIFT_IO_SZ;
 	read_sz += resort.trail_count * TRAIL_IO_SZ;
 
-	input = calloc(read_sz);
+	input = __calloc(read_sz);
 	MALLOC_OK(input);
 	input_s = input;
 
@@ -477,7 +477,7 @@ int32_t load_resort_digraph(void) {
 	result = gen_trails(&input);
 	if (0 > result) return -1;
 
-	free(input_s);
+	__free(input_s);
 	return SUCCESS;
 }
 
@@ -498,11 +498,11 @@ int32_t load_rider_group(void) {
 	uint32_t *input_s;
 	uint32_t count;
 
-	// get count and then read in rider data
+	// get count and then __read in rider data
 	RECV(&count, sizeof(uint32_t));
 
 	read_sz = count * RIDER_IO_SZ;
-	input = calloc(read_sz);
+	input = __calloc(read_sz);
 	MALLOC_OK(input);
 	input_s = input;
 
@@ -511,7 +511,7 @@ int32_t load_rider_group(void) {
 	result = gen_riders(&input, count);
 	if (0 > result) return -1;
 
-	free(input_s);
+	__free(input_s);
 	return SUCCESS;
 }
 
@@ -532,13 +532,13 @@ int32_t load_rider_single(void) {
 	uint32_t *input_s;
 	uint32_t count;
 
-	// get count and then read in rider data
+	// get count and then __read in rider data
 	RECV(&count, sizeof(uint32_t));
 	if (count != 1) return -1;
 
-	// count is 1, so read in rider data
+	// count is 1, so __read in rider data
 	read_sz = count * RIDER_IO_SZ;
-	input = calloc(read_sz);
+	input = __calloc(read_sz);
 	MALLOC_OK(input);
 	input_s = input;
 
@@ -547,7 +547,7 @@ int32_t load_rider_single(void) {
 	result = gen_riders(&input, count);
 	if (0 > result) return -1;
 
-	free(input_s);
+	__free(input_s);
 	return SUCCESS;
 }
 
@@ -581,7 +581,7 @@ int32_t start_simulation(void) {
 	int32_t ret;
 	Rider *r;
 
-	// read # of steps
+	// __read # of steps
 	RECV(&steps, sizeof(uint32_t));
 	if (0 == steps) return -1;
 
@@ -628,7 +628,7 @@ int32_t lift_stats(void) {
 	if (0 == resort.lift_count) return -1;
 
 	stats_sz = resort.lift_count * 2 * sizeof(uint32_t); // id and rider_total
-	stats = calloc(stats_sz);
+	stats = __calloc(stats_sz);
 	MALLOC_OK(stats);
 
 	// examine lifts and store stats
@@ -640,7 +640,7 @@ int32_t lift_stats(void) {
 
 	send((char *)stats, stats_sz);
 
-	free(stats);
+	__free(stats);
 
 	return SUCCESS;
 }
@@ -658,7 +658,7 @@ int32_t trail_stats(void) {
 	if (0 == resort.trail_count) return -1;
 
 	stats_sz = resort.trail_count * 2 * sizeof(uint32_t); // id and rider_total
-	stats = calloc(stats_sz);
+	stats = __calloc(stats_sz);
 	MALLOC_OK(stats);
 
 	// examine trails and store stats
@@ -670,7 +670,7 @@ int32_t trail_stats(void) {
 
 	send((char *)stats, stats_sz);
 
-	free(stats);
+	__free(stats);
 
 	return SUCCESS;
 }
@@ -694,7 +694,7 @@ int32_t rider_stats(void) {
 	if (0 == resort.rider_count) return -1;
 
 	stats_sz = resort.rider_count * 2 * sizeof(uint32_t); // id, energy_level
-	stats = calloc(stats_sz);
+	stats = __calloc(stats_sz);
 	MALLOC_OK(stats);
 
 	// process deciders
@@ -769,7 +769,7 @@ int32_t rider_stats(void) {
 
 	send((char *)stats, stats_sz);
 
-	free(stats);
+	__free(stats);
 
 	return SUCCESS;
 }

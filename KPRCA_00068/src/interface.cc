@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -79,7 +79,7 @@ bool Interface::menuMain()
     char line[100], *word, *buf;
     while (true)
     {
-        fwrite(menuMainPrompt, strlen(menuMainPrompt), stdout);
+        __fwrite(menuMainPrompt, __strlen(menuMainPrompt), stdout);
         if (freaduntil(line, sizeof(line), '\n', stdin) < 0)
             return false;
 
@@ -111,7 +111,7 @@ bool Interface::menuMain()
                 fprintf(stdout, "Missing track\n");
                 continue;
             }
-            value = strtol(word, NULL, 10);
+            value = __strtol(word, NULL, 10);
             track = mixer.getTrack(value);
             if (track == NULL)
             {
@@ -124,7 +124,7 @@ bool Interface::menuMain()
                 fprintf(stdout, "Missing gain\n");
                 continue;
             }
-            value = strtol(word, NULL, 10);
+            value = __strtol(word, NULL, 10);
             if (value < -1000 || value > 1000)
             {
                 fprintf(stdout, "Invalid gain (-10.00...10.00)\n");
@@ -140,7 +140,7 @@ bool Interface::menuMain()
                 fprintf(stdout, "Missing track\n");
                 continue;
             }
-            value = strtol(word, NULL, 10);
+            value = __strtol(word, NULL, 10);
             track = mixer.getTrack(value);
             if (track == NULL)
             {
@@ -153,7 +153,7 @@ bool Interface::menuMain()
                 fprintf(stdout, "Missing pan\n");
                 continue;
             }
-            value = strtol(word, NULL, 10);
+            value = __strtol(word, NULL, 10);
             if (value < -100 || value > 100)
             {
                 fprintf(stdout, "Invalid pan (-1.00...1.00)\n");
@@ -172,7 +172,7 @@ bool Interface::menuMain()
                 fprintf(stdout, "Missing track 1\n");
                 continue;
             }
-            value = strtol(word, NULL, 10);
+            value = __strtol(word, NULL, 10);
             track = mixer.getTrack(value);
             if (track == NULL)
             {
@@ -183,7 +183,7 @@ bool Interface::menuMain()
             word = strsep(&buf, " ");
             if (word != NULL)
             {
-                value = strtol(word, NULL, 10);
+                value = __strtol(word, NULL, 10);
                 other = mixer.getTrack(value);
                 if (other == NULL)
                 {
@@ -232,7 +232,7 @@ bool Interface::menuExport()
     char line[100];
     while (true)
     {
-        fwrite(menuExportPrompt, strlen(menuExportPrompt), stdout);
+        __fwrite(menuExportPrompt, __strlen(menuExportPrompt), stdout);
         if (freaduntil(line, sizeof(line), '\n', stdin) < 0)
             return false;
 
@@ -265,7 +265,7 @@ bool Interface::menuNew()
     AudioTrack *track;
     while (true)
     {
-        fwrite(menuNewPrompt, strlen(menuNewPrompt), stdout);
+        __fwrite(menuNewPrompt, __strlen(menuNewPrompt), stdout);
         if (freaduntil(line, sizeof(line), '\n', stdin) < 0)
             return false;
 
@@ -280,7 +280,7 @@ bool Interface::menuNew()
             fprintf(stdout, "Missing samples\n");
             continue;
         }
-        samples = strtoul(word, NULL, 10);
+        samples = __strtoul(word, NULL, 10);
         if (samples > INT32_MAX)
         {
             fprintf(stdout, "Invalid samples\n");
@@ -301,7 +301,7 @@ bool Interface::menuNew()
                 fprintf(stdout, "Missing frequency\n");
                 continue;
             }
-            hz = strtoul(word, NULL, 10);
+            hz = __strtoul(word, NULL, 10);
             if (hz >= 50000)
             {
                 fprintf(stdout, "Invalid frequency\n");
@@ -353,22 +353,22 @@ void Interface::exportAudio(const Compression &comp)
 
     comp.compress(*track, &data[sizeof(AudioHeader)]);
 
-    fwrite(&size, sizeof(size), stdout);
-    fwrite(data, size, stdout);
+    __fwrite(&size, sizeof(size), stdout);
+    __fwrite(data, size, stdout);
 
-    delete data;
+    delete[] data;
     delete track;
 }
 
 bool Interface::importAudio()
 {
     unsigned int size;
-    if (fread(&size, sizeof(size), stdin) != sizeof(size))
+    if (__fread(&size, sizeof(size), stdin) != sizeof(size))
         return false;
     if (size >= INT32_MAX || size <= sizeof(AudioHeader))
         return false;
     uint8_t *data = new uint8_t[size];
-    if (fread(data, size, stdin) != size)
+    if (__fread(data, size, stdin) != size)
         return false;
 
     AudioHeader *hdr = (AudioHeader *)data;
@@ -391,7 +391,7 @@ bool Interface::importAudio()
         }
     }
 
-    delete data;
+    delete[] data;
     return true;
 }
 
@@ -402,7 +402,7 @@ bool Interface::menuEffects()
     AudioTrack *track;
     while (true)
     {
-        fwrite(menuEffectsPrompt, strlen(menuEffectsPrompt), stdout);
+        __fwrite(menuEffectsPrompt, __strlen(menuEffectsPrompt), stdout);
         if (freaduntil(line, sizeof(line), '\n', stdin) < 0)
             return false;
 
@@ -417,7 +417,7 @@ bool Interface::menuEffects()
             fprintf(stdout, "Missing track\n");
             continue;
         }
-        value = strtol(word, NULL, 10);
+        value = __strtol(word, NULL, 10);
         track = mixer.getTrack(value);
         if (track == NULL)
         {
@@ -434,7 +434,7 @@ bool Interface::menuEffects()
                 fprintf(stdout, "Missing gain\n");
                 continue;
             }
-            value = strtol(word, NULL, 10);
+            value = __strtol(word, NULL, 10);
             if (value < -1000 || value > 1000)
             {
                 fprintf(stdout, "Invalid gain (-10.00...10.00)\n");
@@ -450,7 +450,7 @@ bool Interface::menuEffects()
                 fprintf(stdout, "Missing pan\n");
                 continue;
             }
-            value = strtol(word, NULL, 10);
+            value = __strtol(word, NULL, 10);
             if (value < -100 || value > 100)
             {
                 fprintf(stdout, "Invalid pan (-1.00...1.00)\n");
@@ -469,7 +469,7 @@ bool Interface::menuEffects()
                 fprintf(stdout, "Missing delay\n");
                 continue;
             }
-            value = strtol(word, NULL, 10);
+            value = __strtol(word, NULL, 10);
             if (value <= 0)
             {
                 fprintf(stdout, "Invalid delay (>0)\n");
@@ -485,7 +485,7 @@ bool Interface::menuEffects()
                 fprintf(stdout, "Missing samples\n");
                 continue;
             }
-            value = strtol(word, NULL, 10);
+            value = __strtol(word, NULL, 10);
             if (value <= 0)
             {
                 fprintf(stdout, "Invalid samples (>0)\n");

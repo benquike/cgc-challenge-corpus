@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -34,10 +34,10 @@ blub::blub(char* _author, char* data)
 {
   id = (uint32_t)this;
 
-  size_t l = strlen(_author);
-  strncpy(username, _author, l);
+  size_t l = __strlen(_author);
+  __strncpy(username, _author, l);
 
-  memcpy(content, data, BLUB_MAX);
+  __memcpy(content, data, BLUB_MAX);
 
   ts = tick();
 }
@@ -49,7 +49,7 @@ blubber::blubber(void)
 
 void blubber::set_username(char* _username)
 {
-  strcpy(username, _username);
+  __strcpy(username, _username);
 }
 
 blub* blubber::gen_blub(void)
@@ -58,25 +58,25 @@ blub* blubber::gen_blub(void)
   size_t rem = BLUB_MAX;
   int misses = 0;
 
-  memset(buf, 0, BLUB_MAX + 1);
+  __memset(buf, 0, BLUB_MAX + 1);
 
   while (0 < rem && misses < 8)
   {
     const char* word = words[choice() % (sizeof(words) / sizeof(char *))];
-    if (strlen(word) + strlen(" ") <= rem)
+    if (__strlen(word) + __strlen(" ") <= rem)
     {
-      size_t offset = strlen(buf);
+      size_t offset = __strlen(buf);
       if (offset > 0)
       {
-        strcpy(buf + offset, " ");
-        strcpy(buf + offset + 1, word);
+        __strcpy(buf + offset, " ");
+        __strcpy(buf + offset + 1, word);
       }
       else
       {
-        strcpy(buf + offset, word);
+        __strcpy(buf + offset, word);
       }
 
-      rem = BLUB_MAX - strlen(buf);
+      rem = BLUB_MAX - __strlen(buf);
     }
     else
     {

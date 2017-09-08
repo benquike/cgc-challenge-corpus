@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -40,11 +40,11 @@ lms_sess_t *find_session(uint32_t sid) {
 lms_sess_t *new_session(lms_msg_t *msg) {
     lms_sess_t *new_s = NULL;
 
-    if (!(new_s = calloc(sizeof(lms_sess_t)))) {
+    if (!(new_s = __calloc(sizeof(lms_sess_t)))) {
        TERM(LMSERR,90); 
     }
 
-    if (!(new_s->received = calloc(sizeof(uint8_t)*msg->count))) {
+    if (!(new_s->received = __calloc(sizeof(uint8_t)*msg->count))) {
        TERM(LMSERR,90); 
     }
 
@@ -83,18 +83,18 @@ void delete_session(uint32_t sid) {
             if (last)
                 last->next = cur->next;
 
-            //free all our messages and the list
+            //__free all our messages and the list
             listnext = cur->head;
             while ((list = listnext)) {
                 listnext = list->next;
-                free(list->msg->data);
-                free(list->msg);
-                free(list);
+                __free(list->msg->data);
+                __free(list->msg);
+                __free(list);
             }
 
-            //free the session
-            free(cur->received);
-            free(cur);
+            //__free the session
+            __free(cur->received);
+            __free(cur);
             outstanding--;
             return;
         }
@@ -116,12 +116,12 @@ uint8_t *add_msg(lms_msg_t *msg, lms_sess_t *sess) {
 #else
     if (msg->mid >= sess->count || sess->received[msg->mid]) {
 #endif
-        free(msg->data);
-        free(msg);
+        __free(msg->data);
+        __free(msg);
         return NULL;
     }
 
-    if (!(node = calloc(sizeof(lms_msg_list_t)))) {
+    if (!(node = __calloc(sizeof(lms_msg_list_t)))) {
        TERM(LMSERR,90); 
     }
     
@@ -148,7 +148,7 @@ uint8_t *add_msg(lms_msg_t *msg, lms_sess_t *sess) {
 
     if (i == sess->count) {
         //reassembly time
-        if (!(res = calloc(sess->total))) {
+        if (!(res = __calloc(sess->total))) {
             TERM(LMSERR,95);
         }
 
@@ -156,7 +156,7 @@ uint8_t *add_msg(lms_msg_t *msg, lms_sess_t *sess) {
             cur = sess->head;
             while (cur) {
                 if (cur->msg->mid == i) {
-                    memcpy(res+idx,cur->msg->data,cur->msg->size);
+                    __memcpy(res+idx,cur->msg->data,cur->msg->size);
                     idx += cur->msg->size;
                     break;
                 }
@@ -179,7 +179,7 @@ void process_msg(lms_msg_t *msg) {
 
     if ((res = add_msg(msg, sess))) {
         SSEND(sess->total,(char *)res);
-        free(res);
+        __free(res);
         delete_session(sess->sid);
     }
 
@@ -188,7 +188,7 @@ void process_msg(lms_msg_t *msg) {
 lms_msg_t *recv_msg() {
     lms_msg_t *msg;
 
-    if (!(msg = calloc(sizeof(lms_msg_t)))) {
+    if (!(msg = __calloc(sizeof(lms_msg_t)))) {
         TERM(LMSERR,93);
     }
 
@@ -198,7 +198,7 @@ lms_msg_t *recv_msg() {
         TERM(LMSERR,91);
     }
 
-    if (!(msg->data = calloc(msg->size))) {
+    if (!(msg->data = __calloc(msg->size))) {
         TERM(LMSERR,94);
     }
 

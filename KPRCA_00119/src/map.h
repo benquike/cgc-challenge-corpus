@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -194,14 +194,14 @@ private:
         {
             _allocated = new_size;
             table = new _node *[_allocated];
-            memset(table, 0, sizeof(_node *) * _allocated);
+            __memset(table, 0, sizeof(_node *) * _allocated);
         }
         else
         {
             delete[] table;
             _allocated = new_size;
             table = new _node *[_allocated];
-            memset(table, 0, sizeof(_node *) * _allocated);
+            __memset(table, 0, sizeof(_node *) * _allocated);
 
             for (_node *node = head; node != nullptr; node = node->lnext)
             {

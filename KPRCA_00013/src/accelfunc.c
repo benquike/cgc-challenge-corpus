@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -36,8 +36,8 @@ double handle_op_avg(stack_t **args, int *is_bad_formula)
     double result = 0.0, operand;
     char *front = pop_copy(args);
     while(front != NULL) {
-        operand = atof(front, strlen(front) + 1, is_bad_formula);
-        free(front);
+        operand = __atof(front, __strlen(front) + 1, is_bad_formula);
+        __free(front);
         if(*is_bad_formula)
             goto error;
 
@@ -69,8 +69,8 @@ double handle_op_count(stack_t **args, int *is_bad_formula)
     double result = 0.0, operand;
     char *front = pop_copy(args);
     while(front != NULL) {
-        operand = atof(front, strlen(front) + 1, is_bad_formula);
-        free(front);
+        operand = __atof(front, __strlen(front) + 1, is_bad_formula);
+        __free(front);
         if(*is_bad_formula)
             goto error;
 
@@ -103,8 +103,8 @@ double handle_op_max(stack_t **args, int *is_bad_formula)
     double operand;
     char *front = pop_copy(args);
     if (front != NULL) {
-        max = atof(front, strlen(front) + 1, is_bad_formula);
-        free(front);
+        max = __atof(front, __strlen(front) + 1, is_bad_formula);
+        __free(front);
         if (*is_bad_formula)
             goto error;
         i++;
@@ -112,8 +112,8 @@ double handle_op_max(stack_t **args, int *is_bad_formula)
 
     front = pop_copy(args);
     while(front != NULL) {
-        operand = atof(front, strlen(front) + 1, is_bad_formula);
-        free(front);
+        operand = __atof(front, __strlen(front) + 1, is_bad_formula);
+        __free(front);
         if(*is_bad_formula)
             goto error;
 
@@ -152,9 +152,9 @@ double handle_op_median(stack_t **args, int *is_bad_formula)
     double median = 0.0, operand, temp;
     char *front = pop_copy(args);
 
-    operand = atof(front, strlen(front) + 1, is_bad_formula);
+    operand = __atof(front, __strlen(front) + 1, is_bad_formula);
     if(*is_bad_formula) {
-        free(front);
+        __free(front);
         goto error;
     } else {
         push(&sorted, front);
@@ -163,7 +163,7 @@ double handle_op_median(stack_t **args, int *is_bad_formula)
 
     front = pop_copy(args);
     while(front != NULL) {
-        operand = atof(front, strlen(front) + 1, is_bad_formula);
+        operand = __atof(front, __strlen(front) + 1, is_bad_formula);
         if(*is_bad_formula)
             goto error;
 
@@ -172,12 +172,12 @@ double handle_op_median(stack_t **args, int *is_bad_formula)
         int passed_first = 0, is_inserted = 0;
         stack_t *elem = NULL;
         while (tmp != NULL) {
-            temp = atof(tmp->data, strlen(tmp->data) + 1, is_bad_formula);
+            temp = __atof(tmp->data, __strlen(tmp->data) + 1, is_bad_formula);
             if (operand <= temp) {
                 if (!passed_first) {
                     push(&sorted, front);
                 } else {
-                    elem = malloc(sizeof(stack_t));
+                    elem = __malloc(sizeof(stack_t));
                     elem->data = front;
                     elem->next = tmp;
                     prev->next = elem;
@@ -195,7 +195,7 @@ double handle_op_median(stack_t **args, int *is_bad_formula)
             while (tmp->next != NULL)
                 tmp = tmp->next;
 
-            elem = malloc(sizeof(stack_t));
+            elem = __malloc(sizeof(stack_t));
             elem->data = front;
             elem->next = NULL;
             tmp->next = elem;
@@ -211,16 +211,16 @@ double handle_op_median(stack_t **args, int *is_bad_formula)
         for(j = 0; j < (i / 2) - 1; j++)
             tmp = tmp->next;
 
-        median += atof(tmp->data, strlen(tmp->data) + 1, is_bad_formula);
+        median += __atof(tmp->data, __strlen(tmp->data) + 1, is_bad_formula);
         tmp = tmp->next;
-        median += atof(tmp->data, strlen(tmp->data) + 1, is_bad_formula);
+        median += __atof(tmp->data, __strlen(tmp->data) + 1, is_bad_formula);
 
         median /= 2;
     } else {
         for(j = 0; j < (i / 2); j++)
             tmp = tmp->next;
 
-        median += atof(tmp->data, strlen(tmp->data) + 1, is_bad_formula);
+        median += __atof(tmp->data, __strlen(tmp->data) + 1, is_bad_formula);
     }
 
     goto done;
@@ -248,8 +248,8 @@ double handle_op_min(stack_t **args, int *is_bad_formula)
     double operand;
     char *front = pop_copy(args);
     if (front != NULL) {
-        min = atof(front, strlen(front) + 1, is_bad_formula);
-        free(front);
+        min = __atof(front, __strlen(front) + 1, is_bad_formula);
+        __free(front);
         if (*is_bad_formula)
             goto error;
         i++;
@@ -257,8 +257,8 @@ double handle_op_min(stack_t **args, int *is_bad_formula)
 
     front = pop_copy(args);
     while(front != NULL) {
-        operand = atof(front, strlen(front) + 1, is_bad_formula);
-        free(front);
+        operand = __atof(front, __strlen(front) + 1, is_bad_formula);
+        __free(front);
         if(*is_bad_formula)
             goto error;
 
@@ -293,7 +293,7 @@ double handle_op_stddev(stack_t **args, int *is_bad_formula)
     stack_t *tmp = *args;
 
     while (tmp != NULL) {
-        operand = atof(tmp->data, strlen(tmp->data) + 1, is_bad_formula);
+        operand = __atof(tmp->data, __strlen(tmp->data) + 1, is_bad_formula);
         if(*is_bad_formula)
             goto error;
 
@@ -308,8 +308,8 @@ double handle_op_stddev(stack_t **args, int *is_bad_formula)
     i = 0;
     char *front = pop_copy(args);
     while(front != NULL) {
-        operand = atof(front, strlen(front) + 1, is_bad_formula);
-        free(front);
+        operand = __atof(front, __strlen(front) + 1, is_bad_formula);
+        __free(front);
 
         //TODO - Look into this, I don't know why pow is failing
         //result += (pow((operand - mean), 2.0));
@@ -344,8 +344,8 @@ double handle_op_abs(stack_t **args, int *is_bad_formula)
     front = pop_copy(args);
     if (front == NULL)
         goto error;
-    operand1 = atof(front, strlen(front) + 1, is_bad_formula);
-    free(front);
+    operand1 = __atof(front, __strlen(front) + 1, is_bad_formula);
+    __free(front);
     if(*is_bad_formula)
         goto error;
 
@@ -375,8 +375,8 @@ double handle_op_add(stack_t **args, int *is_bad_formula)
     front = pop_copy(args);
     if (front == NULL)
         goto error;
-    operand1 = atof(front, strlen(front) + 1, is_bad_formula);
-    free(front);
+    operand1 = __atof(front, __strlen(front) + 1, is_bad_formula);
+    __free(front);
     if(*is_bad_formula)
         goto error;
 
@@ -384,8 +384,8 @@ double handle_op_add(stack_t **args, int *is_bad_formula)
     front = pop_copy(args);
     if (front == NULL)
         goto error;
-    operand2 = atof(front, strlen(front) + 1, is_bad_formula);
-    free(front);
+    operand2 = __atof(front, __strlen(front) + 1, is_bad_formula);
+    __free(front);
     if(*is_bad_formula)
         goto error;
 
@@ -415,8 +415,8 @@ double handle_op_cos(stack_t **args, int *is_bad_formula)
     front = pop_copy(args);
     if (front == NULL)
         goto error;
-    operand1 = atof(front, strlen(front) + 1, is_bad_formula);
-    free(front);
+    operand1 = __atof(front, __strlen(front) + 1, is_bad_formula);
+    __free(front);
     if(*is_bad_formula)
         goto error;
 
@@ -446,8 +446,8 @@ double handle_op_ln(stack_t **args, int *is_bad_formula)
     front = pop_copy(args);
     if (front == NULL)
         goto error;
-    operand1 = atof(front, strlen(front) + 1, is_bad_formula);
-    free(front);
+    operand1 = __atof(front, __strlen(front) + 1, is_bad_formula);
+    __free(front);
     if(*is_bad_formula)
         goto error;
 
@@ -480,8 +480,8 @@ double handle_op_log10(stack_t **args, int *is_bad_formula)
     front = pop_copy(args);
     if (front == NULL)
         goto error;
-    operand1 = atof(front, strlen(front) + 1, is_bad_formula);
-    free(front);
+    operand1 = __atof(front, __strlen(front) + 1, is_bad_formula);
+    __free(front);
     if(*is_bad_formula)
         goto error;
 
@@ -514,8 +514,8 @@ double handle_op_power(stack_t **args, int *is_bad_formula)
     front = pop_copy(args);
     if (front == NULL)
         goto error;
-    operand1 = atof(front, strlen(front) + 1, is_bad_formula);
-    free(front);
+    operand1 = __atof(front, __strlen(front) + 1, is_bad_formula);
+    __free(front);
     if(*is_bad_formula)
         goto error;
 
@@ -523,8 +523,8 @@ double handle_op_power(stack_t **args, int *is_bad_formula)
     front = pop_copy(args);
     if (front == NULL)
         goto error;
-    operand2 = atof(front, strlen(front) + 1, is_bad_formula);
-    free(front);
+    operand2 = __atof(front, __strlen(front) + 1, is_bad_formula);
+    __free(front);
     if(*is_bad_formula)
         goto error;
 
@@ -535,7 +535,7 @@ double handle_op_power(stack_t **args, int *is_bad_formula)
         result = 1.0;
     else if (operand2 == 1.0)
         result = operand1;
-    else if (isnan(operand2))
+    else if (__isnan(operand2))
         result = operand2;
     else if (operand1 == 0 && operand2 > 0)
         result = 0.0;
@@ -565,8 +565,8 @@ double handle_op_product(stack_t **args, int *is_bad_formula)
     front = pop_copy(args);
     if (front == NULL)
         goto error;
-    operand1 = atof(front, strlen(front) + 1, is_bad_formula);
-    free(front);
+    operand1 = __atof(front, __strlen(front) + 1, is_bad_formula);
+    __free(front);
     if(*is_bad_formula)
         goto error;
 
@@ -574,8 +574,8 @@ double handle_op_product(stack_t **args, int *is_bad_formula)
     front = pop_copy(args);
     if (front == NULL)
         goto error;
-    operand2 = atof(front, strlen(front) + 1, is_bad_formula);
-    free(front);
+    operand2 = __atof(front, __strlen(front) + 1, is_bad_formula);
+    __free(front);
     if(*is_bad_formula)
         goto error;
 
@@ -605,8 +605,8 @@ double handle_op_quotient(stack_t **args, int *is_bad_formula)
     front = pop_copy(args);
     if (front == NULL)
         goto error;
-    operand1 = atof(front, strlen(front) + 1, is_bad_formula);
-    free(front);
+    operand1 = __atof(front, __strlen(front) + 1, is_bad_formula);
+    __free(front);
     if(*is_bad_formula)
         goto error;
 
@@ -614,8 +614,8 @@ double handle_op_quotient(stack_t **args, int *is_bad_formula)
     front = pop_copy(args);
     if (front == NULL)
         goto error;
-    operand2 = atof(front, strlen(front) + 1, is_bad_formula);
-    free(front);
+    operand2 = __atof(front, __strlen(front) + 1, is_bad_formula);
+    __free(front);
     if(*is_bad_formula)
         goto error;
 
@@ -648,8 +648,8 @@ double handle_op_sin(stack_t **args, int *is_bad_formula)
     front = pop_copy(args);
     if (front == NULL)
         goto error;
-    operand1 = atof(front, strlen(front) + 1, is_bad_formula);
-    free(front);
+    operand1 = __atof(front, __strlen(front) + 1, is_bad_formula);
+    __free(front);
     if(*is_bad_formula)
         goto error;
 
@@ -679,8 +679,8 @@ double handle_op_sqrt(stack_t **args, int *is_bad_formula)
     front = pop_copy(args);
     if (front == NULL)
         goto error;
-    operand1 = atof(front, strlen(front) + 1, is_bad_formula);
-    free(front);
+    operand1 = __atof(front, __strlen(front) + 1, is_bad_formula);
+    __free(front);
     if(*is_bad_formula)
         goto error;
 
@@ -713,8 +713,8 @@ double handle_op_subtract(stack_t **args, int *is_bad_formula)
     front = pop_copy(args);
     if (front == NULL)
         goto error;
-    operand1 = atof(front, strlen(front) + 1, is_bad_formula);
-    free(front);
+    operand1 = __atof(front, __strlen(front) + 1, is_bad_formula);
+    __free(front);
     if(*is_bad_formula)
         goto error;
 
@@ -722,8 +722,8 @@ double handle_op_subtract(stack_t **args, int *is_bad_formula)
     front = pop_copy(args);
     if (front == NULL)
         goto error;
-    operand2 = atof(front, strlen(front) + 1, is_bad_formula);
-    free(front);
+    operand2 = __atof(front, __strlen(front) + 1, is_bad_formula);
+    __free(front);
     if(*is_bad_formula)
         goto error;
 
@@ -749,8 +749,8 @@ double handle_op_sum(stack_t **args, int *is_bad_formula)
     double result = 0.0, operand;
     char *front = pop_copy(args);
     while(front != NULL) {
-        operand = atof(front, strlen(front) + 1, is_bad_formula);
-        free(front);
+        operand = __atof(front, __strlen(front) + 1, is_bad_formula);
+        __free(front);
         if(*is_bad_formula)
             goto error;
 

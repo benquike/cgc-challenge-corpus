@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -28,17 +28,17 @@ THE SOFTWARE.
 
 bool CMessageRenderer::RenderHeader( void )
 {
-    printf( "<HTML>\n" );
-    printf( "<HEAD>Messages</HEAD>\n" );
-    printf( "<BODY>\n" );
+    __printf( "<HTML>\n" );
+    __printf( "<HEAD>Messages</HEAD>\n" );
+    __printf( "<BODY>\n" );
 
     return (true);
 }
 
 bool CMessageRenderer::RenderFooter( void )
 {
-    printf( "</BODY>\n" );
-    printf( "</HTML>\n" );
+    __printf( "</BODY>\n" );
+    __printf( "</HTML>\n" );
 
     return (true);
 }
@@ -46,15 +46,15 @@ bool CMessageRenderer::RenderFooter( void )
 uint32_t add_render_buffer( uint8_t *pBuffer, uint32_t bufferPos, const char *pszString, uint32_t maxBufferPos )
 {
 #ifdef PATCHED
-    uint32_t lenToAdd = strlen( pszString );
+    uint32_t lenToAdd = __strlen( pszString );
 
     if ( (bufferPos + lenToAdd) > maxBufferPos )
         return 0;
 #endif
 
-    memcpy( (uint8_t*)pBuffer+bufferPos, (uint8_t*)pszString, strlen( pszString ) );
+    __memcpy( (uint8_t*)pBuffer+bufferPos, (uint8_t*)pszString, __strlen( pszString ) );
 
-    return strlen( pszString );
+    return __strlen( pszString );
 }
 
 bool CMessageRenderer::RenderMessage( CFullMessage *pMessage )
@@ -266,7 +266,7 @@ bool CMessageRenderer::RenderMessage( CFullMessage *pMessage )
                     break;
                 }
 
-                // Check for exit condition
+                // Check for __exit condition
                 if ( bExit )
                     break;
             }
@@ -291,22 +291,22 @@ bool CMessageRenderer::RenderMessage( CFullMessage *pMessage )
     }
 
     // Output message header information
-    printf( "<b>Message @d:</b><BR>\n", m_messageRenderCount );
+    __printf( "<b>Message @d:</b><BR>\n", m_messageRenderCount );
 
     // Update message render counter
     m_messageRenderCount++;
 
     // Print who the message is from
-    printf( "<b>From:</b> @d<BR>\n", fromAddress );
+    __printf( "<b>From:</b> @d<BR>\n", fromAddress );
 
     // Print who the message is to
-    printf( "<b>To:</b> @d<BR>\n", toAddress );
+    __printf( "<b>To:</b> @d<BR>\n", toAddress );
 
     // Print out the message data
     renderBuffer[renderPos] = '\0';
 
     // Lastly print out the message data
-    printf( "<b>Message Data:</b><BR>\n@s\n", renderBuffer );
+    __printf( "<b>Message Data:</b><BR>\n@s\n", renderBuffer );
 
     // Now render message footer
     RenderFooter();

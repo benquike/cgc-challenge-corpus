@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -39,7 +39,7 @@
 #define err(s, ...) \
 ({ \
   fdprintf(STDERR, "DEBUG %s:%d:\t" s "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
-  exit(1); \
+  __exit(1); \
 })
 
 
@@ -96,10 +96,10 @@ int read_n_bytes(int fd, size_t n, char* buf)
 
 int read_until(int fd, size_t n, char terminator, char* buf)
 {
-  size_t read = 0;
-  while (read < n)
+  size_t __read = 0;
+  while (__read < n)
   {
-    ssize_t tmp_read = read_n_bytes(fd, 1, buf + read);
+    ssize_t tmp_read = read_n_bytes(fd, 1, buf + __read);
     if (tmp_read < 0)
     {
       return -1;
@@ -109,14 +109,14 @@ int read_until(int fd, size_t n, char terminator, char* buf)
       break;
     }
 
-    if (memchr(buf + read, terminator, tmp_read) != NULL)
+    if (memchr(buf + __read, terminator, tmp_read) != NULL)
     {
-      *((char* )memchr(buf + read, terminator, tmp_read)) = '\0';
-      return read + tmp_read;
+      *((char* )memchr(buf + __read, terminator, tmp_read)) = '\0';
+      return __read + tmp_read;
     }
     else
     {
-      read += tmp_read;
+      __read += tmp_read;
     }
   }
 
@@ -129,9 +129,9 @@ size_t read_image(int fd, size_t width, size_t height, u8** input)
     return 0;
 
   *input = NULL;
-  u8* tmp_input = calloc(width * height, sizeof(char));
+  u8* tmp_input = __calloc(width * height, sizeof(char));
   if (!tmp_input)
-    err("calloc() failed");
+    err("__calloc() failed");
 
   size_t idx = 0;
   int mid_line = 0;
@@ -146,7 +146,7 @@ size_t read_image(int fd, size_t width, size_t height, u8** input)
 
     if (tmp_read < 0)
     {
-      free(tmp_input);
+      __free(tmp_input);
       return 0;
     }
     else if (tmp_read == 0)
@@ -172,7 +172,7 @@ size_t read_image(int fd, size_t width, size_t height, u8** input)
     goto done;
 
 error:
-  free(tmp_input);
+  __free(tmp_input);
   return 0;
 done:
   *input = tmp_input;
@@ -190,12 +190,12 @@ struct array_2d_view_t
 
 array_2d_view_t* make_2d_view(u8* data, u32 w, u32 h, u32 x_off, u32 y_off)
 {
-  array_2d_view_t* view = calloc(1, sizeof(array_2d_view_t));
+  array_2d_view_t* view = __calloc(1, sizeof(array_2d_view_t));
   if (!view)
-    err("calloc() failed");
+    err("__calloc() failed");
   view->data = data;
   if (!view->data)
-    err("calloc() failed");
+    err("__calloc() failed");
 
   view->dwidth = w;
   view->dheight = h;
@@ -229,23 +229,23 @@ int parse_dimensions(char* buf, u32 max, u32* w, u32* h)
   char* endptr = NULL;
 
   for (char* p = buf; p < buf + max && *p != '\0'; p++)
-    if (!(isspace(*p) || isdigit(*p)))
+    if (!(__isspace(*p) || __isdigit(*p)))
         return -1;
 
-  if (!isdigit(*buf))
+  if (!__isdigit(*buf))
     return -1;
 
-  *w = strtol(buf, &endptr, 10);
+  *w = __strtol(buf, &endptr, 10);
   if (*w == 0)
     return -1;
 
-  while (endptr <  buf + max && isspace(*endptr))
+  while (endptr <  buf + max && __isspace(*endptr))
     endptr++;
 
   if (endptr == buf + max)
     return -1;
 
-  *h = strtol(endptr, &endptr, 10);
+  *h = __strtol(endptr, &endptr, 10);
   if (*h == 0)
     return -1;
 
@@ -352,10 +352,10 @@ char* perform_ocr(u8* image, u32 width, u32 height, float match_threshold_pct)
 
   if (out_idx)
   {
-    char *ret = calloc(out_idx, sizeof(char));
+    char *ret = __calloc(out_idx, sizeof(char));
     if (!ret)
-      err("calloc() failed");
-    strncpy(ret, output, out_idx);
+      err("__calloc() failed");
+    __strncpy(ret, output, out_idx);
     return ret;
   }
   else
@@ -365,7 +365,7 @@ char* perform_ocr(u8* image, u32 width, u32 height, float match_threshold_pct)
 int check_junk(void)
 {
   u32 chk = 0;
-  size_t max = strlen(junk);
+  size_t max = __strlen(junk);
   for (size_t k = 0; k < 0x10; k++)
   {
     for(size_t i = 0; i < max; i++)
@@ -391,31 +391,31 @@ int main(void)
   if (!check_junk())
     err("bad junk");
 
-  printf("Welcome to the super awesome OCR engine! Enter your input to have it OCR'd\n");
+  __printf("Welcome to the super awesome OCR engine! Enter your input to have it OCR'd\n");
 
   int infd = STDIN;
 
   #define LINE_SIZE 32
   char line[LINE_SIZE];
-  memset(line, 0, LINE_SIZE);
+  __memset(line, 0, LINE_SIZE);
   if (read_until(infd, LINE_SIZE, '\n', line) < 0)
     err("bad line");
   else
     dbg("good line");
 
-  if (strlen(line) != strlen(magic) || strncmp(line, magic, strlen(line)) != 0)
+  if (__strlen(line) != __strlen(magic) || strncmp(line, magic, __strlen(line)) != 0)
     err("bad magic");
   else
     dbg("good magic");
 
-  memset(line, 0, LINE_SIZE);
+  __memset(line, 0, LINE_SIZE);
   if (read_until(infd, LINE_SIZE, '\n', line) < 0)
     err("bad line");
   else
     dbg("good line");
 
   u32 w, h;
-  if (parse_dimensions(line, strlen(line), &w, &h) != 0)
+  if (parse_dimensions(line, __strlen(line), &w, &h) != 0)
     err("bad dimensions");
   else
     dbg("good dimensions, %dx%d", w, h);
@@ -432,7 +432,7 @@ int main(void)
   char* output = perform_ocr(image, w, h, MATCH_THRESHOLD);
 
   if (output)
-    printf("Result: %s\n", output);
+    __printf("Result: %s\n", output);
   else
-    printf("No characters recognized\n");
+    __printf("No characters recognized\n");
 }

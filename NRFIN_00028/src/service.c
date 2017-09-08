@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -74,29 +74,29 @@ int run_seg(segnode_t *curnode) {
     char *d;
     int i;
 
-    if (!(n = calloc(MEMBERSIZE(seg_t,name)))) {
+    if (!(n = __calloc(MEMBERSIZE(seg_t,name)))) {
         TERM(SEGERR,3);
     }
 
-    if (!(d = calloc(MEMBERSIZE(seg_t,desc)))) {
+    if (!(d = __calloc(MEMBERSIZE(seg_t,desc)))) {
         TERM(SEGERR,3);
     }
 
     do { 
         //could overflow if not patched
-        strcpy(n,curnode->s->name);
-        strcpy(d,curnode->s->desc);
-        SSENDL(strlen(n),n);
-        SSENDL(strlen(d),d);
+        __strcpy(n,curnode->s->name);
+        __strcpy(d,curnode->s->desc);
+        SSENDL(__strlen(n),n);
+        SSENDL(__strlen(d),d);
         //note, this may not work on some platforms without a cache flush
         //surprisingly, this can indeed crash if f()
         //contains unsafe code.
         i = curnode->f();
-        SSENDL(strlen(responses[i-1]),responses[i-1]); //gogogo
+        SSENDL(__strlen(responses[i-1]),responses[i-1]); //gogogo
     } while ((curnode = curnode->next));
 
-    free(n);
-    free(d);
+    __free(n);
+    __free(d);
     return 0;
 }
 
@@ -107,7 +107,7 @@ int load_seg(segnode_t *curnode) {
 
         ALLOC(1,(void**)&(curnode->f),MEMBERSIZE(seg_t,code));
 
-        memcpy((void *)curnode->f,curnode->s->code,MEMBERSIZE(seg_t,code));
+        __memcpy((void *)curnode->f,curnode->s->code,MEMBERSIZE(seg_t,code));
 
     } while ((curnode = curnode->next));
 
@@ -115,7 +115,7 @@ int load_seg(segnode_t *curnode) {
 }
 
 int sanitycheck(seg_t *s) {
-    return !(strlen(s->name) > 0 && strlen(s->desc) > 0);
+    return !(__strlen(s->name) > 0 && __strlen(s->desc) > 0);
 }
 
 int validate_seg(segnode_t *curnode) {
@@ -135,13 +135,13 @@ int validate_seg(segnode_t *curnode) {
         #endif
         }
 
-        memset(res,0,sizeof(res));
+        __memset(res,0,sizeof(res));
         scramble(curnode->s->code, res, MEMBERSIZE(seg_t,code));
 
         #ifndef PATCHED_1
         for (i=0; i < NUM_TRUSTED && (err = strncmp((char*)res,(char*)trusted[i],16)); i++);
         #else
-        for (i=0; i < NUM_TRUSTED && (err = memcmp(res,trusted[i],16)); i++);
+        for (i=0; i < NUM_TRUSTED && (err = __memcmp(res,trusted[i],16)); i++);
         #endif
         if (err)
             goto flail;
@@ -170,11 +170,11 @@ segnode_t *recv_seg() {
     for (i = 0; i < nsegs; i++) {
 
 
-        if (!(new = calloc(sizeof(seg_t)))) {
+        if (!(new = __calloc(sizeof(seg_t)))) {
             TERM(SEGERR,2);
         }
 
-        if (!(curnode = calloc(sizeof(segnode_t)))) {
+        if (!(curnode = __calloc(sizeof(segnode_t)))) {
             TERM(SEGERR,2);
         }
 
@@ -232,14 +232,14 @@ int main(void) {
 done:
     do { 
         if (prev)
-            free(prev);
+            __free(prev);
 
-        free(head->s);
+        __free(head->s);
         DEALLOC(head->f,MEMBERSIZE(seg_t,code));
         prev = head;
     } while ((head = head->next));
 
-    free(prev);
+    __free(prev);
 
     LOG(SEGDONE);
     return err;

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -164,7 +164,7 @@ int recvline(int fd, char *buf, size_t size) {
 // stdlib functions
 
 // return number of chars in str, not counting the '\0'
-unsigned int strlen(const char *str) {
+unsigned int __strlen(const char *str) {
     unsigned int count = 0;
     while(*str != '\0') {
         count++;
@@ -175,7 +175,7 @@ unsigned int strlen(const char *str) {
 }
 
 // overwrites the first n chars of str with unsigned char ch.
-void * memset(void* str, int ch, unsigned int n) {
+void * __memset(void* str, int ch, unsigned int n) {
     char *ch_ptr = (char*)str;
     while (n > 0) {
         *ch_ptr = (char)ch;
@@ -187,7 +187,7 @@ void * memset(void* str, int ch, unsigned int n) {
 }
 
 // copy cnt bytes from src into dst; src and dst cannot overlap!
-void * memcpy(void* dst, const void* src, size_t cnt) {
+void * __memcpy(void* dst, const void* src, size_t cnt) {
 
     uint8_t *dst_ptr = (uint8_t *) dst;
     uint8_t *src_ptr = (uint8_t *) src;
@@ -261,7 +261,7 @@ int vsnprintf(char* buf, size_t buf_size, const char* fmt, va_list args) {
                     int_arg = va_arg(args, int);
                     int2str(tmp, 32, int_arg);
                     next_arg = tmp;
-                    arg_len = strlen(next_arg);
+                    arg_len = __strlen(next_arg);
 
                     break; 
                 case 'c': // deal with char buffer (i.e. string)
@@ -269,7 +269,7 @@ int vsnprintf(char* buf, size_t buf_size, const char* fmt, va_list args) {
                     if (!next_arg) {
                         arg_len = 0;
                     } else { 
-                        arg_len = strlen(next_arg);
+                        arg_len = __strlen(next_arg);
                     } 
 
                     break; 
@@ -288,10 +288,10 @@ int vsnprintf(char* buf, size_t buf_size, const char* fmt, va_list args) {
             if (fmt_spec == 'n' || fmt_spec == 'c') {
                 remaining = buf_size - buf_len;
                 if (arg_len <= remaining) {
-                    memcpy(&buf[buf_len], next_arg, arg_len);
+                    __memcpy(&buf[buf_len], next_arg, arg_len);
                     buf_len += arg_len;
                 } else {
-                    memcpy(&buf[buf_len], next_arg, remaining);
+                    __memcpy(&buf[buf_len], next_arg, remaining);
                     buf_len += remaining;
                 }
             }

@@ -7,12 +7,12 @@ extern "C" {
 #include "stdlib.h"
 };
 
-#undef NULL
-#define NULL 0L
+#undef nullptr
+#define nullptr 0L
 
 extern "C" {
 	int __cxa_atexit(void (*destructor)(void *), void *, void *);
-	void *__dso_handle;
+	extern extern extern extern extern extern extern void *__dso_handle;
 };
 
 struct __cxa_destructor_list {
@@ -29,19 +29,19 @@ struct __cxa_destructor_list {
 int __cxa_atexit(void (*destructor)(void *), void *arg, void *dso) {
 	struct __cxa_destructor_list *iter, *exit_fn;
 
-	exit_fn = (struct __cxa_destructor_list *) malloc(sizeof(*exit_fn));
-	if (exit_fn == NULL)
+	exit_fn = (struct __cxa_destructor_list *) __malloc(sizeof(*exit_fn));
+	if (exit_fn == nullptr)
 		return (-1);
 
-	exit_fn->next = NULL;
+	exit_fn->next = nullptr;
 	exit_fn->destructor = destructor;
 	exit_fn->arg = arg;
 	exit_fn->dso = dso;
 
-	if (__cxa_destructor_list == NULL)
+	if (__cxa_destructor_list == nullptr)
 		__cxa_destructor_list = exit_fn;
 	else {
-		for (iter = __cxa_destructor_list; iter->next != NULL; iter = iter->next);
+		for (iter = __cxa_destructor_list; iter->next != nullptr; iter = iter->next);
 		iter->next = exit_fn;
 	}
 
@@ -52,11 +52,11 @@ void terminate(int ex) {
 	struct __cxa_destructor_list *head;
 	void (*destructor)(void *), *arg;
 
-	while (__cxa_destructor_list != NULL) {
+	while (__cxa_destructor_list != nullptr) {
 		head = __cxa_destructor_list->next;
 		destructor = __cxa_destructor_list->destructor;
 		arg = __cxa_destructor_list->arg;
-		free(__cxa_destructor_list);
+		__free(__cxa_destructor_list);
 		__cxa_destructor_list = head;
 		destructor(arg);
 	}

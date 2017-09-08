@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -23,15 +23,15 @@
 #include "time.h"
 #include <string.h>
 
-time_t time(char hour, char minute)
+__time_t_ time(char hour, char minute)
 {
-    time_t t;
+    __time_t_ t;
     t.hour = hour;
     t.minute = minute;
     return t;
 }
 
-int timecmp(time_t t1, time_t t2)
+int timecmp(__time_t_ t1, __time_t_ t2)
 {
     if (t1.hour < t2.hour)
         return -1;
@@ -58,22 +58,22 @@ void daystostr(days_t days, char *output)
     if (!output)
         return;
 
-    memset(output, 0, 9);
+    __memset(output, 0, 9);
     if(days & M)
-        strcat(output, "M");
+        __strcat(output, "M");
     if(days & T)
-        strcat(output, "T");
+        __strcat(output, "T");
     if(days & W)
-        strcat(output, "W");
+        __strcat(output, "W");
     if(days & R)
-        strcat(output, "R");
+        __strcat(output, "R");
     if(days & F)
-        strcat(output, "F");
+        __strcat(output, "F");
     if(days & S)
-        strcat(output, "S");
+        __strcat(output, "S");
     if(days & U)
-        strcat(output, "U");
+        __strcat(output, "U");
     if(days & H)
-        strcat(output, "H");
+        __strcat(output, "H");
 }
 

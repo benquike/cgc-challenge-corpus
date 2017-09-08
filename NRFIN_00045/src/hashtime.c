@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -37,14 +37,14 @@ void checksum(uint32_t acct_id, uint32_t qty, char * symbol, float price, char *
 		dst[sym_tail+i] = symbol[i];
 	}
 
-	memcpy(&qty, (void *) &(dst[SYM_SIZE]), sizeof(uint32_t));
-	memcpy(&acct_id, (void *) &(dst[SYM_SIZE+sizeof(uint32_t)]), sizeof(uint32_t));
+	__memcpy(&qty, (void *) &(dst[SYM_SIZE]), sizeof(uint32_t));
+	__memcpy(&acct_id, (void *) &(dst[SYM_SIZE+sizeof(uint32_t)]), sizeof(uint32_t));
 	uint32_t chksum = acct_id*2+qty;
 	uint32_t chk_off = sizeof(uint32_t)*2+SYM_SIZE;
 
-	memcpy(&chksum, &(dst[chk_off]), sizeof(uint32_t));
+	__memcpy(&chksum, &(dst[chk_off]), sizeof(uint32_t));
 	char * k = ACCOUNTS[acct_id].key;
-	memcpy(k, &(dst[chk_off+sizeof(uint32_t)]), 4);
+	__memcpy(k, &(dst[chk_off+sizeof(uint32_t)]), 4);
 
 	for(int i = 0; i < KEY_LEN; i++){
 		dst[i] = dst[i] ^ k[i];

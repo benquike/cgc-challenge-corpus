@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -119,20 +119,20 @@ typedef enum
   QUIT,
 } COMMAND;
 
-typedef int (*handler)(FILE* in, FILE* out, char** components, size_t num_components);
+typedef int (*handler)(__FILE* in, __FILE* out, char** components, size_t num_components);
 
-int handle_command_error(FILE* in, FILE* out, char** components, size_t num_components)
+int handle_command_error(__FILE* in, __FILE* out, char** components, size_t num_components)
 {
   fprintf(out, "Invalid command" EOL);
   return 0;
 }
 
-int handle_add_command(FILE* in, FILE* out, char** components, size_t num_components)
+int handle_add_command(__FILE* in, __FILE* out, char** components, size_t num_components)
 {
   PRIORITY p = LOW;
   if (components[3])
   {
-    p = (PRIORITY)strtol(components[3], nullptr, 10);
+    p = (PRIORITY)__strtol(components[3], nullptr, 10);
   }
 
   if (p < LOW || p > CRITICAL)
@@ -153,14 +153,14 @@ int handle_add_command(FILE* in, FILE* out, char** components, size_t num_compon
   return 0;
 }
 
-int handle_cancel_command(FILE* in, FILE* out, char** components, size_t num_components)
+int handle_cancel_command(__FILE* in, __FILE* out, char** components, size_t num_components)
 {
-  uint32_t cur_id = strtol(components[1], nullptr, 10);
+  uint32_t cur_id = __strtol(components[1], nullptr, 10);
   dispatcher->CancelTicket(cur_id);
   return 0;
 }
 
-int handle_list_command(FILE* in, FILE* out, char** components, size_t num_components)
+int handle_list_command(__FILE* in, __FILE* out, char** components, size_t num_components)
 {
   for (size_t i = 0; i < workers.Length(); i++)
   {
@@ -170,7 +170,7 @@ int handle_list_command(FILE* in, FILE* out, char** components, size_t num_compo
   return 0;
 }
 
-int handle_list_free_command(FILE* in, FILE* out, char** components, size_t num_components)
+int handle_list_free_command(__FILE* in, __FILE* out, char** components, size_t num_components)
 {
   for (size_t i = 0; i < workers.Length(); i++)
   {
@@ -184,9 +184,9 @@ int handle_list_free_command(FILE* in, FILE* out, char** components, size_t num_
   return 0;
 }
 
-int handle_hire_command(FILE* in, FILE* out, char** components, size_t num_components)
+int handle_hire_command(__FILE* in, __FILE* out, char** components, size_t num_components)
 {
-  PRIORITY p = (PRIORITY)strtol(components[1], nullptr, 10);
+  PRIORITY p = (PRIORITY)__strtol(components[1], nullptr, 10);
   if (p < LOW || p > CRITICAL)
     return 0;
   Support* s = new Support(0, p);
@@ -194,9 +194,9 @@ int handle_hire_command(FILE* in, FILE* out, char** components, size_t num_compo
   return 0;
 }
 
-int handle_fire_command(FILE* in, FILE* out, char** components, size_t num_components)
+int handle_fire_command(__FILE* in, __FILE* out, char** components, size_t num_components)
 {
-  PRIORITY p = (PRIORITY)strtol(components[1], nullptr, 10);
+  PRIORITY p = (PRIORITY)__strtol(components[1], nullptr, 10);
   if (p < LOW || p > CRITICAL)
     return 0;
 
@@ -218,12 +218,12 @@ int handle_fire_command(FILE* in, FILE* out, char** components, size_t num_compo
   return 0;
 }
 
-int handle_view_command(FILE* in, FILE* out, char** components, size_t num_components)
+int handle_view_command(__FILE* in, __FILE* out, char** components, size_t num_components)
 {
   STATUS s = (STATUS)0;
   if (num_components == 2)
   {
-    s = (STATUS)strtol(components[1], nullptr, 10);
+    s = (STATUS)__strtol(components[1], nullptr, 10);
     if (s > RESOLVED)
       s = (STATUS)0;
   }
@@ -243,14 +243,14 @@ int handle_view_command(FILE* in, FILE* out, char** components, size_t num_compo
   return 0;
 }
 
-int handle_status_command(FILE* in, FILE* out, char** components, size_t num_components)
+int handle_status_command(__FILE* in, __FILE* out, char** components, size_t num_components)
 {
-  uint32_t tid = strtol(components[1], nullptr, 10);
+  uint32_t tid = __strtol(components[1], nullptr, 10);
   dispatcher->ViewTicket(tid);
   return 0;
 }
 
-int handle_quit(FILE* in, FILE* out, char** components, size_t num_components)
+int handle_quit(__FILE* in, __FILE* out, char** components, size_t num_components)
 {
   fprintf(out, "TERMINATING TERRIBLE TICKET TRACKER" EOL);
   return -1;
@@ -270,7 +270,7 @@ handler command_handlers[] = {
 };
 
 
-COMMAND read_command(FILE* f, char*** components, size_t* num_components)
+COMMAND read_command(__FILE* f, char*** components, size_t* num_components)
 {
   COMMAND c = COMMAND_ERROR;
   char* component = nullptr;
@@ -280,10 +280,10 @@ COMMAND read_command(FILE* f, char*** components, size_t* num_components)
   for (size_t i = 0; i < MAX_COMPONENTS; ++i)
   {
     component = new char[MAX_COMPONENT + 1];
-    memset(component, 0, MAX_COMPONENT + 1);
+    __memset(component, 0, MAX_COMPONENT + 1);
     c = COMMAND_ERROR;
 
-    int ret = freaduntil(component, MAX_COMPONENT, COMPONENT_DELIM, f);
+    int ret = __freaduntil(component, MAX_COMPONENT, COMPONENT_DELIM, f);
 
     if (ret > 1) // So two successive COMPONENT_DELIM ends command
     {
@@ -302,63 +302,63 @@ COMMAND read_command(FILE* f, char*** components, size_t* num_components)
     goto done;
   }
 
-  if (strcmp(comps[0], TOSTR(ADD_TICKET)) == 0)
+  if (__strcmp(comps[0], TOSTR(ADD_TICKET)) == 0)
   {
     if (!WITHIN(3, 4, *num_components))
       goto done;
 
     c = ADD_TICKET;
   }
-  else if (strcmp(comps[0], TOSTR(CANCEL_TICKET)) == 0)
+  else if (__strcmp(comps[0], TOSTR(CANCEL_TICKET)) == 0)
   {
     if (!WITHIN(2, 2, *num_components))
       goto done;
 
     c = CANCEL_TICKET;
   }
-  else if (strcmp(comps[0], TOSTR(LIST_SUPPORT)) == 0)
+  else if (__strcmp(comps[0], TOSTR(LIST_SUPPORT)) == 0)
   {
     if (!WITHIN(1, 1, *num_components))
       goto done;
 
     c = LIST_SUPPORT;
   }
-  else if (strcmp(comps[0], TOSTR(LIST_FREE_SUPPORT)) == 0)
+  else if (__strcmp(comps[0], TOSTR(LIST_FREE_SUPPORT)) == 0)
   {
     if (!WITHIN(1, 1, *num_components))
       goto done;
 
     c = LIST_FREE_SUPPORT;
   }
-  else if (strcmp(comps[0], TOSTR(HIRE)) == 0)
+  else if (__strcmp(comps[0], TOSTR(HIRE)) == 0)
   {
     if (!WITHIN(2, 2, *num_components))
       goto done;
 
     c = HIRE;
   }
-  else if (strcmp(comps[0], TOSTR(FIRE)) == 0)
+  else if (__strcmp(comps[0], TOSTR(FIRE)) == 0)
   {
     if (!WITHIN(2, 2, *num_components))
       goto done;
 
     c = FIRE;
   }
-  else if (strcmp(comps[0], TOSTR(VIEW)) == 0)
+  else if (__strcmp(comps[0], TOSTR(VIEW)) == 0)
   {
     if (!WITHIN(1, 2, *num_components))
       goto done;
 
     c = VIEW;
   }
-  else if (strcmp(comps[0], TOSTR(VSTATUS)) == 0)
+  else if (__strcmp(comps[0], TOSTR(VSTATUS)) == 0)
   {
     if (!WITHIN(2, 2, *num_components))
       goto done;
 
     c = VSTATUS;
   }
-  else if (strcmp(comps[0], TOSTR(QUIT)) == 0)
+  else if (__strcmp(comps[0], TOSTR(QUIT)) == 0)
   {
     c = QUIT;
   }
@@ -367,7 +367,7 @@ done:
   return c;
 }
 
-void run_server(FILE* in, FILE* out, unsigned char* secrets)
+void run_server(__FILE* in, __FILE* out, unsigned char* secrets)
 {
   COMMAND command;
   size_t num_components;
@@ -419,8 +419,8 @@ void run_server(FILE* in, FILE* out, unsigned char* secrets)
 extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
 {
     unsigned char *secret_page = (unsigned char *)secret_page_i;
-    fxlat(stdin, "EREH_EULAV_MODNAR");
-    fxlat(stdout, "EREH_EULAV_MODNAR");
+    __fxlat(stdin, "EREH_EULAV_MODNAR");
+    __fxlat(stdout, "EREH_EULAV_MODNAR");
     run_server(stdin, stdout, secret_page);
     return 0;
 }

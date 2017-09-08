@@ -1,7 +1,7 @@
 /*
  Copyright (c) 2014 Cromulence LLC
  
- Permission is hereby granted, free of charge, to any person obtaining a copy
+ Permission is hereby granted, __free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <malloc.h>
 
-#define FILE 0
+#define __FILE 0
 #define DIR 1
 
 typedef struct file {
@@ -44,7 +44,7 @@ pfile init_file( void );
 /// Sets the files name to that specified by name
 int set_name( pfile pf, char *name);
 
-/// Sets the type of file as indicated by type only FILE or DIR are valid
+/// Sets the type of file as indicated by type only __FILE or DIR are valid
 int set_type( pfile pf, int type);
 
 /// Allocates a new copy of the data buffer and inserts it into the structure

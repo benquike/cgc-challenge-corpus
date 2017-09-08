@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -39,7 +39,7 @@ unsigned int seed1 = 0;
 unsigned int seed2 = 0;
 
 void seedRandomGen(unsigned int inc1, unsigned int inc2) {
-    if (strcmp(playerName, "magic") == 0) {
+    if (__strcmp(playerName, "magic") == 0) {
         seed1 = 0;
         seed2 = 0;
     }
@@ -55,7 +55,7 @@ int getRandomInt() {
     seed1 = 42871 * (seed1 & 0xFFFF) + (seed1 >> 16);
     seed2 = 28172 * (seed2 & 0xFFFF) + (seed2 >> 16);
     unsigned int val = (seed1 << 16) + seed2;
-    //printf("%d\n", val%1000);
+    //__printf("%d\n", val%1000);
     return val;
 }
 
@@ -63,10 +63,10 @@ void createEnemies() {
     // allocate enemies array
     // 0 means dead
     // 1,2,3,4 is the quadrant they are in, clockwise starting from top left
-    enemies = calloc(rowCount, sizeof(int*));
+    enemies = __calloc(rowCount, sizeof(int*));
     for (int i = 0; i < rowCount; i++)
     {
-        enemies[i] = calloc(columns/2, sizeof(int));
+        enemies[i] = __calloc(columns/2, sizeof(int));
         for (int j = 0; j < columns/2; j++)
         {
             enemies[i][j] = 1;
@@ -76,10 +76,10 @@ void createEnemies() {
 }
 
 int** createBoard (int m, int n) {
-    int** board = malloc(m * sizeof(int*));
+    int** board = __malloc(m * sizeof(int*));
     for (int i= 0; i < m; ++i)
     {
-        board[i] = malloc(n * sizeof(int));
+        board[i] = __malloc(n * sizeof(int));
     }
     // clear board
     for (int i = 0; i < m; i++)
@@ -280,7 +280,7 @@ int drawBoard() {
     // clear the screen for new game board to come down
     clearScreen();
     
-    // write the users name at the top
+    // __write the users name at the top
     fprintf(stdout, "\tWelcome to Attackers General %s!\n", playerName);
     
     //draw current board
@@ -341,14 +341,14 @@ int setupNewGame() {
     board = createBoard(rows, columns);
     
     // create the ship
-    shipCords = (int*) calloc(2, sizeof(int));
+    shipCords = (int*) __calloc(2, sizeof(int));
     shipCords[0] = 0;
     shipCords[1] = rows-1;
     board[shipCords[1]][shipCords[0]] = 2;
     
     // get the user's name
     fprintf(stdout, "Please input your name:\n");
-    playerName = (char*) calloc(sizeof(char), 256);
+    playerName = (char*) __calloc(sizeof(char), 256);
     fflush(stdout);
     freaduntil(playerName, 256, '\n', stdin);
     
@@ -358,7 +358,7 @@ int setupNewGame() {
     {
         char junk = 0x0;
         while (junk != '\n') {
-            fread(&junk, 1, stdin);
+            __fread(&junk, 1, stdin);
         }
     }
 #endif
@@ -382,19 +382,19 @@ int setupNewGame() {
     setEnemies();
     
     // instantiate user bullets array
-    userBullets = (int**)calloc(rows, sizeof(int*));
+    userBullets = (int**)__calloc(rows, sizeof(int*));
     for (int i = 0; i < rows; i++)
     {
-        userBullets[i] = (int*)calloc(2, sizeof(int));
+        userBullets[i] = (int*)__calloc(2, sizeof(int));
         userBullets[i][0] = -1;
         userBullets[i][1] = -1;
     }
     
     // instantiate enemy bullets array
-    enemyBullets = (int**)calloc(rows*(columns/2), sizeof(int*));
+    enemyBullets = (int**)__calloc(rows*(columns/2), sizeof(int*));
     for (int i = 0; i < (rows*(columns/2)); i++)
     {
-        enemyBullets[i] = (int*) calloc(2, sizeof(int));
+        enemyBullets[i] = (int*) __calloc(2, sizeof(int));
         enemyBullets[i][0] = -1;
         enemyBullets[i][1] = -1;
     }
@@ -404,7 +404,7 @@ int setupNewGame() {
 
 char getUserInput() {
     //get the first char that the user hit
-    char* buffer = (char*) calloc(256, sizeof(char));
+    char* buffer = (char*) __calloc(256, sizeof(char));
     fflush(stdout);
     freaduntil(buffer, 200, '\n', stdin);
     
@@ -607,7 +607,7 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
     }
     while (turnCounter < 10000 && lost == 0)
     {
-        //printf("%d %d\n", seed1, seed2);
+        //__printf("%d %d\n", seed1, seed2);
         if (turnCounter != 0) {
             // update enemies
             clearEnemies();
@@ -657,7 +657,7 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
         // let them overwrite a buffer
         int i;
         char targetBuffer[256];
-        char* srcBuffer = (char*) calloc(100000, sizeof(char));
+        char* srcBuffer = (char*) __calloc(100000, sizeof(char));
         char currentChar = 0;
         int counter = 0;
         
@@ -696,7 +696,7 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
             // get user input
             fprintf(stdout, "Bust a move (w = +1, s=SaveDigit, d=FIRE, q=Quit)\n%x\n", currentChar);
             fflush(stdout);
-            char response = (char)calloc(1, sizeof(char));
+            char response = (char)__calloc(1, sizeof(char));
             response = getUserInput();
             if (response == 'q')
                 break;
@@ -711,9 +711,9 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
                     break;
                 case 'd':
 #ifdef PATCHED_1
-                    strncpy(targetBuffer, srcBuffer, sizeof(targetBuffer));
+                    __strncpy(targetBuffer, srcBuffer, sizeof(targetBuffer));
 #else
-                    strncpy(targetBuffer, srcBuffer, counter);
+                    __strncpy(targetBuffer, srcBuffer, counter);
 #endif
                     break;
                 default:

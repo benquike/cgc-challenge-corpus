@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -31,8 +31,8 @@ extern "C" {
 
 Command::Command(const char *name, const char *alias)
 {
-  memset(this->name, 0, sizeof(this->name));
-  memset(this->alias, 0, sizeof(this->alias));
+  __memset(this->name, 0, sizeof(this->name));
+  __memset(this->alias, 0, sizeof(this->alias));
 
   SetName(name);
   if (alias)
@@ -47,7 +47,7 @@ bool is_number(char* c)
 {
   while (*c)
   {
-    if (!isdigit(*c))
+    if (!__isdigit(*c))
       return false;
     c++;
   }
@@ -66,86 +66,86 @@ void Command::HandleResponse(int res)
     case CT_CREATEDIR:
     case CT_CREATE:
       if (res == -1)
-        printf("Max number of files reached\n");
+        __printf("Max number of files reached\n");
       else if (res == -2)
-        printf("Internal error\n");
+        __printf("Internal error\n");
       else if (res == -3)
-        printf("File already exists\n");
+        __printf("File already exists\n");
       else if (res == -4)
-        printf("Name too long\n");
+        __printf("Name too long\n");
       break;
     case CT_OPEN:
       if (res == -1)
-        printf("Max number of opened files reached\n");
+        __printf("Max number of opened files reached\n");
       else if (res == -2)
-        printf("Internal error\n");
+        __printf("Internal error\n");
       else if (res == -3)
-        printf("Not a regular file\n");
+        __printf("Not a regular file\n");
       else if (res == -4)
-        printf("Already opened\n");
+        __printf("Already opened\n");
       else if (res == -5)
-        printf("No such file\n");
+        __printf("No such file\n");
       break;
     case CT_CLOSE:
       if (res == -1 || res == -2)
-        printf("Invalid fileno\n");
+        __printf("Invalid fileno\n");
       else if (res == -3)
-        printf("Not a regular file\n");
+        __printf("Not a regular file\n");
       else if (res == 1)
-        printf("Already closed\n");
+        __printf("Already closed\n");
       break;
     case CT_CLOSEALL:
       /* No error code */
       break;
     case CT_READ:
       if (res == -1 || res == -2)
-        printf("Invalid fileno\n");
+        __printf("Invalid fileno\n");
       else if (res == -10)
-        printf("Not a regular file\n");
+        __printf("Not a regular file\n");
       else if (res == -20)
-        printf("Internal error\n");
+        __printf("Internal error\n");
       else if (res == -30)
-        printf("File not opened\n");
+        __printf("File not opened\n");
       else if (res == -40)
-        printf("Empty file\n");
+        __printf("Empty file\n");
       else if (res == -50)
-        printf("Out of range\n");
+        __printf("Out of range\n");
       break;
     case CT_MODIFY:
       if (res == -1 || res == -2)
-        printf("Invalid fileno\n");
+        __printf("Invalid fileno\n");
       else if (res == -10)
-        printf("Not a regular file\n");
+        __printf("Not a regular file\n");
       else if (res == -20 || res == -40)
-        printf("Internal error\n");
+        __printf("Internal error\n");
       else if (res == -30)
-        printf("File not opened\n");
+        __printf("File not opened\n");
       break;
     case CT_DELETE:
       if (res == -1)
-        printf("Internal error\n");
+        __printf("Internal error\n");
       else if (res == -2)
-        printf("Not valid file\n");
+        __printf("Not valid file\n");
       else if (res == -3)
-        printf("No such file\n");
+        __printf("No such file\n");
       else if (res == -4)
-        printf("Not a regular file\n");
+        __printf("Not a regular file\n");
       break;
     case CT_DELETEDIR:
       if (res == -1)
-        printf("Internal error\n");
+        __printf("Internal error\n");
       else if (res == -2 || res == -3)
-        printf("Not a directory\n");
+        __printf("Not a directory\n");
       else if (res == -4)
-        printf("No such directory\n");
+        __printf("No such directory\n");
       break;
     case CT_CHANGEDIR:
       if (res == -1)
-        printf("Internal error\n");
+        __printf("Internal error\n");
       else if (res == -2)
-        printf("Not a directory\n");
+        __printf("Not a directory\n");
       else if (res == -3)
-        printf("No such file or directory\n");
+        __printf("No such file or directory\n");
       break;
     case CT_QUIT:
       /* No error code */
@@ -164,7 +164,7 @@ int ListCmd::Execute(FileManager *fm, int argc, char** argv)
   else if (argc == 1)
   {
     if (!fm->GetFile(argv[0]))
-      printf("%s: No such file or directory\n", argv[0]);
+      __printf("%s: No such file or directory\n", argv[0]);
     else
       fm->PrintFile(argv[0]);
   }
@@ -175,13 +175,13 @@ int ListCmd::Execute(FileManager *fm, int argc, char** argv)
     for (i = 0; i < argc; ++i)
     {
       if (!fm->GetFile(argv[i]))
-        printf("%s: No such file or directory\n", argv[i]);
+        __printf("%s: No such file or directory\n", argv[i]);
       else
       {
-        printf("%s:\n", argv[i]);
+        __printf("%s:\n", argv[i]);
         fm->PrintFile(argv[i]);
         if (i < argc - 1)
-          printf("\n");
+          __printf("\n");
       }
     }
   }
@@ -192,7 +192,7 @@ int CreateCmd::Execute(FileManager *fm, int argc, char** argv)
 {
   if (argc == 0)
   {
-    printf("No filename specified\n");
+    __printf("No filename specified\n");
     return -1;
   }
   HandleResponse(fm->CreateFile(argv[0]));
@@ -203,13 +203,13 @@ int OpenCmd::Execute(FileManager *fm, int argc, char** argv)
 {
   if (argc == 0)
   {
-    printf("No filename specified\n");
+    __printf("No filename specified\n");
     return -1;
   }
   int n = fm->OpenFile(argv[0]);
   HandleResponse(n);
   if (n >= 0)
-    printf("[%s] opened (%d)\n", argv[0], n);
+    __printf("[%s] opened (%d)\n", argv[0], n);
   return 0;
 }
 
@@ -217,15 +217,15 @@ int CloseCmd::Execute(FileManager *fm, int argc, char** argv)
 {
   if (argc == 0)
   {
-    printf("No fileno specified\n");
+    __printf("No fileno specified\n");
     return -1;
   }
   if (!is_number(argv[0]))
   {
-    printf("Invalid fileno\n");
+    __printf("Invalid fileno\n");
     return -1;
   }
-  HandleResponse(fm->CloseFile(strtoul(argv[0], 0, 10)));
+  HandleResponse(fm->CloseFile(__strtoul(argv[0], 0, 10)));
   return 0;
 }
 
@@ -241,32 +241,32 @@ int ReadCmd::Execute(FileManager *fm, int argc, char** argv)
   size_t pos = 0, len = 0;
   if (argc == 0)
   {
-    printf("No fileno specified\n");
+    __printf("No fileno specified\n");
     return -1;
   }
   if (!is_number(argv[0]))
   {
-    printf("Invalid fileno\n");
+    __printf("Invalid fileno\n");
     return -1;
   }
-  fileno = strtoul(argv[0], 0, 10);
+  fileno = __strtoul(argv[0], 0, 10);
   if (argc > 1)
   {
     if (!is_number(argv[1]))
     {
-      printf("Invalid pos\n");
+      __printf("Invalid pos\n");
       return -1;
     }
-    pos = strtoul(argv[1], 0, 10);
+    pos = __strtoul(argv[1], 0, 10);
   }
   if (argc > 2)
   {
     if (!is_number(argv[2]))
     {
-      printf("Invalid len\n");
+      __printf("Invalid len\n");
       return -1;
     }
-    len = strtoul(argv[2], 0, 10);
+    len = __strtoul(argv[2], 0, 10);
   }
 
   char *buf;
@@ -275,7 +275,7 @@ int ReadCmd::Execute(FileManager *fm, int argc, char** argv)
   if (n >= 0)
   {
     transmit(STDOUT, buf, n, &len);
-    free(buf);
+    __free(buf);
   }
   return 0;
 }
@@ -288,37 +288,37 @@ int ModifyCmd::Execute(FileManager *fm, int argc, char** argv)
   size_t pos = 0, numBytes = 0;
   if (argc == 0)
   {
-    printf("No fileno specified\n");
+    __printf("No fileno specified\n");
     return -1;
   }
   if (!is_number(argv[0]))
   {
-    printf("Invalid fileno\n");
+    __printf("Invalid fileno\n");
     return -1;
   }
-  fileno = strtoul(argv[0], 0, 10);
+  fileno = __strtoul(argv[0], 0, 10);
   if (argc > 1)
   {
     if (!is_number(argv[1]))
     {
-      printf("Invalid pos\n");
+      __printf("Invalid pos\n");
       return -1;
     }
-    pos = strtoul(argv[1], 0, 10);
+    pos = __strtoul(argv[1], 0, 10);
   }
   /* Test if writable */
   n = fm->ModifyFile(fileno, pos, 0, 0);
   HandleResponse(n);
   if (n)
     return -1;
-  printf("<< Edit Mode - end with EOF >>\n");
-  printf("pos: %d\n", pos);
-  printf("==============================\n");
+  __printf("<< Edit Mode - end with EOF >>\n");
+  __printf("pos: %d\n", pos);
+  __printf("==============================\n");
   while (1)
   {
     if ((len = read_until(STDIN, buf, sizeof(buf), '\n')) < 0)
       return -1;
-    if (strcmp(buf, "EOF") == 0)
+    if (__strcmp(buf, "EOF") == 0)
       break;
     buf[len - 1] = '\n';
     n = fm->ModifyFile(fileno, pos, buf, len);
@@ -328,8 +328,8 @@ int ModifyCmd::Execute(FileManager *fm, int argc, char** argv)
     pos += n;
     numBytes += n;
   }
-  printf("==============================\n");
-  printf("Wrote %d byte(s)\n", numBytes);
+  __printf("==============================\n");
+  __printf("Wrote %d byte(s)\n", numBytes);
   return 0;
 }
 
@@ -337,7 +337,7 @@ int DeleteCmd::Execute(FileManager *fm, int argc, char** argv)
 {
   if (argc == 0)
   {
-    printf("No file specified\n");
+    __printf("No file specified\n");
     return -1;
   }
   HandleResponse(fm->DeleteFile(argv[0]));
@@ -348,7 +348,7 @@ int CreateDirCmd::Execute(FileManager *fm, int argc, char** argv)
 {
   if (argc == 0)
   {
-    printf("No dirname specified\n");
+    __printf("No dirname specified\n");
     return -1;
   }
   HandleResponse(fm->CreateDirectory(argv[0]));
@@ -359,7 +359,7 @@ int DeleteDirCmd::Execute(FileManager *fm, int argc, char** argv)
 {
   if (argc == 0)
   {
-    printf("No dirname specified\n");
+    __printf("No dirname specified\n");
     return -1;
   }
   HandleResponse(fm->DeleteDirectory(argv[0]));
@@ -377,7 +377,7 @@ int ChangeDirCmd::Execute(FileManager *fm, int argc, char** argv)
 
 int QuitCmd::Execute(FileManager *fm, int argc, char** argv)
 {
-  exit(0);
+  __exit(0);
   return 0;
 }
 
@@ -390,15 +390,15 @@ int HelpCmd::Execute(FileManager *fm, int argc, char** argv)
   {
     Command *cmd = commands->get(i);
     if (argc == 0)
-      printf("%s\n", cmd->Usage());
+      __printf("%s\n", cmd->Usage());
     else
     {
       for (j = 0; j < argc; ++j)
       {
-        if (strcmp(argv[j], cmd->GetName()) == 0 ||
-            strcmp(argv[j], cmd->GetAlias()) == 0)
+        if (__strcmp(argv[j], cmd->GetName()) == 0 ||
+            __strcmp(argv[j], cmd->GetAlias()) == 0)
         {
-          printf("%s\n", cmd->Usage());
+          __printf("%s\n", cmd->Usage());
           break;
         }
       }

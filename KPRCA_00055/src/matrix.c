@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -145,9 +145,9 @@ static void print_matrix(matrix_t *m)
         sprintf(buf, "%s|", buf);
         for (j = 0; j < m->num_cols; j++)
         {
-            if (strlen(buf) > sizeof(buf) - 1000)
+            if (__strlen(buf) > sizeof(buf) - 1000)
             {
-                transmitall(buf, strlen(buf));
+                transmitall(buf, __strlen(buf));
                 buf[0] = 0;
             }
             if (m->ptype != FLOAT)
@@ -183,7 +183,7 @@ static void print_matrix(matrix_t *m)
     }
     if (buf[0] != 0)
     {
-        transmitall(buf, strlen(buf));
+        transmitall(buf, __strlen(buf));
         buf[0] = 0;
     }
 }
@@ -195,7 +195,7 @@ matrix_t *create_matrix(mtype_e ptype, char *data)
 
     if (data)
     {
-        new_matrix = calloc(1, sizeof(matrix_t));
+        new_matrix = __calloc(1, sizeof(matrix_t));
         if (!new_matrix)
             return NULL;
 
@@ -216,7 +216,7 @@ matrix_t *create_matrix(mtype_e ptype, char *data)
             break;
         }
 
-        new_matrix = calloc(1, sizeof(matrix_t) + data_size);
+        new_matrix = __calloc(1, sizeof(matrix_t) + data_size);
         if (!new_matrix)
             return NULL;
 
@@ -399,8 +399,8 @@ int m_transpose(matrix_t *m)
     }
 
     m->set_rows_cols(m, old_cols, old_rows);
-    memcpy(m->data, mt->data, old_cols * old_rows * data_width);
-    free(mt);
+    __memcpy(m->data, mt->data, old_cols * old_rows * data_width);
+    __free(mt);
     return SUCCESS;
 }
 

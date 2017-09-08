@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,9 +37,9 @@ query *DestroyQuery(query *pQuery)
   }
   if(pQuery->data != NULL) 
   {
-    free(pQuery->data);
+    __free(pQuery->data);
   }
-  free(pQuery);
+  __free(pQuery);
   return NULL;
 }
 
@@ -48,10 +48,10 @@ query *ParseQuery(char *inputBuffer)
   if (inputBuffer == NULL) {
     return NULL;
   }
-  query *pQuery = calloc(sizeof(query));
+  query *pQuery = __calloc(sizeof(query));
   pQuery->type = inputBuffer[0];
-  pQuery->length = strlen(&inputBuffer[1]);
-  pQuery->data = calloc(pQuery->length + 1);
-  strcpy((char *)pQuery->data, &inputBuffer[1]);
+  pQuery->length = __strlen(&inputBuffer[1]);
+  pQuery->data = __calloc(pQuery->length + 1);
+  __strcpy((char *)pQuery->data, &inputBuffer[1]);
   return pQuery;
 }

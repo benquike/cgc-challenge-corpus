@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -44,14 +44,14 @@ int InitReceive(void) {
 	unsigned int gen_type = 0;
 	int len;
 
-	puts("The following packet generators are available:");
-	puts("  1 - Random");
-	puts("  2 - Poisson");
-	puts("  3 - Manual");
+	__puts("The following packet generators are available:");
+	__puts("  1 - Random");
+	__puts("  2 - Poisson");
+	__puts("  3 - Manual");
 
 	// see what packet generator the user wants to employ
 	while (gen_type < 1 || gen_type > 3) {
-		printf("Which generator would you like to use? (1-3): ");
+		__printf("Which generator would you like to use? (1-3): ");
 #ifdef PATCHED
 		if ((len = readUntil(buf, 9, '\n')) == -1) {
 #else
@@ -59,7 +59,7 @@ int InitReceive(void) {
 #endif
 			return(-1);
 		}
-		gen_type = (unsigned char)atoi(buf);
+		gen_type = (unsigned char)__atoi(buf);
 	}
 
 	// set the generator function pointer appropriately
@@ -79,28 +79,28 @@ int InitReceive(void) {
 		}
 		generator = &ManualGenerator;
 	} else {
-		puts("Invalid Generator");
+		__puts("Invalid Generator");
 		return(-1);
 	}
 
 	// see how long we need to run the simulation
 	max_wall_clock = -1.0;
 	while (max_wall_clock < 0) {
-		printf("For how long would you like the simulation to run? (1 - 10s): ");
+		__printf("For how long would you like the simulation to run? (1 - 10s): ");
 		if ((len = readUntil(buf, 9, '\n')) == -1) {
 			return(-1);
 		}
-		max_wall_clock = atof(buf);
+		max_wall_clock = __atof(buf);
 #ifdef PATCHED
 		if (max_wall_clock > 10.0) {
-			printf("Using max runtime of 10.0 seconds\n");
+			__printf("Using max runtime of 10.0 seconds\n");
 			max_wall_clock = 10.0;
 		}
 #endif
 	}
 
 	// init the NextPkt struct
-	bzero(&NextPkt, sizeof(pkt));
+	__bzero(&NextPkt, sizeof(pkt));
 	
 	return(0);
 
@@ -135,7 +135,7 @@ int RX(void) {
 		}
 		if (i == iface.num_queues) {
 			// this shouldn't happen if we set up the queues properly
-			printf("Unable to find target queue for packet with priority @d\n", NextPkt.priority);
+			__printf("Unable to find target queue for packet with priority @d\n", NextPkt.priority);
 			return(-1);
 		}
 
@@ -144,13 +144,13 @@ int RX(void) {
 			q->head->timestamp = NextPkt.timestamp;
 			q->head->bytes     = NextPkt.bytes;
 			q->head->priority  = NextPkt.priority;
-			q->free = q->head->next;
+			q->__free = q->head->next;
 			q->curr_depth++;
 		} else if (q->curr_depth < q->max_depth) {
-			q->free->timestamp = NextPkt.timestamp;
-			q->free->bytes     = NextPkt.bytes;
-			q->free->priority  = NextPkt.priority;
-			q->free = q->free->next;
+			q->__free->timestamp = NextPkt.timestamp;
+			q->__free->bytes     = NextPkt.bytes;
+			q->__free->priority  = NextPkt.priority;
+			q->__free = q->__free->next;
 			q->curr_depth++;
 		} else {
 			q->dropped_pkts++;

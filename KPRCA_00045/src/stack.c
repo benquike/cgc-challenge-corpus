@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -26,18 +26,18 @@
 
 stack_t* stack_new(unsigned int size)
 {
-  stack_t *stack = malloc(sizeof(stack_t));
+  stack_t *stack = __malloc(sizeof(stack_t));
   if (stack == NULL)
     return NULL;
   stack->length = 0;
   stack->size = size;
-  stack->elems = (void **) malloc(size * sizeof(void *));
+  stack->elems = (void **) __malloc(size * sizeof(void *));
   return stack;
 }
 
 void _stack_resize(stack_t *stack, unsigned int size)
 {
-  void *new = realloc(stack->elems, size * sizeof(void *));
+  void *new = __realloc(stack->elems, size * sizeof(void *));
   if (new)
   {
     stack->elems = new;
@@ -77,7 +77,7 @@ void stack_destroy(stack_t *stack)
   if (stack)
   {
     if (stack->elems)
-      free(stack->elems);
+      __free(stack->elems);
     stack->length = 0;
     stack->size = 0;
     stack->elems = NULL;

@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -31,9 +31,9 @@ THE SOFTWARE.
 
 #include "timegen.h"
 
-#define SEEK_SET		(1)
-#define SEEK_CUR		(0)
-#define SEEK_END		(2)
+#define __SEEK_SET		(1)
+#define __SEEK_CUR		(0)
+#define __SEEK_END		(2)
 
 #define FS_NODE_FILE		(1)
 #define FS_NODE_DIRECTORY	(2)

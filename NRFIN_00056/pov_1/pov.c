@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -22,7 +22,7 @@
 
 #include <libpov.h>
 
-void itoa(unsigned int n, char *s) {
+void __itoa(unsigned int n, char *s) {
     int i = 0;
     unsigned int orig = n;
     do {
@@ -53,13 +53,13 @@ int main(void) {
    type1_vals t1vals;
    type1_negotiate(0x00ffffff, 0xffffffff, 2, &t1vals);
 
-   transmit_all(0, setup, strlen(setup));
+   transmit_all(0, setup, __strlen(setup));
 
-   itoa(t1vals.regval, num);
-   transmit_all(0, num, strlen(num));
+   __itoa(t1vals.regval, num);
+   transmit_all(0, num, __strlen(num));
 
-   itoa(0x80000000|(t1vals.ipval&0x00ffffff), num);
-   transmit_all(0, num, strlen(num));
+   __itoa(0x80000000|(t1vals.ipval&0x00ffffff), num);
+   transmit_all(0, num, __strlen(num));
 
    transmit_all(0, "0\n", 2);
 

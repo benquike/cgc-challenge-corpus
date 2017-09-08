@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -36,21 +36,21 @@ make_token(char *name)
     unsigned int *counter;
     char *token;
 
-    if ((counter = calloc(sizeof(unsigned int))) == NULL)
+    if ((counter = __calloc(sizeof(unsigned int))) == NULL)
         return NULL;
 
-    size += strlen("counter=") + 2 * sizeof(unsigned int *) + 1;
-    size += strlen("name=") + strlen(name);
+    size += __strlen("counter=") + 2 * sizeof(unsigned int *) + 1;
+    size += __strlen("name=") + __strlen(name);
 
-    if ((token = calloc(size)) == NULL) {
-        free(counter);
+    if ((token = __calloc(size)) == NULL) {
+        __free(counter);
         return NULL;
     }
 
-    strcpy(token, "counter=");
-    bin_to_hex(token + strlen(token), &counter, sizeof(unsigned int *));
-    strcat(token, "|name=");
-    strcat(token, name);
+    __strcpy(token, "counter=");
+    bin_to_hex(token + __strlen(token), &counter, sizeof(unsigned int *));
+    __strcat(token, "|name=");
+    __strcat(token, name);
 
     return token;
 }
@@ -78,16 +78,16 @@ xor_login(char *name)
     if ((token = make_token(name)) == NULL)
         return -1;
 
-    token_size = strlen(token);
+    token_size = __strlen(token);
     signed_token_size = token_size + 2 * secret_size + 2;
 
-    if ((signed_token = realloc(token, signed_token_size)) == NULL) {
-        free(token);
+    if ((signed_token = __realloc(token, signed_token_size)) == NULL) {
+        __free(token);
         return -1;
     }
 
     if ((sig_size = xor_sig(signed_token, token_size, sig)) == 0) {
-        free(signed_token);
+        __free(signed_token);
         return -1;
     }
 
@@ -98,9 +98,9 @@ xor_login(char *name)
     if (write_all(STDOUT, signed_token, signed_token_size) != signed_token_size)
         return -1;
 
-    memset(sig, '\x00', sig_size);
-    memset(signed_token, '\x00', signed_token_size);
-    free(signed_token);
+    __memset(sig, '\x00', sig_size);
+    __memset(signed_token, '\x00', signed_token_size);
+    __free(signed_token);
 
     return 0;
 }
@@ -111,15 +111,15 @@ adler32_sig(const char *token, size_t token_size, char *sig)
     size_t secret_token_size = sizeof(secret) + token_size;
     char *secret_token;
 
-    if ((secret_token = calloc(secret_token_size)) == NULL)
+    if ((secret_token = __calloc(secret_token_size)) == NULL)
         return 0;
 
-    strcpy(secret_token, secret);
-    strcat(secret_token, token);
+    __strcpy(secret_token, secret);
+    __strcat(secret_token, token);
     *(unsigned int *)sig = adler32ish((unsigned char *)secret_token, secret_token_size - 1);
     
-    memset(secret_token, '\x00', secret_token_size);
-    free(secret_token);
+    __memset(secret_token, '\x00', secret_token_size);
+    __free(secret_token);
 
     return sizeof(unsigned int);
 }
@@ -134,16 +134,16 @@ adler32_login(char *name)
     if ((token = make_token(name)) == NULL)
         return -1;
 
-    token_size = strlen(token);
+    token_size = __strlen(token);
     signed_token_size = token_size + 2 * sizeof(sig) + 2;
 
-    if ((signed_token = realloc(token, signed_token_size)) == NULL) {
-        free(token);
+    if ((signed_token = __realloc(token, signed_token_size)) == NULL) {
+        __free(token);
         return -1;
     }
 
     if ((sig_size = adler32_sig(signed_token, token_size, (char *)(&sig))) == 0) {
-        free(signed_token);
+        __free(signed_token);
         return -1;
     }
 
@@ -155,8 +155,8 @@ adler32_login(char *name)
         return -1;
 
     sig = 0;
-    memset(signed_token, '\x00', signed_token_size);
-    free(signed_token);
+    __memset(signed_token, '\x00', signed_token_size);
+    __free(signed_token);
 
     return 0;
 }
@@ -167,15 +167,15 @@ md5_sig(const char *token, size_t token_size, char *sig)
     size_t secret_token_size = sizeof(secret) + token_size;
     char *secret_token;
 
-    if ((secret_token = calloc(secret_token_size)) == NULL)
+    if ((secret_token = __calloc(secret_token_size)) == NULL)
         return 0;
 
-    strcpy(secret_token, secret);
-    strcat(secret_token, token);
+    __strcpy(secret_token, secret);
+    __strcat(secret_token, token);
     md5((const unsigned char *)secret_token, secret_token_size - 1, (unsigned char *)sig);
     
-    memset(secret_token, '\x00', secret_token_size);
-    free(secret_token);
+    __memset(secret_token, '\x00', secret_token_size);
+    __free(secret_token);
 
     return 16;
 }
@@ -190,16 +190,16 @@ md5_login(char *name)
     if ((token = make_token(name)) == NULL)
         return -1;
 
-    token_size = strlen(token);
+    token_size = __strlen(token);
     signed_token_size = token_size + 2 * sizeof(sig) + 2;
 
-    if ((signed_token = realloc(token, signed_token_size)) == NULL) {
-        free(token);
+    if ((signed_token = __realloc(token, signed_token_size)) == NULL) {
+        __free(token);
         return -1;
     }
 
     if ((sig_size = md5_sig(signed_token, token_size, (char *)sig)) == 0) {
-        free(signed_token);
+        __free(signed_token);
         return -1;
     }
 
@@ -210,9 +210,9 @@ md5_login(char *name)
     if (write_all(STDOUT, signed_token, signed_token_size) != signed_token_size)
         return -1;
 
-    memset(sig, '\x00', sig_size);
-    memset(signed_token, '\x00', signed_token_size);
-    free(signed_token);
+    __memset(sig, '\x00', sig_size);
+    __memset(signed_token, '\x00', signed_token_size);
+    __free(signed_token);
 
     return 0;
 }
@@ -237,16 +237,16 @@ md5_hmac_login(char *name)
     if ((token = make_token(name)) == NULL)
         return -1;
 
-    token_size = strlen(token);
+    token_size = __strlen(token);
     signed_token_size = token_size + 2 * sizeof(sig) + 2;
 
-    if ((signed_token = realloc(token, signed_token_size)) == NULL) {
-        free(token);
+    if ((signed_token = __realloc(token, signed_token_size)) == NULL) {
+        __free(token);
         return -1;
     }
 
     if ((sig_size = md5_hmac_sig(signed_token, token_size, (char *)sig)) == 0) {
-        free(signed_token);
+        __free(signed_token);
         return -1;
     }
 
@@ -257,9 +257,9 @@ md5_hmac_login(char *name)
     if (write_all(STDOUT, signed_token, signed_token_size) != signed_token_size)
         return -1;
 
-    memset(sig, '\x00', sig_size);
-    memset(signed_token, '\x00', signed_token_size);
-    free(signed_token);
+    __memset(sig, '\x00', sig_size);
+    __memset(signed_token, '\x00', signed_token_size);
+    __free(signed_token);
 
     return 0;
 }
@@ -281,10 +281,10 @@ login(char *args)
     };
 
 #ifndef PATCHED
-    if (strlen(args) > MAX_NAME_LENGTH)
+    if (__strlen(args) > MAX_NAME_LENGTH)
         return -1;
 #else
-    if (strlen(args) > MAX_NAME_LENGTH || strchr(args, '|') != NULL)
+    if (__strlen(args) > MAX_NAME_LENGTH || __strchr(args, '|') != NULL)
         return -1;
 #endif
 
@@ -323,7 +323,7 @@ greet(char *token)
     *user_sig++ = '\0';
 
     for (i = 0; i < sizeof(sig_methods) / sizeof(sig_methods[0]); i++) {
-        sig_size = sig_methods[i](token, strlen(token), calc_sig);
+        sig_size = sig_methods[i](token, __strlen(token), calc_sig);
         bin_to_hex(hex_sig, calc_sig, sig_size);
 
         if (strncmp(user_sig, hex_sig, 2 * sig_size) == 0) {
@@ -335,33 +335,33 @@ greet(char *token)
     if (!matched)
         return -1;
 
-    memset(name, '\x00', MAX_NAME_LENGTH + 1);
-    for (tok = strtok(token, '|'); tok != NULL; tok = strtok(NULL, '|')) {
+    __memset(name, '\x00', MAX_NAME_LENGTH + 1);
+    for (tok = __strtok(token, '|'); tok != NULL; tok = __strtok(NULL, '|')) {
         if (strncmp(tok, "name=", 5) == 0) {
 #ifndef PATCHED
-            strcpy(name, tok + 5);
+            __strcpy(name, tok + 5);
 #else
-            strncpy(name, tok + 5, MAX_NAME_LENGTH);
+            __strncpy(name, tok + 5, MAX_NAME_LENGTH);
 #endif
         } else if (strncmp(tok, "counter=", 8) == 0) {
-            if (strlen(tok + 8) == 8)
+            if (__strlen(tok + 8) == 8)
                 counter = (unsigned int *)hex_to_uint(tok + 8);
         }
     }
 
-    if (strlen(name) == 0 || counter == NULL)
+    if (__strlen(name) == 0 || counter == NULL)
         return -1;
 
-    memset(message, '\x00', sizeof(message));
+    __memset(message, '\x00', sizeof(message));
     (*counter)++;
 
-    strcpy(message, "Hello ");
-    strcat(message, name);
-    strcat(message, ", we've seen you ");
-    itoa(*counter, message + strlen(message));
-    strcat(message, " times!\n");
+    __strcpy(message, "Hello ");
+    __strcat(message, name);
+    __strcat(message, ", we've seen you ");
+    __itoa(*counter, message + __strlen(message));
+    __strcat(message, " times!\n");
 
-    if (write_all(STDOUT, message, strlen(message)) != strlen(message))
+    if (write_all(STDOUT, message, __strlen(message)) != __strlen(message))
         return -1;
 
     return 0;
@@ -377,7 +377,7 @@ quit(char *args)
 int
 main(void) {
     char *line;
-    ssize_t read;
+    ssize_t __read;
     int ret;
     char ret_buffer[9];
     size_t i;
@@ -392,22 +392,22 @@ main(void) {
     };
 
     while (1) {
-        if ((read = read_line(STDIN, &line)) < 0)
+        if ((__read = read_line(STDIN, &line)) < 0)
             return -1;
 
-        if (line[read - 1] == '\n')
-            line[read - 1] = '\0';
+        if (line[__read - 1] == '\n')
+            line[__read - 1] = '\0';
 
         ret = -1;
         for (i = 0; i < sizeof(cmds) / sizeof(cmds[0]); i++) {
-            if (strncmp(line, cmds[i].name, strlen(cmds[i].name)) == 0) {
-                ret = cmds[i].cmd(line + strlen(cmds[i].name));
+            if (strncmp(line, cmds[i].name, __strlen(cmds[i].name)) == 0) {
+                ret = cmds[i].cmd(line + __strlen(cmds[i].name));
                 break;
             }
         }
 
-        memset(line, '\0', read);
-        free(line);
+        __memset(line, '\0', __read);
+        __free(line);
 
         bin_to_hex(ret_buffer, &ret, sizeof(ret));
         ret_buffer[2 * sizeof(ret)] = '\n';

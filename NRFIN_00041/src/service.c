@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -35,12 +35,12 @@ int main(void) {
     int bytes_received = 0;
 
     struct sentence_struct ss;
-    ss.ais_msg = malloc(MAX_SENTENCE_LEN*sizeof(char));
+    ss.ais_msg = __malloc(MAX_SENTENCE_LEN*sizeof(char));
     reset_sentence_struct(&ss);
 
     while (1) {
-        char *buf = calloc(MAX_SENTENCE_LEN*sizeof(char));
-        char *english = calloc(MAX_ENGLISH_LEN*sizeof(char));
+        char *buf = __calloc(MAX_SENTENCE_LEN*sizeof(char));
+        char *english = __calloc(MAX_ENGLISH_LEN*sizeof(char));
 
         char *outmsg = NULL;
         char reset = TRUE;
@@ -68,14 +68,14 @@ int main(void) {
             outmsg = INVALID_SENTENCE;
         }
 
-        send(outmsg, strlen(outmsg));
+        send(outmsg, __strlen(outmsg));
 
         if (TRUE == reset) {
             reset_sentence_struct(&ss);
         }
 
-        free(english);
-        free(buf);
+        __free(english);
+        __free(buf);
     }
 
 	return ret;

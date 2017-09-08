@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -68,7 +68,7 @@ uint16_t CResponse::GetResponseData( uint8_t *pDest, uint16_t destLen )
 
 	for ( CResponseElement *pCur = m_responseList.GetFirst(); pCur; pCur = m_responseList.GetNext( pCur ) )
 	{
-		memcpy( pDest+pos, pCur->GetData(), pCur->GetDataLength() );
+		__memcpy( pDest+pos, pCur->GetData(), pCur->GetDataLength() );
 		pos += pCur->GetDataLength();
 	}
 

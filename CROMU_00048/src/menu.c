@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -323,14 +323,14 @@ void PrintRenameMenu(void) {
 				if ((len = read_until(buf, '\n', 31)) == -1) {
 					_terminate(-1);
 				}
-				strncpy(Influent.Name, buf, len+1);
+				__strncpy(Influent.Name, buf, len+1);
 				break;
 			case '2':
 				cromu_printf("New Headworks name: ");
 				if ((len = read_until(buf, '\n', 31)) == -1) {
 					_terminate(-1);
 				}
-				strncpy(Headworks.Name, buf, len+1);
+				__strncpy(Headworks.Name, buf, len+1);
 				break;
 			case '3':
 				cromu_printf("Which ASP 0-$d: ", NumAsp-1);
@@ -348,7 +348,7 @@ void PrintRenameMenu(void) {
 				if ((len = read_until(buf, '\n', 31)) == -1) {
 					_terminate(-1);
 				}
-				strncpy(Asp[Num].Name, buf, len+1);
+				__strncpy(Asp[Num].Name, buf, len+1);
 				break;
 			case '4':
 				cromu_printf("Which Filter 0-$d: ", NumFilters-1);
@@ -366,7 +366,7 @@ void PrintRenameMenu(void) {
 				if ((len = read_until(buf, '\n', 31)) == -1) {
 					_terminate(-1);
 				}
-				strncpy(Filter[Num].Name, buf, len+1);
+				__strncpy(Filter[Num].Name, buf, len+1);
 				break;
 			case '5':
 				cromu_printf("Which Disinfection system 0-$d: ", NumAsp-1);
@@ -384,14 +384,14 @@ void PrintRenameMenu(void) {
 				if ((len = read_until(buf, '\n', 31)) == -1) {
 					_terminate(-1);
 				}
-				strncpy(Disinfection[Num].Name, buf, len+1);
+				__strncpy(Disinfection[Num].Name, buf, len+1);
 				break;
 			case '6':
 				cromu_printf("New Effluent name: ");
 				if ((len = read_until(buf, '\n', 31)) == -1) {
 					_terminate(-1);
 				}
-				strncpy(Effluent.Name, buf, len+1);
+				__strncpy(Effluent.Name, buf, len+1);
 				break;
 			case '7':
 				cromu_puts("1. V1");
@@ -411,34 +411,34 @@ void PrintRenameMenu(void) {
 					if ((len = read_until(buf, '\n', 31)) == -1) {
 						_terminate(-1);
 					}
-					strncpy(HeadworksOutputValve.Name, buf, len+1);
+					__strncpy(HeadworksOutputValve.Name, buf, len+1);
 				} else if (Num == 2) {
 					cromu_printf("New V2 name: ");
 					if ((len = read_until(buf, '\n', 31)) == -1) {
 						_terminate(-1);
 					}
-					strncpy(AspOutputValve.Name, buf, len+1);
+					__strncpy(AspOutputValve.Name, buf, len+1);
 				} else if (Num == 3) {
 					cromu_printf("New V3 name: ");
 					if ((len = read_until(buf, '\n', 31)) == -1) {
 						_terminate(-1);
 					}
-					strncpy(FilterOutputValve.Name, buf, len+1);
+					__strncpy(FilterOutputValve.Name, buf, len+1);
 				} else if (Num == 4) {
 					cromu_printf("New V4 name: ");
 #ifdef PATCHED_1
 					if ((len = read_until(buf, '\n', 31)) == -1) {
 						_terminate(-1);
 					}
-					strncpy(DisinfectionOutputValve.Name, buf, len+1);
+					__strncpy(DisinfectionOutputValve.Name, buf, len+1);
 
 #else
 					if (read_until(buf, '\n', 255) == -1) {
 						_terminate(-1);
 					}
-					len = strlen(buf);
+					len = __strlen(buf);
 					if (len < 31) {
-						strcpy(DisinfectionOutputValve.Name, buf);
+						__strcpy(DisinfectionOutputValve.Name, buf);
 					}
 #endif
 				} else {

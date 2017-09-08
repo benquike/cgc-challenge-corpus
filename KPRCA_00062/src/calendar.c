@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -33,19 +33,19 @@ void view_day(calendar_t * cal, date_t date)
 
     event_list_t *iter = cal->events;
     int datecmp = 0;
-    printf("Viewing Calendar Appointments for %s\n", date_str);
+    __printf("Viewing Calendar Appointments for %s\n", date_str);
     while(iter) {
         datecmp = compare_date(&iter->event->duration.start.date, &date);
         if (datecmp > 0)
             break;
 
         if (date_within(iter->event->duration, date)) {
-            printf("------------------------\n");
+            __printf("------------------------\n");
             print_event(iter->event);
         }
         iter = iter->next;
     }
-    printf("------------------------\n");
+    __printf("------------------------\n");
 }
 
 void view_month(calendar_t * cal, date_t date)
@@ -56,16 +56,16 @@ void view_month(calendar_t * cal, date_t date)
     event_list_t *iter = cal->events;
     int datecmp = 0;
     char *month = get_month(&date);
-    printf("Viewing Monthly Calendar for %s %d\n", month, date.year);
+    __printf("Viewing Monthly Calendar for %s %d\n", month, date.year);
     while(iter) {
         if (iter->event->duration.start.date.month >= date.month &&
             iter->event->duration.end.date.month <= date.month) {
-            printf("------------------------\n");
+            __printf("------------------------\n");
             print_event(iter->event);
         }
         iter = iter->next;
     }
-    printf("------------------------\n");
+    __printf("------------------------\n");
 }
 
 date_t calc_agenda_lookahead(date_t date)
@@ -94,7 +94,7 @@ void view_agenda(calendar_t *cal, date_t date)
     event_list_t *iter = cal->events;
     int datecmp = 0;
     char *month = get_month(&date);
-    printf("Agenda View\n");
+    __printf("Agenda View\n");
     while(i++ < cal->num_events && printed_events < MAX_AGENDA_EVENTS) {
         datecmp = compare_date(&iter->event->duration.start.date, &date);
         if (datecmp < 0) {
@@ -103,7 +103,7 @@ void view_agenda(calendar_t *cal, date_t date)
         }
 
         if (compare_date(&iter->event->duration.start.date, &lookahead) <= 0) {
-            printf("------------------------\n");
+            __printf("------------------------\n");
             print_event(iter->event);
             printed_events++;
         } else {
@@ -111,7 +111,7 @@ void view_agenda(calendar_t *cal, date_t date)
         }
         iter = iter->next;
     }
-    printf("------------------------\n");
+    __printf("------------------------\n");
 }
 
 bool add_calendar_event(calendar_t *cal, event_t *event)

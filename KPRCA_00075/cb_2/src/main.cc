@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -41,7 +41,7 @@ DEFINE_CLASS(Connection, connection)
 
     PROC(Connection, ReadInteger)
         int result;
-        if (fread(&result, sizeof(result), stdin) <= 0)
+        if (__fread(&result, sizeof(result), stdin) <= 0)
         {
             MsgSend1(ServerStatic, (int)Server::Shutdown);
         }
@@ -54,7 +54,7 @@ DEFINE_CLASS(Connection, connection)
     PROC(Connection, ReadBytes)
         ARGUMENT(int, length);
         char *buf = new char [length];
-        if (fread(buf, length, stdin) <= 0)
+        if (__fread(buf, length, stdin) <= 0)
         {
             MsgSend1(ServerStatic, (int)Server::Shutdown);
         }
@@ -67,10 +67,10 @@ DEFINE_CLASS(Connection, connection)
 
     PROC(Connection, ReadPacket)
         unsigned int size = 1000, i = 0, eor = 0;
-        char *buf = (char *)malloc(size);
+        char *buf = (char *)__malloc(size);
         while (1)
         {
-            if (fread(&buf[i], 1, stdin) <= 0)
+            if (__fread(&buf[i], 1, stdin) <= 0)
             {
                 MsgSend1(ServerStatic, (int)Server::Shutdown);
                 break;
@@ -88,16 +88,16 @@ DEFINE_CLASS(Connection, connection)
             if (i == size)
             {
                 size += 1000;
-                buf = (char *)realloc(buf, size);
+                buf = (char *)__realloc(buf, size);
             }
         }
         CONTINUE(const_string(buf, i));
-        free(buf);
+        __free(buf);
     PROC_END()
 
     PROC(Connection, WriteBytes)
         ARGUMENT(const_string, data);
-        fwrite(data.buffer(), data.length(), stdout);
+        __fwrite(data.buffer(), data.length(), stdout);
         CONTINUE();
     PROC_END()
 DEFINE_CLASS_END()

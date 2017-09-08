@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -38,8 +38,8 @@
 extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
 {
     Backend::InitDataStores(secret_page_i);
-    FILE *cb_c_in = fopen(CLIENT_FD, 0);
-    FILE *cb_c_out = fopen(CLIENT_FD, 1);
+    __FILE *cb_c_in = __fopen(CLIENT_FD, 0);
+    __FILE *cb_c_out = __fopen(CLIENT_FD, 1);
     char *secret_page = (char *)secret_page_i;
     (void) secret_page;
 

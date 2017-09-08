@@ -4,7 +4,7 @@ Author: Dustin Fraze (df@cromulence.com)
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -73367,7 +73367,7 @@ char *words[] = {
 "Frederick",
 "frederik",
 "fredricite",
-"free",
+"__free",
 "freeboard",
 "freeboot",
 "freebooter",
@@ -163754,7 +163754,7 @@ char *words[] = {
 "reactualization",
 "reactualize",
 "reactuate",
-"read",
+"__read",
 "readability",
 "readable",
 "readableness",
@@ -182973,7 +182973,7 @@ char *words[] = {
 "sleekly",
 "sleekness",
 "sleeky",
-"sleep",
+"__sleep",
 "sleeper",
 "sleepered",
 "sleepful",
@@ -219046,7 +219046,7 @@ char *words[] = {
 "unlineal",
 "unlined",
 "unlingering",
-"unlink",
+"__unlink",
 "unlinked",
 "unlionlike",
 "unliquefiable",
@@ -233755,7 +233755,7 @@ char *words[] = {
 "writable",
 "writation",
 "writative",
-"write",
+"__write",
 "writeable",
 "writee",
 "writer",

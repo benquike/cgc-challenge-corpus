@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -214,7 +214,7 @@ void sendGoalNotification() {
 
 	int ret;
 
-	ret = transmit_all(STDOUT, GOAL_STR, strlen(GOAL_STR));
+	ret = transmit_all(STDOUT, GOAL_STR, __strlen(GOAL_STR));
 	if(ret != 0)
 		_terminate(TRANSMIT_ERROR);
 

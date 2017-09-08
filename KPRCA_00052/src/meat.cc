@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -52,14 +52,14 @@ namespace {
                 return &meats[i];
         }
 
-        return NULL;
+        return (meat_lut *) NULL;
     }
 
     void print_list()
     {
         size_t i;
         for (i = 0; i < sizeof(meats) / sizeof(meats[0]); i++)
-            printf("%d. %s\n", i + 1, meats[i].name);
+            __printf("%d. %s\n", i + 1, meats[i].name);
     }
 }
 
@@ -79,7 +79,7 @@ Meat *Meat::add_meat(const char *meat_name)
 {
     meat_lut *meat_entry = find_meat_entry(meat_name);
     if (!meat_entry)
-        return NULL;
+      return (Meat *)NULL;
 
     return new Meat(meat_entry->name, meat_entry->calories, meat_entry->carbs, meat_entry->is_pork);
 }

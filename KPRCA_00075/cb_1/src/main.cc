@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -101,7 +101,7 @@ DEFINE_CLASS(Metadata, metadata)
         ARGUMENT(const_string, data)
         const char *buf = data.buffer();
         //fprintf(stderr, "ParseHeader: %s\n", buf);
-        if (data.length() == 0 || memcmp(buf, "HDR", 3) != 0 || buf[3] != 5)
+        if (data.length() == 0 || __memcmp(buf, "HDR", 3) != 0 || buf[3] != 5)
         {
             MsgSend1(ctx->saved_next, ctx->saved_next_selector, self);
         }

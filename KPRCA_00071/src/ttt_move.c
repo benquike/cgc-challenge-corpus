@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -115,18 +115,18 @@ int player_move(board_t *board)
     int max_input = 256;
     int posx = 0;
     int posy = 0;
-    char *input = malloc(max_input);
-    printf("Enter move [y,x]: ");
+    char *input = __malloc(max_input);
+    __printf("Enter move [y,x]: ");
     if (freaduntil(input, max_input, ',', stdin) == -1)
         goto error;
-    posy = strtol(input, NULL, 10);
+    posy = __strtol(input, NULL, 10);
     if (freaduntil(input, max_input, '\n', stdin) == -1)
         goto error;
-    posx = strtol(input, NULL, 10);
+    posx = __strtol(input, NULL, 10);
 
-    free(input);
+    __free(input);
     return do_move(board, posy, posx, HUMAN);
 error:
-    free(input);
+    __free(input);
     return BAD_MOVE;
 }

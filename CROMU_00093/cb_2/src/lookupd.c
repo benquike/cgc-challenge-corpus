@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -57,7 +57,7 @@ void lookupd() {
     int bytes_received = 0;
 
 #ifdef PATCHED_1
-    bytes_received = receive_until(input, sizeof(input), '\n');
+    bytes_received = __receive_until(input, sizeof(input), '\n');
     bytes_received = force_newline(input, sizeof(input), bytes_received);
 #else
     bytes_received = gets(input);
@@ -68,16 +68,16 @@ void lookupd() {
     char *p = input;
 
     while (i < 19) {
-        while(isspace(*p)) p++;
+        while(__isspace(*p)) p++;
         if (!*p)
             break;
         if (*p == '/' && (p[1] == 'W' || p[1] == 'w')) {
             p += 2;
             args[i++] = "-l";
         }
-        if (*p && !isspace(*p)) {
+        if (*p && !__isspace(*p)) {
             args[i++] = p;
-            while (*p && !isspace(*p)) p++;
+            while (*p && !__isspace(*p)) p++;
             *p++ = '\0';
         }
     }
@@ -93,7 +93,7 @@ list *short_list;
 
 char *gen_random_str(int min, int max) {
     int length = random_in_range(min, max);
-    char *s = calloc(length);
+    char *s = __calloc(length);
     for(int i=0; i<length - 2; i++) {
         s[i] = random_in_range(0x30, 0x7e);
     }
@@ -101,11 +101,11 @@ char *gen_random_str(int min, int max) {
 }
 
 user *gen_random_user() {
-    user *new_user = calloc(sizeof(user));
+    user *new_user = __calloc(sizeof(user));
     new_user->name = gen_random_str(5, 32);
     char *hn = gen_random_str(5, 32);
-    strcpy(new_user->hostname, hn);
-    free(hn);
+    __strcpy(new_user->hostname, hn);
+    __free(hn);
     new_user->idletime = rand() & 0xffffff;
     new_user->realname = gen_random_str(5, 64);
     new_user->phone = gen_random_str(9,9);
@@ -131,7 +131,7 @@ int main(void) {
     root_user = gen_random_user();
     num_users++;
     user *u = root_user;
-    short_list = calloc(sizeof(short_list));
+    short_list = __calloc(sizeof(short_list));
     short_list->object = root_user;
     for(int i=0; i<10; i++) {
         u->next = gen_random_user();
@@ -139,7 +139,7 @@ int main(void) {
         num_users++;
     }
 
-    // read input
+    // __read input
     while (1) {
         FD_ZERO(&fds);
         FD_SET(FD_FROM_MAIN, &fds);
@@ -157,6 +157,6 @@ int main(void) {
     } 
 
     EXIT:
-    // exit
+    // __exit
     return 0;
 }

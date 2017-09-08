@@ -1,4 +1,4 @@
 #include <stdlib.h>
 
-#define ERR(x, ...) printf(x "\n", ##__VA_ARGS__)
+#define ERR(x, ...) __printf(x "\n", ##__VA_ARGS__)
 

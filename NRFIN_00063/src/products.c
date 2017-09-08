@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -76,7 +76,7 @@ static unsigned int get_next_update_serial(void) {
 static unsigned char prod_has_bc(const void *product, void *barcode) {
 	Product *p = (Product *)product;
 	unsigned char *bc = (unsigned char *)barcode;
-	if (0 == memcmp(p->barcode, bc, BARCODE_SZ)) {
+	if (0 == __memcmp(p->barcode, bc, BARCODE_SZ)) {
 		return TRUE;
 	}
 	return FALSE;
@@ -109,11 +109,11 @@ static int do_buy(void) {
 	struct list buy_list;
 
 	// create buy list
-	list_init(&buy_list, free);
+	list_init(&buy_list, __free);
 
 	RECV(STDIN, buy_status, sizeof(buy_status));
 	// BUG: this loop could be used for memory exhaustion, it has no bound on buy_list.
-	while (0 == memcmp(buy_status, (void *)BUY_MORE, sizeof(BUY_MORE))) {
+	while (0 == __memcmp(buy_status, (void *)BUY_MORE, sizeof(BUY_MORE))) {
 		// recv barcode
 		RECV(STDIN, bc, BARCODE_SZ);
 
@@ -129,10 +129,10 @@ static int do_buy(void) {
 		}
 
 		// make copy of product
-		p_copy = malloc(sizeof(Product));
+		p_copy = __malloc(sizeof(Product));
 		MALLOC_OK(p_copy);
 
-		memcpy(p_copy, p, sizeof(Product));
+		__memcpy(p_copy, p, sizeof(Product));
 
 		// add product to buy list		
 		list_insert_at_end(&buy_list, p_copy);
@@ -144,7 +144,7 @@ static int do_buy(void) {
 		RECV(STDIN, buy_status, sizeof(buy_status));
 	}
 
-	if (0 != memcmp(buy_status, (void *)BUY_TERM, sizeof(BUY_TERM))) {
+	if (0 != __memcmp(buy_status, (void *)BUY_TERM, sizeof(BUY_TERM))) {
 		list_destroy(&buy_list);
 		return -1;
 	}
@@ -186,7 +186,7 @@ static int do_check(void) {
 	sale_price = p->sfn(p->model_num, p->cost);
 	SEND(STDOUT, (char *)&sale_price, sizeof(float));
 
-	d_len = strlen(p->desc, '\0');
+	d_len = __strlen(p->desc, '\0');
 	if (0 < d_len)
 		SEND(STDOUT, p->desc, d_len);
 	// terminate the description string
@@ -206,7 +206,7 @@ static int do_add(void) {
 	int bytes_recvd = 0;
 
 	// create product struct
-	p = malloc(sizeof(Product));
+	p = __malloc(sizeof(Product));
 	MALLOC_OK(p);
 
 	// set sfn to not on sale
@@ -219,7 +219,7 @@ static int do_add(void) {
 	// if barcode already exists, return -1
 	p2 = get_product_by_barcode((char *)p->barcode);
 	if (NULL != p2) {
-		free(p);
+		__free(p);
 		return -1;
 	}
 
@@ -283,7 +283,7 @@ static int do_rm(void) {
 static int do_update(void) {
 	int bytes_recvd = 0;
 	Product *p = NULL;
-	unsigned int (*desc_copy)(void *dst, const void *src, unsigned int cnt) = memcpy;
+	unsigned int (*desc_copy)(void *dst, const void *src, unsigned int cnt) = __memcpy;
 	char bc[BARCODE_SZ] = {0};
 	char desc_buf[MAX_DESC_LEN] = {0};
 
@@ -416,7 +416,7 @@ static int do_list(void) {
 		}
 		if (0 != options[3] % 2) {
 			// send description
-			d_len = strlen(p->desc, '\0');
+			d_len = __strlen(p->desc, '\0');
 			if (0 < d_len)
 				SEND(STDOUT, p->desc, d_len);
 			// terminate the description string
@@ -431,7 +431,7 @@ static int do_list(void) {
 
 
 void setup(void) {
-	list_init(&inv, free);
+	list_init(&inv, __free);
 
 	load_inventory(&inv);
 }
@@ -442,23 +442,23 @@ short process_cmd(void) {
 
     RECV(STDIN, cmd, sizeof(cmd));
 
-    if (0 == memcmp((void *)CMD_BUY, cmd, sizeof(CMD_BUY))) {
+    if (0 == __memcmp((void *)CMD_BUY, cmd, sizeof(CMD_BUY))) {
     	ret = do_buy();
-    } else if (0 == memcmp((void *)CMD_CHECK, cmd, sizeof(CMD_CHECK))) {
+    } else if (0 == __memcmp((void *)CMD_CHECK, cmd, sizeof(CMD_CHECK))) {
     	ret = do_check();
-    } else if (0 == memcmp((void *)CMD_ADD, cmd, sizeof(CMD_ADD))) {
+    } else if (0 == __memcmp((void *)CMD_ADD, cmd, sizeof(CMD_ADD))) {
     	ret = do_add();
-    } else if (0 == memcmp((void *)CMD_RM, cmd, sizeof(CMD_RM))) {
+    } else if (0 == __memcmp((void *)CMD_RM, cmd, sizeof(CMD_RM))) {
     	ret = do_rm();
-    } else if (0 == memcmp((void *)CMD_UPDATE, cmd, sizeof(CMD_UPDATE))) {
+    } else if (0 == __memcmp((void *)CMD_UPDATE, cmd, sizeof(CMD_UPDATE))) {
     	ret = do_update();
-    } else if (0 == memcmp((void *)CMD_ONSALE, cmd, sizeof(CMD_ONSALE))) {
+    } else if (0 == __memcmp((void *)CMD_ONSALE, cmd, sizeof(CMD_ONSALE))) {
     	ret = do_onsale();
-    } else if (0 == memcmp((void *)CMD_NOSALE, cmd, sizeof(CMD_NOSALE))) {
+    } else if (0 == __memcmp((void *)CMD_NOSALE, cmd, sizeof(CMD_NOSALE))) {
     	ret = do_nosale();
-    } else if (0 == memcmp((void *)CMD_LIST, cmd, sizeof(CMD_LIST))) {
+    } else if (0 == __memcmp((void *)CMD_LIST, cmd, sizeof(CMD_LIST))) {
     	ret = do_list();
-    } else if (0 == memcmp((void *)CMD_QUIT, cmd, sizeof(CMD_QUIT))) {
+    } else if (0 == __memcmp((void *)CMD_QUIT, cmd, sizeof(CMD_QUIT))) {
     	ret = -2;
     } else {
     	ret = -1;

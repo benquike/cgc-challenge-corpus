@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -26,20 +26,20 @@
 #define PAGE_SZ 4096
 
 /**
- * A relatively simple malloc implementation.
+ * A relatively simple __malloc implementation.
  *
  * @param size Number of bytes of space desired
  * @return VA of allocated space, 
  *   or NULL if size is 0 or there is an error allocating more space.
  */
-void *malloc(size_t size);
+void *__malloc(size_t size);
 
 
 /**
  * Free allocated memory
  *
- * Calling free() in a NULL will segfault.
+ * Calling __free() in a NULL will segfault.
  *
  * @param VA of allocated memory.
  */
-void free(void *ptr);
+void __free(void *ptr);

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -239,23 +239,23 @@ ssize_t process(void) {
     RECV(READ_FD, cmd, sizeof(cmd) - 1);
     DBG("recv'd cmd: %S.\n", cmd);
 
-    if (0 == memcmp((char *)START_ROUND, cmd, sizeof(START_ROUND))) {
+    if (0 == __memcmp((char *)START_ROUND, cmd, sizeof(START_ROUND))) {
     	start_round();
-    } else if (0 == memcmp((char *)END_ROUND, cmd, sizeof(END_ROUND))) {
+    } else if (0 == __memcmp((char *)END_ROUND, cmd, sizeof(END_ROUND))) {
     	end_round();
-    } else if (0 == memcmp((char *)GIVE_PLAYER_CARD, cmd, sizeof(GIVE_PLAYER_CARD))) {
+    } else if (0 == __memcmp((char *)GIVE_PLAYER_CARD, cmd, sizeof(GIVE_PLAYER_CARD))) {
     	get_card();
-    } else if (0 == memcmp((char *)SHOW_DEALT_CARDS, cmd, sizeof(SHOW_DEALT_CARDS))) {
+    } else if (0 == __memcmp((char *)SHOW_DEALT_CARDS, cmd, sizeof(SHOW_DEALT_CARDS))) {
     	view_dealt_cards();
-    } else if (0 == memcmp((char *)GET_WAGER, cmd, sizeof(GET_WAGER))) {
+    } else if (0 == __memcmp((char *)GET_WAGER, cmd, sizeof(GET_WAGER))) {
     	give_wager();
-    } else if (0 == memcmp((char *)SHOW_ALL_WAGERS, cmd, sizeof(SHOW_ALL_WAGERS))) {
+    } else if (0 == __memcmp((char *)SHOW_ALL_WAGERS, cmd, sizeof(SHOW_ALL_WAGERS))) {
     	view_wagers();
-    } else if (0 == memcmp((char *)SHOW_RESULTS, cmd, sizeof(SHOW_RESULTS))) {
+    } else if (0 == __memcmp((char *)SHOW_RESULTS, cmd, sizeof(SHOW_RESULTS))) {
     	view_results();
-    } else if (0 == memcmp((char *)PAY_PLAYER, cmd, sizeof(PAY_PLAYER))) {
+    } else if (0 == __memcmp((char *)PAY_PLAYER, cmd, sizeof(PAY_PLAYER))) {
     	exchange_money();
-    } else if (0 == memcmp((char *)PLAYER_QUIT, cmd, sizeof(PLAYER_QUIT))) {
+    } else if (0 == __memcmp((char *)PLAYER_QUIT, cmd, sizeof(PLAYER_QUIT))) {
     	i_quit();
     	ret = -2;
     }

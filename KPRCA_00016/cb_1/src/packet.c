@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,19 +35,19 @@ packet_t* parse_packet(int fd)
   char *body = NULL;
   packet_t *packet = NULL;
 
-  packet = (packet_t *) malloc(sizeof(packet_t));
+  packet = (packet_t *) __malloc(sizeof(packet_t));
   if (packet == NULL)
     goto fail;
 
   /* Read the packet header */
   to_read = sizeof(packet_t) - sizeof(char *);
   if (read_n(fd, (char *)packet, to_read) != to_read)
-    exit(0);
+    __exit(0);
     //goto fail;
 
   if (packet->body_len > MAX_BODY_LEN)
     goto fail;
-  body = malloc(packet->body_len);
+  body = __malloc(packet->body_len);
   if (body == NULL)
     goto fail;
 
@@ -64,15 +64,15 @@ packet_t* parse_packet(int fd)
 
 fail:
   if (body)
-    free(body);
+    __free(body);
   if (packet)
-    free(packet);
+    __free(packet);
   return NULL;
 }
 
 packet_t* new_packet(enum type_t type, enum cmd_t cmd)
 {
-  packet_t *packet = (packet_t *) malloc(sizeof(packet_t));
+  packet_t *packet = (packet_t *) __malloc(sizeof(packet_t));
   if (packet == NULL)
     return NULL;
 
@@ -90,8 +90,8 @@ void free_packet(packet_t *packet)
   if (packet)
   {
     if (packet->body)
-      free(packet->body);
-    free(packet);
+      __free(packet->body);
+    __free(packet);
   }
 }
 

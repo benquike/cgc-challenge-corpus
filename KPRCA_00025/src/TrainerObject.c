@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -57,7 +57,7 @@ DefineFunction(TrainerObject, void, $init)
     this->m_icon = 'T';
     this->m_player_won = 0;
     this->m_team = new(Array);
-    strcpy(this->m_name, random_trainer_name());
+    __strcpy(this->m_name, random_trainer_name());
 }
 
 DefineFunction(TrainerObject, void, init, unsigned int level)
@@ -115,7 +115,7 @@ DefineFunction(TrainerObject, void, deserialize, Buffer *buf)
 {
     char *name;
     unsigned int type;
-    free(this->m_team);
+    __free(this->m_team);
 
     type = $(buf, read_number);
     ASSERT_OR_RAISE(type == 2, EXC_BAD_STATE);
@@ -124,11 +124,11 @@ DefineFunction(TrainerObject, void, deserialize, Buffer *buf)
     this->m_reward = $(buf, read_number);
 
     name = $(buf, read_string);
-    if (strlen(name)+1 > TRAINER_NAME_LEN)
+    if (__strlen(name)+1 > TRAINER_NAME_LEN)
         raise(EXC_BAD_STATE);
 
-    strcpy(this->m_name, name);
-    free(name);
+    __strcpy(this->m_name, name);
+    __free(name);
     
     this->m_team = new(Array);
     Monster_deserialize_array(this->m_team, buf);

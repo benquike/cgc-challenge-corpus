@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -67,7 +67,7 @@ void FreeTrie(trie* Trie)
       }
     }
 
-    free(Trie);
+    __free(Trie);
   }
 }
 
@@ -148,9 +148,9 @@ static int _GatherTerminals(trie* Trie, trie*** Terminals, size_t* TerminalCount
     if (*TerminalCount == *TerminalMax)
     {
       trie** NewTerminals = xcalloc(sizeof(trie*), 2 * *TerminalMax);
-      memcpy(NewTerminals, *Terminals, *TerminalMax * sizeof(trie *));
+      __memcpy(NewTerminals, *Terminals, *TerminalMax * sizeof(trie *));
       *TerminalMax = *TerminalMax * 2;
-      free(*Terminals);
+      __free(*Terminals);
       *Terminals = NewTerminals;
     }
   }
@@ -212,7 +212,7 @@ trie_unit* GetDataString(trie* Trie, size_t* DataLength)
     String[StringIndex++] = Trie->Data;
     if (StringIndex == StringLength)
     {
-      String = realloc(String, StringLength * 2);
+      String = __realloc(String, StringLength * 2);
       StringLength *= 2;
     }
 

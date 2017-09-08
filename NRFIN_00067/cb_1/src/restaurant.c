@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -103,7 +103,7 @@ static char do_add_customers(void) {
 
 	// recv customers
 	while (0 < party_sz[0]) {
-		c = malloc(sizeof(Customer));
+		c = __malloc(sizeof(Customer));
 		MALLOC_OK(c);
 
 		// recv customer ID
@@ -216,11 +216,11 @@ static char do_get_orders(void) {
 					break;
 				default:
 					DBG("invalid Order ftype\n");
-					free(o);
+					__free(o);
 					return -1;
 			}
-			free(o->item);
-			free(o);
+			__free(o->item);
+			__free(o);
 			o = pop_order_from_list(&o_array[table_id]);
 		}
 	}
@@ -251,9 +251,9 @@ static char do_order_up(void) {
 
 	// recv orders
 	for (unsigned char idx = 0; idx < order_count; idx++) {
-		o = malloc(sizeof(Order));
+		o = __malloc(sizeof(Order));
 		MALLOC_OK(o);
-		memset(o, '\x00', sizeof(Order));
+		__memset(o, '\x00', sizeof(Order));
 
 		// recv t_id and c_id
 		RECV(STDIN, (char *)ids, sizeof(ids));
@@ -264,7 +264,7 @@ static char do_order_up(void) {
 		// if t_id is not a valid t_id, then return -1
 		if ((0 == o->t_id) || (TABLE_CNT < o->t_id)) {
 			DBG("invalid Table ID %U\n", o->t_id);
-			free(o);
+			__free(o);
 			return -1;
 		}
 
@@ -277,9 +277,9 @@ static char do_order_up(void) {
 		switch (o->ftype) {
 			case APP_TYPE:
 				DBG("receiving appetizer...\n");
-				a = malloc(sizeof(Appetizer));
+				a = __malloc(sizeof(Appetizer));
 				MALLOC_OK(a);
-				memset(a, '\x00', sizeof(Appetizer));
+				__memset(a, '\x00', sizeof(Appetizer));
 				a->ftype = APP_TYPE;
 				RECV(STDIN, (char *)a->name, APP_NAME_SZ);
 				DBG("received appetizer\n");
@@ -288,9 +288,9 @@ static char do_order_up(void) {
 				break;
 			case MEAL_TYPE:
 				DBG("receiving meal...\n");
-				m = malloc(sizeof(Meal));
+				m = __malloc(sizeof(Meal));
 				MALLOC_OK(m);
-				memset(m, '\x00', sizeof(Meal));
+				__memset(m, '\x00', sizeof(Meal));
 				m->ftype = MEAL_TYPE;
 				RECV(STDIN, (char *)m->name, MEAL_NAME_SZ + MEAL_MAIN_SZ + MEAL_VEG_SZ + MEAL_SIDE_SZ);
 				DBG("received meal\n");
@@ -299,9 +299,9 @@ static char do_order_up(void) {
 				break;
 			case DES_TYPE:
 				DBG("receiving dessert...\n");
-				d = malloc(sizeof(Dessert));
+				d = __malloc(sizeof(Dessert));
 				MALLOC_OK(d);
-				memset(d, '\x00', sizeof(Dessert));
+				__memset(d, '\x00', sizeof(Dessert));
 				d->ftype = DES_TYPE;
 				RECV(STDIN, (char *)d->name, DES_NAME_SZ);
 				DBG("received dessert\n");
@@ -310,10 +310,10 @@ static char do_order_up(void) {
 				break;
 			default:
 				DBG("invalid Order ftype %U\n", o->ftype);
-				free(o);
+				__free(o);
 				return -1;
 		}
-		// Note: if forget to check if table_id is valid, can write Order pointers throughout the stack
+		// Note: if forget to check if table_id is valid, can __write Order pointers throughout the stack
 		append_order_to_list(&o_array[o->t_id], o);
 	}
 	DBG("done recving orders\n");
@@ -407,17 +407,17 @@ short process_cmd(void) {
 
     RECV(STDIN, cmd, sizeof(cmd)-1);
     DBG("recv'd cmd: %S.\n", cmd);
-    if (0 == memcmp((void *)CMD_ADD_CUST, cmd, sizeof(CMD_ADD_CUST))) {
+    if (0 == __memcmp((void *)CMD_ADD_CUST, cmd, sizeof(CMD_ADD_CUST))) {
     	ret = do_add_customers();
-    } else if (0 == memcmp((void *)CMD_GET_ORDERS, cmd, sizeof(CMD_GET_ORDERS))) {
+    } else if (0 == __memcmp((void *)CMD_GET_ORDERS, cmd, sizeof(CMD_GET_ORDERS))) {
     	ret = do_get_orders();
-    } else if (0 == memcmp((void *)CMD_ORDER_UP, cmd, sizeof(CMD_ORDER_UP))) {
+    } else if (0 == __memcmp((void *)CMD_ORDER_UP, cmd, sizeof(CMD_ORDER_UP))) {
     	ret = do_order_up();
-    } else if (0 == memcmp((void *)CMD_TABLE_STATUS, cmd, sizeof(CMD_TABLE_STATUS))) {
+    } else if (0 == __memcmp((void *)CMD_TABLE_STATUS, cmd, sizeof(CMD_TABLE_STATUS))) {
     	ret = do_table_status();
-    } else if (0 == memcmp((void *)CMD_BUS_TABLES, cmd, sizeof(CMD_BUS_TABLES))) {
+    } else if (0 == __memcmp((void *)CMD_BUS_TABLES, cmd, sizeof(CMD_BUS_TABLES))) {
     	ret = do_bus_tables();
-    } else if (0 == memcmp((void *)CMD_QUIT, cmd, sizeof(CMD_QUIT))) {
+    } else if (0 == __memcmp((void *)CMD_QUIT, cmd, sizeof(CMD_QUIT))) {
     	ret = do_table_quit();
     } else {
     	ret = -1;

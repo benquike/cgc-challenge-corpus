@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -24,7 +24,7 @@
 #define OK 0
 #define NOTOK 1
 
-void memcpy(void *src, void *dst, size_t l){
+void __memcpy(void *src, void *dst, size_t l){
 	char * s = (char *) src;
 	char * d = (char *) dst;
 
@@ -37,7 +37,7 @@ void memcpy(void *src, void *dst, size_t l){
 
 }
 
-size_t strlen(char * s){
+size_t __strlen(char * s){
 	for(int i = 0; i < 65535; i++){
 		if( s[i] == 0x0){
 			return i;
@@ -47,7 +47,7 @@ size_t strlen(char * s){
 
 }
 
-int memcmp(void *l, void *r, size_t s){
+int __memcmp(void *l, void *r, size_t s){
 	char *  ll = (char *) l;
 	char * rr = (char *)  r;
 	for(int i = 0; i < s; i++){
@@ -67,12 +67,12 @@ void memclr(void *l, size_t s){
 int recv_all(const size_t size, void *buf){
 	size_t call_recvd = 0;
 	size_t total_recv = 0;
-	int errno = 1;
+	int __errno_ = 1;
 	while(total_recv < size){
 
-		errno = receive(STDIN, buf+total_recv, size-total_recv, &call_recvd);
-		if(errno != 0)
-			return errno;		
+		__errno_ = receive(STDIN, buf+total_recv, size-total_recv, &call_recvd);
+		if(__errno_ != 0)
+			return __errno_;		
 		if(call_recvd == 0){
 			return NOTOK;
 		}

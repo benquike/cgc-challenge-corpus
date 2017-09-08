@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -198,7 +198,7 @@ void CNetworkFS::HandleCFSLogin( void )
 
 	if ( m_pComms->RecvData( (uint8_t*)&oLoginHdr, sizeof(oLoginHdr) ) != sizeof(oLoginHdr) )
 	{
-		SetError( "Login read error" );
+		SetError( "Login __read error" );
 		return;
 	}
 
@@ -211,7 +211,7 @@ void CNetworkFS::HandleCFSLogin( void )
 		delete pszUsername;
 		delete pszPassword;
 
-		SetError( "Login read error" );
+		SetError( "Login __read error" );
 		return;
 	}
 
@@ -222,7 +222,7 @@ void CNetworkFS::HandleCFSLogin( void )
 		delete pszUsername;
 		delete pszPassword;
 
-		SetError( "Login read error" );
+		SetError( "Login __read error" );
 		return;
 	}
 
@@ -364,7 +364,7 @@ void CNetworkFS::HandleCFSRead( void )
 
 	if ( m_pComms->RecvData( (uint8_t*)&oReadHdr, sizeof(oReadHdr) ) != sizeof(oReadHdr) )
 	{
-		SetError( "Read read error" );
+		SetError( "Read __read error" );
 		return;
 	}
 
@@ -375,7 +375,7 @@ void CNetworkFS::HandleCFSRead( void )
 	{
 		delete pszFilename;
 
-		SetError( "Read read error" );
+		SetError( "Read __read error" );
 		return;
 	}
 
@@ -395,7 +395,7 @@ void CNetworkFS::HandleCFSRead( void )
 	}
 
 	// Seek
-	if ( m_pFS->FileSeek( pFP, oReadHdr.fileOffset, SEEK_SET ) != 0 )
+	if ( m_pFS->FileSeek( pFP, oReadHdr.fileOffset, __SEEK_SET ) != 0 )
 	{
 		SendResponse( REQUEST_CFS_READ, RESPONSE_SYSTEM_FAILURE, NULL, 0 );
 
@@ -443,7 +443,7 @@ void CNetworkFS::HandleCFSWrite( void )
 
 	if ( m_pComms->RecvData( (uint8_t*)&oWriteHdr, sizeof(oWriteHdr) ) != sizeof(oWriteHdr) )
 	{
-		SetError( "Write read error" );
+		SetError( "Write __read error" );
 		return;
 	}
 
@@ -456,7 +456,7 @@ void CNetworkFS::HandleCFSWrite( void )
 		delete pszFilename;
 		delete pData;
 
-		SetError( "Write read error" );
+		SetError( "Write __read error" );
 		return;
 	}
 
@@ -467,7 +467,7 @@ void CNetworkFS::HandleCFSWrite( void )
 		delete pszFilename;
 		delete pData;
 
-		SetError( "Write read error" );
+		SetError( "Write __read error" );
 		return;
 	}
 
@@ -487,7 +487,7 @@ void CNetworkFS::HandleCFSWrite( void )
 	}
 
 	// Seek
-	if ( m_pFS->FileSeek( pFP, 0, SEEK_SET ) != 0 )
+	if ( m_pFS->FileSeek( pFP, 0, __SEEK_SET ) != 0 )
 	{
 		delete pData;
 
@@ -538,7 +538,7 @@ void CNetworkFS::HandleCFSWriteAppend( void )
 
 	if ( m_pComms->RecvData( (uint8_t*)&oWriteAppendHdr, sizeof(oWriteAppendHdr) ) != sizeof(oWriteAppendHdr) )
 	{
-		SetError( "Write append read error" );
+		SetError( "Write append __read error" );
 		return;
 	}
 
@@ -551,7 +551,7 @@ void CNetworkFS::HandleCFSWriteAppend( void )
 		delete pData;
 		delete pszFilename;
 
-		SetError( "Write append read error" );
+		SetError( "Write append __read error" );
 		return;
 	}
 
@@ -563,7 +563,7 @@ void CNetworkFS::HandleCFSWriteAppend( void )
 		delete pData;
 		delete pszFilename;
 
-		SetError( "Write append read error" );
+		SetError( "Write append __read error" );
 		return;
 	}
 
@@ -620,7 +620,7 @@ void CNetworkFS::HandleCFSDel( void )
 
 	if ( m_pComms->RecvData( (uint8_t*)&oDeleteHdr, sizeof(oDeleteHdr) ) != sizeof(oDeleteHdr) )
 	{
-		SetError( "Delete read error" );
+		SetError( "Delete __read error" );
 		return;
 	}
 
@@ -631,7 +631,7 @@ void CNetworkFS::HandleCFSDel( void )
 	{
 		delete pszFilename;
 
-		SetError( "Delete read error" );
+		SetError( "Delete __read error" );
 		return;
 	}
 
@@ -668,7 +668,7 @@ void CNetworkFS::HandleCFSRename( void )
 
 	if ( m_pComms->RecvData( (uint8_t*)&oRenameHdr, sizeof(oRenameHdr) ) != sizeof(oRenameHdr) )
 	{
-		SetError( "Rename read error" );
+		SetError( "Rename __read error" );
 		return;
 	}
 
@@ -681,7 +681,7 @@ void CNetworkFS::HandleCFSRename( void )
 		delete pszOrigFilename;
 		delete pszNewFilename;
 
-		SetError( "Rename read error" );
+		SetError( "Rename __read error" );
 		return;
 	}
 
@@ -692,7 +692,7 @@ void CNetworkFS::HandleCFSRename( void )
 		delete pszOrigFilename;
 		delete pszNewFilename;
 
-		SetError( "Rename read error" );
+		SetError( "Rename __read error" );
 		return;
 	}
 

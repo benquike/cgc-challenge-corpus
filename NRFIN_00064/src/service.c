@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -37,10 +37,10 @@ char* getRandomName() {
 	unsigned int idx=0;
 	const unsigned char *randomBuffer = (const unsigned char*) FLAG_PAGE;
 
-	if(!(string = malloc(11)))
+	if(!(string = __malloc(11)))
 		return NULL;
 
-	bzero(string, 11);
+	__bzero(string, 11);
 
 
 	for(int c=0; c<10; c++) {
@@ -73,7 +73,7 @@ char* getRandomName() {
 char getMove() {
 	char tmp[4];
 	size_t bytes;
-	bzero(tmp, 4);
+	__bzero(tmp, 4);
 
 	if(read_n_bytes(STDIN, tmp, 2, &bytes))
 		_terminate(READ_ERROR);
@@ -100,12 +100,12 @@ void sendGameDescription(Dungeon dungeon) {
 	size_t len=0;
 	int ret=0;
 
-	bzero(buffer, 1024);
-	sprintf(buffer, "Game moves\n----------\nLeft: !C\nRight: !C\nJump: !C\nJump Left: !C\nJump Right: !C\nWait: !C\nQuit game: !C\n",
+	__bzero(buffer, 1024);
+	__sprintf(buffer, "Game moves\n----------\nLeft: !C\nRight: !C\nJump: !C\nJump Left: !C\nJump Right: !C\nWait: !C\nQuit game: !C\n",
 					dungeon.moveTypes.left, dungeon.moveTypes.right, dungeon.moveTypes.jump, dungeon.moveTypes.jumpleft,
 					dungeon.moveTypes.jumpright, dungeon.moveTypes.wait, dungeon.moveTypes.quit);
 
-	len = strlen(buffer);
+	len = __strlen(buffer);
 	if((ret = transmit_all(STDOUT, buffer, len)))
 		_terminate(TRANSMIT_ERROR);
 }
@@ -125,11 +125,11 @@ void sendMenuInstruction(Dungeon dungeon) {
 	size_t len=0;
 	int ret=0;
 
-	bzero(buffer, 1024);
-	sprintf(buffer, "Menu\n-----\nPlay game: !C\nGet instructions: !C\nHigh Scores: !C\nQuit game: !C\n",
+	__bzero(buffer, 1024);
+	__sprintf(buffer, "Menu\n-----\nPlay game: !C\nGet instructions: !C\nHigh Scores: !C\nQuit game: !C\n",
 			dungeon.moveTypes.play, dungeon.moveTypes.instructions, dungeon.moveTypes.scores, dungeon.moveTypes.quit);
 
-	len = strlen(buffer);
+	len = __strlen(buffer);
 	if((ret = transmit_all(STDOUT, buffer, len)))
 		_terminate(TRANSMIT_ERROR);
 }
@@ -180,38 +180,38 @@ int playGame(Dungeon* dungeon) {
 void sendHighScores(Score* scoreList) {
 #ifdef PATCHED_2
 	char buffer[sizeof(MASTER_MSG)+MAX_NAME_SIZE+10];
-	bzero((char*)buffer, sizeof(MASTER_MSG)+MAX_NAME_SIZE+10);
+	__bzero((char*)buffer, sizeof(MASTER_MSG)+MAX_NAME_SIZE+10);
 #else
 	char buffer[10+MAX_NAME_SIZE+1];
-	bzero((char*)buffer, 10+MAX_NAME_SIZE+1);
+	__bzero((char*)buffer, 10+MAX_NAME_SIZE+1);
 #endif
 	Score* highScore = scoreList;
 	int num=2;
 
 	if(!highScore) {
 
-		if(transmit_all(STDOUT, NO_SCORES_MSG, strlen(NO_SCORES_MSG)))
+		if(transmit_all(STDOUT, NO_SCORES_MSG, __strlen(NO_SCORES_MSG)))
 			_terminate(TRANSMIT_ERROR);
 
 		return;
 	}
 
-	sprintf((char*)buffer, MASTER_MSG, highScore->score, highScore->name);
-	if(transmit_all(STDOUT, buffer, strlen((char*)buffer)))
+	__sprintf((char*)buffer, MASTER_MSG, highScore->score, highScore->name);
+	if(transmit_all(STDOUT, buffer, __strlen((char*)buffer)))
 			_terminate(TRANSMIT_ERROR);
 
-	if(transmit_all(STDOUT, HIGHSCORE_HDR, strlen(HIGHSCORE_HDR)))
+	if(transmit_all(STDOUT, HIGHSCORE_HDR, __strlen(HIGHSCORE_HDR)))
 		_terminate(TRANSMIT_ERROR);
 
 	for(Score* score=highScore->next; score!=NULL; score=score->next) {
 #ifdef PATCHED_2
-		bzero((char*)buffer, sizeof(MASTER_MSG)+MAX_NAME_SIZE+10);
+		__bzero((char*)buffer, sizeof(MASTER_MSG)+MAX_NAME_SIZE+10);
 #else
-		bzero((char*)buffer, 10+MAX_NAME_SIZE+1);
+		__bzero((char*)buffer, 10+MAX_NAME_SIZE+1);
 #endif
-		sprintf((char*)buffer, "!U. !U  !X\n", num, score->score, score->name);
+		__sprintf((char*)buffer, "!U. !U  !X\n", num, score->score, score->name);
 		num++;
-		if(transmit_all(STDOUT, buffer, strlen((char*)buffer)))
+		if(transmit_all(STDOUT, buffer, __strlen((char*)buffer)))
 			_terminate(TRANSMIT_ERROR);		
 	}
 }
@@ -227,25 +227,25 @@ void initScoreboard(Dungeon* dungeon) {
 	Score* newScore;
 
 
-	if(!(newScore = malloc(sizeof(Score)))) 
+	if(!(newScore = __malloc(sizeof(Score)))) 
 		_terminate(ALLOCATE_ERROR);
-	bzero((char*)newScore, sizeof(Score));
+	__bzero((char*)newScore, sizeof(Score));
 	newScore->name = getRandomName();
 	newScore->score = 600;
 	newScore->next = NULL;
 	dungeon->highScores = insertNewScore(dungeon->highScores, newScore);
 
-	if(!(newScore = malloc(sizeof(Score)))) 
+	if(!(newScore = __malloc(sizeof(Score)))) 
 		_terminate(ALLOCATE_ERROR);
-	bzero((char*)newScore, sizeof(Score));
+	__bzero((char*)newScore, sizeof(Score));
 	newScore->name = getRandomName();
 	newScore->score = 601;
 	newScore->next = NULL;
 	dungeon->highScores = insertNewScore(dungeon->highScores, newScore);
 
-	if(!(newScore = malloc(sizeof(Score)))) 
+	if(!(newScore = __malloc(sizeof(Score)))) 
 		_terminate(ALLOCATE_ERROR);
-	bzero((char*)newScore, sizeof(Score));
+	__bzero((char*)newScore, sizeof(Score));
 	newScore->name = getRandomName();
 	newScore->score = 999999;
 	newScore->next = NULL;

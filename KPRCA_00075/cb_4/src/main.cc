@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -56,12 +56,12 @@ DEFINE_CLASS(Packet, packet)
         {
             if (i == blocks - 1)
             {
-                memcpy(encoded, data.buffer() + i * 255, 255 - missing);
-                memset(encoded + 255 - missing, 0, missing);
+                __memcpy(encoded, data.buffer() + i * 255, 255 - missing);
+                __memset(encoded + 255 - missing, 0, missing);
             }
             else
             {
-                memcpy(encoded, data.buffer() + i * 255, 255);
+                __memcpy(encoded, data.buffer() + i * 255, 255);
             }
 
             // TODO check return value
@@ -70,11 +70,11 @@ DEFINE_CLASS(Packet, packet)
 
             if (i == blocks - 1)
             {
-                memcpy(ctx->data + i * data_per_block, encoded + parity, data_per_block - missing);
+                __memcpy(ctx->data + i * data_per_block, encoded + parity, data_per_block - missing);
             }
             else
             {
-                memcpy(ctx->data + i * data_per_block, encoded + parity, data_per_block);
+                __memcpy(ctx->data + i * data_per_block, encoded + parity, data_per_block);
             }
         }
 

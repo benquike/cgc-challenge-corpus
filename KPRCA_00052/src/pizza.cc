@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -32,12 +32,12 @@ namespace {
     void print_helper(void *_topping)
     {
         Topping *topping = (Topping*)_topping;
-        printf("%s", topping->get_topping_name());
+        __printf("%s", topping->get_topping_name());
         if (topping->contains_pork())
-            printf("**");
+            __printf("**");
         else if(!topping->is_vegetarian())
-            printf("*");
-        printf("\n");
+            __printf("*");
+        __printf("\n");
     }
 }
 
@@ -85,7 +85,7 @@ bool Pizza::remove_sauce(size_t idx)
 void Pizza::print_toppings()
 {
     if (toppings.is_empty())
-        printf("\tNone\n");
+        __printf("\tNone\n");
     else
         toppings.print_list(&print_helper);
 }
@@ -93,7 +93,7 @@ void Pizza::print_toppings()
 void Pizza::print_sauces()
 {
     if (sauce_ots.is_empty())
-        printf("\tNone\n");
+        __printf("\tNone\n");
     else
         sauce_ots.print_list(&print_helper);
 }
@@ -110,9 +110,9 @@ size_t Pizza::get_num_sauces()
 
 void Pizza::print_pizza()
 {
-    printf("    Selected Toppings\n");
+    __printf("    Selected Toppings\n");
     print_toppings();
-    printf("    Sauce on the side\n");
+    __printf("    Sauce on the side\n");
     print_sauces();
 }
 

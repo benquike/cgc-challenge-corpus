@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -91,7 +91,7 @@ int recvline(int fd, char *buf, size_t size) {
 }
 
 //non-standard convention, returns num bytes copied instead of s1
-size_t strcpy(char *s1, char *s2) {
+size_t __strcpy(char *s1, char *s2) {
     char *tmp = s1;
     while(*s2){
         *tmp = *s2;
@@ -103,7 +103,7 @@ size_t strcpy(char *s1, char *s2) {
 }
 
 //non-standard convention, returns num bytes copied instead of s1
-size_t strncpy(char *s1, char *s2, size_t n) {
+size_t __strncpy(char *s1, char *s2, size_t n) {
     char *tmp = s1;
     while((tmp-s1 < n) && *s2){
         *tmp = *s2;
@@ -114,14 +114,14 @@ size_t strncpy(char *s1, char *s2, size_t n) {
     return tmp-s1;
 }
 
-char * strcat(char *s1, char *s2) {
+char * __strcat(char *s1, char *s2) {
     char *tmp = s1;
     while(*tmp) tmp++;
-    strcpy(tmp,s2);
+    __strcpy(tmp,s2);
     return s1;
 }
 
-size_t strlen(char *s){
+size_t __strlen(char *s){
     char *tmp = s;
     while(*tmp) tmp++;
     return (size_t)(tmp-s);

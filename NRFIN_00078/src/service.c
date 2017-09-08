@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -49,11 +49,11 @@ main(void)
     struct command *command;
     struct result *result;
 
-    if ((command = calloc(COMMAND_SIZE)) == NULL)
+    if ((command = __calloc(COMMAND_SIZE)) == NULL)
         return -1;
 
     while (1) {
-        memset(command, '\0', COMMAND_SIZE);
+        __memset(command, '\0', COMMAND_SIZE);
         read_all(STDIN, command, sizeof(struct command));
         if (command->size && command->size <= MAX_COMMAND_SIZE)
             read_all(STDIN, command->buf, command->size);
@@ -63,7 +63,7 @@ main(void)
             result->result = ret;
             result->csum = generate_csum(result->buf, result->size);
             write_all(STDOUT, result, sizeof(struct result) + result->size);
-            free(result);
+            __free(result);
         } else {
             write_all(STDOUT, &ret, sizeof(int));
         }

@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -46,7 +46,7 @@ mail_queue *root_queue;
 
 char *gen_random_string(int min, int max) {
     int length = random_in_range(min, max);
-    char *s = calloc(length);
+    char *s = __calloc(length);
     for(int i=0; i<length - 2; i++) {
         s[i] = random_in_range(0x30, 0x7e);
     }
@@ -55,7 +55,7 @@ char *gen_random_string(int min, int max) {
 
 address *add_random_addressbook_entry() {
     
-    address *a = calloc(sizeof(address));
+    address *a = __calloc(sizeof(address));
     a->name = gen_random_string(5, 32);
     a->home_server = gen_random_string(5, 32);
     a->mode = random_in_range(0,1);
@@ -101,7 +101,7 @@ address *pick_address() {
 address *lookup_name(char *name) {
     address *next = abook->root;
     while (next != NULL) {
-        if (strcmp(next->name, name) == 0) {
+        if (__strcmp(next->name, name) == 0) {
             break;
         }
         next = next->next;
@@ -110,7 +110,7 @@ address *lookup_name(char *name) {
 }
 
 mail_queue *add_random_queue() {
-    mail_queue *mq = calloc(sizeof(mail_queue));
+    mail_queue *mq = __calloc(sizeof(mail_queue));
     address *sender = pick_address();
     mq->name = sender->name;
     mq->root = add_random_message(mq);
@@ -127,12 +127,12 @@ mail_queue *add_random_queue() {
 }
 
 message *add_random_message(mail_queue *mq) {
-    message *m = calloc(sizeof(message));
+    message *m = __calloc(sizeof(message));
     m->sender = pick_address();
     m->recipient = pick_address();
     m->subject = gen_random_string(5, 32);
     m->data = gen_random_string(5,256);
-    m->data_length = strlen(m->data);
+    m->data_length = __strlen(m->data);
 
     if (mq->root != NULL) {
         message *next = mq->root;
@@ -153,11 +153,11 @@ void initialize_mail_queues() {
 }
 
 void print_address_book() {
-    printf("Address Book:\n");
+    __printf("Address Book:\n");
     address *a = abook->root;
     int i = 1;
     while (a != NULL) {
-        printf("$d) $s@$s [$d]\n", i, a->name, a->home_server, a->mode);
+        __printf("$d) $s@$s [$d]\n", i, a->name, a->home_server, a->mode);
         i++;
         a = a->next;
     }
@@ -167,8 +167,8 @@ char *make_string(char *str) {
     if (str == NULL) {
         return NULL;
     }
-    char *s = calloc(strlen(str) + 1);
-    strcpy(s, str);
+    char *s = __calloc(__strlen(str) + 1);
+    __strcpy(s, str);
     return s;
 }
 
@@ -222,11 +222,11 @@ void mailsend_post(char *line) {
     if (end != NULL) {
         *end = '\0';
     }
-    message *msg = calloc(sizeof(message));
+    message *msg = __calloc(sizeof(message));
     msg->sender = lookup_name(sender);
     msg->recipient = lookup_name(recipient);
     msg->data = make_string(body);
-    msg->data_length = strlen(body);
+    msg->data_length = __strlen(body);
     msg->subject = make_string(subject);
 
     if (msg->sender == NULL || msg->recipient == NULL) {
@@ -235,7 +235,7 @@ void mailsend_post(char *line) {
 
     mail_queue *mq = locate_queue(msg->sender->name);
     if (mq == NULL) {
-        mq = calloc(sizeof(mail_queue));
+        mq = __calloc(sizeof(mail_queue));
         mq->name = make_string(msg->sender->name);
         mq->root = msg;
         mail_queue *next = root_queue;
@@ -254,14 +254,14 @@ void mailsend_post(char *line) {
             next->next = msg;
         }
     }
-    printf("Message Received\n");
+    __printf("Message Received\n");
 }   
 
 
 mail_queue *locate_queue(char *name) {
     mail_queue *mq = root_queue;
     while (mq != NULL) {
-        if (strcmp(mq->name, name)==0) {
+        if (__strcmp(mq->name, name)==0) {
             return mq;
         }
         mq = mq->next;
@@ -274,16 +274,16 @@ void list_queue(char *line) {
     // Find a queue for that username
     mail_queue *mq = locate_queue(name);
     if (mq == 0) {
-        printf("Mail Queue Not Found\n");
+        __printf("Mail Queue Not Found\n");
         return;
     }
     int i = 0;
     message *msg = mq->root;
     while ((msg != NULL)&&(i < 10)) {
         if (msg ->sender != NULL && msg->recipient!= NULL) {
-            printf("$d) From:$s To: $s SUBJECT:$s\n", i, msg->sender->name, msg->recipient->name, msg->subject);
+            __printf("$d) From:$s To: $s SUBJECT:$s\n", i, msg->sender->name, msg->recipient->name, msg->subject);
         } else {
-            printf("$d) Malformed Message\n");
+            __printf("$d) Malformed Message\n");
         }
         i++;
         msg = msg->next;
@@ -296,18 +296,18 @@ void list_all_queues() {
     while ((mq != NULL)&&(j<10)) {
         j++;
         int i = 0;
-        printf("QUEUE: $s\n", mq->name);
+        __printf("QUEUE: $s\n", mq->name);
         message *msg = mq->root;
         while ((msg != NULL)&&(i < 10)) {
             if (msg ->sender != NULL && msg->recipient!= NULL) {
-                printf("$d) From:$s To: $s SUBJECT:$s\n", i, msg->sender->name, msg->recipient->name, msg->subject);
+                __printf("$d) From:$s To: $s SUBJECT:$s\n", i, msg->sender->name, msg->recipient->name, msg->subject);
             } else {
-                printf("$d) Malformed Message\n");
+                __printf("$d) Malformed Message\n");
             }
             i++;
             msg = msg->next;
         }
-        printf("\n");
+        __printf("\n");
         mq = mq->next;
     }
 }
@@ -316,7 +316,7 @@ void read_message(char *line) {
     char *name = line;
     while ((*line != ' ') && (*line != '\0')) line++;
     *line++ = '\0';
-    int msg_num = atoi(line);
+    int msg_num = __atoi(line);
     mail_queue *mq = locate_queue(name);
     if (mq == NULL) {
         return;
@@ -328,7 +328,7 @@ void read_message(char *line) {
         next = next->next;
     }
     if (msg_num == i) {
-        printf("$d) Subject:$s Body:$s\n", i, next->subject, next->data);
+        __printf("$d) Subject:$s Body:$s\n", i, next->subject, next->data);
     }
 }
 
@@ -338,7 +338,7 @@ void mailsend(int argc, char **argv) {
     // parse arguments
     while (argc > 0) {
 
-        if (!strcmp(*argv, "-d")) {
+        if (!__strcmp(*argv, "-d")) {
             debug_mode = 1;
             goto next;
         }
@@ -350,7 +350,7 @@ void mailsend(int argc, char **argv) {
     // Initialize mail server
     srand();
     int num_mailq = 0;
-    abook = calloc(sizeof(address_book));
+    abook = __calloc(sizeof(address_book));
     initialize_address_book();
     initialize_mail_queues();
 
@@ -360,7 +360,7 @@ void mailsend(int argc, char **argv) {
     int line_size = 0;
     do {
         // Read a line
-        if ((line_size = receive_until(line, MAX_LINE, '\n')) <= 0) {
+        if ((line_size = __receive_until(line, MAX_LINE, '\n')) <= 0) {
             break;
         }
         line[line_size] = '\0';
@@ -369,33 +369,33 @@ void mailsend(int argc, char **argv) {
         // Terminate first command word
         while ((*next != ' ') && (*next != '\0')) next++;
         *next++ = '\0';
-        if (strcmp(line, "LIST")==0) {
+        if (__strcmp(line, "LIST")==0) {
             // List one mail queue
             list_queue(next);
-        } else if (strcmp(line, "LISTALL")==0) {
+        } else if (__strcmp(line, "LISTALL")==0) {
             // List all mail queues
             list_all_queues();
-        } else if (strcmp(line, "POST")==0) {
+        } else if (__strcmp(line, "POST")==0) {
             // Post a message
             mailsend_post(next);
-        } else if (strcmp(line, "READ")==0) {
+        } else if (__strcmp(line, "READ")==0) {
             // Read a message
             read_message(next);
-        } else if (strcmp(line, "ADDRESSBOOK")==0) {
+        } else if (__strcmp(line, "ADDRESSBOOK")==0) {
             // Print address book
             print_address_book();
-        } else if (strcmp(line, "QUIT")==0) {
+        } else if (__strcmp(line, "QUIT")==0) {
             // Quit mail server
             break;
         } else {
             // Invalid command
-            printf("Invalid Command!\n");
+            __printf("Invalid Command!\n");
             quit = 1;
         }
 
     } while (quit == 0);
 
-    printf("Goodbye.\n");
+    __printf("Goodbye.\n");
 }
 
 int main(void) {
@@ -409,7 +409,7 @@ int main(void) {
     timeout.tv_usec = 0;
     int ret;
 
-    // read input
+    // __read input
     while (1) {
         FD_ZERO(&fds);
         FD_SET(FD_FROM_MAIN, &fds);
@@ -426,12 +426,12 @@ int main(void) {
             // parse input
             char *p = input;
             while (i < 14) {
-                while(isspace(*p)) p++;
+                while(__isspace(*p)) p++;
                 if (!*p)
                     break;
-                if (*p && !isspace(*p)) {
+                if (*p && !__isspace(*p)) {
                     args[i++] = p;
-                    while (*p && !isspace(*p)) p++;
+                    while (*p && !__isspace(*p)) p++;
                     *p++ = '\0';
                 }
             }
@@ -446,6 +446,6 @@ int main(void) {
     } 
 
     EXIT:
-    // exit
+    // __exit
     return 0;
 }

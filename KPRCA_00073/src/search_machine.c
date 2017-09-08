@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -57,7 +57,7 @@ int InitializeSearchMachine(search_machine* SearchMachine, trie* Trie)
   {
     SearchMachine->Goto[TrieIndex] = xcalloc(sizeof(trie*), UNIT_CARDINALITY);
     trie* TrieToCopy = FindInTrieByIdentifier(Trie, TrieIndex);
-    memcpy(SearchMachine->Goto[TrieIndex], TrieToCopy->Children, sizeof(trie*) * UNIT_CARDINALITY);
+    __memcpy(SearchMachine->Goto[TrieIndex], TrieToCopy->Children, sizeof(trie*) * UNIT_CARDINALITY);
   }
 
   // g(ROOT, a) := ROOT forall a in SIGMA where a doesn't leave ROOT
@@ -96,7 +96,7 @@ void FreeSearchMachine(search_machine* SearchMachine)
 
     if (SearchMachine->Fail)
     {
-      free(SearchMachine->Fail);
+      __free(SearchMachine->Fail);
       SearchMachine->Fail = NULL;
     }
 
@@ -106,13 +106,13 @@ void FreeSearchMachine(search_machine* SearchMachine)
       {
         if (SearchMachine->Goto[GotoIndex])
         {
-          free(SearchMachine->Goto[GotoIndex]);
+          __free(SearchMachine->Goto[GotoIndex]);
           SearchMachine->Goto[GotoIndex] = NULL;
         }
       }
     }
 
-    free(SearchMachine);
+    __free(SearchMachine);
   }
 }
 
@@ -140,9 +140,9 @@ match* FindMatches(search_machine *SearchMachine, trie_unit* Data, size_t DataSi
         size_t NewMaxMatches = MaxMatches * 2 + 1;
         Assert(NewMaxMatches > MaxMatches, "MATCH");
         match* NewMatches = xcalloc(sizeof(match), NewMaxMatches);
-        memcpy(NewMatches, Matches, sizeof(match) * MaxMatches);
+        __memcpy(NewMatches, Matches, sizeof(match) * MaxMatches);
         MaxMatches = NewMaxMatches;
-        free(Matches);
+        __free(Matches);
         Matches = NewMatches;
       }
 

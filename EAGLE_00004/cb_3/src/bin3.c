@@ -77,7 +77,7 @@ int run_program(inst_t *program, int size) {
    int op0;
    int op1;
    int result;
-   memset(&cpu, 0, sizeof(cpu));
+   __memset(&cpu, 0, sizeof(cpu));
    PC = 0;
    current = NULL;
    op0 = 0;
@@ -114,7 +114,7 @@ int run_program(inst_t *program, int size) {
             break;
          case OUT:
             op0 = read_op_value(&cpu, current, 0);
-            printf("OUT: 0x%.8x\n", op0);
+            __printf("OUT: 0x%.8x\n", op0);
 #ifdef DEBUG
             fprintf(stderr, "OUT: %d (%x)\n", op0, op0);
 #endif
@@ -210,14 +210,14 @@ int execute() {
    inst_t program[0x200];
    int PC;
 
-   memset(program, 0, sizeof(program));
+   __memset(program, 0, sizeof(program));
    PC = 0;
 #ifdef DEBUG
    fprintf(stderr, "execute hitting illegal inst\n");
 #endif
 
 #ifdef DEBUG
-   fprintf(stderr, "child 3 entering read program loop\n");
+   fprintf(stderr, "child 3 entering __read program loop\n");
 #endif
    do {
       nbytes = read_all(PIPEFD_IN, (char*)(program + PC), sizeof(inst_t));
@@ -229,18 +229,18 @@ int execute() {
           goto done;
       }
 #ifdef DEBUG
-      fprintf(stderr, "read %d bytes from pipe 12\n", sizeof(inst_t));
+      fprintf(stderr, "__read %d bytes from pipe 12\n", sizeof(inst_t));
 #endif
    } while (++PC < 512);
 #ifdef DEBUG
-   fprintf(stderr, "child 3 leaving read program loop\n");
+   fprintf(stderr, "child 3 leaving __read program loop\n");
 #endif
    if (nbytes != sizeof(inst_t) && nbytes != 0) {
       result = -1;
    }
    else {
       result = run_program(program, PC);
-      printf("COMPLETE\n");
+      __printf("COMPLETE\n");
    }
 done:
    return result;

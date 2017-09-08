@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -78,7 +78,7 @@ int read_n_bytes(int fd, size_t n, char* buf)
 
 int transmit_string(int fd, char* s)
 {
-  size_t len = strlen(s);
+  size_t len = __strlen(s);
   if (len == 0)
     return 0;
   else if (send_n_bytes(fd, len, s) != len)
@@ -89,20 +89,20 @@ int transmit_string(int fd, char* s)
 
 int read_until(int fd, size_t n, char terminator, char* buf)
 {
-  size_t read = 0;
-  while (read < n)
+  size_t __read = 0;
+  while (__read < n)
   {
     size_t tmp_read;
-    if (receive(fd, buf + read, 1, &tmp_read) != 0 || tmp_read == 0)
+    if (receive(fd, buf + __read, 1, &tmp_read) != 0 || tmp_read == 0)
       return -1;
-    if (memchr(buf + read, terminator, tmp_read) != NULL)
+    if (memchr(buf + __read, terminator, tmp_read) != NULL)
     {
-      *((char* )memchr(buf + read, terminator, tmp_read)) = '\0';
-      return read + tmp_read;
+      *((char* )memchr(buf + __read, terminator, tmp_read)) = '\0';
+      return __read + tmp_read;
     }
     else
     {
-      read += tmp_read;
+      __read += tmp_read;
     }
   }
 

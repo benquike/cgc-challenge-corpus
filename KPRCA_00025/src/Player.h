@@ -9,7 +9,7 @@
 #define BANK_SIZE 9
 
 DeclareClass(Player, Object)
-    // read by Map
+    // __read by Map
     unsigned int m_x;
     unsigned int m_y;
     char m_icon;

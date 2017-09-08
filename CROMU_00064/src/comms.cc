@@ -4,7 +4,7 @@ Author: James Nuttall <james@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -74,10 +74,10 @@ void OutgoingMessage::SendAsExtended()
 	message += EXT_RESPONSE; // message type 2B
 
 	char arr[512];
-	bzero(arr, 512);
+	__bzero(arr, 512);
 	sprintf( arr, "$04x", swap( m_response ) );
 	message += arr; // 2B
-	bzero(arr, 512);
+	__bzero(arr, 512);
 
 	sprintf( arr, "$08x", swap_int( m_message.GetLength() / 2 ) );
 	message += arr; // ext message size 4B
@@ -87,7 +87,7 @@ void OutgoingMessage::SendAsExtended()
 	// opposite of ConvertToHexChars
 	uint8_t* final_msg = ConvertBackHexChars( ( uint8_t * )message.c_str(), message.GetLength() );
 
-	int retval = write( final_msg, message.GetLength() / 2 );
+	int retval = __write( final_msg, message.GetLength() / 2 );
 
 	if (retval == -1) 
 		_terminate(-1);
@@ -116,7 +116,7 @@ void OutgoingMessage::SendAsBasic()
 
 	// opposite of ConvertToHexChars
 	uint8_t* final_msg = ConvertBackHexChars( ( uint8_t * )message.c_str(), 24 );
-	int retval = write( final_msg, 12 );
+	int retval = __write( final_msg, 12 );
 
 	if (retval == -1) 
 		_terminate(-1);
@@ -265,10 +265,10 @@ begin:
 		pos = 0;
 #endif
 		// after a55a, start reading
-		// read the length (which contains the checksum), then return
+		// __read the length (which contains the checksum), then return
 		// further checking happens later
 
-		// read until first a5 is found, then start paying attention
+		// __read until first a5 is found, then start paying attention
 		receive_bytes( &c, 1 );
 
 		if ( c == SEQ_START )
@@ -312,7 +312,7 @@ begin:
 			}
 
 			uint32_t given_checksum = *( uint32_t* )&input_chars[body_len];
-			memcpy( ( unsigned char * )&given_checksum, input_chars + body_len, 4 );
+			__memcpy( ( unsigned char * )&given_checksum, input_chars + body_len, 4 );
 
 			if (checkval != given_checksum)
 				m_checksum_passed = false;

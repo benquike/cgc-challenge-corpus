@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -70,13 +70,13 @@ char seat_customers_at_table(unsigned int table_id, unsigned char qty, Customer 
 		// send customer id
 		DBG("Seating c->id: %U\n", c->id);
 		SEND(T_WRITE_FD(table_id), (char *)&c->id, sizeof(unsigned int));
-		free(c);
+		__free(c);
 	}
 
 	// recv status (OK if seated, ERR if seats are full and couldn't seat all customers)
 	RECV(T_READ_FD(MASTER_TID), status, sizeof(STATUS_OK));
 	DBG("Seating result: %S\n", status);
-	if (0 == memcmp((void *)STATUS_OK, status, sizeof(STATUS_OK))) {
+	if (0 == __memcmp((void *)STATUS_OK, status, sizeof(STATUS_OK))) {
 		return SUCCESS;
 	} else {
 		return -1;
@@ -87,7 +87,7 @@ char close_table(unsigned int table_id) {
 	char status[sizeof(STATUS_OK) + 1] = {0};
 	SEND(T_WRITE_FD(table_id), T_CMD_QUIT, sizeof(T_CMD_QUIT));
 	RECV(T_READ_FD(MASTER_TID), status, sizeof(STATUS_OK));
-	if (0 == memcmp((void *)STATUS_OK, status, sizeof(STATUS_OK))) {
+	if (0 == __memcmp((void *)STATUS_OK, status, sizeof(STATUS_OK))) {
 		return SUCCESS;
 	} else {
 		return -1;
@@ -125,15 +125,15 @@ unsigned char get_orders_from_table(unsigned int table_id, Order **o_list) {
 	// recv orders
 	ret = order_count;
 	while (0 < order_count) {
-		o = malloc(sizeof(Order));
+		o = __malloc(sizeof(Order));
 		MALLOC_OK(o);
-		memset(o, '\x00', sizeof(Order));
+		__memset(o, '\x00', sizeof(Order));
 		RECV(T_READ_FD(MASTER_TID), (char *)&o->t_id, sizeof(unsigned int));
 		RECV(T_READ_FD(MASTER_TID), (char *)&o->c_id, sizeof(unsigned int));
 		RECV(T_READ_FD(MASTER_TID), (char *)&o->ftype, sizeof(FoodTypes));
 		switch (o->ftype) {
 			case APP_TYPE:
-				app = malloc(sizeof(Appetizer));
+				app = __malloc(sizeof(Appetizer));
 				MALLOC_OK(app);
 				app->ftype = o->ftype;
 				DBG("receiving appetizer\n");
@@ -141,7 +141,7 @@ unsigned char get_orders_from_table(unsigned int table_id, Order **o_list) {
 				o->item = (void *)app;
 				break;
 			case MEAL_TYPE:
-				meal = malloc(sizeof(Meal));
+				meal = __malloc(sizeof(Meal));
 				MALLOC_OK(meal);
 				meal->ftype = o->ftype;
 				DBG("receiving meal\n");
@@ -149,7 +149,7 @@ unsigned char get_orders_from_table(unsigned int table_id, Order **o_list) {
 				o->item = (void *)meal;
 				break;
 			case DES_TYPE:
-				des = malloc(sizeof(Dessert));
+				des = __malloc(sizeof(Dessert));
 				MALLOC_OK(des);
 				des->ftype = o->ftype;
 				DBG("receiving dessert\n");
@@ -158,7 +158,7 @@ unsigned char get_orders_from_table(unsigned int table_id, Order **o_list) {
 				break;
 			default:
 				DBG("invalid Order ftype\n");
-				free(o);
+				__free(o);
 				return 0;
 		}
 		append_order_to_list(o_list, o);
@@ -212,18 +212,18 @@ char deliver_orders_to_table(unsigned int table_id, Order **o_list) {
 				break;
 			default:
 				DBG("invalid Order ftype %U\n", o->ftype);
-				free(o);
+				__free(o);
 				return 0;
 		}
-		free(o->item);
-		free(o);
+		__free(o->item);
+		__free(o);
 		o = pop_order_from_list(o_list);
 	}
 
 	// recv status (OK if all orders delivered correctly, ERR if one or more orders was undeliverable)
 	RECV(T_READ_FD(MASTER_TID), status, sizeof(STATUS_OK));
 	DBG("Order delivery result: %S\n", status);
-	if (0 == memcmp((void *)STATUS_OK, status, sizeof(STATUS_OK))) {
+	if (0 == __memcmp((void *)STATUS_OK, status, sizeof(STATUS_OK))) {
 		return SUCCESS;
 	} else {
 		return -1;
@@ -236,7 +236,7 @@ char clean_and_set_table(unsigned int table_id) {
 	DBG("Directing clean and set table ID: %U on fd: %U\n", table_id, T_WRITE_FD(table_id));
 	SEND(T_WRITE_FD(table_id), T_CMD_TABLE_CLEAN_SET, sizeof(T_CMD_TABLE_CLEAN_SET));
 	RECV(T_READ_FD(MASTER_TID), status, sizeof(STATUS_OK));
-	if (0 == memcmp((void *)STATUS_OK, status, sizeof(STATUS_OK))) {
+	if (0 == __memcmp((void *)STATUS_OK, status, sizeof(STATUS_OK))) {
 		return SUCCESS;
 	} else {
 		return -1;

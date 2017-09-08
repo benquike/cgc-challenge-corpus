@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -27,11 +27,11 @@ extern "C" {
 
 extern void terminate(int);
 extern "C" {
-  void __cxa_pure_virtual() { exit(0); }
+  void __cxa_pure_virtual() { __exit(0); }
 };
 
 void *operator new(unsigned int sz) {
-  return malloc(sz);
+  return __malloc(sz);
 }
 
 void *operator new[](unsigned int sz) {
@@ -39,7 +39,7 @@ void *operator new[](unsigned int sz) {
 }
 
 void operator delete(void *p) {
-  free(p);
+  __free(p);
 }
 
 void operator delete[](void *p) {
@@ -48,7 +48,7 @@ void operator delete[](void *p) {
 
 #define __hidden __attribute__((__visibility__("hidden")))
 
-void *__dso_handle; /* required symbol, but not used */
+extern void *__dso_handle; /* required symbol, but not used */
 
 extern "C" {
   extern void (*__init_array_start[])(int, char **, char **) __hidden;

@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.co>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -38,9 +38,9 @@ void print_board(int board_size, unsigned char board[][board_size])
 	{
 		for(int x=0; x<board_size; x++)
 		{
-			printf("@c ", board[x][y]);
+			__printf("@c ", board[x][y]);
 		}
-		printf("\n");
+		__printf("\n");
 	}
 }
 
@@ -55,7 +55,7 @@ void slots(player_info *player)
 	
 	// Accept board size
 	char input;
-	printf("Enter number of rows (2 to 5):");
+	__printf("Enter number of rows (2 to 5):");
 	receive_fixed_input(&input, '\n', sizeof(input));
 	if ((input < '2') || (input > '5'))
 	{
@@ -71,7 +71,7 @@ void slots(player_info *player)
 		}
 		player->slots_score += 1;
 		unsigned char board[board_size][board_size];
-		bzero(board, sizeof(board));
+		__bzero(board, sizeof(board));
 
 		// Adjust number of characters used to control odds of winning
 		char max_char = '/';
@@ -112,7 +112,7 @@ void slots(player_info *player)
 			}
 			if (y == board_size)
 			{
-				printf("Column match: @d!\n", x);
+				__printf("Column match: @d!\n", x);
 				if (player)
 				{
 					player->wallet += payouts[SLOTS_COLUMN_MATCH];
@@ -132,14 +132,14 @@ void slots(player_info *player)
 			}
 			if (x == board_size)
 			{
-				printf("Row match: @d!\n", y);
+				__printf("Row match: @d!\n", y);
 				if (player)
 				{
 					player->wallet += payouts[SLOTS_ROW_MATCH];
 				}
 			}
 		}
-		printf("Enter q to quit, any other key to play again:");
+		__printf("Enter q to quit, any other key to play again:");
 		receive_fixed_input(&input, '\n', sizeof(input));
 	}
 }

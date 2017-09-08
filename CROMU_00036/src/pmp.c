@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.co>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -54,7 +54,7 @@ int PMPGenerate(PMP_File *pmp, Canvas *c) {
   if (allocate(pmp->data_size, 0, (void **)&pmp->data) != 0) {
     _terminate(-1);
   } 
-  memset(pmp->data, 0, pmp->data_size); 
+  __memset(pmp->data, 0, pmp->data_size); 
 
   pmp->info.size = sizeof(PMP_Info);
   pmp->info.y_size = c->y_size;
@@ -72,7 +72,7 @@ int PMPGenerate(PMP_File *pmp, Canvas *c) {
   for (y = c->y_size - 1; y >= 0; y--) {
     for (x = 0; x < c->x_size; x++) {
       RGB_Color *color = GetColor(c, y, x, 0);
-      memcpy(data, color, sizeof(RGB_Color));
+      __memcpy(data, color, sizeof(RGB_Color));
       data += sizeof(RGB_Color);
     }
     data += row_pad;

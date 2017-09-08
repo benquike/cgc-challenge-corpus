@@ -3,7 +3,7 @@
  * 
  * Copyright (c) 2014 Kaprica Security, Inc.
  * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -90,27 +90,27 @@ int isprint(int c)
     return isascii(c) && (_ctypes[c] & CTYPE_CNTRL) == 0;
 }
 
-int isalnum(int c)
+int __isalnum(int c)
 {
     return isascii(c) && (_ctypes[c] & (CTYPE_LOWER|CTYPE_UPPER|CTYPE_DIGIT));
 }
 
-int isalpha(int c)
+int __isalpha(int c)
 {
     return isascii(c) && (_ctypes[c] & (CTYPE_LOWER|CTYPE_UPPER));
 }
 
-int islower(int c)
+int __islower(int c)
 {
     return isascii(c) && (_ctypes[c] & CTYPE_LOWER);
 }
 
-int isupper(int c)
+int __isupper(int c)
 {
     return isascii(c) && (_ctypes[c] & CTYPE_UPPER);
 }
 
-int isspace(int c)
+int __isspace(int c)
 {
     return isascii(c) && (_ctypes[c] & CTYPE_SPACE);
 }
@@ -122,7 +122,7 @@ int ispunct(int c)
 
 int tolower(int c)
 {
-    if (isupper(c))
+    if (__isupper(c))
         return c + 0x20;
     else
         return c;
@@ -130,7 +130,7 @@ int tolower(int c)
 
 int toupper(int c)
 {
-    if (islower(c))
+    if (__islower(c))
         return c - 0x20;
     else
         return c;

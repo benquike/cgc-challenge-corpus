@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.co>
 
 Copyright (c) 2014-2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -40,7 +40,7 @@ void zero(char *buf, unsigned int len) {
 	return;
 }
 
-size_t strlen(char *buf) {
+size_t __strlen(char *buf) {
 	size_t i = 0;
 
 	if (!buf) {
@@ -63,7 +63,7 @@ void print(char *buf) {
 		return;
 	}
 
-	len = strlen(buf);
+	len = __strlen(buf);
 	while (total_sent < len) {
 		if (transmit(STDOUT, buf+total_sent, len-total_sent, &tx_bytes) != 0) {
 			_terminate(-1);
@@ -106,8 +106,8 @@ int strmatch(char *buf1, char *buf2) {
 		return(0);
 	}
 
-	len1 = strlen(buf1);
-	if (len1 != strlen(buf2)) {
+	len1 = __strlen(buf1);
+	if (len1 != __strlen(buf2)) {
 		return(0);
 	}
 
@@ -127,7 +127,7 @@ void strcopy(char *dst, char *src) {
 		return;
 	}
 
-	for (i = 0; i < strlen(src); i++) {
+	for (i = 0; i < __strlen(src); i++) {
 		dst[i] = src[i];
 	}
 
@@ -155,7 +155,7 @@ int isdigits(char *buf) {
 		return(0);
 	}
 
-	for (i = 0; i < strlen(buf); i++) {
+	for (i = 0; i < __strlen(buf); i++) {
 		if (buf[i] < '0' || buf[i] > '9') {
 			return(0);
 		}
@@ -163,7 +163,7 @@ int isdigits(char *buf) {
 	return(1);
 }
 
-int atoi(char *buf) {
+int __atoi(char *buf) {
 	int i;
 	int val = 0;
 	int m = 1;
@@ -172,7 +172,7 @@ int atoi(char *buf) {
 		return(0);
 	}
 
-	i = strlen(buf);
+	i = __strlen(buf);
 	if (!i) {
 		return(0);
 	}
@@ -202,7 +202,7 @@ void print_uint(unsigned int val) {
 	}
 	buf[i] = '\0';
 
-	for (i = strlen(buf)-1; i >= 0; i--) {
+	for (i = __strlen(buf)-1; i >= 0; i--) {
 		buf2[j++] = buf[i];
 	}
 	buf2[j] = '\0';

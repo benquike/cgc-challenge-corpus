@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.co>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -51,7 +51,7 @@ int ReceiveAndVerifyInitializationPacket(SystemState *state) {
   if (allocate(sizeof(Statistics), 1, (void **)&state->stats) != 0) {
     FailAndTerminate("Failed to allocate statistics");
   }
-  bzero((char *)state->stats, sizeof(Statistics));
+  __bzero((char *)state->stats, sizeof(Statistics));
 
   return 0;
 }
@@ -81,11 +81,11 @@ int ReceiveAndVerifyFilters(SystemState *state) {
     if (allocate(filter->size, 1, (void **)&filter->mask) != 0) {
       FailAndTerminate("failed allocating filter mask");
     }
-    bzero((char *)filter->mask, filter->size);
+    __bzero((char *)filter->mask, filter->size);
     if (allocate(filter->size, 1, (void **)&filter->content) != 0) {
       FailAndTerminate("failed allocating filter content");
     }
-    bzero((char *)filter->content, filter->size);
+    __bzero((char *)filter->content, filter->size);
     // Read mask
     ReceiveBytes(filter->mask, filter->size);
     // Read filter
@@ -136,14 +136,14 @@ int ReceiveAndProcessFile(SystemState *state) {
       }
       option = option->next;
     }
-    bzero((void *)option, sizeof(OptionHeader));
+    __bzero((void *)option, sizeof(OptionHeader));
     ReceiveBytes(&option->type, sizeof(option->type));
     ReceiveBytes(&option->length, sizeof(option->length));
     // Allow 1 extra byte to ensure null termination 
     if (allocate(option->length + 1, 1, (void **)&option->value)) {
       FailAndTerminate("failed to allocate option header value");
     }
-    bzero(option->value, option->length + 1);
+    __bzero(option->value, option->length + 1);
     ReceiveBytes(option->value, option->length);
   }
 
@@ -170,7 +170,7 @@ int ReceiveAndProcessFile(SystemState *state) {
 }
 
 // Receive packets in loop, analyze, and print output
-// Will exit upon error or receipt of special 'end packet'
+// Will __exit upon error or receipt of special 'end packet'
 // Returns 0 for success, -1 for failure
 int ReceiveAndProcessStream(SystemState *state) {
   Packet packet;

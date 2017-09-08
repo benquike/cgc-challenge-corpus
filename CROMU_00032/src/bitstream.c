@@ -1,7 +1,7 @@
 /*
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,13 +37,13 @@ void freeStream( pBitStream *stream )
 		return;
 	}
 
-	/// Ensure the stream pointer is valid before attempting to free it.
+	/// Ensure the stream pointer is valid before attempting to __free it.
 	if ( t->stream ) {
-		free(t->stream);
+		__free(t->stream);
 	}
 
 	/// Free the meta structure
-	free( t );
+	__free( t );
 
 	/// Set the meta structure to NULL
 	*stream = NULL;
@@ -63,25 +63,25 @@ pBitStream initStream( char *newData, unsigned int newDataLength )
 		return pbs;
 	}
 
-	pbs = malloc( sizeof(BitStream) );
+	pbs = __malloc( sizeof(BitStream) );
 
 	if ( pbs == NULL ) {
 		return pbs;
 	}
 
-	memset( pbs, 0, sizeof( BitStream ) );
+	__memset( pbs, 0, sizeof( BitStream ) );
 
-	pbs->stream = malloc( newDataLength );
+	pbs->stream = __malloc( newDataLength );
 
 	if ( pbs->stream == NULL ) {
-		free(pbs);
+		__free(pbs);
 		pbs = NULL;
 		return pbs;
 	}
 
 	pbs->streamLength = newDataLength;
 
-	memcpy( pbs->stream, newData, newDataLength );
+	__memcpy( pbs->stream, newData, newDataLength );
 
 	return pbs;		
 }
@@ -105,11 +105,11 @@ int readBits( pBitStream stream, unsigned int bitCount, unsigned int *outBits )
 		return retval;
 	}
 
-	/// Calculate the end index after the read
+	/// Calculate the end index after the __read
 	outIndex = stream->byteIndex * 8;
 	outIndex += stream->bitIndex + bitCount;
 
-	/// Ensure that the read does not go beyond the buffer
+	/// Ensure that the __read does not go beyond the buffer
 	if ( stream->streamLength * 8 < outIndex ) {
 		return retval;
 	}

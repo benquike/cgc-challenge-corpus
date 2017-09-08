@@ -4,7 +4,7 @@ Copyright (c) 2016 Cromulence LLC
 
 Authors: Bryce Kerley <bk@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -55,7 +55,7 @@ compiler* compile(lexer_list* lexemes) {
   initial.current_position = 0;
   initial.clr.find_list =
     initial.last_op =
-    calloc(sizeof(operation));
+    __calloc(sizeof(operation));
   initial.error_lexeme = initial.clr.error_lexeme = NULL;
   
 
@@ -79,8 +79,8 @@ compiler* compile(lexer_list* lexemes) {
                           after_conclusion.error_lexeme);
   }
 
-  compiler* out = calloc(sizeof(compiler));
-  memcpy(out, &after_conclusion.clr, sizeof(compiler));
+  compiler* out = __calloc(sizeof(compiler));
+  __memcpy(out, &after_conclusion.clr, sizeof(compiler));
   
   return out;
 }
@@ -103,12 +103,12 @@ compiler_state compile_expression(compiler_state in) {
       out.last_op->sint32_value =
         strtol(current_lexeme->bytes, NULL, 10);
 
-      out.last_op->next = calloc(sizeof(operation));
+      out.last_op->next = __calloc(sizeof(operation));
       out.last_op = out.last_op->next;
 
       if (!stack_empty(mul_stack)) {
         out.last_op->type = stack_pop_operation_type(mul_stack);
-        out.last_op->next = calloc(sizeof(operation));
+        out.last_op->next = __calloc(sizeof(operation));
         out.last_op = out.last_op->next;
       }
 
@@ -119,12 +119,12 @@ compiler_state compile_expression(compiler_state in) {
       out.last_op->character_literal_length = current_lexeme->bytes_len;
       out.last_op->character_literal_value = current_lexeme->bytes;
 
-      out.last_op->next = calloc(sizeof(operation));
+      out.last_op->next = __calloc(sizeof(operation));
       out.last_op = out.last_op->next;
 
       if (!stack_empty(mul_stack)) {
         out.last_op->type = stack_pop_operation_type(mul_stack);
-        out.last_op->next = calloc(sizeof(operation));
+        out.last_op->next = __calloc(sizeof(operation));
         out.last_op = out.last_op->next;
       }
     }
@@ -142,7 +142,7 @@ compiler_state compile_expression(compiler_state in) {
 
       if (!stack_empty(add_stack)) {
         out.last_op->type = stack_pop_operation_type(add_stack);
-        out.last_op->next = calloc(sizeof(operation));
+        out.last_op->next = __calloc(sizeof(operation));
         out.last_op = out.last_op->next;
       }
       
@@ -179,7 +179,7 @@ compiler_state compile_expression(compiler_state in) {
   
   while (!stack_empty(add_stack)) {
     out.last_op->type = stack_pop_operation_type(add_stack);
-    out.last_op->next = calloc(sizeof(operation));
+    out.last_op->next = __calloc(sizeof(operation));
     out.last_op = out.last_op->next;
   }
   
@@ -208,7 +208,7 @@ compiler_state compile_function(compiler_state in) {
   out.last_op->type = OP_FUNCALL;
   out.last_op->function_name = func_name->bytes;
 
-  out.last_op->next = calloc(sizeof(operation));
+  out.last_op->next = __calloc(sizeof(operation));
   out.last_op = out.last_op->next;
   
   return out;
@@ -241,7 +241,7 @@ compiler_state compile_conclusion(compiler_state in) {
 }
 
 compiler* compiler_error(uint64 position, lexeme* lexeme) {
-  compiler* error_clr = calloc(sizeof(compiler));
+  compiler* error_clr = __calloc(sizeof(compiler));
   error_clr->error_position = position;
   error_clr->error_lexeme = lexeme;
   return error_clr;
@@ -250,18 +250,18 @@ compiler* compiler_error(uint64 position, lexeme* lexeme) {
 void operation_free(operation* op) {
   if (NULL == op) return;
   operation* next = op->next;
-  free(op);
+  __free(op);
   return operation_free(next);
 }
 
 void compiler_free(compiler* compiler) {
   operation_free(compiler->find_list);
-  free(compiler->relation_name);
-  free(compiler);
+  __free(compiler->relation_name);
+  __free(compiler);
 }
 
 compiler* compile_str(char* str) {
-  lexer_list* ll = lex_string(strlen(str), str);
+  lexer_list* ll = lex_string(__strlen(str), str);
   return compile(ll);
 }
 

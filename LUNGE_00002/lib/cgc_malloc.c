@@ -83,7 +83,7 @@ static void malloc_init(void) {
     unsigned short available;
     unsigned short i;
     state.pages = 0;
-    memset(&state, 0, sizeof(state));
+    __memset(&state, 0, sizeof(state));
     available = PAGE_SIZE - sizeof(chunk_header_t);
 
     for (i = 0; i < MAX_BUCKETS; i++) {
@@ -152,7 +152,7 @@ unsigned int ffs_u(unsigned int i) {
     return count;
 }
 
-void *malloc(size_t size) {
+void *__malloc(size_t size) {
     unsigned int i;
     void *ptr;
     bucket_t *bucket;
@@ -199,7 +199,7 @@ void *malloc(size_t size) {
     return ptr;
 }
 
-void free(void *ptr) {
+void __free(void *ptr) {
     chunk_header_t *chunk;
     bucket_t *bucket;
     unsigned int i;
@@ -231,7 +231,7 @@ void free(void *ptr) {
 
 #define MUL_NO_OVERFLOW (1UL << (sizeof(size_t) * 4))
 
-void * calloc(size_t nmemb, size_t size) {
+void * __calloc(size_t nmemb, size_t size) {
     void *ptr;
 
     assert(nmemb > 0);
@@ -239,6 +239,6 @@ void * calloc(size_t nmemb, size_t size) {
     assert(size < ( (unsigned int) SIZE_MAX / nmemb));
 
     size *= nmemb;
-    ptr = malloc(size);
-    return memset(ptr, 0, size);
+    ptr = __malloc(size);
+    return __memset(ptr, 0, size);
 }

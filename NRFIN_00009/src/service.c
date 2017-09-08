@@ -12,7 +12,7 @@ char* setValue(char* buffer, char* value) {
     while(*ptr && (*ptr!=*delim) && count < RESULT_VALUE_SIZE)
         ptr++, count++;
 
-    memcpy(value, buffer, count);
+    __memcpy(value, buffer, count);
 
     return ++ptr;
 
@@ -36,8 +36,8 @@ int parseResultSize(char* buffer)
     while(*end && (*end!=*delim) && count < KEY_SIZE)
             end++, count++;
 
-    memcpy(key, start, count);
-    if(strcmp(key, NUM_STR) == 0) {
+    __memcpy(key, start, count);
+    if(__strcmp(key, NUM_STR) == 0) {
         setValue(++end, value);
         num_results = str2int(value);
         return num_results;
@@ -65,8 +65,8 @@ int parseBalanceResult(char* buffer)
     while(*end && (*end!=*delim) && count < KEY_SIZE)
             end++, count++;
 
-    memcpy(key, start, count);
-    if(strcmp(key, BAL_STR) == 0) {
+    __memcpy(key, start, count);
+    if(__strcmp(key, BAL_STR) == 0) {
         setValue(++end, value);
         balance = str2int(value);
         if (balance < 0 || balance > 255)
@@ -88,7 +88,7 @@ int parseSearchResult(char* buffer, Song* song)
     char* delim = KEYVAL_DELIM;
     int ret =0;
 
-    memset(song, 0, SONG_SIZE);
+    __memset(song, 0, SONG_SIZE);
 
     start = buffer;
     while(1) {
@@ -97,16 +97,16 @@ int parseSearchResult(char* buffer, Song* song)
         while(*end && (*end!=*delim) && count < KEY_SIZE)
             end++, count++;
         
-        memcpy(key, start, count);
-        if(strcmp(key, SONG_ID_STR) == 0)
+        __memcpy(key, start, count);
+        if(__strcmp(key, SONG_ID_STR) == 0)
             start = setValue(++end, song->id);
-        else if(strcmp(key, PRICE_STR) == 0)
+        else if(__strcmp(key, PRICE_STR) == 0)
             start = setValue(++end, song->price);
-        else if(strcmp(key, ARTIST_STR) == 0)
+        else if(__strcmp(key, ARTIST_STR) == 0)
             start = setValue(++end, song->artist);
-        else if (strcmp(key, ALBUM_STR) == 0)
+        else if (__strcmp(key, ALBUM_STR) == 0)
             start = setValue(++end, song->album);
-        else if (strcmp(key, SONG_STR) == 0) {
+        else if (__strcmp(key, SONG_STR) == 0) {
             setValue(++end, song->song);
 
             return 0;
@@ -114,7 +114,7 @@ int parseSearchResult(char* buffer, Song* song)
         else
             return 0;
 
-        memset(key, 0, KEY_SIZE);
+        __memset(key, 0, KEY_SIZE);
     }
 
     return 0;
@@ -200,19 +200,19 @@ char * createSearchString(Request request)
     if (ret != 0)
         _terminate(3);
 
-    memset(buffer, 0, sizeof(request)+MIN_REQ_LEN);
-    strcat(buffer, TERM_STR);
-    strcat(buffer, KEYVAL_DELIM);
-    strcat(buffer, request.term);
-    strcat(buffer, PARAM_DELIM);
-    strcat(buffer, ATTRIBUTE_STR);
-    strcat(buffer, KEYVAL_DELIM);
-    strcat(buffer, request.attribute);
-    strcat(buffer, PARAM_DELIM);
-    strcat(buffer, LIMIT_STR);
-    strcat(buffer, KEYVAL_DELIM);
-    strcat(buffer, request.limit);
-    strcat(buffer, EOL_STR);
+    __memset(buffer, 0, sizeof(request)+MIN_REQ_LEN);
+    __strcat(buffer, TERM_STR);
+    __strcat(buffer, KEYVAL_DELIM);
+    __strcat(buffer, request.term);
+    __strcat(buffer, PARAM_DELIM);
+    __strcat(buffer, ATTRIBUTE_STR);
+    __strcat(buffer, KEYVAL_DELIM);
+    __strcat(buffer, request.attribute);
+    __strcat(buffer, PARAM_DELIM);
+    __strcat(buffer, LIMIT_STR);
+    __strcat(buffer, KEYVAL_DELIM);
+    __strcat(buffer, request.limit);
+    __strcat(buffer, EOL_STR);
 
     return buffer;
 }
@@ -240,7 +240,7 @@ void getRandomAttribute(Request* request)
     int index =0;
 
     index = getRandomNumber(ATTR_NUM);
-    memcpy(request->attribute, attributes[index], strlen(attributes[index]));
+    __memcpy(request->attribute, attributes[index], __strlen(attributes[index]));
 }
 
 void getRandomTerm(Request* request)
@@ -253,7 +253,7 @@ void getRandomTerm(Request* request)
         size = getRandomNumber(RESULT_VALUE_SIZE);
     }
 
-    charset_size = strlen(charset);
+    charset_size = __strlen(charset);
     for(index = 0; index < size; index++) {
         int letter = getRandomNumber(charset_size);
         request->term[index] = charset[letter];
@@ -265,11 +265,11 @@ void getRandomTerm(Request* request)
 
 void createRandomRequest(Request *request) {
 
-    memset(request, 0, REQUEST_SIZE);
+    __memset(request, 0, REQUEST_SIZE);
 
     getRandomTerm(request);
     getRandomAttribute(request);
-    memcpy(request->limit, RESULT_LIMIT_STR, sizeof(RESULT_LIMIT_STR));
+    __memcpy(request->limit, RESULT_LIMIT_STR, sizeof(RESULT_LIMIT_STR));
 
 }
 
@@ -284,8 +284,8 @@ size_t getRandomGiftCard(char** gift_card) {
     if (ret != 0)
         _terminate(3);
 
-    memset(*gift_card, 0, GIFT_CARD_LEN);
-    charset_size = strlen(charset);
+    __memset(*gift_card, 0, GIFT_CARD_LEN);
+    charset_size = __strlen(charset);
 
     for(index = 0; index < GIFT_CARD_LEN; index++) {
         int letter = getRandomNumber(charset_size);
@@ -317,12 +317,12 @@ int purchaseSong(int socket, Song* selectedSong, SongList* mySongList) {
 
         mySongList->balance -= price;
         mySongList->size++;
-        memcpy(&mySongList->songs[mySongList->size-1], selectedSong, RESULT_VALUE_SIZE*3);
+        __memcpy(&mySongList->songs[mySongList->size-1], selectedSong, RESULT_VALUE_SIZE*3);
 
-        ret = transmit_all(socket, mySongList->songs[mySongList->size-1].id, strlen(mySongList->songs[mySongList->size-1].id));
+        ret = transmit_all(socket, mySongList->songs[mySongList->size-1].id, __strlen(mySongList->songs[mySongList->size-1].id));
         if (ret != 0)
             _terminate(10);
-        ret = transmit_all(socket, "\n", strlen("\n"));
+        ret = transmit_all(socket, "\n", __strlen("\n"));
         if (ret != 0)
             _terminate(10);
 
@@ -339,7 +339,7 @@ int sendSearchString(int socket, Request request) {
 
     search_string = createSearchString(request);
 
-    ret = transmit_all(socket, search_string, strlen(search_string));
+    ret = transmit_all(socket, search_string, __strlen(search_string));
     if (ret != 0)
         _terminate(4);
 
@@ -358,17 +358,17 @@ int getBalance(SongList* mySongList) {
     if (ret != 0)
         _terminate(3);
 
-    memset(buffer, 0, size+sizeof("ID=")+sizeof("\n")+1);
+    __memset(buffer, 0, size+sizeof("ID=")+sizeof("\n")+1);
 
-    strcat(buffer,"ID=");
-    strcat(buffer,gift_card);
-    strcat(buffer,"\n");
+    __strcat(buffer,"ID=");
+    __strcat(buffer,gift_card);
+    __strcat(buffer,"\n");
 
     ret = deallocate(gift_card, size);
     if (ret != 0)
         _terminate(3);
 
-    ret = transmit_all(STDOUT, buffer, strlen(buffer));
+    ret = transmit_all(STDOUT, buffer, __strlen(buffer));
     if (ret != 0)
         _terminate(10);
 

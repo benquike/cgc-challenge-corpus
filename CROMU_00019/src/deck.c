@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.co>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -46,12 +46,12 @@ void shuffle(standard_deck *deck)
 // Print the face value of each card in the deck (2D, AH, etc)
 void print_deck(standard_deck *deck)
 {
-	printf("deck: ");
+	__printf("deck: ");
 	for (int i=0; i< SIZE_OF_DECK; i++)
 	{
-		printf("@s ", card_names[deck->deck[i]]);
+		__printf("@s ", card_names[deck->deck[i]]);
 	}
-	printf("\ntop: @d\n", deck->top);
+	__printf("\ntop: @d\n", deck->top);
 } 
 
 // Print the face value of each card in the hand
@@ -61,10 +61,10 @@ void print_hand(char *hand, size_t size)
 	{
 		if ((hand[i] > 0) && (hand[i] < SIZE_OF_DECK + 1))
 		{
-			printf("@s ", card_names[hand[i]]);
+			__printf("@s ", card_names[hand[i]]);
 		}
 	}
-	printf("\n");
+	__printf("\n");
 }
 
 // Draw a card from the deck.
@@ -73,7 +73,7 @@ char draw(standard_deck *deck)
 {
 	if (is_empty(deck))
 	{
-		printf("Error: Drawing from an empty deck!\n");
+		__printf("Error: Drawing from an empty deck!\n");
 		_terminate(1);
 	}
 	else

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -53,24 +53,24 @@ typedef __builtin_va_list va_list;
 #define EXIT_FAILURE (-1)
 #define EXIT_SUCCESS (0)
 
-struct FILE;
-typedef struct FILE FILE;
-extern FILE *stdin, *stdout, *stderr;
+struct __FILE;
+typedef struct __FILE __FILE;
+extern __FILE *stdin, *stdout, *stderr;
 
 /**
- * Read at most size bytes from FILE pointer into ptr, stopping on delim, buffered.
+ * Read at most size bytes from __FILE pointer into ptr, stopping on delim, buffered.
  *
  * @param ptr The output buffer
  * @param delim The byte to stop on
- * @param size The size to read
- * @param stream The FILE pointer to read from
+ * @param size The size to __read
+ * @param stream The __FILE pointer to __read from
  * @return size on success, else EXIT_FAILURE
  */
-ssize_t fread_until(void *ptr, unsigned char delim, size_t size, FILE *stream);
+ssize_t fread_until(void *ptr, unsigned char delim, size_t size, __FILE *stream);
 
 //#define DEBUG 1
 #ifdef DEBUG
-#define debug(args...) fdprintf(stderr,args)
+#define debug(args...) __fdprintf(stderr,args)
 #else
 #define debug(args...)
 #endif
@@ -114,7 +114,7 @@ ssize_t fread_until(void *ptr, unsigned char delim, size_t size, FILE *stream);
  * Get random bytes.
  *
  * @param s Number of random bytes to return.
- * @param b Buffer to write random bytes to.
+ * @param b Buffer to __write random bytes to.
  * @return Bytes in b.
  */
 #define RANDOM(s,b)  if(random(b, s, NULL)) DIE(RANDFAIL)
@@ -130,7 +130,7 @@ ssize_t fread_until(void *ptr, unsigned char delim, size_t size, FILE *stream);
 /**
  * Read in data from stdin
  *
- * @param s struct to read into
+ * @param s struct to __read into
  * @return 1 on success, 0 on failure
  */
 #define READDATA(s) (sizeof(s) == readall(STDIN,(char *)&s,sizeof(s)) ? 1 : 0)
@@ -138,7 +138,7 @@ ssize_t fread_until(void *ptr, unsigned char delim, size_t size, FILE *stream);
 /**
  * Send data to stdout
  *
- * @param s struct to write
+ * @param s struct to __write
  * @return 1 on success, 0 on failure
  */
 #define SENDDATA(s) (sizeof(s) == sendall(STDOUT,(char *)&s,sizeof(s)) ? 1 : 0)
@@ -146,15 +146,15 @@ ssize_t fread_until(void *ptr, unsigned char delim, size_t size, FILE *stream);
 /**
  * Send a string to stdout
  *
- * @param s string to write
+ * @param s string to __write
  * @return 1 on success, 0 on failure
  */
-#define SENDSTR(s) (strlen(s) == sendall(STDOUT,s,strlen(s)) ? 1 : 0)
+#define SENDSTR(s) (__strlen(s) == sendall(STDOUT,s,__strlen(s)) ? 1 : 0)
 
 /**
  * Send a string followed by newline to stdout
  *
- * @param s string to write
+ * @param s string to __write
  * @return 1 on success, 0 on failre
  */
 #define SENDLINE(s) (SENDSTR(s) && SENDSTR("\n"))
@@ -169,28 +169,28 @@ ssize_t fread_until(void *ptr, unsigned char delim, size_t size, FILE *stream);
 /**
  * Read until NEWLINE is hit
  *
- * @param fd File descriptor to read from.
- * @param buf Buffer to write read bytes to.
- * @param s Maximum number of bytes to read
- * @return Number of bytes read
+ * @param fd File descriptor to __read from.
+ * @param buf Buffer to __write __read bytes to.
+ * @param s Maximum number of bytes to __read
+ * @return Number of bytes __read
  */
 size_t readline(int fd, char *buf, size_t s);
 
 /**
- * Attempt to read a fixed number of bytes
+ * Attempt to __read a fixed number of bytes
  *
- * @param fd File descriptor to read from.
- * @param buf Buffer to write read bytes to.
- * @param s Maximum number of bytes to read
- * @return Number of bytes read 
+ * @param fd File descriptor to __read from.
+ * @param buf Buffer to __write __read bytes to.
+ * @param s Maximum number of bytes to __read
+ * @return Number of bytes __read 
  */
 size_t readall(int fd, char *buf, size_t s);
 
 /**
  * Attempt to send a fixed number of bytes
  *
- * @param fd File descriptor to write to
- * @param buf Buffer to read bytes from
+ * @param fd File descriptor to __write to
+ * @param buf Buffer to __read bytes from
  * @param s Number of bytes to send
  * @return Number of bytes sent.
  */
@@ -204,7 +204,7 @@ size_t sendall(int fd, char *buf, size_t s);
  * @param n Number of bytes to set
  * @return Pointer to buffer
  */
-void *memset(void *s, int c, size_t n);
+void *__memset(void *s, int c, size_t n);
 
 /**
  * Compare two strings for equality.
@@ -221,7 +221,7 @@ int streq(char *s1, char *s2);
  * @param s1 Input string.
  * @return Length of string, not including NULL terminator..
  */
-int strlen(const char *s); 
+int __strlen(const char *s); 
 
 /**
  * Format string and store in buffer
@@ -231,7 +231,7 @@ int strlen(const char *s);
  * @param ... Additional format arguments
  * @return None.
  */
-void sprintf(char *buf, const char *fmt, ...); 
+void __sprintf(char *buf, const char *fmt, ...); 
 
 /**
  * Format string and store in buffer
@@ -241,7 +241,7 @@ void sprintf(char *buf, const char *fmt, ...);
  * @param argp Additional format arguments
  * @return None.
  */
-void vsprintf(char *buf, const char *fmt, va_list argp); 
+void __vsprintf(char *buf, const char *fmt, va_list argp); 
 
 /**
  * Print things to stdout.
@@ -250,7 +250,7 @@ void vsprintf(char *buf, const char *fmt, va_list argp);
  * @param ... Additional format arguments
  * @return None.
  */
-void printf(const char *fmt, ...); 
+void __printf(const char *fmt, ...); 
 
 /**
  * Print things to file descriptor.
@@ -260,7 +260,7 @@ void printf(const char *fmt, ...);
  * @param ... Additional format arguments
  * @return None.
  */
-void fdprintf(int fd, const char *fmt, ...);
+void __fdprintf(int fd, const char *fmt, ...);
 
 /**
  * Print things to file descriptor.
@@ -270,7 +270,7 @@ void fdprintf(int fd, const char *fmt, ...);
  * @param argp Additional format arguments
  * @return None.
  */
-void vfdprintf(int fd, const char *fmt, va_list argp); 
+void __vfdprintf(int fd, const char *fmt, va_list argp); 
 
 /**
  * Tokenize string
@@ -279,7 +279,7 @@ void vfdprintf(int fd, const char *fmt, va_list argp);
  * @param sep Seperator to tokenize off of
  * @return Next token in string.
  */
-char *strtok(char *s, char sep); 
+char *__strtok(char *s, char sep); 
 
 /**
  * String copy
@@ -288,14 +288,14 @@ char *strtok(char *s, char sep);
  * @param s2 src
  * @return None.
  */
-void strcpy(char *s1, const char *s2); 
+void __strcpy(char *s1, const char *s2); 
 
 /**
  * String to int
  * @param s String to convert to int
  * @return Integer value
  */
-unsigned int atoi(char *s);
+unsigned int __atoi(char *s);
 
 /**
  * String cat
@@ -304,7 +304,7 @@ unsigned int atoi(char *s);
  * @param src src
  * @return None.
  */
-char * strcat(char *dest, const char *src);
+char * __strcat(char *dest, const char *src);
 
 /**
  * Memory copy
@@ -314,7 +314,7 @@ char * strcat(char *dest, const char *src);
  * @param len length
  * @return None.
  */
-void memcpy(void *dest, void *src, size_t len); 
+void __memcpy(void *dest, void *src, size_t len); 
 
 /**
  * Check if two buffers are equal
@@ -324,5 +324,5 @@ void memcpy(void *dest, void *src, size_t len);
  * @param len length
  * @return 0 if not equal, 1 if equal
  */
-int memeq(void *b1, void *b2, size_t len);
+int __memeq(void *b1, void *b2, size_t len);
 #endif

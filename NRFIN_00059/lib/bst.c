@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -29,7 +29,7 @@
 
 bst_node_t *bst_create_node(int key) {
 
-	bst_node_t *np = malloc(sizeof(bst_node_t));
+	bst_node_t *np = __malloc(sizeof(bst_node_t));
 	if (NULL == np) {
 		_terminate(ERRNO_ALLOC);
 	}
@@ -42,8 +42,8 @@ bst_node_t *bst_create_node(int key) {
 }
 
 void bst_delete_node(bst_node_t **node) {
-	memset(*node, '\0', sizeof(bst_node_t));
-	free(*node);
+	__memset(*node, '\0', sizeof(bst_node_t));
+	__free(*node);
 }
 
 void bst_init(bst_t *bst) {

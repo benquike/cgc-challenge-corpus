@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -68,7 +68,7 @@ static pixel_list_t *create_cell_list(qtree_t *qt, cell_filter_e filter)
         else if (filter == BOMB && !pixel->px.bomb_set);
         else if (filter == DEAD_CELL && (pixel->px.is_alive || pixel->px.bomb_set));
         else {
-            temp = calloc(1, sizeof(pixel_list_t));
+            temp = __calloc(1, sizeof(pixel_list_t));
             temp->px = pixel->px;
             INSERT_ITEM(list, temp);
         }
@@ -81,7 +81,7 @@ static pixel_list_t *create_cell_list(qtree_t *qt, cell_filter_e filter)
 
 coord_t *create_adjacent_coords(coord_t coord)
 {
-    coord_t *adj_cells = malloc(sizeof(coord_t) * 8);
+    coord_t *adj_cells = __malloc(sizeof(coord_t) * 8);
 
     SET_COORD(adj_cells[0], coord.x - 1, coord.y - 1);
     SET_COORD(adj_cells[1], coord.x - 0, coord.y - 1);
@@ -109,10 +109,10 @@ int bomb_collisions(pixel_list_t *bombs, pixel_list_t *living_cells)
         }
 
         coord_t *adj_cells = create_adjacent_coords(bombs->px.point);
-        coord_t *bomb_cells = malloc(sizeof(coord_t) * 9);
-        memcpy(bomb_cells, adj_cells, sizeof(coord_t) * 8);
+        coord_t *bomb_cells = __malloc(sizeof(coord_t) * 9);
+        __memcpy(bomb_cells, adj_cells, sizeof(coord_t) * 8);
         bomb_cells[8] = bombs->px.point;
-        free(adj_cells);
+        __free(adj_cells);
 
         iter = living_cells;
         while (iter != NULL) {
@@ -143,7 +143,7 @@ int bomb_collisions(pixel_list_t *bombs, pixel_list_t *living_cells)
         }
 
         bombs = bombs->next;
-        free(bomb_cells);
+        __free(bomb_cells);
         total_score += score;
     }
 
@@ -160,7 +160,7 @@ static int is_dead_cell_generation(coord_t coord)
         if (pixel != NULL && pixel->is_alive)
             num_living_cells++;
     }
-    free(adj_cells);
+    __free(adj_cells);
 
     if (num_living_cells == 3)
         return TRUE;
@@ -198,12 +198,12 @@ static void conway_step(conway_pixel_t cell, pixel_list_t **pgenerated_cells, pi
             if (cc_iter != NULL)    //Already checked
                 continue;
 
-            checked_coord = calloc(1, sizeof(coord_list_t));
+            checked_coord = __calloc(1, sizeof(coord_list_t));
             checked_coord->coord = adj_cells[i];
             INSERT_ITEM((*pchecked_coords), checked_coord);
 
             if (is_dead_cell_generation(adj_cells[i])) {
-                generated_cell = calloc(1, sizeof(pixel_list_t));
+                generated_cell = __calloc(1, sizeof(pixel_list_t));
                 if (pixel != NULL)
                     generated_cell->px = *pixel;
                 else
@@ -216,11 +216,11 @@ static void conway_step(conway_pixel_t cell, pixel_list_t **pgenerated_cells, pi
         }
     }
 
-    checked_coord = calloc(1, sizeof(coord_list_t));
+    checked_coord = __calloc(1, sizeof(coord_list_t));
     checked_coord->coord = cell.point;
     INSERT_ITEM((*pchecked_coords), checked_coord);
 
-    generated_cell = calloc(1, sizeof(pixel_list_t));
+    generated_cell = __calloc(1, sizeof(pixel_list_t));
     generated_cell->px = cell;
 
     if (num_living_cells == 2 || num_living_cells == 3) {
@@ -231,7 +231,7 @@ static void conway_step(conway_pixel_t cell, pixel_list_t **pgenerated_cells, pi
         INSERT_ITEM((*pdeceased_cells), generated_cell);
     }
 
-    free(adj_cells);
+    __free(adj_cells);
 }
 /*** END UTILITY FUNCTIONS ***/
 
@@ -305,10 +305,10 @@ static int qt_undivide(qtree_t *qt) {
     move_pixels(qt, qt->sw->pixels, qt->sw->num_pixels);
     move_pixels(qt, qt->se->pixels, qt->se->num_pixels);
 
-    free(qt->nw);
-    free(qt->ne);
-    free(qt->sw);
-    free(qt->se);
+    __free(qt->nw);
+    __free(qt->ne);
+    __free(qt->sw);
+    __free(qt->se);
 
     qt->nw = NULL;
     qt->ne = NULL;
@@ -352,7 +352,7 @@ static int qt_delete(qtree_t *qt, conway_pixel_t px)
 static qtree_t *qt_create(int max_level, region_t valid_region)
 {
     qtree_t *qt;
-    qt = malloc(sizeof(qtree_t));
+    qt = __malloc(sizeof(qtree_t));
     qt->max_levels = max_level;
     qt->max_pixels = PIXELS_PER_TRIE;
     qt->num_pixels = 0;
@@ -399,7 +399,7 @@ static int qt_insert(qtree_t *qt, conway_pixel_t px)
     }
 
     if (qt->num_pixels < qt->max_pixels) {
-        pixel_list_t *new_pixel = calloc(1, sizeof(pixel_list_t));
+        pixel_list_t *new_pixel = __calloc(1, sizeof(pixel_list_t));
         new_pixel->px = px;
         INSERT_ITEM(qt->pixels, new_pixel);
 
@@ -490,7 +490,7 @@ static int cg_step(int num_steps) {
             iter->px.bomb_set--;
             qt_insert(g_conway_gld, iter->px);
 
-            temp = calloc(1, sizeof(pixel_list_t));
+            temp = __calloc(1, sizeof(pixel_list_t));
             temp->px = iter->px;
             INSERT_PIXEL_IN_ORDER((bombs_ordered), temp);
             iter = iter->next;
@@ -592,7 +592,7 @@ static void print_board_helper(qtree_t *qt, pixel_list_t **list)
     pixel_list_t *pixel = qt->pixels, *temp;
     while(pixel != NULL) {
         if (pixel->px.is_alive || pixel->px.bomb_set) {
-            temp = calloc(1, sizeof(pixel_list_t));
+            temp = __calloc(1, sizeof(pixel_list_t));
             temp->px = pixel->px;
             INSERT_PIXEL_IN_ORDER((*list), temp);
         }
@@ -607,9 +607,9 @@ void gld_print_board(char *str)
     print_board_helper(g_conway_gld, &list);
 
     iter = list;
-    printf("%s", str);
+    __printf("%s", str);
     while(iter != NULL) {
-        printf("--| (x,y) = (%d,%d) | Alive=%d | Bomb=%d |\n",
+        __printf("--| (x,y) = (%d,%d) | Alive=%d | Bomb=%d |\n",
                 iter->px.point.x, iter->px.point.y, iter->px.is_alive, iter->px.bomb_set);
         iter = iter->next;
     }
@@ -620,16 +620,16 @@ void qt_debug_print_tree(qtree_t *qt, char *str) {
     if (qt == NULL)
         return;
     if(qt->num_pixels > 0) {
-        printf("Level: %d, ID: %s\n", MAX_LEVELS - qt->max_levels, str);
+        __printf("Level: %d, ID: %s\n", MAX_LEVELS - qt->max_levels, str);
 
         int i = 0;
         pixel_list_t *iter = qt->pixels;
 
         while(iter != NULL) {
             for(i = 0; i < MAX_LEVELS - qt->max_levels; i++)
-                printf("    >");
+                __printf("    >");
 
-            printf("--| (x,y) = (%d,%d) | Alive=%d | Bomb=%d |\n",
+            __printf("--| (x,y) = (%d,%d) | Alive=%d | Bomb=%d |\n",
                     iter->px.point.x, iter->px.point.y, iter->px.is_alive, iter->px.bomb_set);
             iter = iter->next;
         }

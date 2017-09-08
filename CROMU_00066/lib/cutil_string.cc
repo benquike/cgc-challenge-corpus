@@ -4,7 +4,7 @@ Copyright (c) 2016 Cromulence LLC
 
 Authors: Jason Williams <jdw@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -100,8 +100,8 @@ String& String::operator+=( const String &rhs )
 
 	char *pNewData = new char[new_stringlen+1];
 
-	memcpy( pNewData, m_pData, m_length );
-	memcpy( pNewData+m_length, rhs.m_pData, rhs.m_length );
+	__memcpy( pNewData, m_pData, m_length );
+	__memcpy( pNewData+m_length, rhs.m_pData, rhs.m_length );
 
 	// Keep a null terminator at the end for easy return of c_str
 	pNewData[m_length+rhs.m_length] = '\0';
@@ -127,7 +127,7 @@ String String::Upper( void ) const
 
 	for ( size_t i = 0; i < m_length; i++ )
 	{
-		if ( islower( sUpper.m_pData[i] ) )
+		if ( __islower( sUpper.m_pData[i] ) )
 			sUpper.m_pData[i] = toupper( sUpper.m_pData[i] );
 	}
 
@@ -140,7 +140,7 @@ String String::Lower( void ) const
 
 	for ( size_t i = 0; i < m_length; i++ )
 	{
-		if ( isupper( sLower.m_pData[i] ) )
+		if ( __isupper( sLower.m_pData[i] ) )
 			sLower.m_pData[i] = tolower( sLower.m_pData[i] );
 	}
 
@@ -199,7 +199,7 @@ bool String::ToInt( uint32_t &value )
 {
 	if ( !IsEmpty() )
 	{
-		value = atoi( m_pData );
+		value = __atoi( m_pData );
 		return (true);
 	}
 	else
@@ -230,11 +230,11 @@ void String::SetInternal( const char *pszStr )
 		return;
 	}
 
-	m_length = strlen( pszStr );
+	m_length = __strlen( pszStr );
 
 	m_pData = new char[m_length+1];
 
-	memcpy( m_pData, pszStr, m_length );
+	__memcpy( m_pData, pszStr, m_length );
 	m_pData[m_length] = '\0';
 }
 
@@ -247,6 +247,6 @@ void String::SetInternal( const String& str )
 
 	m_pData = new char[m_length+1];
 
-	memcpy( m_pData, str.m_pData, m_length );
+	__memcpy( m_pData, str.m_pData, m_length );
 	m_pData[m_length] = '\0';
 }

@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -27,11 +27,11 @@ THE SOFTWARE.
 #include <libcgc.h>
 #include "libc.h"
 
-// Receive until 'length' chars read OR 'end' char found OR newline. Up to 'length'
+// Receive until 'length' chars __read OR 'end' char found OR newline. Up to 'length'
 // chars written to 'dest', including 'end' char.  
 // Returns 0 on success, otherwise error code. 
-// Number of bytes read is returned in 'bytes_read'.
-int receive_until(char *dest, size_t length, char end, size_t *bytes_read)
+// Number of bytes __read is returned in 'bytes_read'.
+int __receive_until(char *dest, size_t length, char end, size_t *bytes_read)
 {
 	size_t count = 0;
 	char c;
@@ -52,7 +52,7 @@ int receive_until(char *dest, size_t length, char end, size_t *bytes_read)
 	return 0;
 }
 
-size_t strlen(char *buf)
+size_t __strlen(char *buf)
 {
 	size_t length = 0;
 	while(buf[length]!='\0') length++;
@@ -61,7 +61,7 @@ size_t strlen(char *buf)
 
 void print(char *buf)
 {
-   size_t len = strlen(buf);
+   size_t len = __strlen(buf);
    size_t tx = 0;
    size_t nbytes;
    while (tx < len) {
@@ -83,7 +83,7 @@ int equals(char *one, char *two)
 
 // Copy a string from src to dst. Copy ends when null byte reached
 // in src string OR when length bytes have been copied to dst.
-void strncpy(char *dst, char *src, size_t length)
+void __strncpy(char *dst, char *src, size_t length)
 {
 	size_t pos;
 	for(pos = 0; pos<length && src[pos]!='\0'; pos++)
@@ -94,12 +94,12 @@ void strncpy(char *dst, char *src, size_t length)
 		dst[pos] = '\0';
 }
 
-int isdigit(char c)
+int __isdigit(char c)
 {
 	return (c >= '0' && c <= '9');
 }
 
-int atoi(char *str)
+int __atoi(char *str)
 {
 	size_t i = 0;
 	int negative = 0;
@@ -117,7 +117,7 @@ int atoi(char *str)
 	{
 		i++;
 	}
-	while(isdigit(str[i]))
+	while(__isdigit(str[i]))
 	{
 		result = (result * 10) + (str[i] - '0');
 		i++;
@@ -131,9 +131,9 @@ int atoi(char *str)
 
 }
 
-// itoa - Does not check output buffer size. 
-// Can potentially write up to 12 characters ("-2147483648\0") to str.
-void itoa(char *str, int i)
+// __itoa - Does not check output buffer size. 
+// Can potentially __write up to 12 characters ("-2147483648\0") to str.
+void __itoa(char *str, int i)
 {
 	char buffer[11];
 	int pos = 0;
@@ -167,7 +167,7 @@ void itoa(char *str, int i)
 	str[outpos] = '\0';
 }
 
-void memcpy(char *dst, char *src, size_t size)
+void __memcpy(char *dst, char *src, size_t size)
 {
 	char *end = dst + size;
 	while(dst != end)
@@ -176,7 +176,7 @@ void memcpy(char *dst, char *src, size_t size)
 	}
 }
 
-void memset(char *dst, char c, size_t size)
+void __memset(char *dst, char c, size_t size)
 {
 	char *end = dst + size;
 	while(dst < end)

@@ -4,7 +4,7 @@ Author: James Nuttall <james@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -34,7 +34,7 @@ THE SOFTWARE.
 
 
 // Format:
-// 2b: sync -- 0xc3c3 (not saved in packet -- just read and discarded)
+// 2b: sync -- 0xc3c3 (not saved in packet -- just __read and discarded)
 // 2b: type -- PacketType enum
 // 2b: len of data (max is MAX_DATA_LEN in service.h)
 // *b: data
@@ -73,12 +73,12 @@ void SendResponse ( uint16_t category, uint8_t error )
 	buff[5] = 0x00;
 
 	// data
-	memcpy ( ( uint8_t* )&buff[6], &category, sizeof( uint16_t ) );
+	__memcpy ( ( uint8_t* )&buff[6], &category, sizeof( uint16_t ) );
 
 	buff[8] = error;
 
 
-	write( buff, RESP_LEN );
+	__write( buff, RESP_LEN );
 }
 
 InPacket* ReadInput()
@@ -165,7 +165,7 @@ fail:
 }
 
 //
-//	read input, parse command, respond to command
+//	__read input, parse command, respond to command
 //
 int main( void )
 {
@@ -178,7 +178,7 @@ int main( void )
 	for ( int i = 0; i < MAX_SENSOR_VALUE; i++ )
 	{
 		if (FitnessSensor::m_sensorArray[ i ] == 0)
-			printf( "fnd: $x ", FitnessSensor::m_sensorArray[ i ] );
+			__printf( "fnd: $x ", FitnessSensor::m_sensorArray[ i ] );
 	}
 
 	sensorManager.SetCurrentUser( INVALID_USER );
@@ -200,20 +200,20 @@ int main( void )
 
 				match = VerifyMagicMatch( pkt->data, FitnessSensor::m_sensorArray );
 				#ifdef HUMAN_PRINT
-				printf("py magic: ");
+				__printf("py magic: ");
 					for ( int i = 0; i < pkt->data_len; i++ )
 					{
-						printf( "$02x.", pkt->data[ i ] );
+						__printf( "$02x.", pkt->data[ i ] );
 					}
-					printf( "\n" );
+					__printf( "\n" );
 					
 					
-					printf("my magic: ");
+					__printf("my magic: ");
 					for ( int i = 0; i < 5; i++ )
 					{
-						printf( "$02x.", FitnessSensor::m_sensorArray[ i ] );
+						__printf( "$02x.", FitnessSensor::m_sensorArray[ i ] );
 					}
-					printf( "\n" );
+					__printf( "\n" );
 				#endif
 				if ( match == false )
 					SendResponse( TEST_VERIFY, ERROR_TEST_MAGIC_MISMATCH );
@@ -240,7 +240,7 @@ int main( void )
 				{
 					// data field does not have enough data for this type of packet
 					// discard and print error
-					//printf( "sensor data too short\n" );
+					//__printf( "sensor data too short\n" );
 					SendResponse( REGISTER_SENSOR, ERROR_BAD_VALUE );
 					continue;
 				}
@@ -254,7 +254,7 @@ int main( void )
 				FitnessSensor *sensor = new FitnessSensor( id, mac, &pkt->data[6], pkt->data_len - 6 );
 				sensor->SetUser( sensorManager.GetCurrentUser() );
 
-				// read sensor information
+				// __read sensor information
 				#ifndef TEST_VER
 					if ( sensor->IsInvalid() == true )
 					{
@@ -301,7 +301,7 @@ int main( void )
 
 				int d_offset = 3;
 
-				// read all field values
+				// __read all field values
 				for ( int i = 0; i < field_count-1; i++, d_offset += 3 )
 				{
 					switch ( pkt->data[ d_offset ] )
@@ -578,14 +578,14 @@ int main( void )
 				buff[3] = 0x00;
 
 				// data len
-				memcpy( &buff[4], &data_len, sizeof( uint16_t ) );
+				__memcpy( &buff[4], &data_len, sizeof( uint16_t ) );
 
 				// data
-				memcpy ( ( uint8_t* )&buff[6], data, data_len );
+				__memcpy ( ( uint8_t* )&buff[6], data, data_len );
 
 				delete[] data;
 
-				write( buff, data_len + 6 );
+				__write( buff, data_len + 6 );
 
 				delete[] buff;
 
@@ -599,7 +599,7 @@ int main( void )
 
 				// each sensor is 2b ID, 4b mac: 6B
 				uint8_t data[ 7 ];
-				bzero( data, 7 );
+				__bzero( data, 7 );
 
 				sensorManager.ListHwIds( data_len, data );
 
@@ -614,12 +614,12 @@ int main( void )
 				buff[3] = 0x77;
 
 				// data len
-				memcpy( &buff[4], &data_len, sizeof( uint16_t ) );
+				__memcpy( &buff[4], &data_len, sizeof( uint16_t ) );
 
 				// data
-				memcpy ( ( uint8_t* )&buff[6], data, data_len );
+				__memcpy ( ( uint8_t* )&buff[6], data, data_len );
 
-				write( buff, data_len + 6 );
+				__write( buff, data_len + 6 );
 
 				break;
 			}

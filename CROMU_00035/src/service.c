@@ -4,7 +4,7 @@ Author: James Connor (jymbo@cromulence.co)
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,21 +35,21 @@ THE SOFTWARE.
 
 
 void die(char *message){
-	printf("\n******************\n@s\n*****************\n",message);
+	__printf("\n******************\n@s\n*****************\n",message);
 	_terminate( 1 );
 }
 
 void *mallocOrDie( int size, char *message ){
-	void *retval = malloc( size );
+	void *retval = __malloc( size );
 	if ( retval == NULL ){die( message );}
-	bzero(retval, size);
+	__bzero(retval, size);
 	return retval;
 }
 
 pDataStruct init_data(){
 	pDataStruct workingData = NULL;
-	workingData = mallocOrDie( sizeof( sDataStruct ), "Failed to malloc workingData" );
-	workingData->root = mallocOrDie( sizeof( sNode ), "Failed to malloc root node" );
+	workingData = mallocOrDie( sizeof( sDataStruct ), "Failed to __malloc workingData" );
+	workingData->root = mallocOrDie( sizeof( sNode ), "Failed to __malloc root node" );
 	workingData->root->parent = NULL;
 	workingData->root->prev = NULL;
 	workingData->root->date = 0;
@@ -66,9 +66,9 @@ pDataStruct init_data(){
 	workingData->root->file = NULL;
 	workingData->root->parent = NULL;
 	workingData->root->directoryHeadNode = NULL;
-	char *name = mallocOrDie( 5, "Failed to malloc root name" );
+	char *name = mallocOrDie( 5, "Failed to __malloc root name" );
 	workingData->root->name = name;	
-	strcpy(name, "");
+	__strcpy(name, "");
 	return workingData;
 }
 
@@ -78,12 +78,12 @@ pPerms find_perm_by_name(char *name, pNode node, pDataStruct workingData){
 	pPerms tempPerm = node->perms;
 	while( tempPerm != NULL ){
 		if ( tempPerm->user != NULL ){
-			if ( strcmp(tempPerm->user->name,name) == 0 ){
+			if ( __strcmp(tempPerm->user->name,name) == 0 ){
 				return tempPerm;
 			}
 		} 
 		if ( tempPerm->group != NULL ){
-			if ( strcmp(tempPerm->group->name,name) == 0 ){
+			if ( __strcmp(tempPerm->group->name,name) == 0 ){
 				return tempPerm;
 			}
 		}
@@ -94,7 +94,7 @@ pPerms find_perm_by_name(char *name, pNode node, pDataStruct workingData){
 
 pPerms add_perm(pUser user, pGroup group, pNode node){
 	if (  (  ( user == NULL ) && (  group == NULL ) ) || (  ( user != NULL ) && (  group != NULL ) )  ) {die("Bad call to _add_perm");}
-	pPerms newPerms = mallocOrDie( sizeof( sPerms ), "Failed to malloc pPerms" );
+	pPerms newPerms = mallocOrDie( sizeof( sPerms ), "Failed to __malloc pPerms" );
 	if ( user != NULL ){
 		newPerms->user = user;
 	} 
@@ -144,7 +144,7 @@ pPerms delete_perms(pNode node,pPerms temp){//returns next perm or null if no ne
 		}
 #endif
 	}	
-	free(temp);
+	__free(temp);
 	return retval;
 
 }
@@ -156,7 +156,7 @@ void validate_current_perms(pNode node, pDataStruct workingData){
 		return;
 	}
 	if (  (temp->user == NULL) && (temp->group == NULL)  ){
-		printf("Bad perm @s\n",node->name);
+		__printf("Bad perm @s\n",node->name);
 		return;
 	}
 	while(temp != NULL){
@@ -192,8 +192,8 @@ pNode _add_node( char type, unsigned int date, char *name, pNode parent, pUser u
 	newNode->type = type;
 	newNode->date = date;
 	newNode->perms = add_perm(user, NULL, newNode);
-	char *newName = mallocOrDie( strlen(name) + 1, "Failed to malloc name");
-	strcpy( newName, name );
+	char *newName = mallocOrDie( __strlen(name) + 1, "Failed to __malloc name");
+	__strcpy( newName, name );
 	newNode->name = newName;
 	newNode->file = NULL;
 	newNode->parent = parent;
@@ -242,9 +242,9 @@ void delete_file_bytes(pFile file, unsigned int newSize){
 		}
 	}
 	size = last->chunkSize - remainderbytes;
-	char *newChunk = mallocOrDie( size , "Failed to malloc filechunk" );
-	memcpy(newChunk,last->chunk,size);
-	free(last->chunk);
+	char *newChunk = mallocOrDie( size , "Failed to __malloc filechunk" );
+	__memcpy(newChunk,last->chunk,size);
+	__free(last->chunk);
 	last->chunkSize = size;
 	last->chunk = newChunk;
 }
@@ -252,9 +252,9 @@ void delete_file_bytes(pFile file, unsigned int newSize){
 pFileChunk add_file_chunk(char *data, pFile file, unsigned int size ){
 	//allocate a new fileChunk and insert into file chunk list
 	//update file node with new head/tail/count as necessary
-	pFileChunk newFileChunk =  mallocOrDie( sizeof( sFileChunk ), "Failed to malloc filechunk" );
-	newFileChunk->chunk = mallocOrDie( size, "Failed to malloc chunk" );
-	memcpy( newFileChunk->chunk, data, size );
+	pFileChunk newFileChunk =  mallocOrDie( sizeof( sFileChunk ), "Failed to __malloc filechunk" );
+	newFileChunk->chunk = mallocOrDie( size, "Failed to __malloc chunk" );
+	__memcpy( newFileChunk->chunk, data, size );
 	newFileChunk->chunkSize = size;
 	if ( file->tail == NULL ){
 		file->head = newFileChunk;
@@ -273,11 +273,11 @@ pFileChunk add_file_chunk(char *data, pFile file, unsigned int size ){
 
 pNode add_file( pNode directory,unsigned int date, unsigned int size, char *name, char* data, pUser user ){
 	//if size is 0, data is null, create new empty file
-	pFile newFile = mallocOrDie( sizeof( sFile ), "Failed to malloc file" );
+	pFile newFile = mallocOrDie( sizeof( sFile ), "Failed to __malloc file" );
 	if ( size > 0) {
 		pFileChunk newFileChunk = add_file_chunk(data, newFile, size );
 	}
-	pNode newNode = _add_node( FILE, date, name, directory, user);
+	pNode newNode = _add_node( __FILE, date, name, directory, user);
 	newNode->file = newFile;
 	return newNode;
 }
@@ -286,7 +286,7 @@ pFileChunk delete_chunk(pFile file, pFileChunk chunk){
 	//return next or NULL;
 	pFileChunk retval = chunk->next;
 	if (chunk == NULL){
-		puts("delete_chunk called with NULL");
+		__puts("delete_chunk called with NULL");
 		return NULL;
 	}
 	if (chunk->prev == NULL){//first chunk
@@ -308,8 +308,8 @@ pFileChunk delete_chunk(pFile file, pFileChunk chunk){
 		file->chunkCount -= 1;
 	}
 
-	free(chunk->chunk);
-	free(chunk);
+	__free(chunk->chunk);
+	__free(chunk);
 	return retval;
 }
 
@@ -318,7 +318,7 @@ void delete_file(pFile file){
 	while(tempChunk != NULL){
 		tempChunk = delete_chunk(file, tempChunk);
 	}
-	free(file);
+	__free(file);
 	return;
 }
 
@@ -326,9 +326,9 @@ pNode delete_node(pNode node, pDataStruct workingData){
 	pNode retval = node->next;
 	//returns pointer to next node or NULL
 	if ( node == workingData->root ){//can not delete 'root' directory
-		puts("can not delete root directory");
+		__puts("can not delete root directory");
 	}
-	if ( node->type == FILE ){
+	if ( node->type == __FILE ){
 		pFile tempFile = node->file;
 		delete_file( tempFile );
 	}
@@ -358,8 +358,8 @@ pNode delete_node(pNode node, pDataStruct workingData){
 	while(perms != NULL){
 		perms = delete_perms(node, perms);
 	}
-	free(node->name);
-	free(node);
+	__free(node->name);
+	__free(node);
 	return retval;
 }
 
@@ -375,9 +375,9 @@ pUser _add_user( char *name, pUser userList ){
 	//add user to userList, 
 	//if userList is NULL, create single element list
 	pUser newUser = mallocOrDie( sizeof( sUser ), "Failed to allocate user");
-	char *newName = mallocOrDie( strlen( name ) + 1, "Failed to allocate username");
-	//printf("_add_user strlen(name):@d",strlen( name ));
-	strcpy ( newName, name );
+	char *newName = mallocOrDie( __strlen( name ) + 1, "Failed to allocate username");
+	//__printf("_add_user __strlen(name):@d",__strlen( name ));
+	__strcpy ( newName, name );
 	newUser->name = newName;
 	if ( userList == NULL ){
 		//not necessary, but looks nice
@@ -457,7 +457,7 @@ pGroupUserList remove_user_from_group(pUser user, pGroup group){
 		}
 	}
 	retval = temp->prev; //if first, next is null
-	free(temp);
+	__free(temp);
 	return retval;
 }
 
@@ -467,8 +467,8 @@ pUser remove_user(pUser user, pDataStruct workingData){
 	pGroup groupList = workingData->group;
 	pUser retval = NULL;
 	pUser last = NULL;
-	if (user == NULL){puts("Bad call:remove_user");return NULL;}//bad call to remove user
-	if ( user->prev == NULL ){puts("Can not delete root");return NULL;}
+	if (user == NULL){__puts("Bad call:remove_user");return NULL;}//bad call to remove user
+	if ( user->prev == NULL ){__puts("Can not delete root");return NULL;}
 	if (user == workingData->user){//never delete root
 		return NULL;
 	}
@@ -481,8 +481,8 @@ pUser remove_user(pUser user, pDataStruct workingData){
 		user->next->prev = user->prev;
 	}
 	retval = user->prev;
-	free (user->name);
-	free (user);
+	__free (user->name);
+	__free (user);
 	return retval;
 }
 
@@ -491,11 +491,11 @@ pGroup remove_group(pGroup group, pDataStruct workingData){
 	pGroupUserList temp = NULL;
 	pGroupUserList last = NULL;
 	if ( group == NULL){
-		puts("bad call to remove_group");
+		__puts("bad call to remove_group");
 		return NULL;
 	}
 	if (group == workingData->group){
-		puts("Unable to delete group root");
+		__puts("Unable to delete group root");
 		return NULL;
 	}
 	temp = group->userList;
@@ -514,8 +514,8 @@ pGroup remove_group(pGroup group, pDataStruct workingData){
 		group->next->prev = group->prev;
 	}
 	retval = group->prev;
-	free(group->name);
-	free(group);
+	__free(group->name);
+	__free(group);
 	return retval;
 }
 
@@ -524,7 +524,7 @@ pUser find_user_by_name( char *name, pDataStruct workingData){
 	pUser retval = NULL;
 	pUser last = workingData->user;
 	while ( last != NULL ){
-		if ( strcmp(name, last->name ) == 0 ){
+		if ( __strcmp(name, last->name ) == 0 ){
 			return last;
 		} else{
 			last = last->next;
@@ -552,8 +552,8 @@ pGroup _add_group( char *name, pGroup group ){
 	//add empty group of users, no users are added, empty group is returned
 	//group is dllist of groups to add group to, if null, create and return
 	pGroup newGroup = mallocOrDie( sizeof( sGroup ), "Failed to allocate group");
-	char *newName = mallocOrDie( strlen( name ) + 1, "Failed to allocate groupName");
-	strcpy( newName, name );
+	char *newName = mallocOrDie( __strlen( name ) + 1, "Failed to allocate groupName");
+	__strcpy( newName, name );
 	newGroup->name = newName;
 	newGroup->userCount = 0;
 	newGroup->userList = NULL;
@@ -625,7 +625,7 @@ pGroup find_group_by_name( char *name, pDataStruct workingData){
 	if ( workingData->group != NULL ){
 		pGroup last = workingData->group;
 		while ( last != NULL ){
-			if ( strcmp(name, last->name) == 0 ){
+			if ( __strcmp(name, last->name) == 0 ){
 				return last;
 			}
 			last = last->next;
@@ -636,8 +636,8 @@ pGroup find_group_by_name( char *name, pDataStruct workingData){
 
 char *recursive_path(pNode start, pNode end){
 	if (end == start){
-		char *path = mallocOrDie(strlen(end->name) + 2, "Failed to allocate endName");
-		strcpy(path, end->name);
+		char *path = mallocOrDie(__strlen(end->name) + 2, "Failed to allocate endName");
+		__strcpy(path, end->name);
 		return path; 
 	}
 	if ( end->parent == NULL ){
@@ -648,35 +648,35 @@ char *recursive_path(pNode start, pNode end){
 	if (path == NULL){
 		return NULL;
 	}
-	char *retpath = mallocOrDie(  ( strlen(path) + strlen(end->name) + 2 ), "Failed to allocate retpath"); 	
-	strcpy(retpath, path);
-	strcat(retpath, "/");
-	strcat(retpath, end->name);
-	free(path);
+	char *retpath = mallocOrDie(  ( __strlen(path) + __strlen(end->name) + 2 ), "Failed to allocate retpath"); 	
+	__strcpy(retpath, path);
+	__strcat(retpath, "/");
+	__strcat(retpath, end->name);
+	__free(path);
 	return retpath;
 }
 
 void str_of_path(char *path, pDataStruct workingData, pNode end){
 	char *newPath = recursive_path(workingData->root, end);
 #ifdef PATCHED
-	unsigned int size = strlen(newPath);
+	unsigned int size = __strlen(newPath);
 	if (size >= MAXPATH){
 		size = MAXPATH-1;
-		puts("Path exceeds max path size and has been truncated");
+		__puts("Path exceeds max path size and has been truncated");
 	}
-	strncpy(path, newPath, size );
+	__strncpy(path, newPath, size );
 #endif
 #ifndef PATCHED
-	strcpy(path, newPath );	
+	__strcpy(path, newPath );	
 #endif
-	free ( newPath );
+	__free ( newPath );
 	return;
 }
 
 pNode find_node_by_name(char *name, pNode directoryNode){
 	pNode temp = directoryNode;
 	while( temp != NULL ){
-		if (strcmp(name,temp->name) == 0){
+		if (__strcmp(name,temp->name) == 0){
 			return temp;
 		}
 		temp = temp->next;
@@ -698,7 +698,7 @@ pNode find_directory_by_name(char *name, pNode directory){
 pFile find_file_by_name(char *name, pNode directory){
 	pNode temp = find_node_by_name(name,directory->directoryHeadNode);
 	while(temp!= NULL){
-		if ( temp->type == FILE ) {
+		if ( temp->type == __FILE ) {
 			return temp->file;
 		}
 		temp = find_node_by_name(name,temp->next);
@@ -709,7 +709,7 @@ pFile find_file_by_name(char *name, pNode directory){
 pNode find_file_node_by_name(char *name, pNode directory){
 	pNode temp = find_node_by_name(name,directory->directoryHeadNode);
 	while(temp != NULL){
-		if ( temp->type == FILE ) {
+		if ( temp->type == __FILE ) {
 			return temp;
 		}
 		temp = find_node_by_name(name,temp->next);

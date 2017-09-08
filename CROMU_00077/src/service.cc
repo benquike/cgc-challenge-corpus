@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -53,7 +53,7 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
 
 	if ( !oNFS.Init( &oComms, 10 ) )
 	{
-		printf( "Failed to initialize!\n" );
+		__printf( "Failed to initialize!\n" );
 
 		delete pTimeGen;
 		return (-1);
@@ -63,7 +63,7 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
 	{
 		if ( oNFS.HasError() )
 		{
-			printf( "Network File System error: %s\n", oNFS.GetError().c_str() );
+			__printf( "Network File System error: %s\n", oNFS.GetError().c_str() );
 		
 			delete pTimeGen;
 			return (-1);

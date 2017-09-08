@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -27,7 +27,7 @@
 #include "h2o.h"
 
 struct tank *create_tank(uint8_t id, uint8_t capacity) {
-	struct tank *t = calloc(sizeof(struct tank) + capacity * sizeof(struct h2o *));
+	struct tank *t = __calloc(sizeof(struct tank) + capacity * sizeof(struct h2o *));
 
 	t->id = id;
 	t->fill_rate = 0;

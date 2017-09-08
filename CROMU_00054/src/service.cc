@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -49,9 +49,9 @@ void RunSimulation( uint8_t *pSecretPage )
 	uint64_t tcmEquipmentID = *((uint64_t*)(pSecretPage+8));
 
 #if 0 
-	printf( "Equipment ID ECM: " );
+	__printf( "Equipment ID ECM: " );
 	PrintHexBytes( pSecretPage, 8 );
-	printf( "Equipment ID TCM: " );
+	__printf( "Equipment ID TCM: " );
 	PrintHexBytes( pSecretPage+8, 8 );
 #endif
 
@@ -74,7 +74,7 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
 
 	ts &= 0x7FFFF;
 
-	printf( "START::TS=$d\n", ts+1452975600 );
+	__printf( "START::TS=$d\n", ts+1452975600 );
 	
 	bool bDone = false;
 	do
@@ -92,7 +92,7 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
 
 			idx++;
 
-			printf( "Run another simulation (TS=$d) (y/n)? ", ts+1452975600 );
+			__printf( "Run another simulation (TS=$d) (y/n)? ", ts+1452975600 );
 			CUtil::String sLine;
 
 			sLine = ReadLine();

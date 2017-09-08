@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -82,21 +82,21 @@ int32_t parse_date( const char *str, tDateTime *pDate )
         return 0;
 
     // Consume beginning whitespace
-    while ( isspace( *str ) )
+    while ( __isspace( *str ) )
         str++;
 
     // Parse format (mm/dd/yy hh:mi:ss) (24 hour date time format)
 
     // --------------------
     // Parse month
-    if ( isdigit( *str ) )
+    if ( __isdigit( *str ) )
         tTempDate.month = (*str - '0');
     else
         return 0;
 
     str++;
 
-    if ( isdigit( *str ) )
+    if ( __isdigit( *str ) )
     {
         tTempDate.month *= 10;
         tTempDate.month += (*str - '0');
@@ -116,14 +116,14 @@ int32_t parse_date( const char *str, tDateTime *pDate )
 
     // --------------------
     // Parse day
-    if ( isdigit( *str ) )
+    if ( __isdigit( *str ) )
         tTempDate.day = (*str - '0');
     else
         return 0;
 
     str++;
 
-    if ( isdigit( *str ) )
+    if ( __isdigit( *str ) )
     {
         tTempDate.day *= 10;
         tTempDate.day += (*str - '0');
@@ -142,39 +142,39 @@ int32_t parse_date( const char *str, tDateTime *pDate )
 
     // --------------------
     // Parse year
-    if ( isdigit( *str ) )
+    if ( __isdigit( *str ) )
         tTempDate.year = (*str - '0');
     else
         return 0;
 
     str++;
 
-    if ( isdigit( *str ) )
+    if ( __isdigit( *str ) )
     {
         tTempDate.year *= 10;
         tTempDate.year += (*str - '0');
         str++;
     }
-    else if ( !isspace( *str ) )
+    else if ( !__isspace( *str ) )
         return 0;   // Parse error, expecting a space character
 
     // Normalize the year so that dates less than 28 are for the year 2000 and greater
     if ( tTempDate.year < 28 )
         tTempDate.year += 100;
 
-    while ( isspace( *str ) )
+    while ( __isspace( *str ) )
         str++;
 
     // --------------------
     // Parse hour
-    if ( isdigit( *str ) )
+    if ( __isdigit( *str ) )
         tTempDate.hour = (*str - '0');
     else
         return 0;
 
     str++;
 
-    if ( isdigit( *str ) )
+    if ( __isdigit( *str ) )
     {
         tTempDate.hour *= 10;
         tTempDate.hour += (*str - '0');
@@ -195,14 +195,14 @@ int32_t parse_date( const char *str, tDateTime *pDate )
 
     // --------------------
     // Parse minute
-    if ( isdigit( *str ) )
+    if ( __isdigit( *str ) )
         tTempDate.minute = (*str - '0');
     else
         return 0;
 
     str++;
 
-    if ( isdigit( *str ) )
+    if ( __isdigit( *str ) )
     {
         tTempDate.minute *= 10;
         tTempDate.minute += (*str - '0');
@@ -223,14 +223,14 @@ int32_t parse_date( const char *str, tDateTime *pDate )
 
     // --------------------
     // Parse second
-    if ( isdigit( *str ) )
+    if ( __isdigit( *str ) )
         tTempDate.second = (*str - '0');
     else
         return 0;
 
     str++;
 
-    if ( isdigit( *str ) )
+    if ( __isdigit( *str ) )
     {
         tTempDate.second *= 10;
         tTempDate.second += (*str - '0');
@@ -241,7 +241,7 @@ int32_t parse_date( const char *str, tDateTime *pDate )
         return 0;
 
     // Copy the parsed temporary date into the passed in argument
-    memcpy( (void *)pDate, &tTempDate, sizeof(tDateTime) );
+    __memcpy( (void *)pDate, &tTempDate, sizeof(tDateTime) );
 
     // Success
     return (str - start);

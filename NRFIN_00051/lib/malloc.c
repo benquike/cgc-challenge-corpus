@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -54,7 +54,7 @@ static unsigned char is_enough_room(const void *free_sz, void *new_sz) {
 	return FALSE;
 }
 
-void *malloc(size_t size) {
+void *__malloc(size_t size) {
 
 	if (0 == size) {
 		return NULL;
@@ -112,7 +112,7 @@ void *malloc(size_t size) {
 	return (void *)((unsigned char*)ret + sizeof(block_meta_t));
 }
 
-void free(void *ptr) {
+void __free(void *ptr) {
 	// get block_meta for this memory
 	ptr -= sizeof(block_meta_t);
 

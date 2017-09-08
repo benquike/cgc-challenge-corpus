@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -46,15 +46,15 @@
 void addService(Service** services, char* name, void (* callback)(int, char*, unsigned int*)) {
 	size_t size;
 	Service* newService;
-	if(!(newService = malloc(sizeof(Service))))
+	if(!(newService = __malloc(sizeof(Service))))
 		_terminate(ALLOCATE_ERROR);
-	bzero((char *) newService, sizeof(Service));
+	__bzero((char *) newService, sizeof(Service));
 	newService->callback = callback;
-	size = strlen(name);
-	if(!(newService->name = malloc(size+1)))
+	size = __strlen(name);
+	if(!(newService->name = __malloc(size+1)))
 		_terminate(ALLOCATE_ERROR);
-	bzero(newService->name, size+1);
-	memcpy(newService->name, name, size);
+	__bzero(newService->name, size+1);
+	__memcpy(newService->name, name, size);
 	newService->next = *services;
 	*services = newService;
 }
@@ -86,9 +86,9 @@ void initServices(Service** services) {
 * @return None
 */
 void freeMessage(Message *message) {
-	free(message->credential);
-	free(message->body);
-	free(message);
+	__free(message->credential);
+	__free(message->body);
+	__free(message);
 }
 
 /**
@@ -101,72 +101,72 @@ Message* getMessage() {
 	Message *message;
 	char *cmd_str, *auth_str, *id_str, *cred_str, *body_str;
 	char buffer[1024];
-	bzero(buffer,1024);
+	__bzero(buffer,1024);
 
-	if(!(message = malloc(sizeof(Message))))
+	if(!(message = __malloc(sizeof(Message))))
 		_terminate(ALLOCATE_ERROR);
-	bzero((char *)message, sizeof(Message));
+	__bzero((char *)message, sizeof(Message));
 	if(!message) 
 		_terminate(1);
 
 	if(read_until_delim_or_n(STDIN, buffer, '!', sizeof(buffer), &bytes))
 		_terminate(2);
 
-	cmd_str = strtok(buffer, ",");
+	cmd_str = __strtok(buffer, ",");
 	if(!cmd_str)
 		return NULL;
 
-	size = strlen(cmd_str);
+	size = __strlen(cmd_str);
 
 	if(size > MAX_CMD_SIZE)
 		size = MAX_CMD_SIZE;
 
-	if(!(message->command = malloc(size+1)))
+	if(!(message->command = __malloc(size+1)))
 		_terminate(ALLOCATE_ERROR);
-	bzero(message->command, size+1);
-	memcpy(message->command, cmd_str, size);
+	__bzero(message->command, size+1);
+	__memcpy(message->command, cmd_str, size);
 
-	auth_str = strtok(0, ",");
+	auth_str = __strtok(0, ",");
 	if(!auth_str) 
 		return NULL;
 
-	size = strlen(auth_str);
+	size = __strlen(auth_str);
 
 	if(size > MAX_AUTH_TYPE_SIZE)
 		size = MAX_AUTH_TYPE_SIZE;
 
-	memcpy(message->auth, auth_str, size);
+	__memcpy(message->auth, auth_str, size);
 
-	id_str = strtok(0, ",");
+	id_str = __strtok(0, ",");
 
 	if(id_str)
-		message->id = atoi(id_str);
+		message->id = __atoi(id_str);
 	else
 		return NULL;
 
-	cred_str = strtok(0, ",");
+	cred_str = __strtok(0, ",");
 	if(!cred_str)
 		return NULL;
 
-	size = strlen(cred_str);
-	if(!(message->credential = malloc(size+1)))
+	size = __strlen(cred_str);
+	if(!(message->credential = __malloc(size+1)))
 		_terminate(ALLOCATE_ERROR);
 
-	bzero(message->credential, size+1);
-	memcpy(message->credential, cred_str, size);
+	__bzero(message->credential, size+1);
+	__memcpy(message->credential, cred_str, size);
 
-	body_str = strtok(0, "!");
+	body_str = __strtok(0, "!");
 	if(body_str) {
-		size = strlen(body_str);
+		size = __strlen(body_str);
 #ifdef PATCHED_1
-		if(!(message->body = malloc(size+1)))
+		if(!(message->body = __malloc(size+1)))
 			_terminate(ALLOCATE_ERROR);
 #else
-		if(!(message->body = malloc(size)))
+		if(!(message->body = __malloc(size)))
 			_terminate(ALLOCATE_ERROR);
 #endif
-		bzero(message->body, size+1);
-		memcpy(message->body, body_str, size);		
+		__bzero(message->body, size+1);
+		__memcpy(message->body, body_str, size);		
 	}
 
 	return message;
@@ -182,7 +182,7 @@ Message* getMessage() {
 * @return 1 if authenticated, 0 if not
 */
 int authenticate(char* command, char* auth_type, char* credential) {
-	if(!strncmp(auth_type, CERT_AUTH_TYPE, strlen(CERT_AUTH_TYPE))
+	if(!strncmp(auth_type, CERT_AUTH_TYPE, __strlen(CERT_AUTH_TYPE))
 		&& isCertCommand(command)) {
 		Certificate *cert;
 		cert = parseCertificate(credential);
@@ -197,7 +197,7 @@ int authenticate(char* command, char* auth_type, char* credential) {
 
 		return 0;
 
-	} else if(!strncmp(auth_type, TOKEN_AUTH_TYPE, strlen(TOKEN_AUTH_TYPE))) {
+	} else if(!strncmp(auth_type, TOKEN_AUTH_TYPE, __strlen(TOKEN_AUTH_TYPE))) {
 		Token *token;
 		token = parseToken(credential);
 		
@@ -211,14 +211,14 @@ int authenticate(char* command, char* auth_type, char* credential) {
 
 		return 0;
 
-	} else if(!strncmp(auth_type, UP_AUTH_TYPE, strlen(UP_AUTH_TYPE))
-		&& !strncmp(command, TOKEN_CMD, strlen(TOKEN_CMD))) {
+	} else if(!strncmp(auth_type, UP_AUTH_TYPE, __strlen(UP_AUTH_TYPE))
+		&& !strncmp(command, TOKEN_CMD, __strlen(TOKEN_CMD))) {
 		char *user, *pass;
 
-		user = strtok(credential, "/");
-		if(!strncmp(user, DEFAULT_USER, strlen(DEFAULT_USER))) {
-			pass = strtok(0,"!");
-			if(!strncmp(pass, DEFAULT_PASS, strlen(DEFAULT_PASS))) {
+		user = __strtok(credential, "/");
+		if(!strncmp(user, DEFAULT_USER, __strlen(DEFAULT_USER))) {
+			pass = __strtok(0,"!");
+			if(!strncmp(pass, DEFAULT_PASS, __strlen(DEFAULT_PASS))) {
 				return 1;
 			}
 		}
@@ -240,7 +240,7 @@ int authenticate(char* command, char* auth_type, char* credential) {
 void runService(Service* serviceList, Message *message) {
 	Service* service;
 	for(service = serviceList; service!=NULL; service=service->next) {
-		if(!strncmp(message->command, service->name, strlen(service->name))) {
+		if(!strncmp(message->command, service->name, __strlen(service->name))) {
 			if(authenticate(message->command, message->auth, message->credential)) {
 				service->callback(message->id, message->body, &expiration_date);				
 			}
@@ -278,9 +278,9 @@ int main(void) {
 			return 0;
 		}
 
-		if(!strncmp(message->command, QUIT_CMD, strlen(QUIT_CMD))) {
+		if(!strncmp(message->command, QUIT_CMD, __strlen(QUIT_CMD))) {
 
-			if((ret = transmit(STDOUT, "!", strlen("!"), &bytes))) 
+			if((ret = transmit(STDOUT, "!", __strlen("!"), &bytes))) 
 				_terminate(1);
 			return 0;
 		}

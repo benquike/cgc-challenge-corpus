@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -65,7 +65,7 @@ static int is_assignable(int op);
 
 void program_init(program_t *prog, io_t *io)
 {
-    memset(prog, 0, sizeof(program_t));
+    __memset(prog, 0, sizeof(program_t));
     prog->io = io;
 }
 
@@ -86,7 +86,7 @@ int program_parse(program_t *prog)
         print_statement(actions, "");
 #endif
 
-        p = malloc(sizeof(pattern_t));
+        p = __malloc(sizeof(pattern_t));
         if (p == NULL)
             break;
 
@@ -136,7 +136,7 @@ static int pattern_match(program_t *prog, const char *s)
     int c;
     
     while ((c = io_getc(prog->io)) >= 0)
-        if (!isspace(c))
+        if (!__isspace(c))
             break;
     if (c < 0) goto fail;
     io_ungetc(prog->io);
@@ -187,7 +187,7 @@ static char *parse_var(program_t *prog)
         c = io_getc(prog->io);
         if (c < 0)
             return NULL;
-        if (islower(c) || isupper(c) || (i > 0 && isdigit(c)))
+        if (__islower(c) || __isupper(c) || (i > 0 && __isdigit(c)))
             tmp[i] = c;
         else
             break;
@@ -198,7 +198,7 @@ static char *parse_var(program_t *prog)
 
     io_ungetc(prog->io);
     tmp[i] = 0;
-    return strdup(tmp);
+    return __strdup(tmp);
 }
 
 static int parse_statements(program_t *prog, stmt_t **result)
@@ -256,9 +256,9 @@ static int parse_statements(program_t *prog, stmt_t **result)
         goto fail;
     skip_whitespace(prog);
 
-    stmt = calloc(1, sizeof(stmt_t));
+    stmt = __calloc(1, sizeof(stmt_t));
 
-    if (strcmp(kw, "if") == 0)
+    if (__strcmp(kw, "if") == 0)
     {
         stmt->type = STMT_IF;
         if (io_getc(prog->io) != '(')
@@ -268,7 +268,7 @@ static int parse_statements(program_t *prog, stmt_t **result)
         if (!parse_statements(prog, &stmt->s_if.child))
             goto fail;
     }
-    else if (strcmp(kw, "while") == 0)
+    else if (__strcmp(kw, "while") == 0)
     {
         stmt->type = STMT_WHILE;
         stmt->s_while.post = 0;
@@ -279,16 +279,16 @@ static int parse_statements(program_t *prog, stmt_t **result)
         if (!parse_statements(prog, &stmt->s_while.child))
             goto fail;
     }
-    else if (strcmp(kw, "do") == 0)
+    else if (__strcmp(kw, "do") == 0)
     {
         stmt->type = STMT_WHILE;
         stmt->s_while.post = 1;
         if (!parse_statements(prog, &stmt->s_while.child))
             goto fail;
-        free(kw);
+        __free(kw);
         skip_whitespace(prog);
         kw = parse_var(prog);
-        if (kw == NULL || strcmp(kw, "while"))
+        if (kw == NULL || __strcmp(kw, "while"))
             goto fail;
         skip_whitespace(prog);
         if (io_getc(prog->io) != '(')
@@ -299,7 +299,7 @@ static int parse_statements(program_t *prog, stmt_t **result)
         if (io_getc(prog->io) != ';')
             goto fail;
     }
-    else if (strcmp(kw, "for") == 0)
+    else if (__strcmp(kw, "for") == 0)
     {
         stmt->type = STMT_FOR;
         if (io_getc(prog->io) != '(')
@@ -319,40 +319,40 @@ static int parse_statements(program_t *prog, stmt_t **result)
             goto fail;
         }
     }
-    else if (strcmp(kw, "continue") == 0)
+    else if (__strcmp(kw, "continue") == 0)
     {
         stmt->type = STMT_CONTINUE;
         skip_whitespace(prog);
         if (io_getc(prog->io) != ';')
             goto fail;
     }
-    else if (strcmp(kw, "break") == 0)
+    else if (__strcmp(kw, "break") == 0)
     {
         stmt->type = STMT_BREAK;
         skip_whitespace(prog);
         if (io_getc(prog->io) != ';')
             goto fail;
     }
-    else if (strcmp(kw, "next") == 0)
+    else if (__strcmp(kw, "next") == 0)
     {
         stmt->type = STMT_NEXT;
         skip_whitespace(prog);
         if (io_getc(prog->io) != ';')
             goto fail;
     }
-    else if (strcmp(kw, "exit") == 0)
+    else if (__strcmp(kw, "__exit") == 0)
     {
         stmt->type = STMT_EXIT;
         skip_whitespace(prog);
         if (io_getc(prog->io) != ';')
             goto fail;
     }
-    else if (strcmp(kw, "printf") == 0 || strcmp(kw, "print") == 0)
+    else if (__strcmp(kw, "__printf") == 0 || __strcmp(kw, "print") == 0)
     {
         expr_t *tail = NULL;
 
         stmt->type = STMT_PRINT;
-        if (strcmp(kw, "printf") == 0)
+        if (__strcmp(kw, "__printf") == 0)
         {
             if (!parse_expression(prog, &stmt->s_print.fmt, END_PRINT))
                 goto fail;
@@ -383,7 +383,7 @@ static int parse_statements(program_t *prog, stmt_t **result)
     return 1;
 
 fail:
-    free(kw);
+    __free(kw);
     free_statement(stmt);
     io_seek(prog->io, pos);
     return 0;
@@ -633,7 +633,7 @@ static int parse_variable(program_t *prog, expr_t **result)
     expr_t *expr = NULL;
 
     name = parse_var(prog);
-    if (name == NULL || strlen(name) == 0 || is_keyword(name))
+    if (name == NULL || __strlen(name) == 0 || is_keyword(name))
         goto fail;
 
     expr = init_expression(OP_VAR);
@@ -645,7 +645,7 @@ static int parse_variable(program_t *prog, expr_t **result)
     return 1;
 
 fail:
-    free(name);
+    __free(name);
     return 0;
 }
 
@@ -661,14 +661,14 @@ static int parse_number(program_t *prog, expr_t **result)
         if (c < 0)
             goto fail;
         buf[i++] = c;
-    } while (i < sizeof(buf) && isdigit(c));
+    } while (i < sizeof(buf) && __isdigit(c));
 
     io_ungetc(prog->io);
     if (i <= 1)
         goto fail;
 
     buf[i-1] = 0;
-    value = strtol(buf, NULL, 10);
+    value = __strtol(buf, NULL, 10);
 
     expr = init_expression(OP_CONST_INT);
     if (expr == NULL)
@@ -680,7 +680,7 @@ static int parse_number(program_t *prog, expr_t **result)
     return 1;
 
 fail:
-    free(expr);
+    __free(expr);
     return 0;
 }
 
@@ -692,7 +692,7 @@ static int parse_regexp(program_t *prog, expr_t **result)
 
     strio_init(&str);
 
-    if (!io_getc(prog->io) == '"')
+    if (io_getc(prog->io) != '"')
         goto fail;
 
     while (1)
@@ -726,7 +726,7 @@ static int parse_regexp(program_t *prog, expr_t **result)
     return 1;
 
 fail:
-    free(expr);
+    __free(expr);
     strio_free(&str);
     return 0;
 }
@@ -739,7 +739,7 @@ static int parse_quoted_string(program_t *prog, expr_t **result)
 
     strio_init(&str);
 
-    if (!io_getc(prog->io) == '"')
+    if (io_getc(prog->io) != '"')
         goto fail;
 
     while (1)
@@ -819,7 +819,7 @@ static int parse_quoted_string(program_t *prog, expr_t **result)
     return 1;
 
 fail:
-    free(expr);
+    __free(expr);
     strio_free(&str);
     return 0;
 }
@@ -839,7 +839,7 @@ static void skip_whitespace(program_t *prog)
     int c;
     while ((c = io_getc(prog->io)) >= 0)
     {
-        if (!isspace(c))
+        if (!__isspace(c))
         {
             io_ungetc(prog->io);
             break;
@@ -849,16 +849,16 @@ static void skip_whitespace(program_t *prog)
 
 static int is_keyword(const char *s)
 {
-    if (strcmp(s, "if") == 0 ||
-        strcmp(s, "while") == 0 ||
-        strcmp(s, "continue") == 0 ||
-        strcmp(s, "do") == 0 ||
-        strcmp(s, "for") == 0 || 
-        strcmp(s, "break") == 0 ||
-        strcmp(s, "next") == 0 ||
-        strcmp(s, "exit") == 0 ||
-        strcmp(s, "print") == 0 ||
-        strcmp(s, "printf") == 0)
+    if (__strcmp(s, "if") == 0 ||
+        __strcmp(s, "while") == 0 ||
+        __strcmp(s, "continue") == 0 ||
+        __strcmp(s, "do") == 0 ||
+        __strcmp(s, "for") == 0 || 
+        __strcmp(s, "break") == 0 ||
+        __strcmp(s, "next") == 0 ||
+        __strcmp(s, "__exit") == 0 ||
+        __strcmp(s, "print") == 0 ||
+        __strcmp(s, "__printf") == 0)
     {
         return 1;
     }
@@ -975,7 +975,7 @@ static int is_assignable(int op)
         op == OP_VAR;
 }
 
-static void unlink(expr_t *e)
+static void __unlink(expr_t *e)
 {
     if (e->next)
         e->next->prev = e->prev;
@@ -1003,7 +1003,7 @@ static int treeify_expression(expr_t **expr, int stages)
             if (!treeify_expression(&iter->next, 1))
                 goto fail;
             iter->e_unop.expr = iter->next;
-            unlink(iter->e_unop.expr);
+            __unlink(iter->e_unop.expr);
         }
     }
 
@@ -1019,7 +1019,7 @@ static int treeify_expression(expr_t **expr, int stages)
             {
                 iter->op = OP_DEC_POST;
                 iter->e_unop.expr = iter->prev;
-                unlink(iter->e_unop.expr);
+                __unlink(iter->e_unop.expr);
                 if (*expr == iter->e_unop.expr)
                     *expr = iter;
             }
@@ -1027,7 +1027,7 @@ static int treeify_expression(expr_t **expr, int stages)
             {
                 iter->op = OP_DEC_PRE;
                 iter->e_unop.expr = iter->next;
-                unlink(iter->e_unop.expr);
+                __unlink(iter->e_unop.expr);
             }
         }
         if (iter->op == OP_INC && iter->e_unop.expr == NULL)
@@ -1036,7 +1036,7 @@ static int treeify_expression(expr_t **expr, int stages)
             {
                 iter->op = OP_INC_POST;
                 iter->e_unop.expr = iter->prev;
-                unlink(iter->e_unop.expr);
+                __unlink(iter->e_unop.expr);
                 if (*expr == iter->e_unop.expr)
                     *expr = iter;
             }
@@ -1044,7 +1044,7 @@ static int treeify_expression(expr_t **expr, int stages)
             {
                 iter->op = OP_INC_PRE;
                 iter->e_unop.expr = iter->next;
-                unlink(iter->e_unop.expr);
+                __unlink(iter->e_unop.expr);
             }
         }
     }
@@ -1068,8 +1068,8 @@ static int treeify_expression(expr_t **expr, int stages)
 
             iter->e_binop.lhs = iter->prev;
             iter->e_binop.rhs = iter->next;
-            unlink(iter->e_binop.lhs);
-            unlink(iter->e_binop.rhs);
+            __unlink(iter->e_binop.lhs);
+            __unlink(iter->e_binop.rhs);
 
             if (*expr == iter->e_binop.lhs)
                 *expr = iter;
@@ -1089,7 +1089,7 @@ static int treeify_expression(expr_t **expr, int stages)
             if (!treeify_expression(&iter->next, 99))
                 goto fail;
             iter->e_cond.vfalse = iter->next;
-            unlink(iter->e_cond.vfalse);
+            __unlink(iter->e_cond.vfalse);
 
             iter->e_cond.cond = *expr;
             iter->prev->next = NULL;
@@ -1109,8 +1109,8 @@ static int treeify_expression(expr_t **expr, int stages)
                 goto fail; \
             iter->e_binop.lhs = iter->prev; \
             iter->e_binop.rhs = iter->next; \
-            unlink(iter->e_binop.lhs); \
-            unlink(iter->e_binop.rhs); \
+            __unlink(iter->e_binop.lhs); \
+            __unlink(iter->e_binop.rhs); \
             if (*expr == iter->e_binop.lhs) \
                 *expr = iter; \
         } \
@@ -1184,7 +1184,7 @@ static int treeify_expression(expr_t **expr, int stages)
                 goto fail;
             iter->op = OP_NEGATE;
             iter->e_unop.expr = iter->next;
-            unlink(iter->e_unop.expr);
+            __unlink(iter->e_unop.expr);
         }
     }
 
@@ -1197,8 +1197,8 @@ static int treeify_expression(expr_t **expr, int stages)
         iter = init_expression(OP_CONCAT);
         iter->e_binop.lhs = *expr;
         iter->e_binop.rhs = (*expr)->next;
-        unlink((*expr)->next);
-        unlink(*expr);
+        __unlink((*expr)->next);
+        __unlink(*expr);
         *expr = iter;
     }
 
@@ -1224,7 +1224,7 @@ static int verify_expression(expr_t *expr)
 
 static expr_t *init_expression(int op)
 {
-    expr_t *expr = calloc(1, sizeof(expr_t));
+    expr_t *expr = __calloc(1, sizeof(expr_t));
     if (expr == NULL)
         return NULL;
     expr->op = op;
@@ -1238,7 +1238,7 @@ static void print_expression(expr_t *expr, const char *prefix)
     if (expr == NULL)
         return;
 
-    strcpy(buf, prefix);
+    __strcpy(buf, prefix);
     fdprintf(STDERR, "%s%s", prefix, op_to_name(expr->op));
     switch (expr->op)
     {
@@ -1262,8 +1262,8 @@ static void print_expression(expr_t *expr, const char *prefix)
 
     fdprintf(STDERR, "\n");
 
-    if (strlen(buf) < sizeof(buf)-1)
-        strcat(buf, "\t");
+    if (__strlen(buf) < sizeof(buf)-1)
+        __strcat(buf, "\t");
 
     if (expr->op == OP_CONDITIONAL)
     {
@@ -1319,9 +1319,9 @@ static void print_statement(stmt_t *stmt, const char *prefix)
 
     fdprintf(STDERR, "%s%s\n", prefix, stmt_to_name(stmt->type));
     
-    strcpy(buf, prefix);
-    if (strlen(buf) < sizeof(buf) - 1)
-        strcat(buf, "\t");
+    __strcpy(buf, prefix);
+    if (__strlen(buf) < sizeof(buf) - 1)
+        __strcat(buf, "\t");
 
     switch(stmt->type)
     {

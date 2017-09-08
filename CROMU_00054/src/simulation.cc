@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -47,7 +47,7 @@ CSimulationCommand::CSimulationCommand( uint8_t srcID, uint8_t destID, uint32_t 
 {
 	m_pData = new uint8_t[cmdLength];
 
-	memcpy( m_pData, pCmdData, cmdLength );
+	__memcpy( m_pData, pCmdData, cmdLength );
 }
 
 CSimulationCommand::~CSimulationCommand( ) 
@@ -69,7 +69,7 @@ void CSimulation::AddSimulationComponent( CSimulationComponent *pItem )
 void CSimulation::SetupSimulation( void )
 {
 	// Get user simulation commands
-	printf( "Enter number of simulation commands: " );
+	__printf( "Enter number of simulation commands: " );
 
 	CUtil::String sLine = ReadLine( );	
 
@@ -83,7 +83,7 @@ void CSimulation::SetupSimulation( void )
 
 		uint8_t srcID, destID;
 
-		printf( "Enter Source ID: " );
+		__printf( "Enter Source ID: " );
 
 		sLine = ReadLine();
 
@@ -91,13 +91,13 @@ void CSimulation::SetupSimulation( void )
 
 		if ( value > 255 )
 		{
-			printf( "Invalid source ID. Setting to 255\n" );
+			__printf( "Invalid source ID. Setting to 255\n" );
 			srcID = 255;
 		}
 		else
 			srcID = value;
 
-		printf( "Enter Dest ID: " );
+		__printf( "Enter Dest ID: " );
 
 		sLine = ReadLine();
 
@@ -105,25 +105,25 @@ void CSimulation::SetupSimulation( void )
 
 		if ( value > 255 )
 		{
-			printf( "Invalid dest ID. Setting to 255\n" );
+			__printf( "Invalid dest ID. Setting to 255\n" );
 			destID = 255;
 		}
 		else
 			destID = value;
 
-		printf( "Enter Command Type:\n" );
-		printf( "0 - Read EGT\n" );
-		printf( "1 - Read RPM\n" );
-		printf( "2 - Read IAT\n" );
-		printf( "3 - Read O2_1\n" );
-		printf( "4 - Read O2_2\n" );
-		printf( "5 - Read Engine Temp\n" );
-		printf( "6 - Read Engine Torque\n" );
-		printf( "7 - Start Engine\n" );
-		printf( "8 - Stop Engine\n" );
-		printf( "9 - Set Throttle Position\n" );
-		printf( "10 - Set Engine Load\n" );
-		printf( "11 - Send Binary Message\n" );
+		__printf( "Enter Command Type:\n" );
+		__printf( "0 - Read EGT\n" );
+		__printf( "1 - Read RPM\n" );
+		__printf( "2 - Read IAT\n" );
+		__printf( "3 - Read O2_1\n" );
+		__printf( "4 - Read O2_2\n" );
+		__printf( "5 - Read Engine Temp\n" );
+		__printf( "6 - Read Engine Torque\n" );
+		__printf( "7 - Start Engine\n" );
+		__printf( "8 - Stop Engine\n" );
+		__printf( "9 - Set Throttle Position\n" );
+		__printf( "10 - Set Engine Load\n" );
+		__printf( "11 - Send Binary Message\n" );
 		
 		uint32_t cmd_type;
 
@@ -131,8 +131,8 @@ void CSimulation::SetupSimulation( void )
 
 		sLine.ToInt( cmd_type );
 
-		printf( "Enter command time (in ms):\n" );
-		printf( "Simulation will send this command at the specified time in the simulation (max 2 minutes of simulation time):\n" );
+		__printf( "Enter command time (in ms):\n" );
+		__printf( "Simulation will send this command at the specified time in the simulation (max 2 minutes of simulation time):\n" );
 
 		uint32_t cmd_time_ms;
 
@@ -211,11 +211,11 @@ void CSimulation::SetupSimulation( void )
 
 void CSimulation::RunSimulation( void )
 {
-	printf( "Running simulation:\n" );
+	__printf( "Running simulation:\n" );
 
 	if ( m_componentList.IsEmpty() )
 	{
-		printf( "0 components for simulation.\n" );
+		__printf( "0 components for simulation.\n" );
 		return;
 	}	
 
@@ -231,7 +231,7 @@ void CSimulation::RunSimulation( void )
 	}
 	else
 	{
-		printf( "0 commands for simulation.\n" );
+		__printf( "0 commands for simulation.\n" );
 		return;
 	}
 
@@ -252,12 +252,12 @@ void CSimulation::RunSimulation( void )
 		{
 			if ( !bDidDisplayTick )
 			{
-				printf( "[TICK][$d]:\n", curTick );
+				__printf( "[TICK][$d]:\n", curTick );
 				
 				bDidDisplayTick = true;
 			}
 
-			printf( "[SENDCMD][TIME=$d][LENGTH=$d][SRC=$d][DEST=$d]\n", pCommand->GetRunTime(), pCommand->GetDataLength(), pCommand->GetSrcID(), pCommand->GetDestID() );
+			__printf( "[SENDCMD][TIME=$d][LENGTH=$d][SRC=$d][DEST=$d]\n", pCommand->GetRunTime(), pCommand->GetDataLength(), pCommand->GetSrcID(), pCommand->GetDestID() );
 			m_lanBus.InjectSimulationMessage( pCommand->GetSrcID(), pCommand->GetDestID(), pCommand->GetData(), pCommand->GetDataLength() );			
 
 			pCommand = m_commandList.GetNext( pCommand );
@@ -279,12 +279,12 @@ void CSimulation::RunSimulation( void )
 		{
 			if ( !bDidDisplayTick )
 			{
-				printf( "[TICK][$d]:\n", curTick );
+				__printf( "[TICK][$d]:\n", curTick );
 				
 				bDidDisplayTick = true;
 			}
 
-			printf( "[MESSAGE][SRC=$d][DEST=$d][LENGTH=$d]\n", pMsg->GetSourceID(), pMsg->GetDestID(), pMsg->GetMessageLen() );
+			__printf( "[MESSAGE][SRC=$d][DEST=$d][LENGTH=$d]\n", pMsg->GetSourceID(), pMsg->GetDestID(), pMsg->GetMessageLen() );
 
 			PrintHexBytes( pMsg->GetMessageData(), pMsg->GetMessageLen() );
 		}
@@ -296,7 +296,7 @@ void CSimulation::RunSimulation( void )
 	m_commandList.DeleteAll();
 	m_componentList.DeleteAll();
 
-	printf( "Simulation complete.\n" );
+	__printf( "Simulation complete.\n" );
 }
 
 bool CSimulation::SendComponentCommand( uint8_t srcID, uint8_t destID, uint32_t cmdTime, uint8_t *pCmdData, uint16_t cmdLength )
@@ -449,7 +449,7 @@ void CSimulation::StopEngine( uint32_t cmd_time_ms, uint8_t srcID, uint8_t destI
 
 void CSimulation::SetThrottlePosition( uint32_t cmd_time_ms, uint8_t srcID, uint8_t destID )
 {
-	printf( "Enter throttle position: " );
+	__printf( "Enter throttle position: " );
 	uint32_t value;
 
 	CUtil::String sLine = ReadLine();
@@ -470,7 +470,7 @@ void CSimulation::SetThrottlePosition( uint32_t cmd_time_ms, uint8_t srcID, uint
 
 void CSimulation::SetEngineLoad( uint32_t cmd_time_ms, uint8_t srcID, uint8_t destID )
 {
-	printf( "Set Engine Load: " );
+	__printf( "Set Engine Load: " );
 	uint32_t value;
 
 	CUtil::String sLine = ReadLine();
@@ -491,19 +491,19 @@ void CSimulation::SetEngineLoad( uint32_t cmd_time_ms, uint8_t srcID, uint8_t de
 
 void CSimulation::SendBinaryMessage( uint32_t cmd_time_ms, uint8_t srcID, uint8_t destID )
 {
-	printf( "Enter Binary Message (in hex): " );
+	__printf( "Enter Binary Message (in hex): " );
 
 	CUtil::String sLine = ReadLine();
 
 	if ( sLine.IsEmpty() )
 	{
-		printf( "Message data empty. Not sending.\n" );
+		__printf( "Message data empty. Not sending.\n" );
 		return;
 	}
 
 	if ( sLine.GetLength() % 2 != 0 )
 	{
-		printf( "Invalid hex message, must be 2-byte aligned.\n" );
+		__printf( "Invalid hex message, must be 2-byte aligned.\n" );
 		return;
 	}
 
@@ -511,13 +511,13 @@ void CSimulation::SendBinaryMessage( uint32_t cmd_time_ms, uint8_t srcID, uint8_
 	
 	if ( messageLength > 1024 )
 	{
-		printf( "Invalid hex message, max message length exceeded.\n" );
+		__printf( "Invalid hex message, max message length exceeded.\n" );
 		return;
 	}	
 	
 	uint8_t *pMessageData = new uint8_t[messageLength];
 
-	memset( pMessageData, 0, messageLength );
+	__memset( pMessageData, 0, messageLength );
 
 	uint32_t binaryPos = 0;
 	for ( size_t pos = 0; pos < sLine.GetLength(); )
@@ -526,7 +526,7 @@ void CSimulation::SendBinaryMessage( uint32_t cmd_time_ms, uint8_t srcID, uint8_
 
 		if ( !HexCharToInt( sLine[pos], temp ) )
 		{
-			printf( "Invalid character at position $d, not a hex character -- discarding message.\n", pos );
+			__printf( "Invalid character at position $d, not a hex character -- discarding message.\n", pos );
 			
 			// Memory leak here -- leave it	
 			return;
@@ -537,7 +537,7 @@ void CSimulation::SendBinaryMessage( uint32_t cmd_time_ms, uint8_t srcID, uint8_
 
 		if ( !HexCharToInt( sLine[pos], temp ) )
 		{
-			printf( "Invalid character at position $d, not a hex character -- discarding message.\n", pos );
+			__printf( "Invalid character at position $d, not a hex character -- discarding message.\n", pos );
 			
 			// Memory leak here -- leave it	
 			return;

@@ -5,25 +5,25 @@ int main(void) {
       unsigned char *read_00000;
       unsigned int read_00000_len;
       unsigned int read_00000_ptr = 0;
-      //**** delimited read
+      //**** delimited __read
       static unsigned char read_00000_delim[] = 
          "\x0a";
       read_00000 = NULL;
       read_00000_len = 0;
       int read_00000_res = delimited_read(0, &read_00000, &read_00000_len, read_00000_delim, 1);
-      free(read_00000);
+      __free(read_00000);
    } while (0);
    do {
       unsigned char *read_00001;
       unsigned int read_00001_len;
       unsigned int read_00001_ptr = 0;
-      //**** delimited read
+      //**** delimited __read
       static unsigned char read_00001_delim[] = 
          "\x0a";
       read_00001 = NULL;
       read_00001_len = 0;
       int read_00001_res = delimited_read(0, &read_00001, &read_00001_len, read_00001_delim, 1);
-      free(read_00001);
+      __free(read_00001);
    } while (0);
    do {
       //*** writing data
@@ -42,6 +42,6 @@ int main(void) {
       if (write_00000_len > 0) {
          transmit_all(1, write_00000, write_00000_len);
       }
-      free(write_00000);
+      __free(write_00000);
    } while (0);
 }

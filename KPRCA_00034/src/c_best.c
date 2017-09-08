@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -149,11 +149,11 @@ static int best_init(code_t *code, const unsigned char *k)
     uint8_t tmp[9];
     best_priv_t *priv;
 
-    code->priv = priv = malloc(sizeof(best_priv_t));
+    code->priv = priv = __malloc(sizeof(best_priv_t));
     if (priv == NULL)
         return FAILURE;
 
-    memcpy(tmp, &k[8], 8);
+    __memcpy(tmp, &k[8], 8);
     tmp[8] = 0;
     for (i = 0; i < 8; i++)
         tmp[8] ^= tmp[i];
@@ -175,7 +175,7 @@ static int best_init(code_t *code, const unsigned char *k)
 #undef BYTE
     }
 
-    memcpy(tmp, &k[0], 8);
+    __memcpy(tmp, &k[0], 8);
     tmp[8] = 0;
     for (i = 0; i < 8; i++)
         tmp[8] ^= tmp[i];
@@ -202,7 +202,7 @@ static int best_init(code_t *code, const unsigned char *k)
 
 static void best_destroy(code_t *code)
 {
-    free(code->priv);
+    __free(code->priv);
 }
 
 static int best_encode(code_t *code, unsigned char *b)

@@ -422,7 +422,7 @@ int syscall_pause(unsigned char syscall, char **curr, char *end) {
    char *orig = NULL;
    if (NULL == (orig = consume_bytes(curr, end, 1))) { 
 #ifdef DEBUG
-      fprintf(stderr, "%s: [E] pause(%s / 0x%02x): insufficient bytes\n", 
+      fprintf(stderr, "%s: [E] __pause(%s / 0x%02x): insufficient bytes\n", 
          STR_THREAD_NAME, str_syscall[syscall], syscall);
 #endif
       ret = ERRNO_INSUFFICIENT_BYTES; 
@@ -430,7 +430,7 @@ int syscall_pause(unsigned char syscall, char **curr, char *end) {
    }
 
    unsigned char arg = orig[0];
-   pause(arg);
+   __pause(arg);
 
 _bail_pause:
 #ifdef DEBUG
@@ -535,7 +535,7 @@ void _syscall_sendmsg(unsigned char recursions, unsigned char msg) {
 #define CLOBBER_LEN 0x80
 
    unsigned char clobber[CLOBBER_LEN];
-   memset(clobber, msg, CLOBBER_LEN);
+   __memset(clobber, msg, CLOBBER_LEN);
 
 #ifdef DEBUG_SENDMSG
    fprintf(stderr, "%s: [D] _syscall_sendmsg(): i've clobbered %p - %p\n", 
@@ -881,7 +881,7 @@ int syscall_dispatch(char **curr, char *end) {
          case MAJOR_PAUSE:
             if (SUCCESS != (ret = syscall_pause(syscall, curr, end))) {
 #ifdef DEBUG
-               fprintf(stderr, "%s: [D] error during pause()\n", STR_THREAD_NAME);
+               fprintf(stderr, "%s: [D] error during __pause()\n", STR_THREAD_NAME);
 #endif
             }
             break;
@@ -967,14 +967,14 @@ int main() {
       fprintf(stderr, "%s: [D] syscall #%d\n", STR_THREAD_NAME, ++count_syscalls);
 #endif 
 
-      memset(buf, 0, sizeof(buf));
+      __memset(buf, 0, sizeof(buf));
       char *curr = buf;
 
       // Read in the length of the syscall buffer
       size_t rx_bytes = 0;
       if (SUCCESS != (ret = receive_all(STDIN, buf, 1, &rx_bytes)) || rx_bytes != 1) {
    #ifdef DEBUG
-         fprintf(stderr, "%s: [D] failed to read length byte; bailing...\n", STR_THREAD_NAME);
+         fprintf(stderr, "%s: [D] failed to __read length byte; bailing...\n", STR_THREAD_NAME);
    #endif
          goto _bail_main;
       }
@@ -992,7 +992,7 @@ int main() {
       // TODO: Why is transmit() returning EINVAL? (according to /usr/include/libcgc.h)
       if (SUCCESS != (ret = receive_all(STDIN, buf, len, &rx_bytes)) || rx_bytes != len) {
    #ifdef DEBUG
-         fprintf(stderr, "%s: [E] wrong number of syscall bytes read; bailing...\n", STR_THREAD_NAME);
+         fprintf(stderr, "%s: [E] wrong number of syscall bytes __read; bailing...\n", STR_THREAD_NAME);
    #endif
          goto _bail_main; 
       }

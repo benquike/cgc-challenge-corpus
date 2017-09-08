@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -42,15 +42,15 @@ typedef uint64_t u64;
 #define err(s, ...) \
 ({ \
   fdprintf(STDERR, "DEBUG %s:%d:\t" s "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
-  exit(1); \
+  __exit(1); \
 })
 
 static size_t end_marker = 0xDEEDACED;
 
-// calloc or crash
+// __calloc or crash
 void *mcalloc(size_t size)
 {
-  void *x = calloc(1, size);
+  void *x = __calloc(1, size);
   if (!x)
     err("Bad alloc\n");
   return x;
@@ -84,8 +84,8 @@ void any_list_remv(any_list_t* entry)
   entry->next->prev = entry->prev;
   entry->prev->next = entry->next;
   if (entry->data)
-    free(entry->data);
-  free(entry);
+    __free(entry->data);
+  __free(entry);
 }
 
 int any_list_empty(any_list_t* head)
@@ -172,7 +172,7 @@ char* read_until_sequence(int fd, char* sequence, size_t sequence_len)
   while (1) {
     if (rx == sz) {
       sz += STEP;
-      out = realloc(out, sz);
+      out = __realloc(out, sz);
       if (!out)
         err("Bad alloc");
     }
@@ -191,7 +191,7 @@ char* read_until_sequence(int fd, char* sequence, size_t sequence_len)
 done:
   return out;
 error:
-  free(out);
+  __free(out);
   return NULL;
 }
 
@@ -206,7 +206,7 @@ char* readline(int fd)
   while (1) {
     if (rx == sz) {
       sz += STEP;
-      out = realloc(out, sz);
+      out = __realloc(out, sz);
       if (!out)
         err("Bad alloc");
     }
@@ -229,7 +229,7 @@ done:
   *newline_loc = '\0';
   return out;
 error:
-  free(out);
+  __free(out);
   return NULL;
 }
 
@@ -334,7 +334,7 @@ char* alnumspc_filter(char* input)
   if (!input)
     return NULL;
 
-  size_t input_len = strlen(input);
+  size_t input_len = __strlen(input);
 
   if (!input_len)
     return NULL;
@@ -343,7 +343,7 @@ char* alnumspc_filter(char* input)
   char* output = mcalloc(input_len + 1);
 
   for (size_t i = 0; i < input_len; i++)
-    if (isalnum(input[i]) || input[i] == ' ')
+    if (__isalnum(input[i]) || input[i] == ' ')
         output[k++] = input[i];
 
   return output;
@@ -397,7 +397,7 @@ suffix* get_suffix(suffix_list* list, size_t index)
 
 int cmp_suffix(suffix* l, suffix* r)
 {
-  return strcmp(l->input, r->input);
+  return __strcmp(l->input, r->input);
 }
 
 suffix_list* merge(suffix_list* l, suffix_list* r)
@@ -458,16 +458,16 @@ suffix_list* merge_sort(suffix_list* input)
   suffix_list* rs = merge_sort(r);
 
   if (ls != l)
-    free(l);
+    __free(l);
   if (rs != r)
-    free(r);
+    __free(r);
 
   return merge(ls, rs);
 }
 
 size_t* build_suffix_array(char* input)
 {
-  size_t length = strlen(input);
+  size_t length = __strlen(input);
   size_t* sa = mcalloc(sizeof(size_t) * length);
 
   suffix_list* list = make_suffix_list(length);
@@ -619,12 +619,12 @@ size_t compress(char *input, size_t input_len, char *output, size_t output_len, 
   writer_write(writer, (u8*)&end_marker, sizeof(end_marker));
 
   size_t ret =  writer->offset;
-  free(writer);
+  __free(writer);
   for (cur = any_list_first(lzelem_list); cur != lzelem_list;) {
     any_list_t* tmp = cur->next;;
     if (cur->data)
-      free(cur->data);
-    free(cur);
+      __free(cur->data);
+    __free(cur);
     cur = tmp;
   }
 
@@ -663,7 +663,7 @@ size_t decompress(char* input, char *output, size_t output_size)
   }
 
   size_t ret =  writer->offset;
-  free(writer);
+  __free(writer);
   return ret;
 }
 
@@ -681,39 +681,39 @@ int main(void)
     if (!action)
       return -1;
 
-    if (strcmp(action, "compress") == 0) {
+    if (__strcmp(action, "compress") == 0) {
       char* input = readline(STDIN);
       char* filtered_input = alnumspc_filter(input);
-      free(input);
-      free(action);
+      __free(input);
+      __free(action);
       if (!filtered_input)
         return -1;
 
-      if (strlen(filtered_input) > DECOMPRESSED_SZ)
+      if (__strlen(filtered_input) > DECOMPRESSED_SZ)
         return -1;
 
       size_t* sa = build_suffix_array(filtered_input);
       if (!sa)
         return -1;
 
-      size_t compressed_sz = compress(filtered_input, strlen(filtered_input), compressed, COMPRESSED_SZ, sa);
+      size_t compressed_sz = compress(filtered_input, __strlen(filtered_input), compressed, COMPRESSED_SZ, sa);
       send_n_bytes(STDOUT, compressed_sz, compressed);
 
-      free(filtered_input);
-      free(sa);
+      __free(filtered_input);
+      __free(sa);
 
-    } else if (strcmp(action, "decompress") == 0) {
+    } else if (__strcmp(action, "decompress") == 0) {
       char* input = read_until_sequence(STDIN, (char*)&end_marker, 4);
       if (!input)
         return -1;
-      memset(decompressed, 0, DECOMPRESSED_SZ);
+      __memset(decompressed, 0, DECOMPRESSED_SZ);
       size_t decompressed_sz = decompress(input, decompressed, DECOMPRESSED_SZ);
       send_n_bytes(STDOUT, decompressed_sz, decompressed);
 
-      free(action);
-      free(input);
+      __free(action);
+      __free(input);
 
-    } else if (strcmp(action, "quit") == 0) {
+    } else if (__strcmp(action, "quit") == 0) {
       break;
     }
   }

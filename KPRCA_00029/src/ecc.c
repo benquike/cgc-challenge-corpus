@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -109,8 +109,8 @@ int ecc_decode(uint8_t *bits)
     }
 
     // Berlekamp-Massey algorithm
-    memset(B, 0, sizeof(B));
-    memset(C, 0, sizeof(C));
+    __memset(B, 0, sizeof(B));
+    __memset(C, 0, sizeof(C));
     B[0] = 1;
     C[0] = 1;
     L = 0;
@@ -124,7 +124,7 @@ int ecc_decode(uint8_t *bits)
         if (d != 0)
         {
             uint8_t tmp[T+1];
-            memcpy(tmp, C, sizeof(C));
+            __memcpy(tmp, C, sizeof(C));
 
             for (j = 0; j < T; j++)
                 if (B[j])
@@ -135,7 +135,7 @@ int ecc_decode(uint8_t *bits)
                 L = i + 1 - L;
                 b = d;
                 m = 0;
-                memcpy(B, tmp, sizeof(B));
+                __memcpy(B, tmp, sizeof(B));
             }
         }
     }

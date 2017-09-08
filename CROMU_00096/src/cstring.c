@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -81,7 +81,7 @@ int TransmitBytes(char *buffer, int length)
 
 cString *ReceiveCString(int maxLen)
 {
-  cString *newString = calloc(sizeof(cString));
+  cString *newString = __calloc(sizeof(cString));
   if (ReceiveBytes((char *)&newString->length, sizeof(newString->length)) != sizeof(newString->length))
   {
     DestroyCString(newString);
@@ -89,12 +89,12 @@ cString *ReceiveCString(int maxLen)
   }
   if (newString->length > maxLen)
   {
-    printf("FATAL\n");
+    __printf("FATAL\n");
     _terminate(-2);
   }
   if (newString->length > 0)
     {
-    newString->string = calloc(newString->length + 1) ;
+    newString->string = __calloc(newString->length + 1) ;
     if (ReceiveBytes(newString->string, newString->length) != newString->length)
     {
       DestroyCString(newString);
@@ -108,9 +108,9 @@ void DestroyCString(cString *s)
 {
   if (s)
   {
-    free(s->string);
+    __free(s->string);
   }
-  free(s);
+  __free(s);
 }
 
 void TransmitCString(cString *s)

@@ -4,7 +4,7 @@ Copyright (c) 2015 Cromulence LLC
 
 Authors: Cromulence <cgc@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -56,7 +56,7 @@ typedef struct _file {
 	pInode Inode;
 	uint8_t Mode;
 	uint32_t CurrPosition;
-} FILE;
+} __FILE;
 
 char *FsError(void);
 uint8_t DestroyFilesystem(void);
@@ -64,10 +64,10 @@ uint8_t InitFilesystem(uint32_t MaxFiles, char *RootPassword);
 uint8_t RenameFile(char *OldFilename, char *NewFilename);
 uint8_t DeleteFile(char *Filename);
 uint8_t InitPasswd(char *RootPassword);
-FILE *fopen(char *Filename, char *Mode);
-uint32_t fread(char *buf, uint32_t size, uint32_t nitems, FILE *fp);
-uint32_t fwrite(char *buf, uint32_t size, uint32_t nitems, FILE *fp);
-uint8_t fclose(FILE *fp);
+__FILE *__fopen(char *Filename, char *Mode);
+uint32_t __fread(char *buf, uint32_t size, uint32_t nitems, __FILE *fp);
+uint32_t __fwrite(char *buf, uint32_t size, uint32_t nitems, __FILE *fp);
+uint8_t __fclose(__FILE *fp);
 uint8_t ListFiles(char **Buf);
 uint8_t Login(char *Username);
 void Uid(void);
@@ -77,6 +77,6 @@ uint8_t DeleteUser(char *Username);
 uint8_t ChangePasswd(char *Username, char *NewPasswd);
 uint8_t CheckPasswd(char *Username, char *Password);
 uint8_t UserExists(char *Username);
-char *fgets(char *buf, uint32_t size, FILE *fp);
+char *fgets(char *buf, uint32_t size, __FILE *fp);
 
 #endif // __FS_H__

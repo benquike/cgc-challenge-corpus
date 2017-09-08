@@ -3,17 +3,17 @@
 #include <stdlib.h>
 #include "strdup.h"
 
-char* strdup(char *s)
+char* __strdup(char *s)
 {
   int sz = 0;
   if (s)
   {
-    sz = strlen(s) + 1;
-    char *d = malloc(sz);
+    sz = __strlen(s) + 1;
+    char *d = __malloc(sz);
     if (d)
     {
-      memset(d, 0, sz);
-      memcpy(d, s, sz);
+      __memset(d, 0, sz);
+      __memcpy(d, s, sz);
       return d;
     }
   }

@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -130,7 +130,7 @@ eParserSymbol parse_get_symbol( char *pszString, uint32_t *new_offset )
     uint32_t symIndex;
     uint32_t offset = 0;
 
-    while ( isspace( pszString[offset] ) )
+    while ( __isspace( pszString[offset] ) )
         offset++;
 
     if ( pszString[offset] == '\0' )
@@ -149,7 +149,7 @@ eParserSymbol parse_get_symbol( char *pszString, uint32_t *new_offset )
 
         if ( strbeg( pszString+offset, g_parseTable[symIndex].text ) == 0 )
         {
-            offset += strlen( g_parseTable[symIndex].text );
+            offset += __strlen( g_parseTable[symIndex].text );
             (*new_offset) = offset;
 
             return g_parseTable[symIndex].symbol;
@@ -302,15 +302,15 @@ void do_string_search( eParserSymbol object_type, eParserSymbol comparison_symbo
         switch( object_type )
         {
         case SYM_USERNAME:
-            comparison_result = strcmp( pCur->szUserName, pszSearchString );
+            comparison_result = __strcmp( pCur->szUserName, pszSearchString );
             break;
 
         case SYM_FIRSTNAME:
-            comparison_result = strcmp( pCur->szFirstName, pszSearchString );
+            comparison_result = __strcmp( pCur->szFirstName, pszSearchString );
             break;
 
         case SYM_LASTNAME:
-            comparison_result = strcmp( pCur->szLastName, pszSearchString );
+            comparison_result = __strcmp( pCur->szLastName, pszSearchString );
             break;
 
         default:
@@ -517,7 +517,7 @@ void parse_search_expression( char *pszTemp )
                 uint32_t cur_pos;
 
                 // Parse string
-                while ( isspace( *pszCur ) )
+                while ( __isspace( *pszCur ) )
                     pszCur++;
 
                 if ( *pszCur != '\"' )
@@ -661,7 +661,7 @@ void parse_search_expression( char *pszTemp )
         uint32_t idx;
 
         // Print search results
-        printf( "Search results, $d items found:\n", result_count );
+        __printf( "Search results, $d items found:\n", result_count );
 
         for ( idx = 0; idx < result_count; idx++ )
             print_record_helper( db_search_index( results.data.result_list[idx] ) );

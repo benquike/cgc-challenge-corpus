@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -41,7 +41,7 @@ int readline(int fd, char *buf, size_t max, size_t *nrx)
     } else if (ret == 0 && n == (size_t)NULL) {
       break;
     } else if (ret == 0 && n != (size_t)NULL) {
-      char *nl = strchr(tmp, '\n');
+      char *nl = __strchr(tmp, '\n');
 
       // just newline, i.e. input = "\n"
       if (*nrx == 0 && nl == tmp)
@@ -56,9 +56,9 @@ int readline(int fd, char *buf, size_t max, size_t *nrx)
         n = max - *nrx;
 
       *nrx += n;
-      memcpy(buf, tmp, n);
+      __memcpy(buf, tmp, n);
       buf += n;
-      memset(tmp, '\0', READ_SIZE + 1);
+      __memset(tmp, '\0', READ_SIZE + 1);
 
       if (nl)
         break;

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -90,7 +90,7 @@ DefineFunction(Program, void, load_game)
 {
     size_t i;
     Buffer *buffer = new(Buffer);
-    char *start, *strbuf = malloc(8192);
+    char *start, *strbuf = __malloc(8192);
     ASSERT_ALLOC(strbuf);
 
     for (i = 0; i < 8191; i++)
@@ -105,7 +105,7 @@ DefineFunction(Program, void, load_game)
         goto fail;
 
     strbuf[i-1] = 0;
-    start = strchr(strbuf, '-');
+    start = __strchr(strbuf, '-');
     if (start == NULL || start + 1 >= &strbuf[i-1])
         goto fail;
     start++;
@@ -118,7 +118,7 @@ DefineFunction(Program, void, load_game)
 
 fail:
     delete(buffer);
-    free(strbuf);
+    __free(strbuf);
 }
 
 DefineFunction(Program, void, save_game)
@@ -131,7 +131,7 @@ DefineFunction(Program, void, save_game)
     {
         $($io, format, "-%s--\nPress (C) to continue...\n", asc);
         $($io, wait_for, 'c');
-        free(asc);
+        __free(asc);
     }
 
     delete(buffer);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -45,10 +45,10 @@ static int normalize_infix(unsigned char **pinfix, size_t size)
             goto failed;
         }
 
-        if (strchr(OPERATOR, *infix) != NULL) {
+        if (__strchr(OPERATOR, *infix) != NULL) {
             *infix += CHAR_OFFSET;
         } else if (*infix == '\\') {
-            if (infix[1] != '\0' && strchr(TOKEN, infix[1]) != NULL) {
+            if (infix[1] != '\0' && __strchr(TOKEN, infix[1]) != NULL) {
                 *infix++ = SKIP;
             } else {
                 error = BAD_RE;
@@ -83,12 +83,12 @@ static int normalize_infix(unsigned char **pinfix, size_t size)
 
             unions[i] = '\0';
             unions[--i] = RPAREN;
-            new_str = malloc(strlen(t) + strlen(unions) + 1);
-            memcpy(new_str, t, s - t);
-            memcpy(new_str + (s - t), unions, strlen(unions));
-            memcpy(new_str + ((s - t) + strlen(unions)), e, strlen(e) + 1);
-            infix = new_str + ((s - t) + strlen(unions)) - 1;
-            free(t);
+            new_str = __malloc(__strlen(t) + __strlen(unions) + 1);
+            __memcpy(new_str, t, s - t);
+            __memcpy(new_str + (s - t), unions, __strlen(unions));
+            __memcpy(new_str + ((s - t) + __strlen(unions)), e, __strlen(e) + 1);
+            infix = new_str + ((s - t) + __strlen(unions)) - 1;
+            __free(t);
             t = new_str;
         }
     }
@@ -111,38 +111,38 @@ static int is_nonconcat_char(unsigned char c)
 
 void debug_print_re(unsigned char* re)
 {
-    unsigned char *temp = malloc(strlen(re) + 1);
+    unsigned char *temp = __malloc(__strlen(re) + 1);
     unsigned char *ptemp = temp, *pre = re;
     for( ; *re; re++)
         *temp++ = *re > CHAR_OFFSET ? *re - CHAR_OFFSET : *re;
     temp = '\0';
 
-    printf("Normalized re = %s\n", ptemp);
-    printf("Original re = %s\n", pre);
-    free(temp);
+    __printf("Normalized re = %s\n", ptemp);
+    __printf("Original re = %s\n", pre);
+    __free(temp);
 }
 
 int retorpn(unsigned char *infix, size_t size, unsigned char **rpn)
 {
     *rpn = NULL;
-    if(strlen(infix) == 0)
+    if(__strlen(infix) == 0)
         return BAD_RE;
-    else if(strlen(infix) > MAX_RE_SIZE)
+    else if(__strlen(infix) > MAX_RE_SIZE)
         return RE_TOO_LONG;
-    else if(strlen(infix) > size)
+    else if(__strlen(infix) > size)
         return BUF_OVERFLOW;
 
-    unsigned char *output = calloc(1, (strlen(infix) * 2) + 1); // Factor in all the concats
-    unsigned char *operators = calloc(1, strlen(infix) + 1);
+    unsigned char *output = __calloc(1, (__strlen(infix) * 2) + 1); // Factor in all the concats
+    unsigned char *operators = __calloc(1, __strlen(infix) + 1);
     unsigned char *out_iter = output;
     unsigned char *op_iter = operators;
-    unsigned char *ninfix = malloc(size);
+    unsigned char *ninfix = __malloc(size);
 
     int error = 0;
     int bad_paren = 0;
     unsigned char c;
 
-    strcpy(ninfix, infix);
+    __strcpy(ninfix, infix);
     infix = ninfix;
     error = normalize_infix(&infix, size);
     if (error != 0)
@@ -237,14 +237,14 @@ int retorpn(unsigned char *infix, size_t size, unsigned char **rpn)
     }
 
     *rpn = output;
-    free(ninfix);
-    free(operators);
+    __free(ninfix);
+    __free(operators);
     return 0;
 
 failed:
-    free(ninfix);
-    free(output);
-    free(operators);
+    __free(ninfix);
+    __free(output);
+    __free(operators);
     return error;
 }
 

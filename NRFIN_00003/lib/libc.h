@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -41,11 +41,11 @@ typedef unsigned char UINT8;
 #define ERRNO_RECV BASE_ID+2
 #define ERRNO_ALLOC BASE_ID+3
 
-void memcpy(unsigned char *dst, const unsigned char *src, size_t n);
-int memcmp(const char *s1, const char *s2, size_t n);
-unsigned char * memset(unsigned char *b, unsigned char c, size_t len);
+void __memcpy(unsigned char *dst, const unsigned char *src, size_t n);
+int __memcmp(const char *s1, const char *s2, size_t n);
+unsigned char * __memset(unsigned char *b, unsigned char c, size_t len);
 size_t findchar(char *haystack, char needle);
-void pause(size_t usec);
+void __pause(size_t usec);
 int sendallnulltrunc(int fd, const char *buf, size_t size);
 UINT32 my_pow(UINT32 x, UINT32 y);
 UINT32 hex2UINT32(char *hex);

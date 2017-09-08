@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -65,43 +65,43 @@ main(void)
 
         print_bitboard(&board, cur_player);
 
-        printf("%s>%s ", cur_player == WHITE ? "\033[1;36m" : "\033[0;35m",
+        __printf("%s>%s ", cur_player == WHITE ? "\033[1;36m" : "\033[0;35m",
                 "\033[0m");
         fflush(stdout);
 
         fread_until((unsigned char *)buf, '\n', sizeof(buf), stdin);
-        if ((p = strchr(buf, '\n')) != NULL)
+        if ((p = __strchr(buf, '\n')) != NULL)
             *p = '\0';
         else
             continue;
 
-        if (strcmp(buf, "quit") == 0)
+        if (__strcmp(buf, "quit") == 0)
             break;
 
         if (parse_san(&board, cur_player, buf, &move) != 0 ||
                 (result = make_move(&board, &move)) == ERROR) {
-            printf("INVALID MOVE!\n");
+            __printf("INVALID MOVE!\n");
             continue;
         }
 
 #ifdef PATCHED_1
-        printf("\n%s\n%x\n", buf, calculate_csum(result));
+        __printf("\n%s\n%x\n", buf, calculate_csum(result));
 #else
-        printf("\n");
-        printf(buf);
-        printf("\n%x\n", calculate_csum(result));
+        __printf("\n");
+        __printf(buf);
+        __printf("\n%x\n", calculate_csum(result));
 #endif
 
         switch (result) {
         case CHECK:
-            printf("CHECK!\n");
+            __printf("CHECK!\n");
             break;
         case CHECKMATE:
-            printf("CHECKMATE!\n");
+            __printf("CHECKMATE!\n");
             gameover = 1;
             break;
         case STALEMATE:
-            printf("STALEMATE!\n");
+            __printf("STALEMATE!\n");
             gameover = 1;
             break;
         case CONTINUE:

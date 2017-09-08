@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -53,7 +53,7 @@ enum color_t {
   OFF_BOARD
 };
 
-#define error(__status) exit(__status)
+#define error(__status) __exit(__status)
 
 #define BOARD_DIM 19
 #define NUM_PLAYERS 2
@@ -84,7 +84,7 @@ struct hashl_t {
 
 static inline void INIT_LIST(hashl_t** list, hash_t hash)
 {
-  *list = calloc(1, sizeof(hashl_t));
+  *list = __calloc(1, sizeof(hashl_t));
   if (!list) error(1);
   (*list)->hash = hash;
   (*list)->next = *list;
@@ -92,7 +92,7 @@ static inline void INIT_LIST(hashl_t** list, hash_t hash)
 
 static inline void EXTD_LIST(hashl_t* list, hash_t hash)
 {
-  hashl_t* new = calloc(1, sizeof(hashl_t));
+  hashl_t* new = __calloc(1, sizeof(hashl_t));
   if (!new)
     error(1);
   for (; list->next != list; list = list->next)
@@ -180,7 +180,7 @@ u8 ndigits(int x)
 
 game_t* init_game(board_t board)
 {
-  game_t* game = calloc(1, sizeof(game_t));
+  game_t* game = __calloc(1, sizeof(game_t));
   if (!game)
     return NULL;
 
@@ -215,10 +215,10 @@ game_t* init_game(board_t board)
 
 game_t* copy_game(game_t* game)
 {
-  game_t* copy = calloc(1, sizeof(game_t));
+  game_t* copy = __calloc(1, sizeof(game_t));
   if (!copy)
     error(1);
-  memcpy(copy, game, sizeof(game_t));
+  __memcpy(copy, game, sizeof(game_t));
   return copy;
 }
 
@@ -300,14 +300,14 @@ int remove_captures(game_t* game, color_t color)
   game_t* frozen = copy_game(game);
   for (u8 y = 0; y < BOARD_DIM; y++) {
     for (u8 x = 0; x < BOARD_DIM; x++) {
-      memset(sboard, 0, sizeof(sboard));
+      __memset(sboard, 0, sizeof(sboard));
       if (get_color(frozen->board, x, y) == color && !has_liberty(frozen, sboard, x, y, color)) {
         cnt++;
         SET_BOARD(game->board, x, y, EMPTY);
       }
     }
   }
-  free(frozen);
+  __free(frozen);
   return cnt;
 }
 
@@ -328,7 +328,7 @@ int score(game_t* game, u32* black, u32* white)
 
   for (u8 y = 0; y < BOARD_DIM; y++) {
     for (u8 x = 0; x < BOARD_DIM; x++) {
-      memset(sboard, 0, sizeof(sboard));
+      __memset(sboard, 0, sizeof(sboard));
       color_t cur = get_color(game->board, x, y);
       if (cur == WHITE) {
         *white += 1;
@@ -368,17 +368,17 @@ int check_and_play(game_t** game, u8 x, u8 y, color_t color, u8 play)
   u16 thr_cap = remove_captures(simulated, color);
 
   if (has_happened(simulated, *game)) {
-    free(simulated);
+    __free(simulated);
     return -1;
   } else if (play) {
-    free(*game);
+    __free(*game);
     *game = simulated;
     (*game)->used[color - 1]++;
     (*game)->caps[color - 1] += our_cap;
     (*game)->caps[OTHER_PLAYER(color) - 1] += thr_cap;
     return 0;
   } else {
-    free(simulated);
+    __free(simulated);
     return 0;
   }
 }
@@ -458,7 +458,7 @@ void draw_game(game_t* game)
   print_rchar('\n', (SCREEN_HEIGHT - BOARD_DIM) / 2);
 }
 
-void sleep(int s, int us)
+void __sleep(int s, int us)
 {
   struct timeval t;
   t.tv_sec = s;
@@ -496,18 +496,18 @@ int read_move(u8* x, u8* y, u8* pass)
   int ret = -1;
   char buf[INPUT_MAX + 1];
   *pass = 0;
-  memset(buf, 0, INPUT_MAX);
+  __memset(buf, 0, INPUT_MAX);
   read_n_bytes(STDIN, INPUT_MAX, buf, 1, '\n');
   buf[INPUT_MAX] = '\0';
 
   char* p = NULL;
 
-  if (!strncmp("pass", buf, strlen("pass"))) {
+  if (!strncmp("pass", buf, __strlen("pass"))) {
     *pass = 1;
     ret = 0; goto out;
   }
 
-  long n1 = strtol(buf, &p, 10);
+  long n1 = __strtol(buf, &p, 10);
 
   if (p == buf)
     goto out;
@@ -515,10 +515,10 @@ int read_move(u8* x, u8* y, u8* pass)
   if (p >= buf + INPUT_MAX)
     goto out;
 
-  while (p && *p && p < buf + INPUT_MAX && !isdigit(*p))
+  while (p && *p && p < buf + INPUT_MAX && !__isdigit(*p))
     p++;
 
-  long n2 = strtol(p, NULL, 10);
+  long n2 = __strtol(p, NULL, 10);
 
   if (n1 >= 0 && n1 < BOARD_DIM && n2 >= 0 && n2 < BOARD_DIM) {
     *x = n1;
@@ -531,7 +531,7 @@ out:
 
 void end_game(game_t* game, char *name, u8 reason)
 {
-  free(game);
+  __free(game);
   fdprintf(STDOUT, "Game Over ");
   switch (reason) {
   case 0:
@@ -553,7 +553,7 @@ void end_game(game_t* game, char *name, u8 reason)
   fdprintf(STDOUT, name);
 #endif
 
-  exit(0);
+  __exit(0);
   return;
 }
 
@@ -625,7 +625,7 @@ action_t calculate_move(game_t** game, u8* ox, u8* oy, color_t color)
   for (u8 y = 0; y < BOARD_DIM; y++) {
     for (u8 x = 0; x < BOARD_DIM; x++) {
       vote = 0;
-      memset(sboard, 0, sizeof(sboard));
+      __memset(sboard, 0, sizeof(sboard));
 
       u8 neigh_cnt = 0;
       neigh_cnt += (get_color((*game)->board, x + 1, y) == color);
@@ -712,11 +712,11 @@ int main(void)
 
   fdprintf(STDOUT, "What is your name?\n");
   if (read_n_bytes(STDIN, NAME_LEN, name, 1, '\n') < 0) {
-    printf("Need a name, bro\n");
-    exit(1);
+    __printf("Need a name, bro\n");
+    __exit(1);
   }
 
-  printf("Hi, %s\n", name);
+  __printf("Hi, %s\n", name);
   draw_game(game);
   while (1) {
     while (1) {

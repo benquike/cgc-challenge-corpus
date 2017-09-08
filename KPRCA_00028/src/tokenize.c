@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -31,7 +31,7 @@ DEF_LIST_APPEND(tok, char *);
 
 static int ok_for_sym(char c)
 {
-  if (c == '(' || c == ')' || isspace(c))
+  if (c == '(' || c == ')' || __isspace(c))
     return 0;
   else
     return 1;
@@ -39,20 +39,20 @@ static int ok_for_sym(char c)
 
 tok_list *tokenize(char *expr)
 {
-  size_t len = strlen(expr);
+  size_t len = __strlen(expr);
   size_t i = 0;
 
-  tok_list *l = malloc(sizeof(tok_list));
+  tok_list *l = __malloc(sizeof(tok_list));
   if (l == NULL)
     return NULL;
   l->value = "START";
 
   while (i < len) {
-    while (isspace(expr[i]))
+    while (__isspace(expr[i]))
       i++;
 
     if (expr[i] == '(' || expr[i] == ')') {
-      char *v = malloc(2);
+      char *v = __malloc(2);
       if (v == NULL)
         return NULL;
       v[0] = expr[i];
@@ -63,19 +63,19 @@ tok_list *tokenize(char *expr)
       continue;
     }
 
-    if (isalnum(expr[i])) {
+    if (__isalnum(expr[i])) {
       size_t start = i;
 
-      while (isalnum(expr[i]) && i < len)
+      while (__isalnum(expr[i]) && i < len)
         i++;
 
       if (i < start)
         return NULL;
 
-      char *v = malloc(i - start + 1);
+      char *v = __malloc(i - start + 1);
       if (v == NULL)
         return NULL;
-      strncpy(v, expr + start, i - start);
+      __strncpy(v, expr + start, i - start);
       if (tok_list_append(l, v) < 0)
         return NULL;
     } else{

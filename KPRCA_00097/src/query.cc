@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -158,16 +158,16 @@ Node *Query::apply(Node *root, Instruction *cur, unsigned int index)
             d_error = Error::SUCCESS;
             return root;
         case Op::TAG:
-            if (strcmp(root->tag()->cstr(), cur->d_op1_s->cstr()) != 0)
+            if (__strcmp(root->tag()->cstr(), cur->d_op1_s->cstr()) != 0)
                 return nullptr;
             break;
         case Op::NAMESPACE:
-            if (root->ns() == nullptr || strcmp(root->ns()->cstr(), cur->d_op1_s->cstr()) != 0)
+            if (root->ns() == nullptr || __strcmp(root->ns()->cstr(), cur->d_op1_s->cstr()) != 0)
                 return nullptr;
             break;
         case Op::ATTRIBUTE:
             attr = root->get_attr(cur->d_op1_s->cstr());
-            if (attr == nullptr || strcmp(attr->get()->cstr(), cur->d_op2_s->cstr()) != 0)
+            if (attr == nullptr || __strcmp(attr->get()->cstr(), cur->d_op2_s->cstr()) != 0)
                 return nullptr;
             break;
         case Op::INDEX:

@@ -4,7 +4,7 @@ Copyright (c) 2016 Cromulence LLC
 
 Authors: Bryce Kerley <bk@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -31,7 +31,7 @@ THE SOFTWARE.
 #include "types.h"
 #include "char.h"
 
-#define streq(s1, s2) (0 == strcmp(s1, s2))
+#define streq(s1, s2) (0 == __strcmp(s1, s2))
 #define flmatch(s1,s2, flav) if streq(s1, s2) return flav;
 
 typedef enum character_class_enum {
@@ -78,7 +78,7 @@ lexer_list* lex_string(uint16 len, char* str) {
   st.error = 0;
   st.total_length = len;
   st.entire = st.remainder = str;
-  st.head = st.tail = calloc(sizeof(lexer_list));
+  st.head = st.tail = __calloc(sizeof(lexer_list));
     
   while (remaining_bytes(st) > 0) {
     char peek = st.remainder[0];
@@ -137,15 +137,15 @@ void free_lexer_list(lexer_list* to_free) {
   lexer_list* next_to_free;
   if (NULL == (next_to_free = to_free->next)) return;
 
-  free(to_free);
+  __free(to_free);
   return free_lexer_list(next_to_free);
 }
 
 void free_lexeme(lexeme* to_free) {
   if (NULL == to_free) return;
   
-  free(to_free->bytes);
-  free(to_free);
+  __free(to_free->bytes);
+  __free(to_free);
 }
 
 lexeme_flavor get_single_byte_flavor(char first_byte);
@@ -210,13 +210,13 @@ lexeme_flavor get_single_byte_flavor(char first_byte) {
 
 lexer_state lex_single_byte(lexer_state in) {
   lexer_state out = in;
-  lexer_list* new_tail = out.tail->next = calloc(sizeof(lexer_list));
+  lexer_list* new_tail = out.tail->next = __calloc(sizeof(lexer_list));
   out.tail = new_tail;
-  lexeme* content = new_tail->content = calloc(sizeof(lexeme));
+  lexeme* content = new_tail->content = __calloc(sizeof(lexeme));
   char b = in.remainder[0];
   content->flavor = get_single_byte_flavor(b);
   content->bytes_len = 1;
-  content->bytes = calloc(2);
+  content->bytes = __calloc(2);
   content->bytes[0] = b;
   out.remainder++;
   
@@ -234,12 +234,12 @@ lexer_state lex_character_literal(lexer_state in) {
     cur++;
   }
 
-  lexer_list* new_tail = out.tail->next = calloc(sizeof(lexer_list));
+  lexer_list* new_tail = out.tail->next = __calloc(sizeof(lexer_list));
   out.tail = new_tail;
-  lexeme* content = new_tail->content = calloc(sizeof(lexeme));
+  lexeme* content = new_tail->content = __calloc(sizeof(lexeme));
   content->flavor = F_CHARACTER_LITERAL;
   content->bytes_len = bytes_len;
-  content->bytes = calloc(bytes_len + 1);
+  content->bytes = __calloc(bytes_len + 1);
 
   for (uint16 i = 0; i < bytes_len; i++) {
     content->bytes[i] = apostrophe[i+1];
@@ -261,12 +261,12 @@ lexer_state lex_word(lexer_state in) {
     cur++;
   }
 
-  lexer_list* new_tail = out.tail->next = calloc(sizeof(lexer_list));
+  lexer_list* new_tail = out.tail->next = __calloc(sizeof(lexer_list));
   out.tail = new_tail;
-  lexeme* content = new_tail->content = calloc(sizeof(lexeme));
+  lexeme* content = new_tail->content = __calloc(sizeof(lexeme));
   content->bytes_len = bytes_len;
-  content->bytes = calloc(bytes_len + 1);
-  memcpy(content->bytes, start, bytes_len);
+  content->bytes = __calloc(bytes_len + 1);
+  __memcpy(content->bytes, start, bytes_len);
   content->flavor = get_flavor(content);
 
   out.remainder += bytes_len;
@@ -285,12 +285,12 @@ lexer_state lex_number(lexer_state in) {
     cur++;
   }
 
-  lexer_list* new_tail = out.tail->next = calloc(sizeof(lexer_list));
+  lexer_list* new_tail = out.tail->next = __calloc(sizeof(lexer_list));
   out.tail = new_tail;
-  lexeme* content = new_tail->content = calloc(sizeof(lexeme));
+  lexeme* content = new_tail->content = __calloc(sizeof(lexeme));
   content->bytes_len = bytes_len;
-  content->bytes = calloc(bytes_len + 1);
-  memcpy(content->bytes, start, bytes_len);
+  content->bytes = __calloc(bytes_len + 1);
+  __memcpy(content->bytes, start, bytes_len);
   content->flavor = F_INTEGER_LITERAL;
 
   out.remainder = cur;
@@ -300,13 +300,13 @@ lexer_state lex_number(lexer_state in) {
 lexer_state lexer_error(lexer_state in) {
   lexer_state out = in;
   out.error = 1;
-  lexer_list* new_tail = out.tail->next = calloc(sizeof(lexer_list));
+  lexer_list* new_tail = out.tail->next = __calloc(sizeof(lexer_list));
   out.tail = new_tail;
-  lexeme* err = new_tail->content = calloc(sizeof(lexeme));
+  lexeme* err = new_tail->content = __calloc(sizeof(lexeme));
   err->flavor = F_ERROR;
   err->bytes_len = (in.remainder - in.entire + 1);
-  err->bytes = calloc(err->bytes_len + 1);
-  memcpy(err->bytes, in.remainder, err->bytes_len - 1);
+  err->bytes = __calloc(err->bytes_len + 1);
+  __memcpy(err->bytes, in.remainder, err->bytes_len - 1);
 
   return out;
 }
@@ -327,7 +327,7 @@ void assert_lexeme_flavor(lexeme_flavor desired, lexeme* lexeme) {
 }
 
 void assert_lex(lexeme_flavor desired, char* str) {
-  lexer_list* out = lex_string(strlen(str), str);
+  lexer_list* out = lex_string(__strlen(str), str);
   if ((desired == F_ERROR) && (NULL == out)) return;
   lexeme_flavor actual = out->content->flavor;
 
@@ -367,7 +367,7 @@ void lexer_test() {
   assert_lex(F_CHARACTER_LITERAL, "'abc'");
 
   char* sample = "FIND 1 + 2 / 3 * 4 FROM my_cool_table_12345";
-  lexer_list* lexed = lex_string(strlen(sample), sample);
+  lexer_list* lexed = lex_string(__strlen(sample), sample);
 
   assert_chase(F_FIND, 0);
   assert_chase(F_INTEGER_LITERAL, 1);
@@ -381,12 +381,12 @@ void lexer_test() {
   assert_chase(F_IDENTIFIER, 9);
 
   sample = "FIND 'abc' FROM rad_table";
-  lexed = lex_string(strlen(sample), sample);
+  lexed = lex_string(__strlen(sample), sample);
 
   assert_chase(F_CHARACTER_LITERAL, 1);
 
   sample = "FIND func('abc', 1, 2) FROM cool_table";
-  lexed = lex_string(strlen(sample), sample);
+  lexed = lex_string(__strlen(sample), sample);
 
   assert_chase(F_FIND, 0);
   assert_chase(F_IDENTIFIER, 1);

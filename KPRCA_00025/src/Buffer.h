@@ -5,7 +5,7 @@
 #include "oo.h"
 
 #define SEEK_BEGIN 0
-#define SEEK_END ((size_t)-1)
+#define ___SEEK_END ((size_t)-1)
 
 DeclareClass(Buffer, Object)
     uint8_t *m_buf;

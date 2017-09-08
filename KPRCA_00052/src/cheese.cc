@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -51,14 +51,14 @@ namespace {
                 return &cheeses[i];
         }
 
-        return NULL;
+        return (cheese_lut *) NULL;
     }
 
     void print_list()
     {
         size_t i;
         for (i = 0; i < sizeof(cheeses) / sizeof(cheeses[0]); i++)
-            printf("%d. %s\n", i + 1, cheeses[i].name);
+            __printf("%d. %s\n", i + 1, cheeses[i].name);
     }
 }
 
@@ -77,7 +77,7 @@ Cheese *Cheese::select_cheese(const char *cheese_name)
 {
     cheese_lut *cheese_entry = find_cheese_entry(cheese_name);
     if (!cheese_entry)
-        return NULL;
+      return (Cheese *)NULL;
 
     return new Cheese(cheese_entry->name, cheese_entry->calories, cheese_entry->carbs);
 }

@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.co>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -30,9 +30,9 @@ THE SOFTWARE.
 #include "page.h"
 
 int AddPageVar(PageVar *varlist, char *cmd) {
-  char *name = strchr(cmd, ':') + 1;
-  char *value = strchr(name, ':') + 1;
-  char *end = strchr(cmd, ']');
+  char *name = __strchr(cmd, ':') + 1;
+  char *value = __strchr(name, ':') + 1;
+  char *end = __strchr(cmd, ']');
   if (value - name > sizeof(varlist->name)) {
     // Invalid name length
     return -1;
@@ -41,7 +41,7 @@ int AddPageVar(PageVar *varlist, char *cmd) {
   if (pagevar != NULL) {
     // Special case, variable already exists
     if (pagevar->value != NULL) {
-      free(pagevar->value);
+      __free(pagevar->value);
     }
   } else {
     // Add new variable to end of list
@@ -49,19 +49,19 @@ int AddPageVar(PageVar *varlist, char *cmd) {
     while (pagevar->next != NULL) {
       pagevar = pagevar->next;
     }
-    pagevar->next = calloc(sizeof(PageVar), 1);
+    pagevar->next = __calloc(sizeof(PageVar), 1);
     VerifyPointerOrTerminate(pagevar->next, "New PageVar");
     pagevar = pagevar->next;
   }
-  memcpy(pagevar->name, name, value - 1 - name);
+  __memcpy(pagevar->name, name, value - 1 - name);
   #ifdef PATCHED
   if (end - value <= 0) {
     return -1;
   }
   #endif 
-  pagevar->value = calloc(end - value + 1, 1);
+  pagevar->value = __calloc(end - value + 1, 1);
   VerifyPointerOrTerminate(pagevar->value, "PageVar->value");
-  memcpy(pagevar->value, value, end - value);
+  __memcpy(pagevar->value, value, end - value);
   return 1;
 }
 
@@ -84,10 +84,10 @@ void DestroyVarList(PageVar *varlist) {
     varlist->next = NULL;
   }
   if (varlist->value != NULL) {
-    free(varlist->value);
+    __free(varlist->value);
     varlist->value = NULL;
   }
-  free(varlist);
+  __free(varlist);
 }
 
 // Processes user supplied variable definitions and then serves the requested
@@ -100,7 +100,7 @@ int InteractWithPage(char *page, int page_size, char *override_data) {
     return ServePageWithOverride(page, page_size, NULL);
   }
 #endif 
-  PageVar *override_list = calloc(sizeof(PageVar), 1);
+  PageVar *override_list = __calloc(sizeof(PageVar), 1);
   VerifyPointerOrTerminate(override_list, "Override_list initialization");
   // Process override variable definitions
   while(*override_data != '\0' && *override_data != ']') {
@@ -109,7 +109,7 @@ int InteractWithPage(char *page, int page_size, char *override_data) {
     // Process var definition
     AddPageVar(override_list, override_data);
     // Locate end of var definition
-    char *end_of_var = strchr(override_data, ']');
+    char *end_of_var = __strchr(override_data, ']');
     if (end_of_var == NULL) { break; }
     // Step over var definition
     override_data = end_of_var + 1;
@@ -128,10 +128,10 @@ char line[81];
 int line_length;
 
 void FlushOutput() {
-  printf("@s\n", line);
-  memset(line, '\0', sizeof(line));
+  __printf("@s\n", line);
+  __memset(line, '\0', sizeof(line));
   if (in_a_box) {
-    memset(line, ' ', sizeof(line) - 1);
+    __memset(line, ' ', sizeof(line) - 1);
     line[0] = '*';
     line[79] = '*';
     line_length = 2;
@@ -150,14 +150,14 @@ void OutputChar(char c) {
 }
 
 void OutputStr(char *s) {
-  if (strlen(s) + line_length > 80) {
+  if (__strlen(s) + line_length > 80) {
     FlushOutput();
   }
-  if (strlen(s) > 80) {
-    printf("@s\n", s);
+  if (__strlen(s) > 80) {
+    __printf("@s\n", s);
   } else {
-    memcpy(&line[line_length],s, strlen(s));
-    line_length += strlen(s);
+    __memcpy(&line[line_length],s, __strlen(s));
+    line_length += __strlen(s);
   }
 } 
 
@@ -166,10 +166,10 @@ void OutputStr(char *s) {
 // will take precedence over variables of the same name defined in the page. 
 int ServePageWithOverride(char *page, int page_size, PageVar *override_list) {
   // Initialize varlist
-  PageVar *varlist = calloc(sizeof(PageVar), 1);
+  PageVar *varlist = __calloc(sizeof(PageVar), 1);
   VerifyPointerOrTerminate(varlist, "VarList initialization");
   in_a_box = 0;
-  memset(line, '\0', sizeof(line));
+  __memset(line, '\0', sizeof(line));
   line_length = 0;
   
   #ifdef PATCHED
@@ -210,7 +210,7 @@ int ServePageWithOverride(char *page, int page_size, PageVar *override_list) {
           break;
         }
         default: {
-          printf("ERROR: Invalid control code\n");
+          __printf("ERROR: Invalid control code\n");
           goto error;
         }
       }
@@ -223,8 +223,8 @@ int ServePageWithOverride(char *page, int page_size, PageVar *override_list) {
         goto error;
       }
       // Process script commands
-      if (strncmp(page, "line", strlen("line")) == 0) {
-        page += strlen("line");
+      if (strncmp(page, "line", __strlen("line")) == 0) {
+        page += __strlen("line");
         if (*page != ':') {
           goto error;
         }
@@ -232,21 +232,21 @@ int ServePageWithOverride(char *page, int page_size, PageVar *override_list) {
         if (*(++page) != ':') {
           goto error;
         }
-        int length = atoi(++page);
+        int length = __atoi(++page);
         for (int i = 0; i < length; i++) {
           OutputChar(c);
         }
         page = close + 1;
-      } else if (strncmp(page, "var", strlen("var")) == 0) {
+      } else if (strncmp(page, "var", __strlen("var")) == 0) {
         AddPageVar(varlist, page);
         page = close + 1;
-      } else if (strncmp(page, "box", strlen("box")) == 0) {
+      } else if (strncmp(page, "box", __strlen("box")) == 0) {
         in_a_box = 1;
         FlushOutput();
         for (int i = 0; i < 80; i++) {
-          putc('*');
+          __putc('*');
         }
-        printf("\n");
+        __printf("\n");
         page += 4;
       } 
     } else if (*page == ']') {
@@ -255,9 +255,9 @@ int ServePageWithOverride(char *page, int page_size, PageVar *override_list) {
         in_a_box = 0;
         FlushOutput();
         for (int i = 0; i < 80; i++) {
-          putc('*');
+          __putc('*');
         }
-        printf("\n");
+        __printf("\n");
       } else {
         goto error;
       }
@@ -296,7 +296,7 @@ int ServePageWithOverride(char *page, int page_size, PageVar *override_list) {
   return 0;
 
 error:
-  printf("ERROR: Invalid syntax\n");
+  __printf("ERROR: Invalid syntax\n");
   DestroyVarList(varlist);
   DestroyVarList(override_list);
   return -1;

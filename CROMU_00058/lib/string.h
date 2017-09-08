@@ -4,7 +4,7 @@ Copyright (c) 2015 Cromulence LLC
 
 Authors: Cromulence <cgc@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -28,10 +28,10 @@ THE SOFTWARE.
 
 #include <libcgc.h>
 
-size_t strlen( const char *str );
-void bzero(void *s, size_t n);
-void *memset( void *ptr, int value, size_t num );
-char *strchr(char *s, int c);
-char *strtok(char *str, char *sep);
+size_t __strlen( const char *str );
+void __bzero(void *s, size_t n);
+void *__memset( void *ptr, int value, size_t num );
+char *__strchr(char *s, int c);
+char *__strtok(char *str, char *sep);
 
 #endif // __STRING_H__

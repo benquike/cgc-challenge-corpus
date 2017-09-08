@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -50,7 +50,7 @@ int main(void) {
 	InitFilesystem();
 
 	// zero out the command history
-	bzero(ENV.CommandHistory, sizeof(ENV.CommandHistory));
+	__bzero(ENV.CommandHistory, sizeof(ENV.CommandHistory));
 	ENV.NumCommandHistory = 0;
 
 	// log in the default 'crs' user
@@ -60,10 +60,10 @@ int main(void) {
 		PrintPrompt();
 
 		if (ReadShellPrompt(STDIN, buf, MAX_CMD_LEN-1) == 0) {
-			printf("\b\b  \b\b\n\r");
+			__printf("\b\b  \b\b\n\r");
 			continue;
 		}
-		printf("\b\b  \b\b\n\r");
+		__printf("\b\b  \b\b\n\r");
 
 		PrependCommandHistory(buf);
 
@@ -71,35 +71,35 @@ int main(void) {
 		if (ParseResult == 0) {
 			break;
 		} else if (ParseResult == 1) {
-			puts("Invalid input");
+			__puts("Invalid input");
 			continue;
 		}
 
 		// Command handler
-		if (!strcmp(Cmd.argv[0], "list")) {
+		if (!__strcmp(Cmd.argv[0], "list")) {
 			HandleListFiles(&Cmd);
-		} else if (!strcmp(Cmd.argv[0], "chuser")) {
+		} else if (!__strcmp(Cmd.argv[0], "chuser")) {
 			ChUser(&Cmd);
-		} else if (!strcmp(Cmd.argv[0], "chpw")) {
+		} else if (!__strcmp(Cmd.argv[0], "chpw")) {
 			ChPw(&Cmd);
-		} else if (!strcmp(Cmd.argv[0], "exit")) {
+		} else if (!__strcmp(Cmd.argv[0], "exit")) {
 			HandleExit(&Cmd);
-		} else if (!strcmp(Cmd.argv[0], "id")) {
+		} else if (!__strcmp(Cmd.argv[0], "id")) {
 			ID(&Cmd);
-		} else if (!strcmp(Cmd.argv[0], "?")) {
+		} else if (!__strcmp(Cmd.argv[0], "?")) {
 			HandleHelp(&Cmd);
-		} else if (!strcmp(Cmd.argv[0], "help")) {
+		} else if (!__strcmp(Cmd.argv[0], "help")) {
 			HandleHelp(&Cmd);
-		} else if (!strcmp(Cmd.argv[0], "newuser")) {
+		} else if (!__strcmp(Cmd.argv[0], "newuser")) {
 			NewUser(&Cmd);
-		} else if (!strcmp(Cmd.argv[0], "deluser")) {
+		} else if (!__strcmp(Cmd.argv[0], "deluser")) {
 			DelUser(&Cmd);
-		} else if (!strcmp(Cmd.argv[0], "dump")) {
+		} else if (!__strcmp(Cmd.argv[0], "dump")) {
 			HandleDump(&Cmd);
-		} else if (!strcmp(Cmd.argv[0], "print")) {
+		} else if (!__strcmp(Cmd.argv[0], "print")) {
 			HandlePrint(&Cmd);
 		} else {
-			printf("Invalid command: $s\n\r", buf);
+			__printf("Invalid command: $s\n\r", buf);
 		}
 
 	}

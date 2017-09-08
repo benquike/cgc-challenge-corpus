@@ -4,7 +4,7 @@ Author: James Connor (jymbo@cromulence.co)
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -57,10 +57,10 @@ pdListNode get_last_element_d(pdList thisList){
 psList create_single_list(){
 	psList thisList = NULL;
 	if (  allocate( sizeof(sList), 0, (void**)&thisList ) !=0  ){
-		puts("\n**Allocate returned an error.\n");
+		__puts("\n**Allocate returned an error.\n");
 		_terminate(1);	
 	}
-	bzero(thisList, sizeof(sList));
+	__bzero(thisList, sizeof(sList));
 	thisList->listRoot = NULL;
 	thisList->count = 0;
 	return thisList;
@@ -71,10 +71,10 @@ psList create_single_list(){
 pdList create_double_list(){
 	pdList thisList = NULL;
 	if (  allocate( sizeof(dList), 0, (void**)&thisList ) !=0  ){
-			puts("\n**Allocate returned an error.\n");
+			__puts("\n**Allocate returned an error.\n");
 			_terminate(1);
 	}
-	bzero(thisList, sizeof(dList));
+	__bzero(thisList, sizeof(dList));
 	thisList->listRoot = NULL;
 	thisList->count = 0;
 	return thisList;
@@ -90,10 +90,10 @@ pdListNode insert_double_list_node(pdList thisList, pdListNode prevNode){
 
 	//allocate a node
 	if (  allocate( sizeof(dListNode), 0, (void**)&newNode ) != 0  ){
-		puts("\n**Allocate returned an error.\n");
+		__puts("\n**Allocate returned an error.\n");
 		_terminate(1);
 		}
-	bzero(newNode, sizeof(dListNode));
+	__bzero(newNode, sizeof(dListNode));
 	//cases are 
 	//1) newlist insert at listroot, new->next is null, new->prev is null, listroot is new
 	//2) existing insert at listroot, new->next is listroot, new->prev is null, listroot is new, new->next->prev is new
@@ -126,7 +126,7 @@ pdListNode delete_double_list_node(pdList thisList, pdListNode deletedNode){
 	//empty list
 	pdListNode retNode = NULL;	
 	if ( (deletedNode == NULL) || (thisList->count == 0) ){
-		puts("**Cannot delete and empty list.");
+		__puts("**Cannot delete and empty list.");
 		return NULL;
 	}
 
@@ -166,10 +166,10 @@ psListNode insert_single_list_node(psList thisList, psListNode prevNode){
 	psListNode newNode = NULL;
 	psListNode tempNode = NULL;
 	if (  allocate( sizeof(sListNode), 0, (void**)&newNode ) != 0  ){
-		puts("\n**Allocate returned an error.\n");
+		__puts("\n**Allocate returned an error.\n");
 		_terminate(1);
 		}
-	bzero(newNode, sizeof(sListNode));
+	__bzero(newNode, sizeof(sListNode));
 	//cases are 
 	//1) newlist insert at listroot, new->next is null, listroot is new
 	//2) existing insert at listroot, new->next is listroot, listroot is new

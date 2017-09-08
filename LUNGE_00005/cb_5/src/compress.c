@@ -6,7 +6,7 @@ int read_fd  = 10;
 int write_fd = 10;
 char *pattern;
 
-void exit(int i) {
+void __exit(int i) {
     transmit_all(write_fd, "\x00\n", 2);
     _terminate(i);
 }
@@ -17,7 +17,7 @@ char get_byte(int fd) {
 
     size = receive_all(fd, (char *) &value, sizeof(value));
     if (size != sizeof(value))
-        exit(0);
+        __exit(0);
     
     return value;
 }
@@ -39,10 +39,10 @@ void setup(void) {
 
 int write_char(int fd, char value, int count) {
     if (count > 1) {
-        printf(fd, "%u", count);
+        __printf(fd, "%u", count);
     } else {
         if (value >= '0' && value <= '9') {
-            printf(fd, "1");
+            __printf(fd, "1");
         }
     }
 
@@ -88,7 +88,7 @@ void compress(void) {
 
 int main(void) {
     setup();
-    sleep(2);
+    __sleep(2);
     compress();
-    exit(0);
+    __exit(0);
 }

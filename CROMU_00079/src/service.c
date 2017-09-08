@@ -47,7 +47,7 @@ void say_hello() {
 void run_loop() {
   while(1) {
     protocol_with_recv_string(^void(uint16 len, char* str) {
-        if ((len == 4) && (strcmp("exit", str) == 0)) {
+        if ((len == 4) && (__strcmp("exit", str) == 0)) {
           _terminate(0);
         }
         
@@ -64,10 +64,10 @@ void run_loop() {
         }
 
         sint32 result = eval(clr);
-        char* result_buf = calloc(16); //log10(2^32) < 16
+        char* result_buf = __calloc(16); //log10(2^32) < 16
         uint64 count = sprintf(result_buf, "$d", result);
         protocol_send_str(result_buf);
-        free(result_buf);
+        __free(result_buf);
       });
   }
 }

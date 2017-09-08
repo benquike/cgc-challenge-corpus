@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -201,7 +201,7 @@ int main(void) {
 	// be a linear graph from the starting 
 	// node to the ending node.  As such
 	// the SPT will have > MAX_NODES in it
-	// causing the integer overflow, malloc
+	// causing the integer overflow, __malloc
 	// undersizing and buffer underwrite.
 	//
 	
@@ -262,10 +262,10 @@ int main(void) {
 	cmd.EndingNode = 0x2ff+9;
 	SendBytes(0, (char *)&cmd, 13);
 
-	// read the response
+	// __read the response
 	
 	// send a new allocation request
-	// causing the fake malloc block to be used
+	// causing the fake __malloc block to be used
 	cmd.Action = CMD_SEND_NODES;
 	cmd.NumElements = 3;
 	cmd.StartingNode = 0;

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -57,7 +57,7 @@ static int _ht_resize(ht_t *tbl)
     struct ht_node_t **new_entries, *iter;
 
     // allocate new table
-    new_entries = calloc(new_size, sizeof(ht_node_t *));
+    new_entries = __calloc(new_size, sizeof(ht_node_t *));
     if (new_entries == NULL)
         return FAILURE;
 
@@ -68,19 +68,19 @@ static int _ht_resize(ht_t *tbl)
             goto fail;
     }
 
-    free(tbl->tbl);
+    __free(tbl->tbl);
     tbl->tbl = new_entries;
     tbl->tbl_size = new_size;
     return SUCCESS;
 
 fail:
-    free(new_entries);
+    __free(new_entries);
     return FAILURE;
 }
 
 int ht_init(ht_t *tbl)
 {
-    memset(tbl, 0, sizeof(ht_t));
+    __memset(tbl, 0, sizeof(ht_t));
     tbl->tbl_size = INITIAL_COUNT;
     return _ht_resize(tbl);
 }
@@ -142,8 +142,8 @@ int ht_delete(ht_t *tbl, const char *k, void **v)
         }
     }
 
-    free(node->k);
-    free(node);
+    __free(node->k);
+    __free(node);
     return SUCCESS;
 }
 
@@ -157,10 +157,10 @@ int ht_insert(ht_t *tbl, const char *k_, void *v)
     if (tbl->tbl_count == MAX_COUNT)
         return FAILURE;
 
-    k = strdup(k_);
+    k = __strdup(k_);
     if (k == NULL)
         return FAILURE;
-    node = malloc(sizeof(ht_node_t));
+    node = __malloc(sizeof(ht_node_t));
     node->k = k;
     node->value = v;
 
@@ -182,8 +182,8 @@ int ht_insert(ht_t *tbl, const char *k_, void *v)
     return SUCCESS;
 
 fail:
-    free(k);
-    free(node);
+    __free(k);
+    __free(node);
     return FAILURE;
 }
 

@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include "lookup.h"
 
 void usage() {
-  printf("lookupd [-s] [-q] names\n");
+  __printf("lookupd [-s] [-q] names\n");
 }
 
 void lookup(int argc, char **argv) {
@@ -43,7 +43,7 @@ void lookup(int argc, char **argv) {
   int i;
 
 // Process command line args
-  if (strcmp(argv[0], "lookup") != 0) {
+  if (__strcmp(argv[0], "lookup") != 0) {
     usage();
     return;
   }
@@ -57,7 +57,7 @@ void lookup(int argc, char **argv) {
       } else if (argv[i][1] == 'q') {
         quick = 1;
       } else {
-        printf("Invalid Switch: -$c\n", argv[i][1]);
+        __printf("Invalid Switch: -$c\n", argv[i][1]);
         usage();
         return;
       }
@@ -85,7 +85,7 @@ void lookup(int argc, char **argv) {
       u = long_lookup(argv[i]);
     }
     if (u == NULL) {
-      printf("User not found ($s)\n", argv[i]);
+      __printf("User not found ($s)\n", argv[i]);
     } else {
       if (brief) {
         print_user_short(u);
@@ -128,7 +128,7 @@ user *long_lookup(char *name) {
         }
       }
       if (l->next == NULL) {
-        l->next = calloc(sizeof(list));
+        l->next = __calloc(sizeof(list));
         l->next->object = u;
       }
       return u;
@@ -157,19 +157,19 @@ void print_all_users_long() {
 }
 
 void print_user_short(user *u) {
-  printf("Username: $s\n", u->name);
-  printf("Real name: $s\n", u->realname);
-  printf("Phone #:$s\n", u->phone);
-  printf("\n");
+  __printf("Username: $s\n", u->name);
+  __printf("Real name: $s\n", u->realname);
+  __printf("Phone #:$s\n", u->phone);
+  __printf("\n");
   }
 
 
 void print_user_long(user *u) {
-  printf("Username: $s\nReal name: $s\nHost name: $s\nIdle for: $d seconds\n", u->name, u->realname, u->hostname, u->idletime);
+  __printf("Username: $s\nReal name: $s\nHost name: $s\nIdle for: $d seconds\n", u->name, u->realname, u->hostname, u->idletime);
   if (u->online) {
-    printf("User is online\n");
+    __printf("User is online\n");
   } else {
-    printf("User is offline\n");
+    __printf("User is offline\n");
   }
-  printf("Phone #:$s\n\n", u->phone);
+  __printf("Phone #:$s\n\n", u->phone);
   }

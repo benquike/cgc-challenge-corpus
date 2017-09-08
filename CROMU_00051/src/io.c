@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -44,7 +44,7 @@ uint32_t ReadShellPrompt(int fd, char *buf, size_t len) {
 	char TmpBuf[MAX_CMD_LEN];
 	uint32_t CursorPos = 0;
 	
-	bzero(TmpBuf, MAX_CMD_LEN);
+	__bzero(TmpBuf, MAX_CMD_LEN);
 
 	while ((receive(fd, &c, 1, &rx_bytes) == 0) && total_len < len-1) {
 		if (rx_bytes == 0) {
@@ -52,12 +52,12 @@ uint32_t ReadShellPrompt(int fd, char *buf, size_t len) {
 			return(0);
 		}
 //		t[0] = c;
-//		printf("$08x\n", t[0]);
+//		__printf("$08x\n", t[0]);
 
 		// backspace
 		if (c == '\x7f') {
 			if (CursorPos == total_len) {
-				printf("\b\b\b   \b\b\b");
+				__printf("\b\b\b   \b\b\b");
 				total_len--;
 				CursorPos--;
 				continue;
@@ -70,7 +70,7 @@ uint32_t ReadShellPrompt(int fd, char *buf, size_t len) {
 			EraseLine(0);
 			PrintPrompt();
 			buf[total_len] = '\0';
-			printf("$s", buf);
+			__printf("$s", buf);
 			CursorLeft(total_len-CursorPos);
 			continue;
 		}
@@ -86,7 +86,7 @@ uint32_t ReadShellPrompt(int fd, char *buf, size_t len) {
 			EraseLine(0);
 			PrintPrompt();
 			buf[total_len] = '\0';
-			printf("$s", buf);
+			__printf("$s", buf);
 			CursorPos = total_len;
 			continue;
 		}
@@ -103,12 +103,12 @@ uint32_t ReadShellPrompt(int fd, char *buf, size_t len) {
 		// ctrl-d
 		if (c == '\x04') {
 			if (total_len > 0) {
-				printf("\b\b  \b\b");
+				__printf("\b\b  \b\b");
 				continue;
 			} else {
-				printf("\b\b  \b\b");
-				printf("exit  ");
-				strcpy(buf, "exit");
+				__printf("\b\b  \b\b");
+				__printf("exit  ");
+				__strcpy(buf, "exit");
 				return(1);
 			}
 		}
@@ -143,7 +143,7 @@ uint32_t ReadShellPrompt(int fd, char *buf, size_t len) {
 						EraseLine(0);
 						PrintPrompt();
 						buf[total_len] = '\0';
-						printf("$s", buf);
+						__printf("$s", buf);
 						CursorPos = total_len;
 						continue;
 					}
@@ -153,7 +153,7 @@ uint32_t ReadShellPrompt(int fd, char *buf, size_t len) {
 					// arrow's back to it
 					if (CurrCommandHistory == -1) {
 						buf[total_len] = '\0';
-						strcpy(TmpBuf, buf);
+						__strcpy(TmpBuf, buf);
 					}
 					CurrCommandHistory++;
 					if (CurrCommandHistory >= ENV.NumCommandHistory) {
@@ -162,10 +162,10 @@ uint32_t ReadShellPrompt(int fd, char *buf, size_t len) {
 					// print the next command in the history buf
 					EraseLine(0);
 					PrintPrompt();
-					strcpy(buf, ENV.CommandHistory[CurrCommandHistory]);
-					total_len = strlen(ENV.CommandHistory[CurrCommandHistory]);
+					__strcpy(buf, ENV.CommandHistory[CurrCommandHistory]);
+					total_len = __strlen(ENV.CommandHistory[CurrCommandHistory]);
 					CursorPos = total_len;
-					printf("$s", ENV.CommandHistory[CurrCommandHistory]);
+					__printf("$s", ENV.CommandHistory[CurrCommandHistory]);
 					continue;
 				} else if (c == '\x42') {
 					// down arrow	
@@ -174,7 +174,7 @@ uint32_t ReadShellPrompt(int fd, char *buf, size_t len) {
 						EraseLine(0);
 						PrintPrompt();
 						buf[total_len] = '\0';
-						printf("$s", buf);
+						__printf("$s", buf);
 						continue;
 					}
 
@@ -183,10 +183,10 @@ uint32_t ReadShellPrompt(int fd, char *buf, size_t len) {
 						// go back to the user's original command
 						EraseLine(0);
 						PrintPrompt();
-						strcpy(buf, TmpBuf);
-						total_len = strlen(buf);
+						__strcpy(buf, TmpBuf);
+						total_len = __strlen(buf);
 						CursorPos = total_len;
-						printf("$s", buf);
+						__printf("$s", buf);
 						CurrCommandHistory = -1;
 						continue;
 					}
@@ -195,10 +195,10 @@ uint32_t ReadShellPrompt(int fd, char *buf, size_t len) {
 					CurrCommandHistory--;
 					EraseLine(0);
 					PrintPrompt();
-					strcpy(buf, ENV.CommandHistory[CurrCommandHistory]);
-					total_len = strlen(ENV.CommandHistory[CurrCommandHistory]);
+					__strcpy(buf, ENV.CommandHistory[CurrCommandHistory]);
+					total_len = __strlen(ENV.CommandHistory[CurrCommandHistory]);
 					CursorPos = total_len;
-					printf("$s", ENV.CommandHistory[CurrCommandHistory]);
+					__printf("$s", ENV.CommandHistory[CurrCommandHistory]);
 					continue;
 
 				} else if (c == '\x43') {
@@ -208,7 +208,7 @@ uint32_t ReadShellPrompt(int fd, char *buf, size_t len) {
 						EraseLine(0);
 						PrintPrompt();
 						buf[total_len] = '\0';
-						printf("$s", buf);
+						__printf("$s", buf);
 						continue;
 					}
 
@@ -218,7 +218,7 @@ uint32_t ReadShellPrompt(int fd, char *buf, size_t len) {
 					EraseLine(0);
 					PrintPrompt();
 					buf[total_len] = '\0';
-					printf("$s", buf);
+					__printf("$s", buf);
 					if (total_len != CursorPos) {
 						CursorLeft(total_len-CursorPos);
 					}
@@ -230,7 +230,7 @@ uint32_t ReadShellPrompt(int fd, char *buf, size_t len) {
 						EraseLine(0);
 						PrintPrompt();
 						buf[total_len] = '\0';
-						printf("$s", buf);
+						__printf("$s", buf);
 						CursorLeft(total_len);
 						continue;
 					}
@@ -240,7 +240,7 @@ uint32_t ReadShellPrompt(int fd, char *buf, size_t len) {
 					EraseLine(0);
 					PrintPrompt();
 					buf[total_len] = '\0';
-					printf("$s", buf);
+					__printf("$s", buf);
 					CursorLeft(total_len-CursorPos);
 					continue;
 				}
@@ -302,10 +302,10 @@ uint32_t ReadUntilNewline(int fd, char *buf, size_t len) {
 		// backspace
 		if (c == '\x7f') {
 			if (CursorPos == 0) {
-				printf("\b\b  \b\b");
+				__printf("\b\b  \b\b");
 				continue;
 			}
-			printf("\b\b\b   \b\b\b");
+			__printf("\b\b\b   \b\b\b");
 			total_len--;
 			CursorPos--;
 			continue;

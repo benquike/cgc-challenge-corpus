@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -70,12 +70,12 @@ void clearRun(Run* run_ptr) {
 int initRun(Run** run_ptr, unsigned int size)
 {
 	int ret;
-	if((ret = allocate(_SC_PAGESIZE, 0, (void**) run_ptr)))
+	if((ret = allocate(___SC_PAGESIZE_, 0, (void**) run_ptr)))
 		return ret;
 	
 	Run* run;
 	run = *run_ptr;
-	if((ret = allocate(_SC_PAGESIZE, 0, &run->memory)))
+	if((ret = allocate(___SC_PAGESIZE_, 0, &run->memory)))
 		return ret;
 
 	setBit(run->bitmap, 0);
@@ -86,7 +86,7 @@ int initRun(Run** run_ptr, unsigned int size)
 }
 
 /**
-* Get the next free chunk 
+* Get the next __free chunk 
 * 
 * @param size The size of the chunk to allocate
 * @param allocated The address to store the address of the allocated chunk
@@ -101,9 +101,9 @@ int getNextFreeChunk(int size, void** allocated)
 	int index;
 	Run* run_ptr;
 
-	// Get the next run with free space
+	// Get the next run with __free space
 	chunk_size = (1 << size);
-	bitmap_size = _SC_PAGESIZE/(1 << size);
+	bitmap_size = ___SC_PAGESIZE_/(1 << size);
 	for(run_ptr=pool[size-1]; run_ptr != NULL && testBit(run_ptr->bitmap, bitmap_size-1); run_ptr=run_ptr->next) {
 		int found=0;
 		for(int i=0; i<bitmap_size; i++) {
@@ -125,7 +125,7 @@ int getNextFreeChunk(int size, void** allocated)
 		return 0;
 	}
 
-	// Find free space in run
+	// Find __free space in run
 	for(int i=0; i<bitmap_size; i++) {
 		if(!testBit(run_ptr->bitmap, i)) {
 			char* mem_ptr;
@@ -183,7 +183,7 @@ int isClear(unsigned int* bitmap) {
 *
 * @return a pointer the allocated memory
 */
-void* malloc(size_t size) {
+void* __malloc(size_t size) {
 
 	void* allocated=NULL;
 	unsigned int msb=0;
@@ -197,7 +197,7 @@ void* malloc(size_t size) {
 	if(msb > 11) {
 		LargeChunk* lc_ptr;
 		for(lc_ptr = largeChunks; lc_ptr != NULL; lc_ptr=lc_ptr->next);
-		lc_ptr = (LargeChunk *) malloc(sizeof(LargeChunk));
+		lc_ptr = (LargeChunk *) __malloc(sizeof(LargeChunk));
 		if((ret = allocate(size, 0, &lc_ptr->memory)))
 			return NULL;
 		lc_ptr->next = largeChunks;
@@ -219,7 +219,7 @@ void* malloc(size_t size) {
 *
 * @return None
 */
-void free(void* ptr) {
+void __free(void* ptr) {
 
 	Run* run_ptr=NULL, *prev_run_ptr=NULL;
 	int bit_index=0;
@@ -241,7 +241,7 @@ void free(void* ptr) {
 			largeChunks = lc_ptr->next;
 		else
 			prev_ptr->next = lc_ptr->next;
-		free(lc_ptr);
+		__free(lc_ptr);
 		return;
 	}
 
@@ -266,7 +266,7 @@ void free(void* ptr) {
 	// Free and zero chunk
 	bit_index = (ptr - run_ptr->memory) / run_ptr->size;
 	clearBit(run_ptr->bitmap, bit_index);
-	//bzero(ptr, run_ptr->size);
+	//__bzero(ptr, run_ptr->size);
 
 	// Deallocate empty run
 	if(isClear(run_ptr->bitmap)) {
@@ -274,10 +274,10 @@ void free(void* ptr) {
 			pool[j] = run_ptr->next;
 		else
 			prev_run_ptr->next = run_ptr->next;
-		if((ret = deallocate(run_ptr->memory, _SC_PAGESIZE)))
+		if((ret = deallocate(run_ptr->memory, ___SC_PAGESIZE_)))
 			_terminate(4);
 		clearRun(run_ptr);
-		if((ret = deallocate(run_ptr, _SC_PAGESIZE)))
+		if((ret = deallocate(run_ptr, ___SC_PAGESIZE_)))
 			_terminate(4);
 		run_ptr = NULL;
 

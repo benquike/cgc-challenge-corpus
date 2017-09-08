@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -42,7 +42,7 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
     *(unsigned int *)&ruleset[0] = 0;
     *(unsigned char *)&ruleset[4] = 0;
     *(unsigned int *)&ruleset[5] = 128;
-    memcpy(&ruleset[9], secret_page, 128);
+    __memcpy(&ruleset[9], secret_page, 128);
 
     for (unsigned int i = 4; i < sizeof(ruleset); i++)
         cksum -= ruleset[i];
@@ -55,14 +55,14 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
     }
 
     do {
-        if (fread(&len, 4, stdin) != 4) break;
+        if (__fread(&len, 4, stdin) != 4) break;
         if (len > 0x40000000) break;
 
-        free(data);
-        data = (unsigned char *)malloc(len);
-        if (data == NULL || fread(data, len, stdin) != len) break;
+        __free(data);
+        data = (unsigned char *)__malloc(len);
+        if (data == NULL || __fread(data, len, stdin) != len) break;
     } while (intf.process(data, len));
 
-    free(data);
+    __free(data);
     return 0;
 }

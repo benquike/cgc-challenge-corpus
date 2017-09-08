@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -126,7 +126,7 @@ void kty_object_to_string(kty_item_t *item, int depth)
       count++;
       print_indent(depth + 1);
       fdprintf(STDOUT, "\"");
-      print_escaped(entry->key, strlen(entry->key));
+      print_escaped(entry->key, __strlen(entry->key));
       fdprintf(STDOUT, "\": ");
       kty_print_item(entry->val, depth + 1);
     }
@@ -230,14 +230,14 @@ char* parse_number(kty_item_t *item, char *str)
   int i;
   double d;
 
-  c1 = strchr(str, ' ');
+  c1 = __strchr(str, ' ');
   if (c1 == NULL)
-    c1 = strchr(str, ',');
+    c1 = __strchr(str, ',');
   if (c1 == NULL)
-    c1 = strchr(str, ']');
+    c1 = __strchr(str, ']');
   if (c1 == NULL)
-    c1 = strchr(str, '}');
-  c2 = strchr(str, '.');
+    c1 = __strchr(str, '}');
+  c2 = __strchr(str, '.');
   if ((c1 && c2 && c2 < c1) || (c2 && c1 == NULL))
   {
     // Double
@@ -248,7 +248,7 @@ char* parse_number(kty_item_t *item, char *str)
   else
   {
     // Int
-    i = strtol(str, &str, 10);
+    i = __strtol(str, &str, 10);
     item->type = KTY_INT;
     item->item.i_int = i;
   }
@@ -258,7 +258,7 @@ char* parse_number(kty_item_t *item, char *str)
 
 char* parse_string(kty_item_t *item, char *str)
 {
-  int read = 0, len = 0;
+  int __read = 0, len = 0;
   char *c = str + 1;
 
   item->type = KTY_STRING;
@@ -271,21 +271,21 @@ char* parse_string(kty_item_t *item, char *str)
     if (c[0] == '\\')
     {
       c++;
-      read++;
+      __read++;
     }
     c++;
     len++;
-    read++;
+    __read++;
   }
 
   if (len >= MAX_KTY_STRING)
     return NULL;
-  item->item.i_string.s = malloc(len + 1);
+  item->item.i_string.s = __malloc(len + 1);
   if (item->item.i_string.s == NULL)
     return NULL;
 
   c = str + 1;
-  read += 2;
+  __read += 2;
   len = 0;
   while (c[0] && c[0] != '\"')
   {
@@ -325,7 +325,7 @@ char* parse_string(kty_item_t *item, char *str)
   item->item.i_string.s[len] = '\0';
   item->item.i_string.len = len;
 
-  return str + read;
+  return str + __read;
 }
 
 char* parse_array(kty_item_t *item, char *str)
@@ -338,7 +338,7 @@ char* parse_array(kty_item_t *item, char *str)
   if (str[0] == ']')
     return str + 1;
 
-  new = (kty_item_t *) malloc(sizeof(kty_item_t));
+  new = (kty_item_t *) __malloc(sizeof(kty_item_t));
   if (new == NULL)
     goto fail;
   item->item.i_array = array_create(4, free_kty_item);
@@ -352,7 +352,7 @@ char* parse_array(kty_item_t *item, char *str)
 
   while (str[0] == ',')
   {
-    new = (kty_item_t *) malloc(sizeof(kty_item_t));
+    new = (kty_item_t *) __malloc(sizeof(kty_item_t));
     if (new == NULL)
       goto fail;
     str++;
@@ -384,7 +384,7 @@ char* parse_object(kty_item_t *item, char *str)
   if (str[0] == '}')
     return str + 1;
 
-  k = (kty_item_t *) malloc(sizeof(kty_item_t));
+  k = (kty_item_t *) __malloc(sizeof(kty_item_t));
   if (k == NULL)
     goto fail;
   item->item.i_object = htbl_create(4, free_kty_item);
@@ -395,20 +395,20 @@ char* parse_object(kty_item_t *item, char *str)
   if (str == NULL || str[0] != ':')
     goto fail;
   str++;
-  new = (kty_item_t *) malloc(sizeof(kty_item_t));
+  new = (kty_item_t *) __malloc(sizeof(kty_item_t));
   if (new == NULL)
     goto fail;
   str = eat_ws(parse_item(new, eat_ws(str)));
   if (str == NULL)
     goto fail;
   htbl_put(item->item.i_object, key, new);
-  if (strcmp("nyan_says", key) == 0 && new->type == KTY_STRING)
+  if (__strcmp("nyan_says", key) == 0 && new->type == KTY_STRING)
   {
-    dup = (kty_item_t *) malloc(sizeof(kty_item_t));
+    dup = (kty_item_t *) __malloc(sizeof(kty_item_t));
     if (dup == NULL)
       goto fail;
     dup->type = new->type;
-    dup->item.i_string.s = strdup(new->item.i_string.s);
+    dup->item.i_string.s = __strdup(new->item.i_string.s);
     dup->item.i_string.len = new->item.i_string.len;
     array_append(g_parser->nyan_says, dup);
     dup = NULL;
@@ -419,7 +419,7 @@ char* parse_object(kty_item_t *item, char *str)
 
   while (str[0] == ',')
   {
-    k = (kty_item_t *) malloc(sizeof(kty_item_t));
+    k = (kty_item_t *) __malloc(sizeof(kty_item_t));
     if (k == NULL)
       goto fail;
     str = eat_ws(parse_string(k, eat_ws(str + 1)));
@@ -427,20 +427,20 @@ char* parse_object(kty_item_t *item, char *str)
     if (str == NULL || str[0] != ':')
       goto fail;
     str++;
-    new = (kty_item_t *) malloc(sizeof(kty_item_t));
+    new = (kty_item_t *) __malloc(sizeof(kty_item_t));
     if (new == NULL)
       goto fail;
     str = eat_ws(parse_item(new, eat_ws(str)));
     if (str == NULL)
       goto fail;
     htbl_put(item->item.i_object, key, new);
-    if (strcmp("nyan_says", key) == 0 && new->type == KTY_STRING)
+    if (__strcmp("nyan_says", key) == 0 && new->type == KTY_STRING)
     {
-      dup = (kty_item_t *) malloc(sizeof(kty_item_t));
+      dup = (kty_item_t *) __malloc(sizeof(kty_item_t));
       if (dup == NULL)
         goto fail;
       dup->type = new->type;
-      dup->item.i_string.s = strdup(new->item.i_string.s);
+      dup->item.i_string.s = __strdup(new->item.i_string.s);
       dup->item.i_string.len = new->item.i_string.len;
       array_append(g_parser->nyan_says, dup);
       dup = NULL;
@@ -519,7 +519,7 @@ kty_item_t* kty_loads(char *str)
   int i = 0, init = 0, state = -1;
   kty_item_t *root;
 
-  root = (kty_item_t *) calloc(1, sizeof(kty_item_t));
+  root = (kty_item_t *) __calloc(1, sizeof(kty_item_t));
   if (root == NULL)
     goto fail;
 
@@ -565,7 +565,7 @@ void free_kty_item(void *e)
     {
       case KTY_STRING:
         if (item->item.i_string.s)
-          free(item->item.i_string.s);
+          __free(item->item.i_string.s);
         break;
       case KTY_ARRAY:
         array_destroy(item->item.i_array);
@@ -576,6 +576,6 @@ void free_kty_item(void *e)
       default:
         break;
     }
-    free(item);
+    __free(item);
   }
 }

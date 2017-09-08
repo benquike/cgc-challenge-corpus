@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -47,7 +47,7 @@ void InitializeFileSystem()
     fs_tree *tree = &allTrees[i];
     tree->treeID = rand();
     populate_random_string(tree->treeName, treeNameLen - i);
-    strcpy(tree->serviceType, serviceTypes[random_in_range(0, MAX_SERVICE_TYPES - 1)]);
+    __strcpy(tree->serviceType, serviceTypes[random_in_range(0, MAX_SERVICE_TYPES - 1)]);
     int numFiles = random_in_range(1, MAX_FILES_PER_TREE);
     int fileIndex = 0;
     int fileNameLen = random_in_range(MAX_FILENAME_LEN/2, MAX_FILENAME_LEN);
@@ -57,11 +57,11 @@ void InitializeFileSystem()
       populate_random_string(filename, fileNameLen - numFiles);
       fs_file *file = CreateFile(tree, (uint8_t *)filename, 0, FS_MODE_CREATE);
       int length = random_in_range(10, MAX_FILESIZE);
-      uint8_t *buffer = calloc(length);
+      uint8_t *buffer = __calloc(length);
       populate_random_string((char *)buffer, length);
       WriteFile(file, buffer, 0, length);
       CloseFile(file);
-      free(buffer);
+      __free(buffer);
       tree->files[fileIndex++] = file;
       numFiles--;
     }
@@ -69,10 +69,10 @@ void InitializeFileSystem()
 
   fs_tree *lastTree = &allTrees[MAX_TREES - 1];
   lastTree->treeID = rand();
-  strcpy(lastTree->treeName, "SOMETREE");
-  strcpy(lastTree->serviceType, "EYEPSEE");   
-  fs_file *file = calloc(sizeof(fs_file));
-  strcpy(file->filename, "NETSTUFF");
+  __strcpy(lastTree->treeName, "SOMETREE");
+  __strcpy(lastTree->serviceType, "EYEPSEE");   
+  fs_file *file = __calloc(sizeof(fs_file));
+  __strcpy(file->filename, "NETSTUFF");
   file->fileID = rand() & 0xffff;
   lastTree->files[0] = file;
   return;
@@ -86,7 +86,7 @@ fs_file *FindFileByName(fs_tree *tree, uint8_t *filename)
     fs_file *file = tree->files[i];
     if (file != NULL)
     {
-     if (strcmp(file->filename, (char *)filename) == 0)
+     if (__strcmp(file->filename, (char *)filename) == 0)
       {
         return file;
       }
@@ -111,14 +111,14 @@ fs_file *CreateFile(fs_tree *tree, uint8_t *filename, uint32_t userID, uint32_t 
       if (tree->files[i] == NULL)
       {
         // Create new file in open slot
-        fs_file *newfile = calloc(sizeof(fs_file));
+        fs_file *newfile = __calloc(sizeof(fs_file));
         newfile->fileID = rand() & 0xffff;
-        int len = strlen((char *)filename);
+        int len = __strlen((char *)filename);
         if (len > MAX_FILENAME_LEN)
         {
           len = MAX_FILENAME_LEN;
         }
-        strncpy(newfile->filename, (char *)filename, MAX_FILENAME_LEN);
+        __strncpy(newfile->filename, (char *)filename, MAX_FILENAME_LEN);
         newfile->isOpen = 1;
         tree->files[i] = newfile;
         return newfile;
@@ -159,7 +159,7 @@ int ReadFile(uint8_t *dest, fs_file *file, uint16_t offset, uint16_t length)
   {
     length = file->numBytes - offset;
   }
-  memcpy(dest, file->bytes + offset, length);
+  __memcpy(dest, file->bytes + offset, length);
   return 0;
 }
 
@@ -174,22 +174,22 @@ int WriteFile(fs_file *file, uint8_t *source, uint16_t offset, uint16_t length)
     return -1;
   }
   uint8_t *oldData = file->bytes;
-  file->bytes = calloc(offset + length);
+  file->bytes = __calloc(offset + length);
   if (offset > 0)
   {
     if (oldData != NULL)
     {
       if (file->numBytes >= offset)
       {
-        memcpy(file->bytes, oldData, offset);
+        __memcpy(file->bytes, oldData, offset);
       } else {
-        memcpy(file->bytes, oldData, file->numBytes);
+        __memcpy(file->bytes, oldData, file->numBytes);
       }
     }
   }
-  memcpy(file->bytes + offset, source, length);
+  __memcpy(file->bytes + offset, source, length);
   file->numBytes = offset + length;
-  free(oldData);
+  __free(oldData);
   return 0;
 }
 
@@ -198,9 +198,9 @@ fs_tree *FindTreeByPath(uint32_t userID, uint8_t *path, uint8_t *service)
   for (int i=0; i < MAX_TREES; i++)
   {
     fs_tree *tree = &allTrees[i];
-    if (strcmp(tree->treeName, (char *)path) == 0)
+    if (__strcmp(tree->treeName, (char *)path) == 0)
     {
-      if (strcmp(tree->serviceType, (char *)service) == 0)
+      if (__strcmp(tree->serviceType, (char *)service) == 0)
       {
         return tree;
       }

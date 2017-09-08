@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -28,7 +28,7 @@ FileManager::FileManager()
   numFiles = 0;
   numOpenedFiles = 0;
   rootDir = new File("/", File::FT_DIR, 0, 0);
-  memset(openedFiles, 0, sizeof(openedFiles));
+  __memset(openedFiles, 0, sizeof(openedFiles));
   cwd = rootDir;
 }
 
@@ -40,16 +40,16 @@ File* FileManager::GetFile(const char* name)
 {
   int i;
   List<File *> *files = cwd->GetFiles();
-  if (!name || strcmp(name, ".") == 0)
+  if (!name || __strcmp(name, ".") == 0)
     return cwd;
-  if (strcmp(name, "..") == 0)
+  if (__strcmp(name, "..") == 0)
     return (cwd == rootDir) ? cwd : cwd->GetParent();
   if (!files)
     return 0;
   for (i = 0; i < files->length(); ++i)
   {
     File *file = files->get(i);
-    if (strcmp(file->GetName(), name) == 0)
+    if (__strcmp(file->GetName(), name) == 0)
       return file;
   }
   return 0;
@@ -64,8 +64,8 @@ void FileManager::PrintFile(const char* name)
   if (file->GetType() == File::FT_DIR)
   {
     List<File *> *files = file->GetFiles();
-    printf("%d entries\n", files->length() + 2);
-    printf("<DIR> D 0 .\n<DIR> D 0 ..\n");
+    __printf("%d entries\n", files->length() + 2);
+    __printf("<DIR> D 0 .\n<DIR> D 0 ..\n");
     for (i = 0; files && i < files->length(); ++i)
     {
       File *f = files->get(i);
@@ -84,14 +84,14 @@ int FileManager::CreateFile(const char* name)
   List<File *> *files = cwd->GetFiles();
   if (!files)
     return -2;
-  if (strlen(name) > 255)
+  if (__strlen(name) > 255)
     return -4;
-  if (!strcmp(name, ".") || !strcmp(name, "..") || !strcmp(name, "/"))
+  if (!__strcmp(name, ".") || !__strcmp(name, "..") || !__strcmp(name, "/"))
     return -3;
   for (i = 0; i < files->length(); ++i)
   {
     File *file = files->get(i);
-    if (strcmp(file->GetName(), name) == 0)
+    if (__strcmp(file->GetName(), name) == 0)
       return -3;
   }
   File *file = new File(name, File::FT_REG, 0, cwd);
@@ -108,14 +108,14 @@ int FileManager::CreateDirectory(const char* name)
   List<File *> *files = cwd->GetFiles();
   if (!files)
     return -2;
-  if (strlen(name) > 255)
+  if (__strlen(name) > 255)
     return -4;
-  if (!strcmp(name, ".") || !strcmp(name, "..") || !strcmp(name, "/"))
+  if (!__strcmp(name, ".") || !__strcmp(name, "..") || !__strcmp(name, "/"))
     return -3;
   for (i = 0; i < files->length(); ++i)
   {
     File *file = files->get(i);
-    if (strcmp(file->GetName(), name) == 0)
+    if (__strcmp(file->GetName(), name) == 0)
       return -3;
   }
   File *file = new File(name, File::FT_DIR, 0, cwd);
@@ -132,12 +132,12 @@ int FileManager::OpenFile(const char* name)
   List<File *> *files = cwd->GetFiles();
   if (!files)
     return -2;
-  if (!strcmp(name, ".") || !strcmp(name, "..") || !strcmp(name, "/"))
+  if (!__strcmp(name, ".") || !__strcmp(name, "..") || !__strcmp(name, "/"))
     return -3;
   for (i = 0; i < files->length(); ++i)
   {
     File *file = files->get(i);
-    if (strcmp(file->GetName(), name) == 0)
+    if (__strcmp(file->GetName(), name) == 0)
     {
       if (file->GetType() == File::FT_DIR)
         return -3;
@@ -207,12 +207,12 @@ int FileManager::DeleteFile(const char* name)
   List<File *> *files = cwd->GetFiles();
   if (!files)
     return -1;
-  if (!strcmp(name, ".") || !strcmp(name, "..") || !strcmp(name, "/"))
+  if (!__strcmp(name, ".") || !__strcmp(name, "..") || !__strcmp(name, "/"))
     return -2;
   for (i = 0; i < files->length(); ++i)
   {
     File *file = files->get(i);
-    if (strcmp(file->GetName(), name) == 0)
+    if (__strcmp(file->GetName(), name) == 0)
     {
       if (file->GetType() == File::FT_REG)
       {
@@ -276,12 +276,12 @@ int FileManager::DeleteDirectory(const char* name)
   List<File *> *files = cwd->GetFiles();
   if (!files)
     return -1;
-  if (!strcmp(name, ".") || !strcmp(name, "..") || !strcmp(name, "/"))
+  if (!__strcmp(name, ".") || !__strcmp(name, "..") || !__strcmp(name, "/"))
     return -2;
   for (i = 0; i < files->length(); ++i)
   {
     file = files->get(i);
-    if (strcmp(file->GetName(), name) == 0)
+    if (__strcmp(file->GetName(), name) == 0)
     {
       if (file->GetType() == File::FT_REG)
         return -3;
@@ -303,14 +303,14 @@ int FileManager::ChangeDirectory(const char* name)
   List<File *> *files = cwd->GetFiles();
   if (!files)
     return -1;
-  if (!name || strcmp(name, "/") == 0)
+  if (!name || __strcmp(name, "/") == 0)
   {
     cwd = rootDir;
     return 0;
   }
-  if (strcmp(name, ".") == 0)
+  if (__strcmp(name, ".") == 0)
     return 0;
-  if (strcmp(name, "..") == 0)
+  if (__strcmp(name, "..") == 0)
   {
     if (cwd != rootDir)
       cwd = cwd->GetParent();
@@ -319,7 +319,7 @@ int FileManager::ChangeDirectory(const char* name)
   for (i = 0; i < files->length(); ++i)
   {
     File *file = files->get(i);
-    if (strcmp(file->GetName(), name) == 0)
+    if (__strcmp(file->GetName(), name) == 0)
     {
       if (file->GetType() != File::FT_DIR)
         return -2;

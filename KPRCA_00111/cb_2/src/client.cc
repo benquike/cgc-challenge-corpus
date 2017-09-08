@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -60,7 +60,7 @@ void check_quit(char* s)
   }
 }
 
-int handle_read(FILE* rx, FILE* tx, vector* read_blubs)
+int handle_read(__FILE* rx, __FILE* tx, vector* read_blubs)
 {
   size_t id;
   char username[USERNAME_MAX + 1];
@@ -69,9 +69,9 @@ int handle_read(FILE* rx, FILE* tx, vector* read_blubs)
   fprintf(tx, "r" EOT_S);
 
   int to_read = 0;
-  if (fread(&to_read, sizeof(to_read), rx) != sizeof(to_read))
+  if (__fread(&to_read, sizeof(to_read), rx) != sizeof(to_read))
   {
-    dbg("Failed to read count");
+    dbg("Failed to __read count");
     return 0;
   }
   check_quit((char *)&to_read);
@@ -79,18 +79,18 @@ int handle_read(FILE* rx, FILE* tx, vector* read_blubs)
   dbg("Reading %d blubs", to_read);
   for (size_t i = 0; i < to_read; ++i)
   {
-    memset(username, 0, sizeof(username));
-    memset(content, 0, sizeof(content));
+    __memset(username, 0, sizeof(username));
+    __memset(content, 0, sizeof(content));
 
-    if (fread(&id, sizeof(id), rx) != sizeof(id))
+    if (__fread(&id, sizeof(id), rx) != sizeof(id))
     {
-      dbg("Failed to read id");
+      dbg("Failed to __read id");
       break;
     }
     check_quit((char *)&id);
     dbg("Got id: %d", id);
 
-    if (fread(username, USERNAME_MAX, rx) < 0)
+    if (__fread(username, USERNAME_MAX, rx) < 0)
     {
       break;
     }
@@ -98,7 +98,7 @@ int handle_read(FILE* rx, FILE* tx, vector* read_blubs)
     check_quit(username);
     dbg("Read username %s", username);
 
-    if (fread(content, BLUB_MAX, rx) < 0)
+    if (__fread(content, BLUB_MAX, rx) < 0)
     {
       break;
     }
@@ -108,21 +108,21 @@ int handle_read(FILE* rx, FILE* tx, vector* read_blubs)
 
     blub_artifact* b = new blub_artifact;
     b->id = id;
-    memcpy(b->username, username, sizeof(username));
-    memcpy(b->blub, content, sizeof(content));
+    __memcpy(b->username, username, sizeof(username));
+    __memcpy(b->blub, content, sizeof(content));
     read_blubs->add(b);
   }
 
   return 0;
 }
 
-int handle_blub(FILE* rx, FILE* tx)
+int handle_blub(__FILE* rx, __FILE* tx)
 {
   fprintf(tx, "b" EOT_S);
   return 0;
 }
 
-int handle_reblub(FILE* rx, FILE* tx, vector* read_blubs)
+int handle_reblub(__FILE* rx, __FILE* tx, vector* read_blubs)
 {
   if (read_blubs->length() == 0)
   {
@@ -145,7 +145,7 @@ int handle_reblub(FILE* rx, FILE* tx, vector* read_blubs)
   int n = 0;
   for (size_t i = 0; i < read_blubs->length(); ++i)
   {
-    if (strcmp(b->username, ((blub *)read_blubs->get(i))->username) == 0)
+    if (__strcmp(b->username, ((blub *)read_blubs->get(i))->username) == 0)
       n++;
   }
 
@@ -161,20 +161,20 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
     (void) secret_page;
 
 #ifndef DEBUG
-    fxlat(stdin, "9an538n9av3;5");
-    fxlat(stdout, "9an538n9av3;5");
+    __fxlat(stdin, "9an538n9av3;5");
+    __fxlat(stdout, "9an538n9av3;5");
 #endif
 
     char buf[5];
     int fd = 3 + (2 * (ID - 1) + 0);
-    FILE* rx = fopen(fd, F_READ);
-    FILE* tx = fopen(fd, F_WRITE);
-    fbuffered(tx, 0);
-    fbuffered(rx, 0);
+    __FILE* rx = __fopen(fd, F_READ);
+    __FILE* tx = __fopen(fd, F_WRITE);
+    __fbuffered(tx, 0);
+    __fbuffered(rx, 0);
 
     dbg("Starting...");
     fprintf(tx, "client_%d" EOT_S, ID);
-    freaduntil(buf, 5, EOT_C, rx);
+    __freaduntil(buf, 5, EOT_C, rx);
     check_quit(buf);
     dbg("Registered...");
 
@@ -187,7 +187,7 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
       {
         dbg("Subbing to %d", i);
         fprintf(tx, "s" EOT_S "client_%d" EOT_S, i);
-        freaduntil(buf, 5, EOT_C, rx);
+        __freaduntil(buf, 5, EOT_C, rx);
         check_quit(buf);
         dbg("Subbed to %d", i);
       }
@@ -197,14 +197,14 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
     for (;;)
     {
       // get past prompt
-      freaduntil(buf, 5, EOT_C, rx);
+      __freaduntil(buf, 5, EOT_C, rx);
       check_quit(buf);
       dbg("Got prompt...");
       switch (choice() % 3)
       {
-        case 0: // read
+        case 0: // __read
           {
-            dbg("Doing read");
+            dbg("Doing __read");
             handle_read(rx, tx, &read_blubs);
             break;
           }

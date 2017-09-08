@@ -3,7 +3,7 @@
  * 
  * Copyright (c) 2014 Kaprica Security, Inc.
  * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -104,7 +104,7 @@ int jit_int(jit_t *jit, int n)
                     0x39, 0x97, 0xb8, BYTE1(n), BYTE2(n), BYTE3(n), BYTE4(n) };
 
     ASSERT_OVF(sizeof(code));
-    memcpy(jit->code_ptr, code, sizeof(code));
+    __memcpy(jit->code_ptr, code, sizeof(code));
     jit->code_ptr += sizeof(code);
     jit->stack_ptr--;
     jit->count++;
@@ -216,7 +216,7 @@ int jit_op(jit_t *jit, char op)
 int main()
 {
     char buf[8192];
-    g_output_buf = malloc(MAX_OUTPUT);
+    g_output_buf = __malloc(MAX_OUTPUT);
     if (g_output_buf == NULL)
     {
         fdprintf(STDOUT, "Failed to allocate output buffer.\n");
@@ -238,37 +238,37 @@ int main()
         int val = 0;
         int error = ERR_OK;
 
-        if (strcmp(buf, "quit") == 0)
+        if (__strcmp(buf, "quit") == 0)
         {
             fdprintf(STDOUT, "QUIT\n");
             return 0;
         }
 
-        if (strlen(buf) > 0)
+        if (__strlen(buf) > 0)
         {
             jit->code_ptr = jit->code;
             jit->stack_ptr = JITStackEnd;
             jit->count = 0;
 
             char prologue[] = { 0x55, 0x8b, 0xec, 0x81, 0xec, 0xff, 0x00, 0x00, 0x00, 0x51, 0x31, 0xc0, 0x89, 0xc2 };
-            memcpy(jit->code_ptr, prologue, sizeof(prologue));
+            __memcpy(jit->code_ptr, prologue, sizeof(prologue));
             jit->code_ptr += sizeof(prologue);
 
             char *tok, *input = buf;
-            while (*input && input < buf + strlen(buf))
+            while (*input && input < buf + __strlen(buf))
             {
-                if (isspace(*input))
+                if (__isspace(*input))
                 {
                     input++;
                     continue;
                 }
 
-                int n = strtol(input, &tok, 0);
+                int n = __strtol(input, &tok, 0);
                 if (input == tok)
                 {
                     /* Operator */
                     char c = *(input + 1);
-                    if (!isspace(c) && c != '\0')
+                    if (!__isspace(c) && c != '\0')
                     {
                         error = ERR_INV;
                         break;
@@ -290,7 +290,7 @@ int main()
             }
             else
             {
-                memcpy(jit->code_ptr, epilogue, sizeof(epilogue));
+                __memcpy(jit->code_ptr, epilogue, sizeof(epilogue));
                 jit->code_ptr += sizeof(epilogue);
 
                 /* Execute JIT'd code */

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,16 +35,16 @@ proc encode_uint32(x):
 
 proc read_uint16():
     var x
-    x = ord(read(1)) << 8
-    x = x | ord(read(1))
+    x = ord(__read(1)) << 8
+    x = x | ord(__read(1))
     return x
 
 proc read_uint32():
     var x
-    x = ord(read(1)) << 24
-    x = x | (ord(read(1)) << 16)
-    x = x | (ord(read(1)) << 8)
-    x = x | (ord(read(1)))
+    x = ord(__read(1)) << 24
+    x = x | (ord(__read(1)) << 16)
+    x = x | (ord(__read(1)) << 8)
+    x = x | (ord(__read(1)))
     return x
 
 proc main():
@@ -115,7 +115,7 @@ static bool builtin_echo(void *arg, Evaluator &eval, const vector<unique_ptr<Var
         }
 
         StringVar *svar = static_cast<StringVar *>(var);
-        fwrite(svar->getBuffer(), svar->getLength(), stdout);
+        __fwrite(svar->getBuffer(), svar->getLength(), stdout);
     }
 
     result.reset(nullptr);
@@ -129,7 +129,7 @@ static bool builtin_read(void *arg, Evaluator &eval, const vector<unique_ptr<Var
     unsigned int length = static_cast<NumberVar*>(args[0].get())->getValue();
     unique_ptr<StringVar> svar = new StringVar();
     svar->resize(length);
-    if (fread(svar->getBuffer(), length, stdin) != length)
+    if (__fread(svar->getBuffer(), length, stdin) != length)
         return false;
     result.reset(svar.release());
     return true;
@@ -197,7 +197,7 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
         eval.addExternal("ord", builtin_ord);
         eval.addExternal("flag", builtin_flag, secret_page);
         eval.addExternal("rand", builtin_rand, secret_page);
-        eval.addExternal("read", builtin_read);
+        eval.addExternal("__read", builtin_read);
         if (!eval.run())
         {
             fprintf(stderr, "Eval error\n");

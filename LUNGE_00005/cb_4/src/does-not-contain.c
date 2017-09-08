@@ -21,7 +21,7 @@ char * read_buf(int fd) {
         _terminate(2);
 
     buf_size = recv_size;
-    buf = malloc(recv_size);
+    buf = __malloc(recv_size);
     if (!buf)
         _terminate(3);
 
@@ -52,11 +52,11 @@ void do_config(void) {
 }
 
 int search(char *buffer, int buffer_size) {
-    size_t size = strlen(pattern);
+    size_t size = __strlen(pattern);
     size_t offset = 0;
 
     while (size + offset <= buffer_size) {
-        if (memcmp(buffer + offset, pattern, size) == 0) {
+        if (__memcmp(buffer + offset, pattern, size) == 0) {
             return 1;
         }
         offset++;
@@ -64,7 +64,7 @@ int search(char *buffer, int buffer_size) {
     return 0;
 }
 
-void exit(int i) {
+void __exit(int i) {
     transmit_all(write_fd, "\x00\n", 2);
     _terminate(i);
 }
@@ -75,25 +75,25 @@ int main(void) {
 
     do_config();
     setup();
-    sleep(2);
+    __sleep(2);
 
     while (1) {
-        memset(buf, 0, sizeof(buf));
+        __memset(buf, 0, sizeof(buf));
         ret = read_until(read_fd, buf, sizeof(buf), '\n');
         if (ret == -1)
-            exit(4);
+            __exit(4);
 
         if (ret > 0) {
 
             if (buf[0] == 0) {
-                exit(0);
+                __exit(0);
             }
 
-            ret = search(buf, strlen(buf));
+            ret = search(buf, __strlen(buf));
             if (ret != 1) {
-                printf(write_fd, "%s\n", buf);
+                __printf(write_fd, "%s\n", buf);
             }
         }
     }
-    exit(1);
+    __exit(1);
 }

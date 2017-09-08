@@ -45,7 +45,7 @@ void receive_all(int fd, void* buf, size_t len)
   }
 }
 
-size_t receive_until(int fd, char* buf, size_t len, char delim)
+size_t __receive_until(int fd, char* buf, size_t len, char delim)
 {
 
   int ret = 0;
@@ -91,7 +91,7 @@ int main(void)
   char msg1[] = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBCCCCDDDD\n";
 
   unsigned int ipmask = 0x0EEEEEEE;
-  unsigned int orMask = 0xF1111111; //We use this mask because the read is delimited
+  unsigned int orMask = 0xF1111111; //We use this mask because the __read is delimited
                                     // so we will or the requested value with this
                                     // to ensure 0x0a doesn't exist
   unsigned int regmask = 0x0EEEEEEE;
@@ -104,7 +104,7 @@ int main(void)
   *((unsigned int*)(msg1 + 136)) = t1v.regval | orMask;
   *((unsigned int*)(msg1 + 140)) = t1v.ipval | orMask;
 
-  receive_until(STDIN, (char*)buf, 512, '\n');
+  __receive_until(STDIN, (char*)buf, 512, '\n');
 
   transmit_all(STDOUT, msg1, sizeof(buf) - 1);
 

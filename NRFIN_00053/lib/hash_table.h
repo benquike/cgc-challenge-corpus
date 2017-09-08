@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -216,7 +216,7 @@ ht_t *ht_str_init_fp(unsigned int size);
  * Delete the hash table. Assumes hash table is empty.
  *
  * NOTE: This only deletes the hash table structure.
- * You MUST empty the hash table and free the pairs (ht_pair_remove + free)
+ * You MUST empty the hash table and __free the pairs (ht_pair_remove + __free)
  * yourself before destroying the hash table, else this is a huge memory leak.
  *
  * @param h 	Pointer to the hash table

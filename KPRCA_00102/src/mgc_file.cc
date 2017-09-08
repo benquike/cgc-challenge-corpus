@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -34,23 +34,23 @@ MgcFile::MgcFile()
     size_ = 0;
 }
 
-bool MgcFile::ReadMgcFile(FILE *stream)
+bool MgcFile::ReadMgcFile(__FILE *stream)
 {
     unsigned char frame_buffer[6400];
     mgc_frame temp_frame;
     do
     {
-        fread(&temp_frame, sizeof(temp_frame), stream);
+        __fread(&temp_frame, sizeof(temp_frame), stream);
         if (!MgcHeaderInfo::Synced(&temp_frame) || !MgcHeaderInfo::SongV1(&temp_frame))
         {
             Clear();
             return false;
         }
 
-        fread(frame_buffer, MgcHeaderInfo::CalcFrameSize(&temp_frame), stream);
-        mgc_frame *new_frame = (mgc_frame *)malloc(sizeof(mgc_frame) + MgcHeaderInfo::CalcFrameSize(&temp_frame));
-        memcpy(new_frame, &temp_frame, sizeof(temp_frame));
-        memcpy(new_frame->data, frame_buffer, MgcHeaderInfo::CalcFrameSize(&temp_frame));
+        __fread(frame_buffer, MgcHeaderInfo::CalcFrameSize(&temp_frame), stream);
+        mgc_frame *new_frame = (mgc_frame *)__malloc(sizeof(mgc_frame) + MgcHeaderInfo::CalcFrameSize(&temp_frame));
+        __memcpy(new_frame, &temp_frame, sizeof(temp_frame));
+        __memcpy(new_frame->data, frame_buffer, MgcHeaderInfo::CalcFrameSize(&temp_frame));
         AddFrame(new_frame);
     } while(temp_frame.num_frames_left);
 
@@ -69,7 +69,7 @@ void MgcFile::Clear()
     if (frames_)
     {
         for (unsigned int i = 0; i < num_frames_; i++)
-            free(frames_[i]);
+            __free(frames_[i]);
 
         delete[] frames_;
         frames_ = (mgc_frame **)NULL;
@@ -94,13 +94,13 @@ void MgcFile::Remix(unsigned char *mix_buf, unsigned int *idx, const unsigned in
 void MgcFile::PrintFrameData()
 {
 
-    printf("---Raw Frames---" NL);
+    __printf("---Raw Frames---" NL);
     for (unsigned int i = 0; i < num_frames_; i++)
     {
         PRINT_ARR_HEX(frames_[i]->data, MgcHeaderInfo::CalcFrameSize(frames_[i]));
     }
-    printf(NL "----------------" NL);
-    fflush(stdout);
+    __printf(NL "----------------" NL);
+    __fflush(stdout);
 
 }
 
@@ -123,7 +123,7 @@ bool MgcFile::AddFrame(mgc_frame *mframe)
     {
         size_ *= 2;
         mgc_frame **doubled_list = new mgc_frame*[size_];
-        memcpy(doubled_list, frames_, sizeof(mgc_frame *) * num_frames_);
+        __memcpy(doubled_list, frames_, sizeof(mgc_frame *) * num_frames_);
         delete frames_;
         frames_ = doubled_list;
     }

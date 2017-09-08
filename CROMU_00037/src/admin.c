@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.co>
 
 Copyright (c) 2014-2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -72,21 +72,21 @@ void SendBroadcastMessage(void) {
 #ifdef PATCHED
 	char message[MAX_MESSAGE_LEN];
 
-	// read in the Message:
+	// __read in the Message:
 	zero(message, MAX_MESSAGE_LEN);
 	print("Message: ");
 	if (read_until(message, '\n', MAX_MESSAGE_LEN) == -1) {
 #else
 	char message[1024];
 
-	// read in the Message:
+	// __read in the Message:
 	zero(message, 1024);
 	print("Message: ");
 	if (read_until(message, '\n', 1024) == -1) {
 #endif
 		_terminate(-1);
 	}
-	if (strlen(message) == 0) {
+	if (__strlen(message) == 0) {
 		return;
 	}
 

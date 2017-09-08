@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -36,7 +36,7 @@ THE SOFTWARE.
 environment ENV;
 
 void PrintPrompt(void) {
-	printf("$s@CB> ", ENV.User);
+	__printf("$s@CB> ", ENV.User);
 }
 
 int32_t ParseCli(char *buf, Command *pCmd) {
@@ -48,19 +48,19 @@ int32_t ParseCli(char *buf, Command *pCmd) {
 	}
 
 	pCmd->argc = 0;
-	while ((tok = strtok(buf, " ")) && pCmd->argc <= MAX_ARGS) {
+	while ((tok = __strtok(buf, " ")) && pCmd->argc <= MAX_ARGS) {
 		buf = NULL;
 		if (FoundQuote) {
-			if (tok[strlen(tok)-1] == '"') {
+			if (tok[__strlen(tok)-1] == '"') {
 				// found the close quote at the end of tok
 				// copy this token onto the argv and move on
-				tok[strlen(tok)-1] = '\0';
-				if (strlen(pCmd->argv[pCmd->argc]) + strlen(tok) + 1 > MAX_ARGLEN) {
+				tok[__strlen(tok)-1] = '\0';
+				if (__strlen(pCmd->argv[pCmd->argc]) + __strlen(tok) + 1 > MAX_ARGLEN) {
 					// parse error
 					return(1);
 				}
-				strcat(pCmd->argv[pCmd->argc], " ");
-				strcat(pCmd->argv[pCmd->argc++], tok);
+				__strcat(pCmd->argv[pCmd->argc], " ");
+				__strcat(pCmd->argv[pCmd->argc++], tok);
 				FoundQuote = 0;
 				continue;
 			}
@@ -72,14 +72,14 @@ int32_t ParseCli(char *buf, Command *pCmd) {
 				continue;
 			}
 
-			if (strchr(tok, '"') == NULL) {
+			if (__strchr(tok, '"') == NULL) {
 				// add this tok to the argv
-				if (strlen(pCmd->argv[pCmd->argc]) + strlen(tok) + 1 > MAX_ARGLEN) {
+				if (__strlen(pCmd->argv[pCmd->argc]) + __strlen(tok) + 1 > MAX_ARGLEN) {
 					// parse error
 					return(1);
 				}
-				strcat(pCmd->argv[pCmd->argc], " ");
-				strcat(pCmd->argv[pCmd->argc], tok);
+				__strcat(pCmd->argv[pCmd->argc], " ");
+				__strcat(pCmd->argv[pCmd->argc], tok);
 				continue;
 			} else {
 				// found the close quote in the middle of the tok
@@ -90,14 +90,14 @@ int32_t ParseCli(char *buf, Command *pCmd) {
 		}
 		if (tok[0] == '\"') {
 			// found an open quote
-			if (tok[strlen(tok)-1] == '"') {
+			if (tok[__strlen(tok)-1] == '"') {
 				// found the end quote
-				tok[strlen(tok)-1] = '\0';
+				tok[__strlen(tok)-1] = '\0';
 				// copy everything between the quotes into the argv
-				strncpy(pCmd->argv[pCmd->argc++], tok+1, MAX_ARGLEN);
+				__strncpy(pCmd->argv[pCmd->argc++], tok+1, MAX_ARGLEN);
 			} else {
 				// this token doesn't end with a quote, so check that there are no mid-token quotes
-				if (strchr(tok+1, '"') != NULL) {
+				if (__strchr(tok+1, '"') != NULL) {
 					// parse error
 					return(1);
 				}
@@ -106,13 +106,13 @@ int32_t ParseCli(char *buf, Command *pCmd) {
 				FoundQuote = 1;
 
 				// but copy what we have into the first part of the argv
-				strncpy(pCmd->argv[pCmd->argc], tok+1, MAX_ARGLEN);
+				__strncpy(pCmd->argv[pCmd->argc], tok+1, MAX_ARGLEN);
 			}
 			continue;
 		}
 
 		// no quotes, just copy to an argv
-		strncpy(pCmd->argv[pCmd->argc++], tok, MAX_ARGLEN);
+		__strncpy(pCmd->argv[pCmd->argc++], tok, MAX_ARGLEN);
 	}
 
 	return(2);
@@ -125,7 +125,7 @@ int32_t HandleListFiles(Command *pCmd) {
 	}
 
 	if (pCmd->argc != 1) {
-		puts("Invalid arguments");
+		__puts("Invalid arguments");
 		return(0);
 	}
 
@@ -140,11 +140,11 @@ int32_t HandleExit(Command *pCmd) {
 	}
 
 	if (pCmd->argc != 1) {
-		puts("Invalid arguments");
+		__puts("Invalid arguments");
 		return(0);
 	}
 
-	puts("logout");
+	__puts("logout");
 
 	_terminate(0);
 
@@ -157,44 +157,44 @@ int32_t HandleHelp(Command *pCmd) {
 	}
 
 	if (pCmd->argc == 1) {
-		puts("Available commands:");
-		puts("chuser");
-		puts("chpw");
-		puts("exit");
-		puts("id");
-		puts("help");
-		puts("?");
-		puts("newuser");
-		puts("deluser");
-		puts("dump");
-		puts("print");
+		__puts("Available commands:");
+		__puts("chuser");
+		__puts("chpw");
+		__puts("exit");
+		__puts("id");
+		__puts("help");
+		__puts("?");
+		__puts("newuser");
+		__puts("deluser");
+		__puts("dump");
+		__puts("print");
 	} else if (pCmd->argc == 2) {
-		if (!strcmp(pCmd->argv[1], "chuser")) {
-			puts("Usage: chuser <username>");
-		} else if (!strcmp(pCmd->argv[1], "passwd")) {
-			if (!strcmp(ENV.User, "root")) {
-				puts("Usage: passwd <username>");
+		if (!__strcmp(pCmd->argv[1], "chuser")) {
+			__puts("Usage: chuser <username>");
+		} else if (!__strcmp(pCmd->argv[1], "passwd")) {
+			if (!__strcmp(ENV.User, "root")) {
+				__puts("Usage: passwd <username>");
 			} else {
-				puts("Usage: passwd");
+				__puts("Usage: passwd");
 			}
-		} else if (!strcmp(pCmd->argv[1], "exit")) {
-			puts("Usage: exit");
-		} else if (!strcmp(pCmd->argv[1], "id")) {
-			puts("Usage: id");
-		} else if (!strcmp(pCmd->argv[1], "help")) {
-			puts("Usage: help <command>");
-		} else if (!strcmp(pCmd->argv[1], "?")) {
-			puts("Usage: ? <command>");
-		} else if (!strcmp(pCmd->argv[1], "newuser")) {
-			puts("Usage: newuser <username> <group>");
-		} else if (!strcmp(pCmd->argv[1], "deluser")) {
-			puts("Usage: deluser <username>");
-		} else if (!strcmp(pCmd->argv[1], "cat")) {
-			puts("Usage: dump <filename>");
-		} else if (!strcmp(pCmd->argv[1], "echo")) {
-			puts("Usage: print <text> [> file]");
+		} else if (!__strcmp(pCmd->argv[1], "exit")) {
+			__puts("Usage: exit");
+		} else if (!__strcmp(pCmd->argv[1], "id")) {
+			__puts("Usage: id");
+		} else if (!__strcmp(pCmd->argv[1], "help")) {
+			__puts("Usage: help <command>");
+		} else if (!__strcmp(pCmd->argv[1], "?")) {
+			__puts("Usage: ? <command>");
+		} else if (!__strcmp(pCmd->argv[1], "newuser")) {
+			__puts("Usage: newuser <username> <group>");
+		} else if (!__strcmp(pCmd->argv[1], "deluser")) {
+			__puts("Usage: deluser <username>");
+		} else if (!__strcmp(pCmd->argv[1], "cat")) {
+			__puts("Usage: dump <filename>");
+		} else if (!__strcmp(pCmd->argv[1], "echo")) {
+			__puts("Usage: print <text> [> file]");
 		} else {
-			printf("Unknown command: $s\n", pCmd->argv[1]);
+			__printf("Unknown command: $s\n", pCmd->argv[1]);
 		}
 	}
 
@@ -203,15 +203,15 @@ int32_t HandleHelp(Command *pCmd) {
 }
 
 uint8_t HandleDump(Command *pCmd) {
-	FILE *stream;
+	__FILE *stream;
 
 	if (!pCmd) {
 		return(0);
 	}
 
 	if (pCmd->argc != 2) {
-		puts("Input error");
-		puts("Usage: dump <filename>");
+		__puts("Input error");
+		__puts("Usage: dump <filename>");
 		return(0);
 	}
 
@@ -220,7 +220,7 @@ uint8_t HandleDump(Command *pCmd) {
 }	
 
 uint8_t HandlePrint(Command *pCmd) {
-	FILE *stream;
+	__FILE *stream;
 	char *RedirectFile = NULL;
 	uint32_t i;
 
@@ -229,8 +229,8 @@ uint8_t HandlePrint(Command *pCmd) {
 	}
 
 	if (pCmd->argc < 2) {
-		puts("Input error");
-		puts("Usage: print \"<text>\" [> file]");
+		__puts("Input error");
+		__puts("Usage: print \"<text>\" [> file]");
 		return(0);
 	}
 
@@ -239,8 +239,8 @@ uint8_t HandlePrint(Command *pCmd) {
 		if (pCmd->argv[i][0] == '>' && pCmd->argv[i][1] == '\0') {
 			// found a file redirect...and there should only be one more arg
 			if (i+1 != pCmd->argc-1)  {
-				puts("Input error");
-				puts("Usage: print \"<text>\" [> file]");
+				__puts("Input error");
+				__puts("Usage: print \"<text>\" [> file]");
 				return(0);
 			}
 			RedirectFile = pCmd->argv[i+1];
@@ -249,22 +249,22 @@ uint8_t HandlePrint(Command *pCmd) {
 	}
 
 	if (RedirectFile) {
-		if ((stream = fopen(RedirectFile, "w", 0)) == NULL) {
-			printf("Unable to open file '$s'\n\r", RedirectFile);
+		if ((stream = __fopen(RedirectFile, "w", 0)) == NULL) {
+			__printf("Unable to open file '$s'\n\r", RedirectFile);
 			return(0);
 		}
-		if (fwrite(pCmd->argv[1], strlen(pCmd->argv[1]), 1, stream) != strlen(pCmd->argv[1])) {
-			fclose(stream);
+		if (__fwrite(pCmd->argv[1], __strlen(pCmd->argv[1]), 1, stream) != __strlen(pCmd->argv[1])) {
+			__fclose(stream);
 			return(0);
 		}
-		fclose(stream);
+		__fclose(stream);
 	} else {
 		// output to stdout
-		printf("$s", pCmd->argv[1]);
+		__printf("$s", pCmd->argv[1]);
 		for (i = 2; i < pCmd->argc; i++) {
-			printf(" $s", pCmd->argv[i]);
+			__printf(" $s", pCmd->argv[i]);
 		}
-		puts("");
+		__puts("");
 	}
 
 	return(1);
@@ -281,12 +281,12 @@ void PrependCommandHistory(char *buf) {
 	for (i = MAX_CMD_HISTORY; i > 0; i--) {
 #endif
 		if (ENV.CommandHistory[i-1][0] != '\0') {
-			strcpy(ENV.CommandHistory[i], ENV.CommandHistory[i-1]);
+			__strcpy(ENV.CommandHistory[i], ENV.CommandHistory[i-1]);
 			if (ENV.NumCommandHistory == 0) {
 				ENV.NumCommandHistory = i;
 			}
 		}
 	}
-	strcpy(ENV.CommandHistory[0], buf);
+	__strcpy(ENV.CommandHistory[0], buf);
 	ENV.NumCommandHistory++;
 }

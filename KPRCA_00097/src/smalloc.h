@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -32,7 +32,7 @@ static inline void *safe_calloc(unsigned int count, unsigned int size)
     unsigned int result = count * size;
     if ((result / count) != size)
         die("detected overflow");
-    void *mem = calloc(count, size);
+    void *mem = __calloc(count, size);
     if (mem == nullptr)
         die("out of memory");
     return mem;
@@ -40,7 +40,7 @@ static inline void *safe_calloc(unsigned int count, unsigned int size)
 
 static inline void *safe_malloc(unsigned int size)
 {
-    void *mem = malloc(size);
+    void *mem = __malloc(size);
     if (mem == nullptr)
         die("out of memory");
     return mem;

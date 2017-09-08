@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -33,7 +33,7 @@ typedef struct {
 /*
  * Define a new deck or replace deck with a new one.
  *
- * This copies the values out of the values param, but does not free the values param.
+ * This copies the values out of the values param, but does not __free the values param.
  * The caller should do that.
  *
  * @param count 	Number of cards

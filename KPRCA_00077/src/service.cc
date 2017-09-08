@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -41,13 +41,13 @@
     } \
   })
 
-static void WaitForInput(FILE* Stream, char* Input, u32 Max)
+static void WaitForInput(__FILE* Stream, char* Input, u32 Max)
 {
   fflush(stdout);
-  memset(Input, Max, '\0');
+  __memset(Input, Max, '\0');
   if (freaduntil(Input, Max, '\n', Stream) <= 0)
   {
-    exit(0);
+    __exit(0);
   }
 }
 
@@ -61,7 +61,7 @@ static int CanBeDecimal(char* Token)
   if (*Token == '-')
     Token++;
 
-  while (Token && *Token && (isdigit((char)*Token) || isspace((char)*Token)))
+  while (Token && *Token && (__isdigit((char)*Token) || __isspace((char)*Token)))
       Token++;
 
   if (Token && *Token == '\0')
@@ -75,7 +75,7 @@ static int CanBeHex(char* Token)
   if (*Token == '-')
     Token++;
 
-  while (Token && *Token && (isxdigit((char)*Token) || isspace((char)*Token)))
+  while (Token && *Token && (isxdigit((char)*Token) || __isspace((char)*Token)))
       Token++;
 
   if (Token && *Token == '\0')
@@ -89,7 +89,7 @@ static int CanBeOctal(char* Token)
   if (*Token == '-')
     Token++;
 
-  while (Token && *Token && ((isdigit((char)*Token) && CharToNum(*Token) < 8) || isspace(*Token)))
+  while (Token && *Token && ((__isdigit((char)*Token) && CharToNum(*Token) < 8) || __isspace(*Token)))
       Token++;
 
   if (Token && *Token == '\0')
@@ -100,9 +100,9 @@ static int CanBeOctal(char* Token)
 
 static int ParseInt(char* Token, s32* Value)
 {
-  long AsBase10 = CanBeDecimal(Token) ? strtol(Token, NULL, 10) : LONG_MIN;
-  long AsBase16 = CanBeHex(Token) ? strtol(Token, NULL, 16) : LONG_MIN;
-  long AsBase8 = CanBeOctal(Token) ? strtol(Token, NULL, 8) : LONG_MIN;
+  long AsBase10 = CanBeDecimal(Token) ? __strtol(Token, NULL, 10) : LONG_MIN;
+  long AsBase16 = CanBeHex(Token) ? __strtol(Token, NULL, 16) : LONG_MIN;
+  long AsBase8 = CanBeOctal(Token) ? __strtol(Token, NULL, 8) : LONG_MIN;
 
   if (AsBase10 != LONG_MIN && AsBase10 != LONG_MAX)
     *Value = AsBase10;
@@ -198,7 +198,7 @@ struct Vector
     VectorCopy->_Capacity = _Capacity;
     VectorCopy->_Size = _Size;
     VectorCopy->_StepSize = _StepSize;
-    memcpy(VectorCopy->_Storage, _Storage, _Capacity * sizeof(t1));
+    __memcpy(VectorCopy->_Storage, _Storage, _Capacity * sizeof(t1));
     return VectorCopy;
   }
 
@@ -207,7 +207,7 @@ struct Vector
     u32 NewCapacity = ((_Capacity / _StepSize) + 1) * _StepSize;
     t1* NewStorage = new t1[sizeof(t1) * NewCapacity];
 
-    memcpy(NewStorage, _Storage, sizeof(t1) * _Capacity);
+    __memcpy(NewStorage, _Storage, sizeof(t1) * _Capacity);
 
     delete[] _Storage;
     _Storage = NewStorage;
@@ -219,7 +219,7 @@ struct Vector
     u32 NewCapacity = _Capacity - _StepSize;
     t1* NewStorage = new t1[sizeof(t1) * NewCapacity];
 
-    memcpy(NewStorage, _Storage, sizeof(t1) * NewCapacity);
+    __memcpy(NewStorage, _Storage, sizeof(t1) * NewCapacity);
 
     delete[] _Storage;
     _Storage = NewStorage;
@@ -266,7 +266,7 @@ struct Stack
 
   Stack* Copy(void)
   {
-    Stack<t1>* StackCopy = (Stack<t1> *)malloc(sizeof(Stack<t1>));
+    Stack<t1>* StackCopy = (Stack<t1> *)__malloc(sizeof(Stack<t1>));
     StackCopy->_BackingVector = _BackingVector->Copy();
     return StackCopy;
   }
@@ -306,8 +306,8 @@ struct VC
   u16 _MinHeight = 80;
   u16 _Width = 120;
 
-  FILE* In;
-  FILE* Out;
+  __FILE* In;
+  __FILE* Out;
 
   char _InputBuffer[MAX_INPUT_SIZE];
   char _ErrorBuffer[MAX_INPUT_SIZE];
@@ -370,10 +370,10 @@ struct VC
     {"shuf", 0, &VC::Shuffle, NULL, NULL},
   };
 
-  VC(FILE* In, FILE* Out) : In(In), Out(Out)
+  VC(__FILE* In, __FILE* Out) : In(In), Out(Out)
   {
-    memset(_InputBuffer, '\0', MAX_INPUT_SIZE);
-    memset(_ErrorBuffer, '\0', MAX_INPUT_SIZE);
+    __memset(_InputBuffer, '\0', MAX_INPUT_SIZE);
+    __memset(_ErrorBuffer, '\0', MAX_INPUT_SIZE);
     HasError = 0;
   }
 
@@ -405,7 +405,7 @@ struct VC
 
     if (HasError)
     {
-      printf("%s", _ErrorBuffer);
+      __printf("%s", _ErrorBuffer);
       HasError = 0;
     }
     else
@@ -439,7 +439,7 @@ struct VC
   {
     for (u8 CommandIndex = 0; CommandIndex < NumCommands; ++CommandIndex)
     {
-      if (Arity == CommandTable[CommandIndex].Arity && strcmp(Command, CommandTable[CommandIndex].Name) == 0)
+      if (Arity == CommandTable[CommandIndex].Arity && __strcmp(Command, CommandTable[CommandIndex].Name) == 0)
         return &CommandTable[CommandIndex];
     }
 
@@ -895,7 +895,7 @@ struct VC
     }
 
     u8* RBuf = new u8[CalcStack->Size()];
-    memcpy(RBuf, (u8 *)0x4347C000, CalcStack->Size());
+    __memcpy(RBuf, (u8 *)0x4347C000, CalcStack->Size());
     for (u32 Index = 1; Index < CalcStack->Size(); ++Index)
     {
       RBuf[Index] ^= (Index % 0xff);
@@ -909,7 +909,7 @@ struct VC
       (*CalcStack)[RIndex] = Temp;
     }
 
-    delete RBuf;
+    delete[] RBuf;
     return ADD_HISTORY;
   }
 
@@ -1081,7 +1081,7 @@ struct VC
   {
 #define MAX_TOKENS 16
     char* Tokens[MAX_TOKENS];
-    memset(Tokens, NULL, sizeof(char *) * MAX_TOKENS);
+    __memset(Tokens, NULL, sizeof(char *) * MAX_TOKENS);
     char* Current;
     u8 NumTokens = 0;
 
@@ -1173,8 +1173,8 @@ struct VC
     {
       DrawScreen();
       WaitForInput(In, _InputBuffer, MAX_INPUT_SIZE);
-      ASSERT(strlen(_InputBuffer) <= MAX_INPUT_SIZE, "Input too long");
-      if (strcmp((const char *)_InputBuffer, "quit") == 0)
+      ASSERT(__strlen(_InputBuffer) <= MAX_INPUT_SIZE, "Input too long");
+      if (__strcmp((const char *)_InputBuffer, "quit") == 0)
           break;
 
       if (ProcessInput(_InputBuffer) < 0)
@@ -1186,9 +1186,9 @@ struct VC
 void check_seed()
 {
     unsigned int x = 0;
-    fread(&x, sizeof(x), stdin);
+    __fread(&x, sizeof(x), stdin);
     if (x == *(unsigned int*)0x4347c000)
-        fwrite((void *)0x4347c000, 0x1000, stdout);
+        __fwrite((void *)0x4347c000, 0x1000, stdout);
 }
 
 extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])

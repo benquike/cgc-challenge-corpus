@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -59,11 +59,11 @@ void poop_page_perfectly(void)
 
 void *xcalloc(size_t nmemb, size_t size)
 {
-  void* mem = calloc(nmemb, size);
+  void* mem = __calloc(nmemb, size);
   if (!mem)
   {
-    transmit(2, "calloc failed\n", strlen("calloc_failed\n"), NULL);
-    exit(1);
+    transmit(2, "__calloc failed\n", __strlen("calloc_failed\n"), NULL);
+    __exit(1);
   }
 
   return mem;
@@ -129,14 +129,14 @@ size_t read_n(int fd, char* buf, size_t n, int* err)
 
 void reverse(char* s)
 {
-  char* tmp = xcalloc(strlen(s) + 1, 1);
+  char* tmp = xcalloc(__strlen(s) + 1, 1);
   for (
-      int i = strlen(s) - 1, j = 0;
+      int i = __strlen(s) - 1, j = 0;
       i >= 0;
       i--, j++
   )
     tmp[j] = s[i];
-  strcpy(s, tmp);
+  __strcpy(s, tmp);
 }
 
 size_t read_ascii_octal(char* buf, int size, int* err)
@@ -177,9 +177,9 @@ char* map_type(int type)
     case NORMAL:
       return "Normal";
     case HARD:
-      return "Hard link";
+      return "Hard __link";
     case SYMBOLIC:
-      return "Symbolic link";
+      return "Symbolic __link";
     case CHAR:
       return "Character device";
     case BLOCK:
@@ -232,24 +232,24 @@ size_t sent_n(int fd, char* buf, size_t cnt, int* err)
 
 void print_entry(glue_t* block)
 {
-  printf("name:\t\t%s\n", block->f_name);
-  printf("    mode:\t\t%s\n", block->f_mode);
-  printf("    uid:\t\t%d\n", read_ascii_octal(block->uid, 8, NULL));
-  printf("    gid:\t\t%d\n", read_ascii_octal(block->gid, 8, NULL));
-  printf("    user_code:\t\t");
+  __printf("name:\t\t%s\n", block->f_name);
+  __printf("    mode:\t\t%s\n", block->f_mode);
+  __printf("    uid:\t\t%d\n", read_ascii_octal(block->uid, 8, NULL));
+  __printf("    gid:\t\t%d\n", read_ascii_octal(block->gid, 8, NULL));
+  __printf("    user_code:\t\t");
   sent_n(1, (char *)get_user_code(read_ascii_octal(block->uid, 8, NULL), read_ascii_octal(block->gid, 8, NULL)), 4, NULL);
-  printf("\n");
-  printf("    size:\t\t%d\n", read_ascii_octal(block->f_size, 12, NULL));
-  printf("    mtime:\t\t%d\n", read_ascii_octal(block->mtime, 12, NULL));
-  printf("    type:\t\t%s\n", map_type(block->type[0]));
-  printf("    link_name:\t\t%s\n", block->l_name);
-  printf("    magic:\t\t%s\n", block->indicator);
-  printf("    version:\t\t%d\n", read_ascii_octal(block->version, 2, NULL));
-  printf("    owner_name:\t\t%s\n", block->u_name);
-  printf("    group_name:\t\t%s\n", block->g_name);
-  printf("    dev_major:\t\t%d\n", read_ascii_octal(block->d_maj, 8, NULL));
-  printf("    dev_minor:\t\t%d\n", read_ascii_octal(block->d_min, 8, NULL));
-  printf("    prefix:\t\t%s\n", block->f_prefix);
+  __printf("\n");
+  __printf("    size:\t\t%d\n", read_ascii_octal(block->f_size, 12, NULL));
+  __printf("    mtime:\t\t%d\n", read_ascii_octal(block->mtime, 12, NULL));
+  __printf("    type:\t\t%s\n", map_type(block->type[0]));
+  __printf("    link_name:\t\t%s\n", block->l_name);
+  __printf("    magic:\t\t%s\n", block->indicator);
+  __printf("    version:\t\t%d\n", read_ascii_octal(block->version, 2, NULL));
+  __printf("    owner_name:\t\t%s\n", block->u_name);
+  __printf("    group_name:\t\t%s\n", block->g_name);
+  __printf("    dev_major:\t\t%d\n", read_ascii_octal(block->d_maj, 8, NULL));
+  __printf("    dev_minor:\t\t%d\n", read_ascii_octal(block->d_min, 8, NULL));
+  __printf("    prefix:\t\t%s\n", block->f_prefix);
 }
 
 glue_t* initialize(char* buf)
@@ -258,22 +258,22 @@ glue_t* initialize(char* buf)
 
   glue_t* new = xcalloc(sizeof(glue_t), 1);
 
-  memcpy(new->f_name    , p, 100  ); p += 100;
-  memcpy(new->f_mode    , p, 8    ); p += 8;
-  memcpy(new->uid       , p, 8   ); p += 8;
-  memcpy(new->gid       , p, 8    ); p += 8;
-  memcpy(new->f_size    , p, 12   ); p += 12;
-  memcpy(new->mtime     , p, 12   ); p += 12;
-  memcpy(new->chk_sum   , p, 8    ); p += 8;
-  memcpy(new->type      , p, 1    ); p += 1;
-  memcpy(new->l_name    , p, 100  ); p += 100;
-  memcpy(new->indicator , p, 6    ); p += 6;
-  memcpy(new->version   , p, 2    ); p += 2;
-  memcpy(new->u_name    , p, 32   ); p += 32;
-  memcpy(new->g_name    , p, 32   ); p += 32;
-  memcpy(new->d_maj     , p, 8    ); p += 8;
-  memcpy(new->d_min     , p, 8    ); p += 8;
-  memcpy(new->f_prefix  , p, 100  ); p += 100;
+  __memcpy(new->f_name    , p, 100  ); p += 100;
+  __memcpy(new->f_mode    , p, 8    ); p += 8;
+  __memcpy(new->uid       , p, 8   ); p += 8;
+  __memcpy(new->gid       , p, 8    ); p += 8;
+  __memcpy(new->f_size    , p, 12   ); p += 12;
+  __memcpy(new->mtime     , p, 12   ); p += 12;
+  __memcpy(new->chk_sum   , p, 8    ); p += 8;
+  __memcpy(new->type      , p, 1    ); p += 1;
+  __memcpy(new->l_name    , p, 100  ); p += 100;
+  __memcpy(new->indicator , p, 6    ); p += 6;
+  __memcpy(new->version   , p, 2    ); p += 2;
+  __memcpy(new->u_name    , p, 32   ); p += 32;
+  __memcpy(new->g_name    , p, 32   ); p += 32;
+  __memcpy(new->d_maj     , p, 8    ); p += 8;
+  __memcpy(new->d_min     , p, 8    ); p += 8;
+  __memcpy(new->f_prefix  , p, 100  ); p += 100;
 
   return new;
 }
@@ -332,6 +332,6 @@ int main(void) {
     if (err)
       break;
 
-    free(block);
+    __free(block);
   }
 }

@@ -18,11 +18,11 @@ private:
     void add_sauces();
     void remove_sauces();
 public:
-    PizzaIoManager(Pizza *_pizza=NULL);
+    PizzaIoManager(Pizza *_pizza=(Pizza *)NULL);
     virtual ~PizzaIoManager();
 
     bool new_pizza();
-    bool edit_pizza(Pizza *_pizza=NULL);
+    bool edit_pizza(Pizza *_pizza=(Pizza *) NULL);
     Pizza *get_pizza();
 };
 

@@ -4,7 +4,7 @@ Author: Dustin Fraze (df@cromulence.com)
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -46,20 +46,20 @@ int main() {
     state->hugcount = 1000;
     put("Welcome to the hug gambling server.\n");
     put("What is your name?\n");
-    bzero(state->name, 256);
+    __bzero(state->name, 256);
     recvUntil(0, state->name, 256, '\n');
     put("Hi ");
     put(state->name);
     put(". ");
-    memcpy((char *)&seed, state->name, 4);
+    __memcpy((char *)&seed, state->name, 4);
     hugsrand(state, seed);
     while(state->hugcount > 0) {
         if(state->hugcount > 1000000)
             state->hugcount = 1000000;
         put("You have ");
-        put(itoa(state->hugcount));
+        put(__itoa(state->hugcount));
         put(" hugs. Shall we play a game?\n1. Coin Flip\n2. Hangman\n3. Dice game\n4. War\nq. Quit\n");
-        bzero(choice, 16);
+        __bzero(choice, 16);
         recvUntil(0, choice, 15, '\n');
         switch(choice[0])
         {

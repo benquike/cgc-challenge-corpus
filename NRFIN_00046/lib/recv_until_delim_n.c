@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -49,8 +49,8 @@ int recv_until_delim_n(int fd, char delim, char *buf, unsigned int size) {
         }
 	}
 
-	// bug: if size bytes are read into buf, and the last byte is not the
-	// 	delim char, then this will read 1 byte beyond the end of buf.
+	// bug: if size bytes are __read into buf, and the last byte is not the
+	// 	delim char, then this will __read 1 byte beyond the end of buf.
 	//	That will cause segfault if buf is against the edge of mapped memory.
 	if (delim != buf[i]) {
 		return ERRNO_RECV;

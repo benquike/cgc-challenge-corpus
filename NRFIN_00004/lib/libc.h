@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -26,10 +26,10 @@
 int sendall(int fd, const char *buf, size_t size);
 int sendline(int fd, const char *buf, size_t size);
 int recvline(int fd, char *buf, size_t size);
-size_t strcpy(char *s1, char *s2);
-size_t strncpy(char *s1, char *s2, size_t n);
-char * strcat(char *s1, char *s2);
-size_t strlen(char *s);
+size_t __strcpy(char *s1, char *s2);
+size_t __strncpy(char *s1, char *s2, size_t n);
+char * __strcat(char *s1, char *s2);
+size_t __strlen(char *s);
 int streq(char *s1, char *s2);
 int startswith(char *s1, char *s2);
 

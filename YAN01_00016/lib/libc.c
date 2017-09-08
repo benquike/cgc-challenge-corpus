@@ -78,7 +78,7 @@ void receive_all(int fd, void* buf, size_t len)
   }
 }
 
-size_t receive_until(int fd, char* buf, size_t len, char delim)
+size_t __receive_until(int fd, char* buf, size_t len, char delim)
 {
 
   int ret = 0;
@@ -122,7 +122,7 @@ size_t receive_until(int fd, char* buf, size_t len, char delim)
   return  (count);
 }
 
-int strcmp(const char* s1, const char* s2)
+int __strcmp(const char* s1, const char* s2)
 {
   size_t i = 0;
 

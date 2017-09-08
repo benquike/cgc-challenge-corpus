@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -51,21 +51,21 @@ sprintEntryType *sprintPtr;
 
 
 	// allocate memory for the new sprint
-	newSprint = (sprintEntryType *)calloc(sizeof(sprintEntryType));
+	newSprint = (sprintEntryType *)__calloc(sizeof(sprintEntryType));
 
 	if (newSprint == 0)
 		_terminate(-1);
 
 	newSprint->ID = message->sprintID;
 
-	// add an extra byte since strlen doesn't count the null terminator
-	newSprint->title = calloc(strlen((char *)&message->title)+1);
+	// add an extra byte since __strlen doesn't count the null terminator
+	newSprint->title = __calloc(__strlen((char *)&message->title)+1);
 
 	if (newSprint->title == 0)
 		_terminate(-1);
 
 
-	strncpy(newSprint->title, &message->title, strlen(&message->title));
+	__strncpy(newSprint->title, &message->title, __strlen(&message->title));
 
 	// set the default values, all 0 in this case
 	newSprint->duration = 0;
@@ -130,13 +130,13 @@ sprintEntryType *prevPtr;
 
 		// does it have a title?  Free that memory first
 		if (sprintPtr->title)
-			free(sprintPtr->title);
+			__free(sprintPtr->title);
 
-		free(sprintPtr);
+		__free(sprintPtr);
 		return 0;
 
 	}
-	// otherwise, just link around the entry to be deleted
+	// otherwise, just __link around the entry to be deleted
 	else {
 
 		prevPtr = database->sprintList;
@@ -165,10 +165,10 @@ sprintEntryType *prevPtr;
 
 	// does it have a title?  Free that memory first
 	if (sprintPtr->title)
-		free(sprintPtr->title);
+		__free(sprintPtr->title);
 		
 	// now delete the sprint's memory
-	free(sprintPtr);
+	__free(sprintPtr);
 
 
 	return 0;

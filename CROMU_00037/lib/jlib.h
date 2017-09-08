@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.co>
 
 Copyright (c) 2014-2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -26,11 +26,11 @@ THE SOFTWARE.
 
 void zero(char *, unsigned int);
 void print(char *);
-size_t strlen(char *);
+size_t __strlen(char *);
 int read_until(char *, char, size_t);
 int strmatch(char *, char *);
 void strcopy(char *, char *);
 void memcopy(char *, char *, unsigned int);
 int isdigits(char *);
-int atoi(char *);
+int __atoi(char *);
 void print_uint(unsigned int);

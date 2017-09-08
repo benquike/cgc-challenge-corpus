@@ -4,7 +4,7 @@ Authors: Cromulence <cgc@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -52,7 +52,7 @@ void link( pmeta linkme )
 
 	/// Handle the case where this is <= 1016
 	if ( linkme->length <= 1016 ) {
-		//printf("Adding into bucket: $d\n", BUCKET( linkme->length) );
+		//__printf("Adding into bucket: $d\n", BUCKET( linkme->length) );
 		linkme->next = lookaside[ BUCKET( linkme->length ) ];
 		lookaside[ BUCKET( linkme->length ) ] = linkme;
 		return;
@@ -91,11 +91,11 @@ void add_freelist_block( size_t length )
 	length = (length + 4095 ) & 0xfffff000;
 
 	if ( allocate( length, 0, (void**)&block) != 0 ) {
-		printf("[ERROR] Allocating a free list block failed: $d\n", length);
+		__printf("[ERROR] Allocating a __free list block failed: $d\n", length);
 		_terminate(-1);
 	}
 
-	bzero( block, length );
+	__bzero( block, length );
 
 	block->length = length-4;
 	
@@ -109,7 +109,7 @@ void add_freelist_block( size_t length )
 	return;
 }
 
-void free( void *block )
+void __free( void *block )
 {
 	pmeta nb = NULL;
 
@@ -127,11 +127,11 @@ void init_freelist( void )
 	pmeta base_block = NULL;
 
 	if ( allocate(4096, 0, (void**)&lookaside) != 0 ) {
-		printf("[ERROR] Malloc fail terminate\n");
+		__printf("[ERROR] Malloc fail terminate\n");
 		_terminate(-1);
 	}
 
-	bzero( lookaside[0], 4096);
+	__bzero( lookaside[0], 4096);
 
 	zero_block = lookaside[0];
 	base_block = zero_block + 1;
@@ -146,12 +146,12 @@ void init_freelist( void )
 	base_block->prev = zero_block;
 	base_block->next = NULL;
 
-	//printf("Set up head: $x with walker: $d: $x\n", zero_block, base_block->length, base_block);
+	//__printf("Set up head: $x with walker: $d: $x\n", zero_block, base_block->length, base_block);
 
 	return;
 }
 
-void unlink( pmeta block )
+void __unlink( pmeta block )
 {
 	if ( block == NULL ) {
 		return;
@@ -173,7 +173,7 @@ void *freelist_alloc( size_t length )
 	pmeta walker = NULL;
 	pmeta newone = NULL;
 
-	/// If there isn't a block on the free list then initialize one
+	/// If there isn't a block on the __free list then initialize one
 	/// This should only be the case on the first allocation request
 	if ( lookaside[0] == NULL ) {
 		init_freelist();
@@ -191,13 +191,13 @@ void *freelist_alloc( size_t length )
 	}
 
 	if ( walker == NULL ) {
-		//printf("no blocks found\n");
+		//__printf("no blocks found\n");
 		add_freelist_block( length );
 		return freelist_alloc(length);
 	} else {
-		//printf("foudn block size: $d\n", walker->length );
+		//__printf("foudn block size: $d\n", walker->length );
 
-		unlink(walker);
+		__unlink(walker);
 
 		/// If the block is less than the size needed for at
 		///	least an 8 byte block then return the whole thing
@@ -212,12 +212,12 @@ void *freelist_alloc( size_t length )
 		newone = (pmeta) ( ((char*)walker) + 4 + length );
 		newone->length = walker->length - (length+4);
 
-		//printf("Broke $d into $d and $d\n", walker->length, length, newone->length);
+		//__printf("Broke $d into $d and $d\n", walker->length, length, newone->length);
 		walker->length = length;
 
 		link(newone);
 
-		//printf("Returning size: $d\n", walker->length);
+		//__printf("Returning size: $d\n", walker->length);
 		return ((char*)walker) + 4;
 	}
 
@@ -225,9 +225,9 @@ void *freelist_alloc( size_t length )
 }
 
 
-void *calloc( size_t length )
+void *__calloc( size_t length )
 {
-	void *out = malloc( length );
+	void *out = __malloc( length );
 
 	if ( !out ) {
 		return out;
@@ -235,12 +235,12 @@ void *calloc( size_t length )
 
 	length = (length+7) & 0xfffffff8;
 
-	bzero( out, length);
+	__bzero( out, length);
 
 	return out;
 }
 
-void *malloc( size_t length )
+void *__malloc( size_t length )
 {
 	int bucket = 0;
 	pmeta outb = NULL;
@@ -268,10 +268,10 @@ void *malloc( size_t length )
 	}
 
 	if ( bucket == 128 ) {
-		//printf("No available buckets freelist alloc\n");
+		//__printf("No available buckets freelist alloc\n");
 		return freelist_alloc( length );
 	} else {
-		//printf("Found bucket: $d\n", bucket);
+		//__printf("Found bucket: $d\n", bucket);
 		outb = lookaside[ bucket ];
 		lookaside[bucket] = outb->next;
 

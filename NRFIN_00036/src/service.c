@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -45,8 +45,8 @@ void receiveValue(int* value) {
 void receiveKey(char* key) {
 	int bytes_read;
 
-	//tmpKey = (char *)malloc(MAX_KEY_SIZE+1);
-	memset(key, 0, MAX_KEY_SIZE+1);
+	//tmpKey = (char *)__malloc(MAX_KEY_SIZE+1);
+	__memset(key, 0, MAX_KEY_SIZE+1);
 	bytes_read = recvline(STDIN, key, MAX_KEY_SIZE);
 	if(bytes_read < 0)
 		_terminate(RECEIVE_ERROR);
@@ -74,7 +74,7 @@ void sendReport(Map *map) {
 		ret = transmit_all(STDOUT, report_buf, sizeof(report_buf));
 		if(ret != 0)
 			_terminate(TRANSMIT_ERROR);
-		memset(report_buf, 0, sizeof(report_buf));
+		__memset(report_buf, 0, sizeof(report_buf));
 		mapPtr = mapPtr->next;
 
 	}
@@ -126,7 +126,7 @@ int main(void) {
 			budget -= value;
 			setMap(&map, key, budget);
 			if(budget < 0) {
-				ret = transmit_all(STDOUT, key, strlen(key));
+				ret = transmit_all(STDOUT, key, __strlen(key));
 				if(ret != 0)
 					_terminate(TRANSMIT_ERROR);	
 				ret = transmit_all(STDOUT, OVERBUDGET_STR, sizeof(OVERBUDGET_STR)-1);
@@ -151,7 +151,7 @@ int main(void) {
 
 		if(instruction == DELETE_BUDGET_INSTR) {
 			receiveKey(key);
-			if(!strcmp(key, "BACON"))
+			if(!__strcmp(key, "BACON"))
 				removeMap(&map, key);
 		}
 

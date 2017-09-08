@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -32,7 +32,7 @@ void newReport(Report *report) {
 
 	while(END_CHAR != character) {
 		if(SPLIT_CHAR == character) {
-			new_field = malloc(sizeof(Field));
+			new_field = __malloc(sizeof(Field));
 #ifdef PATCHED
 			if(new_field == NULL)
 				_terminate(ALLOCATE_ERROR);
@@ -55,7 +55,7 @@ void newReport(Report *report) {
             _terminate(FIELD_SIZE_ERROR);
 #endif
 	}
-	new_field = malloc(sizeof(Field));
+	new_field = __malloc(sizeof(Field));
 #ifdef PATCHED
 	if(new_field == NULL)
 		_terminate(ALLOCATE_ERROR);
@@ -162,7 +162,7 @@ void filterReport(Report *report, Report* filteredReport, char* filterString) {
 			compare = strncmp(&nextRecord->data[nextField->start], &filterString[nextField->start], nextField->size);
 			if(!compare) {
 				Record* record;
-				record = malloc(sizeof(Record));
+				record = __malloc(sizeof(Record));
 #ifdef PATCHED
 				if(record == NULL)
 					_terminate(ALLOCATE_ERROR);
@@ -185,43 +185,43 @@ int newRecord(Report *report) {
 	Field* nextField = NULL;
 	short field_index = 0;
 
-	record = malloc(sizeof(Record));
+	record = __malloc(sizeof(Record));
 #ifdef PATCHED
 	if(record == NULL)
 		_terminate(ALLOCATE_ERROR);
 #endif
 	record->next = NULL;
-	record->data = malloc(report->record_size*2); 
+	record->data = __malloc(report->record_size*2); 
 #ifdef PATCHED
 	if(record->data == NULL)
 		_terminate(ALLOCATE_ERROR);
 #endif
-	receive_buf = malloc(report->record_size*2);
+	receive_buf = __malloc(report->record_size*2);
 #ifdef PATCHED
 	if(receive_buf == NULL)
 		_terminate(ALLOCATE_ERROR);
 #endif
 
-	memset(record->data, 0, report->record_size);
+	__memset(record->data, 0, report->record_size);
     
     for(nextField = report->fields; nextField != NULL; nextField = nextField->next) {
-    	memset(receive_buf, 0, report->record_size);
+    	__memset(receive_buf, 0, report->record_size);
     	recv(STDIN, receive_buf, nextField->size);
 
-    	strcpy(&record->data[field_index], receive_buf);
+    	__strcpy(&record->data[field_index], receive_buf);
     	field_index += nextField->size;
     }
 
-	free(receive_buf);
+	__free(receive_buf);
 
 	if(startswith(record->data, "END")) {
-		free(record->data);
-		free(record);
+		__free(record->data);
+		__free(record);
 		return 0;
 	} else if(startswith(record->data, "REPORT")) {
 		sendReport(report);
-		free(record->data);
-		free(record);
+		__free(record->data);
+		__free(record);
 		return 1;
 	} else if(startswith(record->data, "SORT")) {
 		unsigned short field_index;
@@ -238,8 +238,8 @@ int newRecord(Report *report) {
 		if(key)
 			sortReport(&report->head, key);
 
-		free(record->data);
-		free(record);
+		__free(record->data);
+		__free(record);
 
 		return 1;
 	} else if(startswith(record->data, "FREPORT")) {
@@ -247,8 +247,8 @@ int newRecord(Report *report) {
 		filteredReport.record_size = report->record_size;
 		filterReport(report, &filteredReport, record->data);
 		sendReport(&filteredReport);
-		free(record->data);
-		free(record);
+		__free(record->data);
+		__free(record);
 
 		return 1;
 	} else {
@@ -257,11 +257,11 @@ int newRecord(Report *report) {
 
 		if(startswith(command, "ERROR")) {
 #ifdef PATCHED
-			free(record->data);
+			__free(record->data);
 #else
-			free(command);
+			__free(command);
 #endif
-			free(record);
+			__free(record);
 			return 1;
 		}
 	}

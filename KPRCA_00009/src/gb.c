@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -120,7 +120,7 @@ gb_t *gb_new()
 
 int gb_load(gb_t *gb, uint8_t *cartridge)
 {
-    memcpy(gb->rom, cartridge, ROM_SIZE);
+    __memcpy(gb->rom, cartridge, ROM_SIZE);
 
     hdr_t *hdr = (hdr_t *)&gb->rom[0x100];
     copy_title(gb->title, hdr);
@@ -155,7 +155,7 @@ int gb_tick(gb_t *gb)
     if (gb->mem[IO_DMA] != 0xFF)
     {
         // XXX instant DMA?
-        memcpy(&gb->mem[0xFE00], &gb->mem[gb->mem[IO_DMA] << 8], 0xA0);
+        __memcpy(&gb->mem[0xFE00], &gb->mem[gb->mem[IO_DMA] << 8], 0xA0);
         gb->mem[IO_DMA] = 0xFF;
     }
 
@@ -203,7 +203,7 @@ static void copy_title(char *dst, const hdr_t *hdr)
     // should be strictly UPPERCASE ASCII
     // some new cartridges put flags in title
     size_t i;
-    for (i = 0; isupper(hdr->title[i]); i++)
+    for (i = 0; __isupper(hdr->title[i]); i++)
         if (i < TITLE_SIZE)
             dst[i] = hdr->title[i];
 #ifdef PATCHED

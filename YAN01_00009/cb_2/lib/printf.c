@@ -1,6 +1,6 @@
 #include <libcgc.h>
 #include "stdarg.h"
-#include "printf.h"
+#include "__printf.h"
 #include "inttypes.h"
 
 #define PRINTF_BUF_SIZE 200
@@ -434,7 +434,7 @@ size_t fprintf(int fd, const char* fstr, ...)
   return (ret);
 }
 
-size_t printf(const char* fstr, ...)
+size_t __printf(const char* fstr, ...)
 {
   size_t ret = 0;
   va_list args;

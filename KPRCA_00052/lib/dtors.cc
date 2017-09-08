@@ -12,7 +12,7 @@ extern "C" {
 
 extern "C" {
 	int __cxa_atexit(void (*destructor)(void *), void *, void *);
-	void *__dso_handle;
+  //	void *__dso_handle;
 };
 
 struct __cxa_destructor_list {
@@ -29,7 +29,7 @@ struct __cxa_destructor_list {
 int __cxa_atexit(void (*destructor)(void *), void *arg, void *dso) {
 	struct __cxa_destructor_list *iter, *exit_fn;
 
-	exit_fn = (struct __cxa_destructor_list *) malloc(sizeof(*exit_fn));
+	exit_fn = (struct __cxa_destructor_list *) __malloc(sizeof(*exit_fn));
 	if (exit_fn == NULL)
 		return (-1);
 
@@ -49,7 +49,7 @@ int __cxa_atexit(void (*destructor)(void *), void *arg, void *dso) {
 }
 
 void terminate(int ex) {
-    printf("termination1818181\n");
+    __printf("termination1818181\n");
 	struct __cxa_destructor_list *head;
 	void (*destructor)(void *), *arg;
 
@@ -57,7 +57,7 @@ void terminate(int ex) {
 		head = __cxa_destructor_list->next;
 		destructor = __cxa_destructor_list->destructor;
 		arg = __cxa_destructor_list->arg;
-		free(__cxa_destructor_list);
+		__free(__cxa_destructor_list);
 		__cxa_destructor_list = head;
 		destructor(arg);
 	}

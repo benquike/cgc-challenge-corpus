@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -45,12 +45,12 @@ uint8_t submit_lyrics(char *lyrics, size_t len)
   int i, nl = 0, n = 0;
   size_t olen = len;
   char line[128], *s = lyrics;
-  memset(lyrics, 0, len);
+  __memset(lyrics, 0, len);
   while (1)
   {
     if (read_until(STDIN, line, sizeof(line), '\n') < 0)
       return 0;
-    if (strcmp(line, "EOF") == 0)
+    if (__strcmp(line, "EOF") == 0)
       break;
 
     nl = 1;
@@ -65,25 +65,25 @@ uint8_t submit_lyrics(char *lyrics, size_t len)
       {
         for (i = 0; i < sizeof(depressing_words) / sizeof(char*); ++i)
         {
-          if (strcmp(depressing_words[i], word) == 0)
+          if (__strcmp(depressing_words[i], word) == 0)
           {
-            printf("depressing word detected.\n");
+            __printf("depressing word detected.\n");
             return 0;
           }
         }
 #if PATCHED
-        if (strlen(word) < len - 1)
+        if (__strlen(word) < len - 1)
         {
 #endif
         if (!nl)
         {
-          strcat(s, " ");
+          __strcat(s, " ");
           s++;
           len--;
         }
-        strcat(s, word);
-        s += strlen(word);
-        len -= strlen(word);
+        __strcat(s, word);
+        s += __strlen(word);
+        len -= __strlen(word);
 #if PATCHED
         }
         else
@@ -95,17 +95,17 @@ uint8_t submit_lyrics(char *lyrics, size_t len)
       }
       else if (n == 0)
       {
-        if (strlen(word) < len - 1)
+        if (__strlen(word) < len - 1)
         {
           if (!nl)
           {
-            strcat(s, " ");
+            __strcat(s, " ");
             s++;
             len--;
           }
-          strcat(s, word);
-          s += strlen(word);
-          len -= strlen(word);
+          __strcat(s, word);
+          s += __strlen(word);
+          len -= __strlen(word);
         }
         else
         {
@@ -118,12 +118,12 @@ uint8_t submit_lyrics(char *lyrics, size_t len)
       nl = 0;
     }
 #ifdef PATCHED
-    if (strlen(lyrics) < olen - 1)
+    if (__strlen(lyrics) < olen - 1)
 #else
-    if (strlen(lyrics) < olen)
+    if (__strlen(lyrics) < olen)
 #endif
     {
-      strcat(s, "\n");
+      __strcat(s, "\n");
       s++;
       len--;
     }
@@ -134,9 +134,9 @@ uint8_t submit_lyrics(char *lyrics, size_t len)
 
 void print_menu()
 {
-  printf("1. Submit lyrics\n");
-  printf("2. View lyrics\n");
-  printf("-3. Quit\n");
+  __printf("1. Submit lyrics\n");
+  __printf("2. View lyrics\n");
+  __printf("-3. Quit\n");
 }
 
 void init()
@@ -144,7 +144,7 @@ void init()
   int i;
   bloomy = bloomy_new(128, moomoo, yooyoo, geegee);
   if (bloomy == NULL)
-    exit(-1);
+    __exit(-1);
 
   for (i = 0; i < sizeof(depressing_words) / sizeof(char*); ++i)
     bloomy_add(bloomy, depressing_words[i]);
@@ -155,40 +155,40 @@ int main()
   uint8_t good = 0;
   char buf[8], lyrics[2048];
 
-  printf("~=~=~=~= Bloomy Sunday =~=~=~=~\n");
+  __printf("~=~=~=~= Bloomy Sunday =~=~=~=~\n");
   init();
 
   while (1)
   {
     print_menu();
-    printf("> ");
+    __printf("> ");
 
    if (read_until(STDIN, buf, sizeof(buf), '\n') < 0)
      goto fail;
-   switch (strtol(buf, NULL, 10))
+   switch (__strtol(buf, NULL, 10))
    {
      case 1:
        good = submit_lyrics(lyrics, sizeof(lyrics));
        break;
      case 2:
        if (!good)
-         printf("not good.\n");
+         __printf("not good.\n");
        else
-         printf("%s", lyrics);
+         __printf("%s", lyrics);
        break;
      case -3:
-       printf("Don't let the sadness grow.\n\n");
-       exit(0);
+       __printf("Don't let the sadness grow.\n\n");
+       __exit(0);
        break;
      default:
-       printf("Nope!\n");
+       __printf("Nope!\n");
        break;
    }
-   printf("\n");
+   __printf("\n");
   }
   return 0;
 
 fail:
-  printf("fail\n");
+  __printf("fail\n");
   return -1;
 }

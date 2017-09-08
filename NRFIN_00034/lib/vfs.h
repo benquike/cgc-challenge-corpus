@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -125,11 +125,11 @@ uid_t get_owner(const struct vfs *vfs, const char *path);
 /**
  * Read the contents of a file, respecting permissions.
  *
- * Note: In our current model, any user can read any file.
+ * Note: In our current model, any user can __read any file.
  *
  * @param vfs The vfs
  * @param user The uid of the user
- * @param path The path to read
+ * @param path The path to __read
  * @param contents Set to the contents of the file on success
  * @return 0 on success, -1 on failure
  */
@@ -140,7 +140,7 @@ int read_file(const struct vfs *vfs, uid_t user, const char *path, unsigned char
  *
  * @param vfs The vfs
  * @param user The uid of the user
- * @param path The path to read
+ * @param path The path to __read
  * @param contents Buffer to set as the new file contents on success, will be
  *      freed on delete
  * @param size The new size of the file
@@ -187,12 +187,12 @@ struct file *create_file(struct vfs *vfs, const char *path);
 struct file *create_file_in_dir(struct vfs *vfs, struct directory *dir, const char *name);
 
 /**
- * Create a new symbolic link, respecting permissions.
+ * Create a new symbolic __link, respecting permissions.
  *
  * @param vfs The vfs
  * @param user The uid of the user
- * @param src_path The path to create a link at
- * @param dst_path The path to point the link at
+ * @param src_path The path to create a __link at
+ * @param dst_path The path to point the __link at
  * @return 0 on success, -1 on failure
  */
 int create_symlink(struct vfs *vfs, uid_t user, const char *src_path, const char *dst_path);

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -27,7 +27,7 @@
 
 
 struct h2o *create_h2o() {
-	struct h2o *new = malloc(sizeof(struct h2o));
+	struct h2o *new = __malloc(sizeof(struct h2o));
 	new->H2O[0] = 'H';
 	new->H2O[1] = 'H';
 	new->H2O[2] = 'O';
@@ -35,6 +35,6 @@ struct h2o *create_h2o() {
 }
 
 void destroy_h2o(struct h2o *h) {
-	free(h);
+	__free(h);
 }
 

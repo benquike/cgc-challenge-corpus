@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -30,9 +30,9 @@ extern int transmit_all(int fd, const char *buf, const size_t size); // NRFIN_00
 int recvline(int fd, char *buf, size_t size); // NRFIN_00001
 int strncmp(const char *s1, const char *s2, size_t n);
 int strn2int(const char* str_buf, size_t max_chars); // NRFIN_00001 - modified
-void * memcpy(void* dst, const void* src, size_t cnt); // NRFIN_00001
+void * __memcpy(void* dst, const void* src, size_t cnt); // NRFIN_00001
 size_t strnlen(const char *string, size_t max_len); // NRFIN_00009 - modified
-size_t strlen(const char *string); // NRFIN_00009
+size_t __strlen(const char *string); // NRFIN_00009
 char * itoaB10(int value); // NRFIN_00007
-void * memset(void* str, int ch, size_t n); // NRFIN_00001
+void * __memset(void* str, int ch, size_t n); // NRFIN_00001
 #endif

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -45,7 +45,7 @@
 int prompt(char *pmpt, char *buf, size_t size) {
     int ret;
 
-    SEND(pmpt, strlen(pmpt), ret);
+    SEND(pmpt, __strlen(pmpt), ret);
 
     RECV(buf, size, ret);
 
@@ -58,7 +58,7 @@ int main(void) {
 
     ALLOC(sizeof(htreq),0,(void**)&req,ret);
 
-    //make sure our CB will crash on out of bounds read/write
+    //make sure our CB will crash on out of bounds __read/__write
     req = (htreq *)(((char *)req)+4096-sizeof(htreq));
 
     SENDL(GREET, sizeof(GREET)-1, ret);
@@ -67,22 +67,22 @@ int main(void) {
         ret = prompt("> ", req->recv, sizeof(req->recv));
         if (startswith(req->recv,EDGRBUF)) {
             do_edgar(req);
-            req->resplen = strlen(req->resp);
+            req->resplen = __strlen(req->resp);
         } else if (startswith(req->recv,WILLBUF)) {
             do_will(req);
         } else if (startswith(req->recv,ELIZBUF)) {
             do_eliz(req);
-            req->resplen = strlen(req->resp);
+            req->resplen = __strlen(req->resp);
         } else if (startswith(req->recv,JOHNBUF)) {
             do_john(req);
-            req->resplen = strlen(req->resp);
+            req->resplen = __strlen(req->resp);
         } else if (streq(req->recv,"quit")) {
             _terminate(0);
         } else if (streq(req->recv,"")) {
 	        continue;
         } else {
-	        strcpy(req->resp,"Error");
-            req->resplen = strlen(req->resp);
+	        __strcpy(req->resp,"Error");
+            req->resplen = __strlen(req->resp);
 	    }
 
         SENDL(req->resp, req->resplen, ret); 

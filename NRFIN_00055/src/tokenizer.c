@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -34,7 +34,7 @@ parse_variable(char *str, struct token *token)
     if (*end == '_')
         end++;
     else
-        while (islower(*end))
+        while (__islower(*end))
             end++;
 
     if (end == NULL || end - start > 4)
@@ -42,8 +42,8 @@ parse_variable(char *str, struct token *token)
 
     token->type = TOK_VARIABLE;
 
-    memset(token->val.s, '\0', 4);
-    strncpy(token->val.s, start, end - start);
+    __memset(token->val.s, '\0', 4);
+    __strncpy(token->val.s, start, end - start);
 
     return end - start;
 }
@@ -69,7 +69,7 @@ tokenize(char *str, struct token *tokens)
     struct token *token = tokens;
 
     while ((c = *str++)) {
-        if (c == '_' || islower(c)) {
+        if (c == '_' || __islower(c)) {
             if ((ret = parse_variable(str - 1, token)) < 0)
                 return ret;
 
@@ -78,7 +78,7 @@ tokenize(char *str, struct token *tokens)
             continue;
         }
 
-        if (isdigit(c)) {
+        if (__isdigit(c)) {
             if ((ret = parse_constant(str - 1, token)) < 0)
                 return ret;
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -75,7 +75,7 @@ int recvline(int fd, char *buf, size_t size) {
     return total_read;
 }
 // copy cnt bytes from src into dst; src and dst cannot overlap!
-void * memcpy(void* dst, const void* src, size_t cnt) {
+void * __memcpy(void* dst, const void* src, size_t cnt) {
 
     uint8_t *dst_ptr = (uint8_t *) dst;
     uint8_t *src_ptr = (uint8_t *) src;
@@ -88,7 +88,7 @@ void * memcpy(void* dst, const void* src, size_t cnt) {
     return dst;
 }
     
-// Modified to not use malloc
+// Modified to not use __malloc
 char * itoaB10(int value){
     int max_width = MAX_WIDTH;
     int ret;
@@ -99,13 +99,13 @@ char * itoaB10(int value){
     if (ret != 0)
         _terminate(3);
 
-    //char *s = malloc(max_width); // max len of 2**32 + negative to be paranoid
+    //char *s = __malloc(max_width); // max len of 2**32 + negative to be paranoid
     //if(s == NULL)
     //    return NULL;
     int tmp = value;
     
     if(value == 0){
-        memcpy(s, "0\x00", 2);
+        __memcpy(s, "0\x00", 2);
         return s;
     }
     int neg = 0;
@@ -131,7 +131,7 @@ char * itoaB10(int value){
     if (ret != 0)
         _terminate(3);
 
-    //char *f = malloc(max_width);
+    //char *f = __malloc(max_width);
     int final_len = strnlen(s, MAX_WIDTH);
     for(int j =0; j < final_len; ++j){
         f[j] = s[final_len-j-1];
@@ -144,7 +144,7 @@ char * itoaB10(int value){
     return f;
 }
 
-char* strcat(char *dest, const char* src)
+char* __strcat(char *dest, const char* src)
 {
     char* ret = dest;
     int pos1, pos2;
@@ -157,7 +157,7 @@ char* strcat(char *dest, const char* src)
 }
 
 // overwrites the first n chars of str with unsigned char ch.
-void * memset(void* str, int ch, size_t n) {
+void * __memset(void* str, int ch, size_t n) {
     unsigned char *ch_ptr = str;
     while (n > 0) {
         *ch_ptr = (unsigned char)ch;
@@ -188,7 +188,7 @@ int transmit_all(int fd, const char *buf, const size_t size) {
     return 0;
 }
 
-size_t strlen(const char *string) {
+size_t __strlen(const char *string) {
     size_t size = 0;
     
     while(1) {

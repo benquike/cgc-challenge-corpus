@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -27,7 +27,7 @@ THE SOFTWARE.
 #include <stdlib.h>
 #include <stdint.h>
 
-int islower( int c )
+int __islower( int c )
 {
 	if ( c >= 'a' && c <= 'z') {
 		return 1;
@@ -36,7 +36,7 @@ int islower( int c )
 	return 0;
 }
 
-int isupper( int c )
+int __isupper( int c )
 {
 	if ( c >= 'A' && c <= 'Z') {
 		return 1;
@@ -54,16 +54,16 @@ int isascii( int c )
 	return 0;
 }
 
-int isalpha( int c )
+int __isalpha( int c )
 {
-	if ( islower(c) || isupper(c) ) {
+	if ( __islower(c) || __isupper(c) ) {
 		return 1;
 	}
 
 	return 0;
 }
 
-int isspace( int c )
+int __isspace( int c )
 {
     if ( c == ' ' ||
          c == '\t' ||
@@ -76,7 +76,7 @@ int isspace( int c )
         return 0;
 }
 
-int isdigit( int c )
+int __isdigit( int c )
 {
     if ( c >= '0' && c <= '9' )
         return 1;
@@ -84,12 +84,12 @@ int isdigit( int c )
         return 0;
 }
 
-int isnan( double val )
+int __isnan( double val )
 {
     return __builtin_isnan( val );
 }
 
-int isinf( double val )
+int __isinf( double val )
 {
     return __builtin_isinf( val );
 }
@@ -110,7 +110,7 @@ int toupper( int c )
         return c;
 }
 
-int strcmp( char *str1, char *str2 )
+int __strcmp( char *str1, char *str2 )
 {
     size_t i;
 
@@ -135,9 +135,9 @@ int strcmp( char *str1, char *str2 )
     return 0;
 }
 
-char *strncat( char *dest, char *src, size_t n )
+char *__strncat( char *dest, char *src, size_t n )
 {
-	size_t i = strlen(dest);
+	size_t i = __strlen(dest);
 	size_t j;
 
 	for (j = 0; i < n; i++, j++ )
@@ -151,9 +151,9 @@ char *strncat( char *dest, char *src, size_t n )
 	return (dest);
 }
 
-char *strcat( char *dest, char *src )
+char *__strcat( char *dest, char *src )
 {
-	size_t i = strlen(dest);
+	size_t i = __strlen(dest);
 	size_t j;
 
 	for (j = 0; ; i++, j++ )
@@ -167,7 +167,7 @@ char *strcat( char *dest, char *src )
 	return (dest);
 }
 
-char *strchr( char *src, char c )
+char *__strchr( char *src, char c )
 {
 	char *result = NULL;
 
@@ -182,7 +182,7 @@ char *strchr( char *src, char c )
 	return result;
 }
 
-char *strcpy( char *dest, char *src )
+char *__strcpy( char *dest, char *src )
 {
     size_t i;
 
@@ -198,7 +198,7 @@ char *strcpy( char *dest, char *src )
     return (dest);
 }
 
-char *strncpy( char *dest, const char *src, size_t num )
+char *__strncpy( char *dest, const char *src, size_t num )
 {
     size_t i;
 
@@ -214,7 +214,7 @@ char *strncpy( char *dest, const char *src, size_t num )
     return (dest);
 }
 
-void *memcpy( void *dest, void *src, size_t numbytes )
+void *__memcpy( void *dest, void *src, size_t numbytes )
 {
     size_t bytes_copied = 0;
     if ( numbytes >= 4 )
@@ -229,7 +229,7 @@ void *memcpy( void *dest, void *src, size_t numbytes )
     return dest;
 }
 
-void *memset( void *dest, int value, size_t numbytes )
+void *__memset( void *dest, int value, size_t numbytes )
 {
     size_t bytes_copied = 0;
     uint8_t byte_set_value = (uint8_t)value;
@@ -248,7 +248,7 @@ void *memset( void *dest, int value, size_t numbytes )
     return dest;
 }
 
-int atoi(const char* str)
+int __atoi(const char* str)
 {
     if ( str == NULL )
         return 0;
@@ -259,7 +259,7 @@ int atoi(const char* str)
     int digit_count = 0;
 
     // Skip whitespace
-    while ( isspace( str[0] ) )
+    while ( __isspace( str[0] ) )
         str++;
 
     part = 0; // First part (+/-/number is acceptable)
@@ -281,7 +281,7 @@ int atoi(const char* str)
 
             part++;
         }
-        else if ( isdigit( *str ) )
+        else if ( __isdigit( *str ) )
         {
             if ( part == 0 || part == 1 )
             {
@@ -309,7 +309,7 @@ int atoi(const char* str)
     return (sign * integer_part);
 }
 
-size_t strlen( const char *str )
+size_t __strlen( const char *str )
 {
     size_t length = 0;
 

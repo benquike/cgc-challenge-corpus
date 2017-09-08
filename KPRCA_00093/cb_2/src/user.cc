@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -44,15 +44,15 @@ User::User(const char *name, const unsigned short name_length, const char *pass,
 
 void User::InitUser(const char *name, const unsigned short name_length, const char *pass, const unsigned short pass_length) {
     name_length_ = name_length < MAX_LENGTH ? name_length : MAX_LENGTH;
-    memcpy(name_, name, name_length_);
+    __memcpy(name_, name, name_length_);
     pass_length_ = pass_length < MAX_LENGTH ? pass_length : MAX_LENGTH;
-    memcpy(pass_, pass, pass_length_);
+    __memcpy(pass_, pass, pass_length_);
 }
 
 bool User::Equals(User *user) const {
     if (name_length_ != user->name_length())
         return false;
-    if (memcmp(name_, user->name(), name_length_) != 0)
+    if (__memcmp(name_, user->name(), name_length_) != 0)
         return false;
     return true;
 }
@@ -60,7 +60,7 @@ bool User::Equals(User *user) const {
 bool User::CompareName(const char *name, unsigned short length) const {
     if (!name || name_length_ != length)
         return false;
-    if (memcmp(name_, name, name_length_) != 0)
+    if (__memcmp(name_, name, name_length_) != 0)
         return false;
     return true;
 }
@@ -68,7 +68,7 @@ bool User::CompareName(const char *name, unsigned short length) const {
 bool User::VerifyPass(const char *pass, unsigned short length) const {
     if (!pass || pass_length_ != length)
         return false;
-    if (memcmp(pass_, pass, pass_length_) != 0)
+    if (__memcmp(pass_, pass, pass_length_) != 0)
         return false;
     return true;
 }
@@ -140,7 +140,7 @@ const char *User::name() {
 
 void User::set_name(const char *name, const unsigned short name_length) {
     name_length_ = name_length < MAX_LENGTH ? name_length : MAX_LENGTH;
-    memcpy(name_, name, name_length_);
+    __memcpy(name_, name, name_length_);
 }
 
 const unsigned short User::name_length() {
@@ -153,7 +153,7 @@ const char *User::pass() {
 
 void User::set_pass(const char *pass, const unsigned short pass_length) {
     pass_length_ = pass_length < MAX_LENGTH ? pass_length : MAX_LENGTH;
-    memcpy(pass_, pass, pass_length_);
+    __memcpy(pass_, pass, pass_length_);
 }
 
 const unsigned short User::pass_length() {

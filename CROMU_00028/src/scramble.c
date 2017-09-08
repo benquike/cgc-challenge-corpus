@@ -4,7 +4,7 @@ Author: Bryce Kerley <bk@cromulence.co>
 
 Copyright (c) 2014-2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -93,7 +93,7 @@ int main() {
   uint8 found;
 
   for (int i = 7; i >= 0; i--) {
-    printf("phase @d: desired @x\n", i, desired);
+    __printf("phase @d: desired @x\n", i, desired);
     found = 0;
 
     for (uint32 j = 0; j <= UINT16_MAX; j++) {
@@ -130,10 +130,10 @@ int main() {
         }
 
         mst.i &= TARGET_MASK;
-        printf("\r@x", mst.i);
+        __printf("\r@x", mst.i);
 
         if (mst.i == desired) {
-          printf("\rinput @x instate @x\n", current.i, j & TARGET_MASK);
+          __printf("\rinput @x instate @x\n", current.i, j & TARGET_MASK);
           found = 1;
           desired = j & TARGET_MASK;
           break;
@@ -141,7 +141,7 @@ int main() {
     }
 
     if (!found) {
-      printf("\ndidn't find :( :( :( \n");
+      __printf("\ndidn't find :( :( :( \n");
       _terminate(-1);
     }
   }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -84,12 +84,12 @@ void AudioStream::enlarge(unsigned int length)
         }
 
         newsamples = new int32_t[size];
-        memcpy(newsamples, samples, this->length * sizeof(int32_t));
+        __memcpy(newsamples, samples, this->length * sizeof(int32_t));
         delete[] samples;
         samples = newsamples;
     }
 
-    memset(&samples[this->length], 0, sizeof(int32_t) * (length - this->length));
+    __memset(&samples[this->length], 0, sizeof(int32_t) * (length - this->length));
     this->length = length;
 }
 

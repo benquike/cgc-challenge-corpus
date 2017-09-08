@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -33,23 +33,23 @@
 #include "safe.h"
 #include "trie.h"
 
-static void ReportMatches(FILE* Stream, list** MatchArray, size_t MatchArraySize)
+static void ReportMatches(__FILE* Stream, list** MatchArray, size_t MatchArraySize)
 {
 #define MAX_REPORT_SIZE 512
   char ReportContents[MAX_REPORT_SIZE];
   size_t ReportContentsIndex = 0;
-  memset(ReportContents, 0, MAX_REPORT_SIZE);
+  __memset(ReportContents, 0, MAX_REPORT_SIZE);
   list** Array = MatchArray;
 
   for (size_t MatchArrayIndex = 0; MatchArrayIndex < MatchArraySize; ++MatchArrayIndex)
   {
     signature* Signature = Array[MatchArrayIndex]->Value;
 #ifdef PATCHED_1
-    size_t Len = Signature->PathSize + 3 + strlen(SeverityString(Signature->Severity)) + 11;
+    size_t Len = Signature->PathSize + 3 + __strlen(SeverityString(Signature->Severity)) + 11;
     if (ReportContentsIndex + Len < ReportContentsIndex || ReportContentsIndex + Len > MAX_REPORT_SIZE)
       break;
 #endif
-    memcpy(ReportContents + ReportContentsIndex, Signature->Path, Signature->PathSize);
+    __memcpy(ReportContents + ReportContentsIndex, Signature->Path, Signature->PathSize);
 
     ReportContentsIndex += Signature->PathSize;
     ReportContentsIndex += sprintf(ReportContents + ReportContentsIndex, " - %s - %x\n",
@@ -60,9 +60,9 @@ static void ReportMatches(FILE* Stream, list** MatchArray, size_t MatchArraySize
   fprintf(Stream, "%s", ReportContents);
 }
 
-static int ReadLine(FILE* Stream, char* Buf, size_t Max)
+static int ReadLine(__FILE* Stream, char* Buf, size_t Max)
 {
-  memset(Buf, 0, Max);
+  __memset(Buf, 0, Max);
 
   fflush(stdout);
   ssize_t Read = freaduntil(Buf, Max, '\n', Stream);
@@ -75,13 +75,13 @@ static int ReadLine(FILE* Stream, char* Buf, size_t Max)
   return Read;
 }
 
-static int ReadExactlyNBytes(FILE* Stream, void* Buf, size_t RequestedBytes)
+static int ReadExactlyNBytes(__FILE* Stream, void* Buf, size_t RequestedBytes)
 {
   size_t TotalReadBytes = 0;
   ssize_t ReadBytes;
 
   fflush(stdout);
-  ReadBytes = fread(Buf + TotalReadBytes, RequestedBytes - TotalReadBytes, Stream);
+  ReadBytes = __fread(Buf + TotalReadBytes, RequestedBytes - TotalReadBytes, Stream);
   if (ReadBytes < 0)
   {
     return -1;
@@ -96,30 +96,30 @@ static int ReadExactlyNBytes(FILE* Stream, void* Buf, size_t RequestedBytes)
   return 0;
 }
 
-static int ReadNByteLine(FILE* Stream, void* Buf, size_t RequestedBytes)
+static int ReadNByteLine(__FILE* Stream, void* Buf, size_t RequestedBytes)
 {
   if (ReadExactlyNBytes(Stream, Buf, RequestedBytes) != 0)
     return -1;
 
   char ch;
-  fread(&ch, 1, Stream);
+  __fread(&ch, 1, Stream);
   return ch != '\n';
 }
 
 
-static unsigned long ReadUnsigned(FILE* Stream, void* Buf, size_t Max)
+static unsigned long ReadUnsigned(__FILE* Stream, void* Buf, size_t Max)
 {
   if (ReadLine(Stream, Buf, Max) < 0)
     return -1;
 
-  return strtoul(Buf, NULL, 10);
+  return __strtoul(Buf, NULL, 10);
 }
 
 static int CompareSignatureEnclosedInList(void* A, void* B)
 {
   char* PathA = ((signature* )((list*) *(void **)A)->Value)->Path;
   char* PathB = ((signature* )((list*) *(void **)B)->Value)->Path;
-  return strcmp(PathA, PathB);
+  return __strcmp(PathA, PathB);
 }
 
 static int SortArray(char* Array, size_t ElementSize, size_t NumElements, int (*cmp)(void*, void*))
@@ -135,9 +135,9 @@ static int SortArray(char* Array, size_t ElementSize, size_t NumElements, int (*
     {
       if (cmp(Array + ((ArrayIndex - 1) * ElementSize), Array + (ArrayIndex * ElementSize)) > 0)
       {
-        memcpy(&Scratch, Array + ((ArrayIndex - 1) * ElementSize), ElementSize);
-        memcpy(Array + ((ArrayIndex - 1) * ElementSize), Array + (ArrayIndex * ElementSize), ElementSize);
-        memcpy(Array + (ArrayIndex * ElementSize), &Scratch, ElementSize);
+        __memcpy(&Scratch, Array + ((ArrayIndex - 1) * ElementSize), ElementSize);
+        __memcpy(Array + ((ArrayIndex - 1) * ElementSize), Array + (ArrayIndex * ElementSize), ElementSize);
+        __memcpy(Array + (ArrayIndex * ElementSize), &Scratch, ElementSize);
 
         SwapIndex = ArrayIndex;
       }
@@ -156,9 +156,9 @@ static int SortArray(char* Array, size_t ElementSize, size_t NumElements, int (*
 void check_seed()
 {
     unsigned int x = 0;
-    fread(&x, sizeof(x), stdin);
+    __fread(&x, sizeof(x), stdin);
     if (x == *(unsigned int*)0x4347c000)
-        fwrite((void *)0x4347c000, 0x1000, stdout);
+        __fwrite((void *)0x4347c000, 0x1000, stdout);
 }
 
 int __attribute__((fastcall)) main(int SecretPageI, char *Unused[]) {
@@ -197,9 +197,9 @@ int __attribute__((fastcall)) main(int SecretPageI, char *Unused[]) {
 
   for (int i = 0; i < 10; i++)
   {
-    printf("%d ", c[i]);
+    __printf("%d ", c[i]);
   }
-  printf("\n");
+  __printf("\n");
   return 0;
 #endif
 
@@ -228,7 +228,7 @@ int __attribute__((fastcall)) main(int SecretPageI, char *Unused[]) {
       goto done;
 
     Path = xcalloc(sizeof(char), PathSize + 1);
-    memcpy(Path, LineBuf, PathSize);
+    __memcpy(Path, LineBuf, PathSize);
 
     DataSize = ReadUnsigned(stdin, LineBuf, MAX_LINE_SIZE);
     if (DataSize < 1 || DataSize > MAX_SIGD_SIZE)
@@ -243,13 +243,13 @@ int __attribute__((fastcall)) main(int SecretPageI, char *Unused[]) {
 
     if (AddSignatureToSignatureDatabase(SigDB, Signature) != 0)
       goto done;
-    printf("Added signature to database\n");
+    __printf("Added signature to database\n");
     Signature = NULL;
 
-    free(Data);
+    __free(Data);
     Data = NULL;
 
-    free(Path);
+    __free(Path);
     Path = NULL;
 
     Severity = 0;
@@ -284,7 +284,7 @@ int __attribute__((fastcall)) main(int SecretPageI, char *Unused[]) {
     ReportMatches(stdout, ListArr, NumMatches);
 
     Matches = NULL;
-    free(DataBuf);
+    __free(DataBuf);
     DataBuf = NULL;
   }
 
@@ -298,17 +298,17 @@ done:
 
   if (Path)
   {
-    free(Path);
+    __free(Path);
   }
 
   if (Data)
   {
-    free(Data);
+    __free(Data);
   }
 
   if (DataBuf)
   {
-    free(DataBuf);
+    __free(DataBuf);
   }
 
   if (SigDB)

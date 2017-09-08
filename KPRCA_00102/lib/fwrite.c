@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -23,7 +23,7 @@
 #include <string.h>
 #include "stdio_private.h"
 
-ssize_t fwrite(const void *ptr, size_t size, FILE *stream)
+ssize_t __fwrite(const void *ptr, size_t size, __FILE *stream)
 {
     const char *buf = ptr;
     size_t idx = 0, tx;
@@ -47,24 +47,24 @@ unbuffered:
     {
         if (size >= sizeof(stream->buffer))
         {
-            fflush(stream);
+            __fflush(stream);
             goto unbuffered;
         }
 
         if (stream->length + size >= sizeof(stream->buffer))
         {
             tx = sizeof(stream->buffer) - stream->length;
-            memcpy(stream->buffer + stream->length, buf, tx);
+            __memcpy(stream->buffer + stream->length, buf, tx);
             stream->length += tx;
             idx += tx;
 
-            fflush(stream);
+            __fflush(stream);
         }
 
         if (idx < size)
         {
             tx = size - idx;
-            memcpy(stream->buffer + stream->length, buf + idx, tx);
+            __memcpy(stream->buffer + stream->length, buf + idx, tx);
             stream->length += tx;
             idx += tx;
         }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -50,14 +50,14 @@ static void debug_state_helper(state_t *state, int level) {
     g_states_checked[g_state_length++] = state->id;
 
     for (i = 0; i < level; i++)
-        printf("---");
+        __printf("---");
     if(str[0] == EPSILON)
-        printf(">%d", state->id);
+        __printf(">%d", state->id);
     else
-        printf(">%s", str);
+        __printf(">%s", str);
     if (state->is_accepting_state)
-        printf("::Accepting State Id::%d", state->id);
-    printf("\n");
+        __printf("::Accepting State Id::%d", state->id);
+    __printf("\n");
 
     debug_state_helper(state->t1, level + 1);
     debug_state_helper(state->t2, level + 1);
@@ -68,11 +68,11 @@ static int match_helper(state_t *state, unsigned char *str, int match_len, match
         return 0;
 
 #ifdef PATCHED
-    if (g_epsilon_loop[state->id] > strlen(str))
+    if (g_epsilon_loop[state->id] > __strlen(str))
 #else
-    if (g_epsilon_loop[state->id] >= strlen(str))
+    if (g_epsilon_loop[state->id] >= __strlen(str))
 #endif
-        g_epsilon_loop[state->id] = strlen(str);
+        g_epsilon_loop[state->id] = __strlen(str);
     else
         return 0;
 
@@ -111,7 +111,7 @@ static int match_helper(state_t *state, unsigned char *str, int match_len, match
 void debug_state(state_t *state)
 {
     if(g_states_checked == NULL)
-        g_states_checked = malloc(sizeof(int) * MAX_STATES);
+        g_states_checked = __malloc(sizeof(int) * MAX_STATES);
     g_state_length = 0;
     return debug_state_helper(state, 0);
 }
@@ -121,11 +121,11 @@ void debug_state(state_t *state)
 void match(state_t *state, unsigned char *str, match_type_e match_type)
 {
     int i, match_len = 0, end_of_str = 0;
-    unsigned char *tstr = malloc(strlen(str) + 1), *line = tstr, *tline = tstr, *ptstr = tstr;
-    memcpy(tstr, str, strlen(str) + 1);
+    unsigned char *tstr = __malloc(__strlen(str) + 1), *line = tstr, *tline = tstr, *ptstr = tstr;
+    __memcpy(tstr, str, __strlen(str) + 1);
 
     if(g_epsilon_loop == NULL)
-        g_epsilon_loop = malloc(sizeof(int) * MAX_STATES);
+        g_epsilon_loop = __malloc(sizeof(int) * MAX_STATES);
 
     while(!end_of_str) {
         tstr++;
@@ -138,7 +138,7 @@ void match(state_t *state, unsigned char *str, match_type_e match_type)
 
                 match_len = match_helper(state, tline, 0, match_type);
                 if (match_len) {
-                    printf("%s\n", line);
+                    __printf("%s\n", line);
                     break;
                 } else if (match_type == ALL) {
                     break;
@@ -151,12 +151,12 @@ void match(state_t *state, unsigned char *str, match_type_e match_type)
             tline = line;
         }
     }
-    free(ptstr);
+    __free(ptstr);
 }
 
 state_t *evalrpn(unsigned char *rpn) {
     if (!g_stack)
-        g_stack = malloc(sizeof(state_t *) * MAX_STATES);
+        g_stack = __malloc(sizeof(state_t *) * MAX_STATES);
 
     state_t **stack = g_stack;
     state_t *temp_state;

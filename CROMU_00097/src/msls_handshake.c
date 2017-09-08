@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -91,7 +91,7 @@ void msls_handle_handshake(SERVER_STATE *state, SLS_MESSAGE *msg)
       msls_send_hello_done(connection);
       if (connection->magic)
       {
-        free(connection->magic);
+        __free(connection->magic);
         connection->magic = NULL;
       }
       break;
@@ -123,12 +123,12 @@ void msls_handle_handshake(SERVER_STATE *state, SLS_MESSAGE *msg)
       const MSLS_CLIENT_KEYX_MSG *hs_keyx_msg = (MSLS_CLIENT_KEYX_MSG *)((uint8_t *)hs_msg + SLS_HANDSHAKE_HEADER_LEN);
 
       // Read the client key from the message
-      connection->client_key = calloc(sizeof(uint32_t) *PUBLIC_KEY_LEN);
-      memcpy((uint8_t *)connection->client_key, (uint8_t *)hs_keyx_msg->key, sizeof(uint32_t) *PUBLIC_KEY_LEN);
+      connection->client_key = __calloc(sizeof(uint32_t) *PUBLIC_KEY_LEN);
+      __memcpy((uint8_t *)connection->client_key, (uint8_t *)hs_keyx_msg->key, sizeof(uint32_t) *PUBLIC_KEY_LEN);
       connection->have_key = 1;
       
       // Read pre-master secret from message
-      connection->client_secret = calloc(sizeof(uint32_t) * PUBLIC_KEY_LEN);
+      connection->client_secret = __calloc(sizeof(uint32_t) * PUBLIC_KEY_LEN);
       for (int i = 0; i < PUBLIC_KEY_LEN; i++)
       {
         connection->client_secret[i] = connection->server_key[i] ^ hs_keyx_msg->pre_secret[i];
@@ -217,9 +217,9 @@ void msls_handle_handshake(SERVER_STATE *state, SLS_MESSAGE *msg)
 
 void msls_send_hello_verify(SERVER_STATE *state, uint32_t connection_id)
 {
-  SLS_MESSAGE *msg = calloc(sizeof(SLS_MESSAGE));
-  SLS_HANDSHAKE_MESSAGE *hs_msg = calloc(sizeof(SLS_HANDSHAKE_MESSAGE));
-  MSLS_HELLO_VERIFY_MSG *hs_hv_msg = calloc(sizeof(MSLS_HELLO_VERIFY_MSG));
+  SLS_MESSAGE *msg = __calloc(sizeof(SLS_MESSAGE));
+  SLS_HANDSHAKE_MESSAGE *hs_msg = __calloc(sizeof(SLS_HANDSHAKE_MESSAGE));
+  MSLS_HELLO_VERIFY_MSG *hs_hv_msg = __calloc(sizeof(MSLS_HELLO_VERIFY_MSG));
 
   // Create MSLS_HELLO_VERIFY_MSG
   hs_hv_msg->server_version = SLS_VERSION;
@@ -247,9 +247,9 @@ void msls_send_hello_verify(SERVER_STATE *state, uint32_t connection_id)
 
 void msls_send_server_hello(CLIENT_CONTEXT *context)
 {
-  SLS_MESSAGE *msg = calloc(sizeof(SLS_MESSAGE));
-  SLS_HANDSHAKE_MESSAGE *hs_msg = calloc(sizeof(SLS_HANDSHAKE_MESSAGE));
-  MSLS_SERVER_HELLO_MSG *hs_sh_msg = calloc(sizeof(MSLS_SERVER_HELLO_MSG));
+  SLS_MESSAGE *msg = __calloc(sizeof(SLS_MESSAGE));
+  SLS_HANDSHAKE_MESSAGE *hs_msg = __calloc(sizeof(SLS_HANDSHAKE_MESSAGE));
+  MSLS_SERVER_HELLO_MSG *hs_sh_msg = __calloc(sizeof(MSLS_SERVER_HELLO_MSG));
 
   // Create MSLS_SERVER_HELLO_MSG
   hs_sh_msg->server_version = SLS_VERSION;
@@ -276,12 +276,12 @@ void msls_send_server_hello(CLIENT_CONTEXT *context)
 
 void msls_send_keyx(CLIENT_CONTEXT *context)
 {
-  SLS_MESSAGE *msg = calloc(sizeof(SLS_MESSAGE));
-  SLS_HANDSHAKE_MESSAGE *hs_msg = calloc(sizeof(SLS_HANDSHAKE_MESSAGE));
-  MSLS_SERVER_KEYX_MSG *hs_kx_msg = calloc(sizeof(MSLS_SERVER_KEYX_MSG));
+  SLS_MESSAGE *msg = __calloc(sizeof(SLS_MESSAGE));
+  SLS_HANDSHAKE_MESSAGE *hs_msg = __calloc(sizeof(SLS_HANDSHAKE_MESSAGE));
+  MSLS_SERVER_KEYX_MSG *hs_kx_msg = __calloc(sizeof(MSLS_SERVER_KEYX_MSG));
 
   // Create MSLS_SERVER_KEYX_MSG
-  context->server_key = calloc(sizeof(uint32_t) * PUBLIC_KEY_LEN);
+  context->server_key = __calloc(sizeof(uint32_t) * PUBLIC_KEY_LEN);
   for (int i=0; i< PUBLIC_KEY_LEN; i++)
   { 
     context->server_key[i] = ((uint32_t *)PUBLIC_KEY_BASE1)[i] ^ ((uint32_t *)PUBLIC_KEY_BASE2)[i];
@@ -308,8 +308,8 @@ void msls_send_keyx(CLIENT_CONTEXT *context)
 
 void msls_send_hello_done(CLIENT_CONTEXT *context)
 {
-  SLS_MESSAGE *msg = calloc(sizeof(SLS_MESSAGE));
-  SLS_HANDSHAKE_MESSAGE *hs_msg = calloc(sizeof(SLS_HANDSHAKE_MESSAGE));
+  SLS_MESSAGE *msg = __calloc(sizeof(SLS_MESSAGE));
+  SLS_HANDSHAKE_MESSAGE *hs_msg = __calloc(sizeof(SLS_HANDSHAKE_MESSAGE));
   
   // Create SLS_HS_MSG Wrapper
   hs_msg->msg_type = MSLS_HS_SERVER_DONE;
@@ -332,12 +332,12 @@ void msls_send_hello_done(CLIENT_CONTEXT *context)
 
 void msls_send_finish(CLIENT_CONTEXT *context)
 {
-  SLS_MESSAGE *msg = calloc(sizeof(SLS_MESSAGE));
-  SLS_HANDSHAKE_MESSAGE *hs_msg = calloc(sizeof(SLS_HANDSHAKE_MESSAGE));
-  MSLS_FINISHED_MSG *hs_fin_msg = calloc(sizeof(MSLS_FINISHED_MSG));
+  SLS_MESSAGE *msg = __calloc(sizeof(SLS_MESSAGE));
+  SLS_HANDSHAKE_MESSAGE *hs_msg = __calloc(sizeof(SLS_HANDSHAKE_MESSAGE));
+  MSLS_FINISHED_MSG *hs_fin_msg = __calloc(sizeof(MSLS_FINISHED_MSG));
 
   // Generate server secret
-  context->server_secret = calloc(PUBLIC_KEY_LEN * sizeof(uint32_t));
+  context->server_secret = __calloc(PUBLIC_KEY_LEN * sizeof(uint32_t));
   for (int i=0; i < PUBLIC_KEY_LEN; i++)
   {
     context->server_secret[i] = ((uint32_t *)SERVER_SECRET1)[i] ^ ((uint32_t *)SERVER_SECRET2)[i];
@@ -385,14 +385,14 @@ CLIENT_CONTEXT *msls_get_connection(SERVER_STATE *state, uint32_t client_id)
     if (state->connections[i] == NULL)
     {
 
-      connection = calloc(sizeof(CLIENT_CONTEXT));
+      connection = __calloc(sizeof(CLIENT_CONTEXT));
       debug_print("Created connection at $x\n", connection);
       connection->connection_id = client_id;
       state->connections[i] = connection;
-      uint32_t *cookie = calloc(MSLS_COOKIE_SIZE * sizeof(uint32_t));
-      uint32_t *magic = calloc(MSLS_COOKIE_SIZE * sizeof(uint32_t));
-      memcpy(cookie, (uint8_t *)COOKIE_BASE1, MSLS_COOKIE_SIZE * sizeof(uint32_t));
-      memcpy(magic, (uint8_t *)COOKIE_BASE2 , MSLS_COOKIE_SIZE * sizeof(uint32_t));
+      uint32_t *cookie = __calloc(MSLS_COOKIE_SIZE * sizeof(uint32_t));
+      uint32_t *magic = __calloc(MSLS_COOKIE_SIZE * sizeof(uint32_t));
+      __memcpy(cookie, (uint8_t *)COOKIE_BASE1, MSLS_COOKIE_SIZE * sizeof(uint32_t));
+      __memcpy(magic, (uint8_t *)COOKIE_BASE2 , MSLS_COOKIE_SIZE * sizeof(uint32_t));
       for (int j = 0; j < MSLS_COOKIE_SIZE; j++)
       {
         cookie[j] = (cookie[j] ^ magic[j]) ^ client_id;
@@ -447,7 +447,7 @@ void msls_destroy_connection(SERVER_STATE *state, uint32_t client_id)
 
 void msls_set_cookie(SERVER_STATE *state)
 {
-  state->cookie_base = calloc(MSLS_COOKIE_SIZE * sizeof(uint32_t));
+  state->cookie_base = __calloc(MSLS_COOKIE_SIZE * sizeof(uint32_t));
   for (int i=0; i< MSLS_COOKIE_SIZE; i++)
   {
     state->cookie_base[i] = *(uint32_t *)(COOKIE_BASE1 + i*4) ^ *(uint32_t *)(COOKIE_BASE2 + i*4) ;
@@ -459,11 +459,11 @@ void destroy_context(CLIENT_CONTEXT *context)
 {
   if (context)
   {
-    free(context->cookie);
-    free(context->client_key);
-    free(context->server_key);
-    free(context->server_secret);
-    free(context->client_secret);
+    __free(context->cookie);
+    __free(context->client_key);
+    __free(context->server_key);
+    __free(context->server_secret);
+    __free(context->client_secret);
   }
   return;
 }

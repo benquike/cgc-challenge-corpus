@@ -4,7 +4,7 @@ Author: James Nuttall <james@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,12 +35,12 @@ SensorManager::~SensorManager()
 
 void SensorManager::PrintSensors()
 {
-	printf( "  print sensors for user: $x\n", m_currentUser );
+	__printf( "  print sensors for user: $x\n", m_currentUser );
 	for ( FitnessSensor *pCur = m_sensorList.GetFirst(); pCur; pCur = m_sensorList.GetNext( pCur ) )
 	{
 		pCur->Print();
 	}
-	printf("\n");
+	__printf("\n");
 }
 
 uint8_t *SensorManager::ListSensors( uint16_t &buffer_len)
@@ -49,7 +49,7 @@ uint8_t *SensorManager::ListSensors( uint16_t &buffer_len)
 				
 // each sensor is 2b ID, 4b mac: 6B
 	uint8_t data[ 6 * MAX_SENSORS_PER_USER * MAX_USERS ];
-	bzero( data, 6 * MAX_SENSORS_PER_USER * MAX_USERS );
+	__bzero( data, 6 * MAX_SENSORS_PER_USER * MAX_USERS );
 
 	uint8_t *buff = (uint8_t *)&data;
 
@@ -77,10 +77,10 @@ uint8_t *SensorManager::ListSensors( uint16_t &buffer_len)
 				count_per_user++;
 				uint16_t id = pSensor->GetID();
 				uint32_t mac = pSensor->GetMacAsInt();
-				memcpy( &buff[buffer_len], &id, sizeof( uint16_t ) );
+				__memcpy( &buff[buffer_len], &id, sizeof( uint16_t ) );
 
 				buffer_len += sizeof( uint16_t );
-				memcpy( &buff[buffer_len], &mac, sizeof( uint32_t ) );
+				__memcpy( &buff[buffer_len], &mac, sizeof( uint32_t ) );
 				buffer_len += sizeof( uint32_t );
 
 				if (pSensor->GetType() == BIKE)
@@ -89,15 +89,15 @@ uint8_t *SensorManager::ListSensors( uint16_t &buffer_len)
 
 					if (data)
 					{
-						uint32_t len = strlen((char *)data);
+						uint32_t len = __strlen((char *)data);
 #ifdef PATCHED_1		
 						if ( buffer_len < ( 6 * MAX_SENSORS_PER_USER * MAX_USERS - len + 1) )
 						{
-							memcpy(&buff[buffer_len], data, len);
+							__memcpy(&buff[buffer_len], data, len);
 							buffer_len += len;
 						}
 #else
-						memcpy(&buff[buffer_len], data, len);
+						__memcpy(&buff[buffer_len], data, len);
 
 						return NULL;
 #endif
@@ -107,7 +107,7 @@ uint8_t *SensorManager::ListSensors( uint16_t &buffer_len)
 		}
 	}
 	uint8_t *rbuf = new uint8_t[buffer_len];
-	memcpy(rbuf, data, buffer_len);
+	__memcpy(rbuf, data, buffer_len);
 	return rbuf;
 }
 

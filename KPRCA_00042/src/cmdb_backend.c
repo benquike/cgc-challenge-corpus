@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -61,7 +61,7 @@ static char *check_genre(char *genre)
 {
     size_t i = 0;
     for (i = 0; i < g_num_genres; i++) {
-        if(strcmp(genre, g_all_genres[i]) == 0)
+        if(__strcmp(genre, g_all_genres[i]) == 0)
             return g_all_genres[i];
     }
 
@@ -72,7 +72,7 @@ static char *check_rating(char *rating)
 {
     size_t i = 0;
     for (i = 0; i < g_num_mpaa_ratings; i++) {
-        if(strcmp(rating, g_all_mpaa_ratings[i]) == 0)
+        if(__strcmp(rating, g_all_mpaa_ratings[i]) == 0)
             return g_all_mpaa_ratings[i];
     }
 
@@ -114,12 +114,12 @@ int add_movie(char *name, char *desc, short year, char score, char *type, char *
     if (score < 0 || score > 100)
         return -1;
 
-    cmdb_entry_t *row = malloc(sizeof(cmdb_entry_t));
+    cmdb_entry_t *row = __malloc(sizeof(cmdb_entry_t));
     if (!row)
         return -1;
 
-    row->name = strdup(name);
-    row->desc = strdup(desc);
+    row->name = __strdup(name);
+    row->desc = __strdup(desc);
     row->year = year;
     row->score = score;
     row->type = genre;
@@ -127,7 +127,7 @@ int add_movie(char *name, char *desc, short year, char score, char *type, char *
     row->is_checked_out = 0;
 
     if (add_entry(row) != 0) {
-        free(row);
+        __free(row);
         return -1;
     }
 
@@ -137,7 +137,7 @@ int add_movie(char *name, char *desc, short year, char score, char *type, char *
 int add_entry(cmdb_entry_t *entry)
 {
     if (g_list_size == 0) {
-        g_cmdb = malloc(sizeof(cmdb_entry_t) * 16);
+        g_cmdb = __malloc(sizeof(cmdb_entry_t) * 16);
         if (!g_cmdb) {
             return -1;
         }
@@ -145,18 +145,18 @@ int add_entry(cmdb_entry_t *entry)
     } else if(g_list_size == g_list_length) {
         size_t i;
         cmdb_entry_t *temp_db = g_cmdb;
-        g_cmdb = malloc(sizeof(cmdb_entry_t) * g_list_size<<1);
+        g_cmdb = __malloc(sizeof(cmdb_entry_t) * g_list_size<<1);
         if (!g_cmdb) {
             g_cmdb = temp_db;
             return -1;
         }
-        memcpy(g_cmdb, temp_db, (sizeof(cmdb_entry_t) * g_list_size));
+        __memcpy(g_cmdb, temp_db, (sizeof(cmdb_entry_t) * g_list_size));
 
         g_list_size <<= 1;
-        free(temp_db);
+        __free(temp_db);
     }
 
-    memcpy(&g_cmdb[g_list_length++], entry, sizeof(cmdb_entry_t));
+    __memcpy(&g_cmdb[g_list_length++], entry, sizeof(cmdb_entry_t));
     return 0;
 }
 
@@ -169,14 +169,14 @@ int delete_entry(int id)
         return -1;
     id--;
 
-    free(g_cmdb[id].name);
-    free(g_cmdb[id].desc);
+    __free(g_cmdb[id].name);
+    __free(g_cmdb[id].desc);
 
     if (id+1 < g_list_length)
-        memcpy(&g_cmdb[id], &g_cmdb[id+1], sizeof(cmdb_entry_t) * (g_list_length - (id+1)));
+        __memcpy(&g_cmdb[id], &g_cmdb[id+1], sizeof(cmdb_entry_t) * (g_list_length - (id+1)));
 
     g_list_length--;
-    printf("Successfully removed the movie!\n");
+    __printf("Successfully removed the movie!\n");
     return 0;
 }
 
@@ -187,14 +187,14 @@ int rent_entry(int id)
     id--;
 
     if (g_cmdb[id].is_checked_out) {
-        printf("Sorry, [%s] is already rented at this time. Please try again later.\n", g_cmdb[id].name);
+        __printf("Sorry, [%s] is already rented at this time. Please try again later.\n", g_cmdb[id].name);
         return 1;
     }
 
     g_cmdb[id].is_checked_out = 1;
     g_num_rented++;
 
-    printf("Successfully rented [%s]! Enjoy!\n", g_cmdb[id].name);
+    __printf("Successfully rented [%s]! Enjoy!\n", g_cmdb[id].name);
     return 0;
 }
 
@@ -213,7 +213,7 @@ int return_entry(int id)
         if (j == id) {
             g_cmdb[i].is_checked_out = 0;
             g_num_rented--;
-            printf("Successfully returned [%s]! Thank you!\n", g_cmdb[i].name);
+            __printf("Successfully returned [%s]! Thank you!\n", g_cmdb[i].name);
             return 0;
         }
     }
@@ -225,7 +225,7 @@ cmdb_entry_t *find_entry(char *name)
 {
     int i;
     for (i = 0; i < g_list_length; i++) {
-        if (strcmp(g_cmdb[i].name, name) == 0)
+        if (__strcmp(g_cmdb[i].name, name) == 0)
             return &g_cmdb[i];
     }
 
@@ -242,8 +242,8 @@ cmdb_entry_t *get_entry(int id)
 
 void print_entry(cmdb_entry_t *entry)
 {
-    printf("%s (%d, %s) - %s [%d/100]\n", entry->name, entry->year, entry->mpaa, entry->type, entry->score);
-    printf("  => %s\n", entry->desc);
+    __printf("%s (%d, %s) - %s [%d/100]\n", entry->name, entry->year, entry->mpaa, entry->type, entry->score);
+    __printf("  => %s\n", entry->desc);
 }
 
 void print_movies(filter_e filter)
@@ -251,31 +251,31 @@ void print_movies(filter_e filter)
     int i;
 
     if (filter == ALL || filter == OWNED) {
-        printf("\nMovies (Full)\n");
-        printf("--------------\n");
+        __printf("\nMovies (Full)\n");
+        __printf("--------------\n");
 
         for (i = 0; i < g_list_length; i++) {
-            printf("[%d] ", i+1);
+            __printf("[%d] ", i+1);
             print_entry(&g_cmdb[i]);
         }
 
-        printf("--------------\n");
-        printf("%d movie(s)\n", g_list_length);
+        __printf("--------------\n");
+        __printf("%d movie(s)\n", g_list_length);
     }
     if (filter == ALL || filter == RENTED) {
         int j = 0;
-        printf("\nMovies (Rented)\n");
-        printf("--------------\n");
+        __printf("\nMovies (Rented)\n");
+        __printf("--------------\n");
 
         for (i = 0; (i < g_list_length) && g_num_rented; i++) {
             if (g_cmdb[i].is_checked_out) {
-                printf("[%d] ", ++j);
+                __printf("[%d] ", ++j);
                 print_entry(&g_cmdb[i]);
             }
         }
 
-        printf("--------------\n");
-        printf("%d movie(s)\n", g_num_rented);
+        __printf("--------------\n");
+        __printf("%d movie(s)\n", g_num_rented);
     }
 }
 
@@ -284,21 +284,21 @@ void print_genres()
     int i;
     for (i = 0; i < g_num_genres; i++) {
 #ifndef PATCHED
-        printf("\n %d. ", i+1);
-        printf(g_all_genres[i]);
+        __printf("\n %d. ", i+1);
+        __printf(g_all_genres[i]);
 #else
-        printf("\n %d. %s", i+1, g_all_genres[i]);
+        __printf("\n %d. %s", i+1, g_all_genres[i]);
 #endif
     }
-    printf("\n");
+    __printf("\n");
 }
 
 void print_ratings()
 {
     int i;
     for (i = 0; i < g_num_mpaa_ratings; i++)
-        printf("\n %d. %s", i+1, g_all_mpaa_ratings[i]);
-    printf("\n");
+        __printf("\n %d. %s", i+1, g_all_mpaa_ratings[i]);
+    __printf("\n");
 }
 
 //Debug add genre
@@ -308,7 +308,7 @@ void dag(char *new_genre)
         return;
 
     if (g_num_genres < 10)
-        g_all_genres[g_num_genres++] = strdup(new_genre);
+        g_all_genres[g_num_genres++] = __strdup(new_genre);
 }
 
 //Debug add rating
@@ -318,6 +318,6 @@ void dar(char *new_rating)
         return;
 
     if (g_num_mpaa_ratings < 10)
-        g_all_mpaa_ratings[g_num_mpaa_ratings++] = strdup(new_rating);
+        g_all_mpaa_ratings[g_num_mpaa_ratings++] = __strdup(new_rating);
 }
 

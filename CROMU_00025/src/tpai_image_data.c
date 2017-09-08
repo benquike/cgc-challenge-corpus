@@ -1,7 +1,7 @@
 /*
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -91,7 +91,7 @@ int tpai_display_image( ptpai_image_data tid )
 		return 0;
 	}
 
-	memset( image, ' ', image_length);
+	__memset( image, ' ', image_length);
 	image[image_length] = '\x00';
 
 	while ( tpai_read_pixel( tid, &pixel) != 0 ) {
@@ -136,7 +136,7 @@ int tpai_display_image( ptpai_image_data tid )
 		index = (row * tid->width) + column;
 
 		if ( index > image_length ) {
-			printf("[ERROR] Pixel out of bounds\n");
+			__printf("[ERROR] Pixel out of bounds\n");
 			deallocate( image, image_length + 1 );
 			return 0;
 		}
@@ -147,13 +147,13 @@ int tpai_display_image( ptpai_image_data tid )
 
 	for (index = 0; index < image_length; index++) {
 		if ( index % tid->width == 0 && index != 0 ) {
-			printf("\n");
+			__printf("\n");
 		}
 
-		printf("@c", image[index]);
+		__printf("@c", image[index]);
 	}
 
-	printf("\n");
+	__printf("\n");
 	deallocate(image, image_length + 1 );
 
 	return 1;

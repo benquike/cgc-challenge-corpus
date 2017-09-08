@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdint.h>
 
-size_t strlen( const char *str )
+size_t __strlen( const char *str )
 {
 	size_t len = 0;
 	while ( *str++ != '\0' )
@@ -10,14 +10,14 @@ size_t strlen( const char *str )
 	return len;
 }
 
-void bzero(void *s, size_t n) {
+void __bzero(void *s, size_t n) {
         while (n) {
                 ((char *)s)[--n] = '\0';
         }
         ((char *)s)[n] = '\0';
 }
 
-void *memset( void *ptr, int value, size_t num )
+void *__memset( void *ptr, int value, size_t num )
 {
 	void *ptr_temp = ptr;
 	uint8_t set_value_byte = (uint8_t)value;

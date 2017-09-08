@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -46,7 +46,7 @@ data_item_type *next_ptr;
 	// make sure the tree already exists
 	if (!*head) {
 
-		*head=(bst_node_type *)calloc(1, sizeof(bst_node_type));
+		*head=(bst_node_type *)__calloc(1, sizeof(bst_node_type));
 
 		// memory allocation failed
 		if (!*head) {
@@ -89,7 +89,7 @@ data_item_type *next_ptr;
 			}
 			else {
 
-				tmp_node->left=(bst_node_type *)calloc(1, sizeof(bst_node_type));
+				tmp_node->left=(bst_node_type *)__calloc(1, sizeof(bst_node_type));
 
 				if (!tmp_node->left) {
 					return(-1);
@@ -111,7 +111,7 @@ data_item_type *next_ptr;
 			}
 			else {
 
-				tmp_node->right=(bst_node_type *)calloc(1, sizeof(bst_node_type));
+				tmp_node->right=(bst_node_type *)__calloc(1, sizeof(bst_node_type));
 
 				if (!tmp_node->right) {
 					return(-1);
@@ -128,7 +128,7 @@ data_item_type *next_ptr;
 		else   {  
 		
 			// if the strings don't match, its a key collision
-			if (strcmp(tmp_node->data->name, data->name)!=0) {
+			if (__strcmp(tmp_node->data->name, data->name)!=0) {
 
 				// so move to the end of the linked list and add the new data
 				next_ptr=tmp_node->data;
@@ -196,9 +196,9 @@ data_item_type *prev_ptr, *next_ptr;
 		next_ptr=prev_ptr->next;
 
 		// check the first entry because if its the match we need to update the pointer stored in the BST node
-		if (strcmp(tmp_node->data->name, str)==0) {
+		if (__strcmp(tmp_node->data->name, str)==0) {
 
-			free(prev_ptr);
+			__free(prev_ptr);
 			tmp_node->data=next_ptr;
 			tmp_node->data_count--;
 			return (0);
@@ -208,8 +208,8 @@ data_item_type *prev_ptr, *next_ptr;
 		// otherwise, cycle through the remainder of the linked list looking for a match
 		while (next_ptr!= 0) {
 
-			//	printf("looking for appended element\n");
-			if (strcmp(next_ptr->name, str)==0) {
+			//	__printf("looking for appended element\n");
+			if (__strcmp(next_ptr->name, str)==0) {
 
 				prev_ptr->next = next_ptr->next;
 				tmp_node->data_count--;
@@ -218,7 +218,7 @@ data_item_type *prev_ptr, *next_ptr;
 #else				
 				next_ptr=next_ptr->next;
 #endif
-				free(next_ptr);
+				__free(next_ptr);
 
 				break;
 			}
@@ -237,11 +237,11 @@ data_item_type *prev_ptr, *next_ptr;
 	// if the node has no children, delete it
 	if (tmp_node->left == 0 && tmp_node->right == 0) {
 
-		//printf("only one child node on this delete\n");
+		//__printf("only one child node on this delete\n");
 		if (tmp_node==*head) {
 
-			free((*head)->data);
-			free(*head);
+			__free((*head)->data);
+			__free(*head);
 			*head=0;
 			return 0;
 		}
@@ -252,8 +252,8 @@ data_item_type *prev_ptr, *next_ptr;
 		else
 			previous_node->right=0;
 
-		free(tmp_node->data);
-		free(tmp_node);
+		__free(tmp_node->data);
+		__free(tmp_node);
 	}
 
 	// if the node has two children, promote its in-order predecessor and then delete the old node.
@@ -269,7 +269,7 @@ data_item_type *prev_ptr, *next_ptr;
 		}
 
 		// Now delete the data from the node to be deleted  and move the promote node's data there
-		free(tmp_node->data);
+		__free(tmp_node->data);
 		tmp_node->data=promote_node->data;
 		
 
@@ -286,7 +286,7 @@ data_item_type *prev_ptr, *next_ptr;
 
 		tmp_node->key=promote_node->key;
 		tmp_node->data_count=promote_node->data_count;
-		free(promote_node);
+		__free(promote_node);
 
 
 	}
@@ -296,14 +296,14 @@ data_item_type *prev_ptr, *next_ptr;
 
 		if (tmp_node==*head) {
 
-			free((*head)->data);
+			__free((*head)->data);
 
 			if (tmp_node->left !=0)
 				*head=(*head)->left;
 			else
 				*head=(*head)->right;
 
-			free(tmp_node);
+			__free(tmp_node);
 
 			return 0;
 		}
@@ -320,8 +320,8 @@ data_item_type *prev_ptr, *next_ptr;
 		else
 			previous_node->right=promote_node;
 
-		free(tmp_node->data);
-		free(tmp_node);	
+		__free(tmp_node->data);
+		__free(tmp_node);	
 
 	}
 
@@ -388,7 +388,7 @@ data_item_type *tmp_ptr;
 
 	// walk the linked list
 	while (tmp_ptr!= 0) {
-		printf("@s\n", tmp_ptr->name);
+		__printf("@s\n", tmp_ptr->name);
 		tmp_ptr=tmp_ptr->next;
 	}
 

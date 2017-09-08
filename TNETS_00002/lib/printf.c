@@ -7,7 +7,7 @@ size_t transmit_char(char d);
 size_t transmit_unsigned(unsigned int value);
 size_t transmit_string(char *string);
 
-size_t printf(const char *format, ...) {
+size_t __printf(const char *format, ...) {
     va_list ap;
     size_t count = 0;
 
@@ -53,7 +53,7 @@ size_t transmit_string(char *string) {
     size_t count;
     int ret;
 
-    count = strlen(string);
+    count = __strlen(string);
 
     ret = transmit_all(STDOUT, string, count);
     if (ret != 0) {

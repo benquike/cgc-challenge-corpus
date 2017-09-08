@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void *calloc(size_t nmemb, size_t size)
+void *__calloc(size_t nmemb, size_t size)
 {
   if (nmemb == 0 || size == 0)
     return NULL;
@@ -39,9 +39,9 @@ void *calloc(size_t nmemb, size_t size)
   if (tot / size != nmemb)
     return NULL;
 
-  void *ptr = malloc(tot);
+  void *ptr = __malloc(tot);
   if (ptr == NULL)
     return NULL;
 
-  return memset(ptr, 0, tot);
+  return __memset(ptr, 0, tot);
 }

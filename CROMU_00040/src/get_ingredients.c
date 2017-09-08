@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -43,7 +43,7 @@ Ingredient_Type *ingredient;
 	ingredient = 0;
 
 
-	printf("Enter the measurement and ingredients, one per line.  A blank line ends.\n\n");
+	__printf("Enter the measurement and ingredients, one per line.  A blank line ends.\n\n");
 
 	size=getline(buffer, sizeof(buffer));
 
@@ -53,11 +53,11 @@ Ingredient_Type *ingredient;
 	}
 	else {
 
-		 ingredient = malloc(sizeof(Ingredient_Type));
+		 ingredient = __malloc(sizeof(Ingredient_Type));
 
 		if (ingredient == 0) {
 
-			printf("unable to malloc memory\n");
+			__printf("unable to __malloc memory\n");
 			_terminate(-1);
 		}
 	}
@@ -68,15 +68,15 @@ Ingredient_Type *ingredient;
 
 		// validate ingredient entry
 
-		bzero(measurement, 1024);
-		bzero(item,1024);
+		__bzero(measurement, 1024);
+		__bzero(item,1024);
 
 		split_ingredient(buffer, measurement, 1024,  item, 1024);
 
 		ingredient->next = 0;
 
-		memcpy( ingredient->item, item, 99);
-		memcpy( ingredient->measurement, measurement, 19);
+		__memcpy( ingredient->item, item, 99);
+		__memcpy( ingredient->measurement, measurement, 19);
 
 		// store ingredient
 		++ingredients_count;
@@ -87,11 +87,11 @@ Ingredient_Type *ingredient;
 
 		if (size > 1 ) {
 
-			ingredient->next = malloc(sizeof(Ingredient_Type));
+			ingredient->next = __malloc(sizeof(Ingredient_Type));
 
 			if (ingredient->next == 0) {
 
-				printf("unable to malloc\n");
+				__printf("unable to __malloc\n");
 				_terminate(-1);
 
 			}

@@ -297,9 +297,9 @@ int main(void)
     }
 
 #ifdef PATCHED_1
-    numRead = receive_until(STDIN, buf, sizeof(buf), '\n');
+    numRead = __receive_until(STDIN, buf, sizeof(buf), '\n');
 #else
-    numRead = receive_until(STDIN, buf, sizeof(buf) * 2, '\n');
+    numRead = __receive_until(STDIN, buf, sizeof(buf) * 2, '\n');
 #endif 
     if (numRead == 0)
     {
@@ -326,7 +326,7 @@ int main(void)
 
     for (j = 0; j < curNode->numBranches; j++)
     {
-      if (strcmp(curNode->responses[j], buf) == 0)
+      if (__strcmp(curNode->responses[j], buf) == 0)
       {
         curNode = curNode->branches[j];
         bValidResponse = 1;

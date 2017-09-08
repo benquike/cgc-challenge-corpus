@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -27,7 +27,7 @@
 
 dict_t** dict_new()
 {
-  return calloc(sizeof(dict_t *), TABLE_SIZE);
+  return __calloc(sizeof(dict_t *), TABLE_SIZE);
 }
 
 unsigned int _hash(const char *str)
@@ -46,7 +46,7 @@ void* dict_find(dict_t **dict, const char *name)
   dict_t *cur = dict[_hash(name)];
   while (cur)
   {
-    if (strcmp(cur->name, name) == 0)
+    if (__strcmp(cur->name, name) == 0)
       return cur->value;
     cur = cur->next;
   }
@@ -59,10 +59,10 @@ void dict_insert(dict_t **dict, const char *name, void *value)
   dict_t *cur = dict_find(dict, name);
   if (cur == NULL)
   {
-    cur = (dict_t *) malloc(sizeof(dict_t));
+    cur = (dict_t *) __malloc(sizeof(dict_t));
     if (cur == NULL)
       goto error;
-    cur->name = strdup(name);
+    cur->name = __strdup(name);
     if (cur->name == NULL)
       goto error;
     cur->value = value;
@@ -76,8 +76,8 @@ error:
   if (cur)
   {
     if (cur->name)
-      free(cur->name);
-    free(cur);
+      __free(cur->name);
+    __free(cur);
   }
 }
 
@@ -88,15 +88,15 @@ void* dict_remove(dict_t **dict, const char *name)
   dict_t *cur = dict[hash], *prev = NULL;
   while (cur)
   {
-    if (strcmp(cur->name, name) == 0)
+    if (__strcmp(cur->name, name) == 0)
     {
       if (prev == NULL)
         dict[hash] = cur->next;
       else
         prev->next = cur->next;
       ret = cur->value;
-      free(cur->name);
-      free(cur);
+      __free(cur->name);
+      __free(cur);
       break;
     }
     prev = cur;

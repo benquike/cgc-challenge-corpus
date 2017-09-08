@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -33,7 +33,7 @@ extern "C" {
 
 void print_banner()
 {
-    printf("Welcome to the CGC Pizzeria order management system.\n");
+    __printf("Welcome to the CGC Pizzeria order management system.\n");
 }
 
 int main()
@@ -47,22 +47,22 @@ int main()
     while (!shutdown) {
         pw_attempts = 10;
         while (!authenticated) {
-            printf("Enter system password: ");
+            __printf("Enter system password: ");
             if(!pwio.readline()) {
-                printf("Incorrect Password!\n");
-            } else if (strcmp("pizzapass", pwio.get_last_input()) == 0) {
-            //else if (strcmp("pp", pwio.get_last_input()) == 0) {
+                __printf("Incorrect Password!\n");
+            } else if (__strcmp("pizzapass", pwio.get_last_input()) == 0) {
+            //else if (__strcmp("pp", pwio.get_last_input()) == 0) {
                 authenticated = true;
-                printf("\n");
+                __printf("\n");
                 print_banner();
-            }  else if (strcmp("quit", pwio.get_last_input()) == 0) {
-                printf("Received termination string\n");
+            }  else if (__strcmp("quit", pwio.get_last_input()) == 0) {
+                __printf("Received termination string\n");
                 shutdown = true;
                 break;
             } else {
-                printf("Incorrect Password!\n");
+                __printf("Incorrect Password!\n");
                 if (!(--pw_attempts)) {
-                    printf("Too many bad attempts\n");
+                    __printf("Too many bad attempts\n");
                     shutdown = true;
                     break;
                 }
@@ -70,20 +70,20 @@ int main()
         }
 
         while (authenticated) {
-            printf("1. Input Order\n");
-            printf("2. Update Order\n");
-            printf("3. View One Orders\n");
-            printf("4. View All Orders\n");
-            printf("5. Delete Order\n");
-            printf("6. Clear All Orders\n");
-            printf("7. Logout\n");
-            printf("Choice: ");
+            __printf("1. Input Order\n");
+            __printf("2. Update Order\n");
+            __printf("3. View One Orders\n");
+            __printf("4. View All Orders\n");
+            __printf("5. Delete Order\n");
+            __printf("6. Clear All Orders\n");
+            __printf("7. Logout\n");
+            __printf("Choice: ");
 
             choice = oim.readnum();
             switch(choice) {
             case 1:
                 if(!oim.input_order(-1))
-                    printf("Wow. that failed pretty bad");
+                    __printf("Wow. that failed pretty bad");
                 break;
             case 2:
                 oim.update_order();
@@ -96,19 +96,19 @@ int main()
                 break;
             case 5:
                 if (oim.delete_order())
-                    printf("Succesfully removed order\n");
+                    __printf("Succesfully removed order\n");
                 break;
             case 6:
                 oim.clear_all_orders();
-                printf("Cleared all previous orders\n");
+                __printf("Cleared all previous orders\n");
                 break;
             case 7:
                 oim.clear_all_orders(true);
-                printf("Logging out\n");
+                __printf("Logging out\n");
                 authenticated = false;
                 break;
             default:
-                printf("Bad Selection\n");
+                __printf("Bad Selection\n");
             }
         }
     }

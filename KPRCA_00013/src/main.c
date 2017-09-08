@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -58,7 +58,7 @@ static int readline(int fd, char *line, size_t line_size)
 
     for (i = 0; i < line_size; i++) {
         if (receive(fd, line, 1, &rx) != 0 || rx == 0)
-            exit(0);
+            __exit(0);
         if (*line == '\n')
             break;
         line++;
@@ -86,31 +86,31 @@ static int parse_line(char *line)
     if (strtrim(line, LINE_SIZE, TRIM_FRONT) == -1)
         return BAD_INPUT;
 
-    memcpy(tmp, line, strlen(SHOW));
-    for (i = 0; i < strlen(SHOW); i++)
+    __memcpy(tmp, line, __strlen(SHOW));
+    for (i = 0; i < __strlen(SHOW); i++)
         tmp[i] = toupper(tmp[i]);
 
-    if (memcmp(tmp, SHOW, strlen(SHOW)) == 0)
+    if (memcmp(tmp, SHOW, __strlen(SHOW)) == 0)
         goto show_cmd;
 
-    memcpy(tmp, line, strlen(REPR));
-    for (i = 0; i < strlen(REPR); i++)
+    __memcpy(tmp, line, __strlen(REPR));
+    for (i = 0; i < __strlen(REPR); i++)
         tmp[i] = toupper(tmp[i]);
 
-    if (memcmp(tmp, REPR, strlen(REPR)) == 0) {
+    if (memcmp(tmp, REPR, __strlen(REPR)) == 0) {
         is_repr = 1;
         goto show_cmd;
     }
 
-    memcpy(tmp, line, strlen(CLEAR));
-    for (i = 0; i < strlen(CLEAR); i++)
+    __memcpy(tmp, line, __strlen(CLEAR));
+    for (i = 0; i < __strlen(CLEAR); i++)
         tmp[i] = toupper(tmp[i]);
 
-    if (memcmp(tmp, CLEAR, strlen(CLEAR)) == 0)
+    if (memcmp(tmp, CLEAR, __strlen(CLEAR)) == 0)
         goto clear_cmd;
 
-    // Use sizeof to include null terminator (vs strlen)
-    memcpy(tmp, line, sizeof(EXIT));
+    // Use sizeof to include null terminator (vs __strlen)
+    __memcpy(tmp, line, sizeof(EXIT));
     for (i = 0; i < sizeof(EXIT); i++)
         tmp[i] = toupper(tmp[i]);
 
@@ -121,27 +121,27 @@ static int parse_line(char *line)
 
 show_cmd:
     strtrim(line, LINE_SIZE, TRIM_BACK);
-    memcpy(tmp, &line[strlen(SHOW)], sizeof(TABLE));
+    __memcpy(tmp, &line[__strlen(SHOW)], sizeof(TABLE));
     for (i = 0; i < sizeof(TABLE); i++)
         tmp[i] = toupper(tmp[i]);
 
-    // Use sizeof to include null terminator (vs strlen)
+    // Use sizeof to include null terminator (vs __strlen)
     if (memcmp(tmp, TABLE, sizeof(TABLE)) == 0) {
         print_table();
         return CMD_SUCCESS;
-    } else if (valid_cell_id(&line[strlen(SHOW)]) != -1) {
-        cell_str = show_cell(&line[strlen(SHOW)], is_repr, val_str, LINE_SIZE);
+    } else if (valid_cell_id(&line[__strlen(SHOW)]) != -1) {
+        cell_str = show_cell(&line[__strlen(SHOW)], is_repr, val_str, LINE_SIZE);
         if (is_repr)
-            printf("Cell Repr: %s\n", cell_str);
+            __printf("Cell Repr: %s\n", cell_str);
         else
-            printf("Cell Value: %s\n", cell_str);
+            __printf("Cell Value: %s\n", cell_str);
         return CMD_SUCCESS;
     } else {
         return BAD_SHOW_CMD;
     }
 
 clear_cmd:
-    if (clear_cell(&line[strlen(CLEAR)]) != 0)
+    if (clear_cell(&line[__strlen(CLEAR)]) != 0)
         return BAD_CLEAR_CMD;
 
     return CMD_SUCCESS;
@@ -163,44 +163,44 @@ exit_cmd:
 int main(void) {
     char line[LINE_SIZE];
     init_sheet();
-    int exit = 0;
+    int __exit = 0;
     int line_status;
 
     do {
-        printf("Accel:-$ ");
+        __printf("Accel:-$ ");
         line_status = readline(STDIN, line, LINE_SIZE);
         if(line_status != 0) {
-            printf("\n");
+            __printf("\n");
             continue;
         }
 
         switch (parse_line(line)) {
             case BAD_CLEAR_CMD:
-                printf("Error clearing cell\n");
+                __printf("Error clearing cell\n");
                 break;
             case BAD_ASSIGN_CMD:
-                printf("Error assigning cell. Valid Cells: A0-ZZ99\n");
+                __printf("Error assigning cell. Valid Cells: A0-ZZ99\n");
                 break;
             case BAD_SHOW_CMD:
-                printf("Error showing data. Try SHOW TABLE or SHOW [A0-ZZ99]\n");
+                __printf("Error showing data. Try SHOW TABLE or SHOW [A0-ZZ99]\n");
                 break;
             case BAD_INPUT:
-                printf("Bad input\n");
+                __printf("Bad input\n");
                 break;
             case CMD_SUCCESS:
-                printf("Success.\n");
+                __printf("Success.\n");
                 break;
             case EXIT_CODE:
-                exit = 1;
-                printf("Exiting...\n");
+                __exit = 1;
+                __printf("Exiting...\n");
                 return 0;
             default:
-                printf("Unknown Input\n");
+                __printf("Unknown Input\n");
                 break;
         }
-    } while (!exit);
+    } while (!__exit);
 
-    printf("Unsupported signal. Exiting...\n");
+    __printf("Unsupported signal. Exiting...\n");
     return 0;
 }
 

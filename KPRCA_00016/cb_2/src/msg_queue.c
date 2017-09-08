@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -31,7 +31,7 @@ int enq_msg(msg_queue *q, message_t *msg)
   {
     if (*q == NULL)
     {
-      *q = (node_t *) malloc(sizeof(node_t));
+      *q = (node_t *) __malloc(sizeof(node_t));
       if (*q == NULL)
         return -1;
       (*q)->msg = msg;
@@ -40,7 +40,7 @@ int enq_msg(msg_queue *q, message_t *msg)
     else
     {
       node_t *n;
-      node_t *tmp = (node_t *) malloc(sizeof(node_t));
+      node_t *tmp = (node_t *) __malloc(sizeof(node_t));
       if (tmp == NULL)
         return -1;
       tmp->msg = msg;
@@ -61,7 +61,7 @@ message_t* deq_msg(msg_queue *q)
     if ((*q)->next == NULL)
     {
       ret = (*q)->msg;
-      free(*q);
+      __free(*q);
       *q = NULL;
     }
     else
@@ -69,7 +69,7 @@ message_t* deq_msg(msg_queue *q)
       node_t *tmp = *q;
       ret = tmp->msg;
       *q = tmp->next;
-      free(tmp);
+      __free(tmp);
     }
   }
   return ret;
@@ -85,7 +85,7 @@ message_t* deq_msg_at(msg_queue *q, int idx)
     if ((*q)->next == NULL && idx == 1)
     {
       ret = (*q)->msg;
-      free(*q);
+      __free(*q);
       *q = NULL;
     }
     else
@@ -100,7 +100,7 @@ message_t* deq_msg_at(msg_queue *q, int idx)
           else
             prev->next = node->next;
           ret = node->msg;
-          free(node);
+          __free(node);
           break;
         }
         prev = node;

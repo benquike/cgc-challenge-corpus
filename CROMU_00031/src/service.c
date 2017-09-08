@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.co>
 
 Copyright (c) 2014-2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,29 +37,29 @@ int main(void) {
 	char board[X_MAX][Y_MAX];
 
 	InitBoard(board);
-	strcpy(CURR_PLAYER, "WHITE");
+	__strcpy(CURR_PLAYER, "WHITE");
 	PrintBoard(board);
 
 	while (1) {
 		if (!AcceptMove(board, &srcx, &srcy, &dstx, &dsty)) {
-			puts("good game");
+			__puts("good game");
 			return(0);
 		}	
 
 		if (!IsValidMove(board, srcx, srcy, dstx, dsty)) {
-			puts("NO");
+			__puts("NO");
 			continue;
 		}
 
 		MakeMove(board, srcx, srcy, dstx, dsty);
 
-		if (!strcmp(CURR_PLAYER, "WHITE")) {
-			strcpy(CURR_PLAYER, "BLACK");
+		if (!__strcmp(CURR_PLAYER, "WHITE")) {
+			__strcpy(CURR_PLAYER, "BLACK");
 		} else {
-			strcpy(CURR_PLAYER, "WHITE");
+			__strcpy(CURR_PLAYER, "WHITE");
 		}
 
-		puts("OK");
+		__puts("OK");
 	}
 
 	return(0);

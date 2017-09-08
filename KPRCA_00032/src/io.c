@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -29,14 +29,14 @@ void write_bytes(const void *buf, size_t count)
 {
     size_t bytes;
     if (transmit(STDOUT, buf, count, &bytes) != 0 || bytes != count)
-        exit(1);
+        __exit(1);
 }
 
 void read_bytes(void *buf, size_t count)
 {
     size_t bytes;
     if (receive(STDIN, buf, count, &bytes) != 0 || bytes != count)
-        exit(1);
+        __exit(1);
 }
 
 void write_byte(uint8_t b)
@@ -96,7 +96,7 @@ int read_int()
 
 void write_string(const char *str)
 {
-    unsigned int length = strlen(str);
+    unsigned int length = __strlen(str);
     write_int(length);
     write_bytes(str, length);
 }
@@ -109,7 +109,7 @@ char *read_string()
     if (size == SIZE_MAX)
         return NULL;
     
-    result = malloc(size+1);
+    result = __malloc(size+1);
     if (result == NULL)
         return NULL;
 

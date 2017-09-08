@@ -4,7 +4,7 @@ Author: Dustin Fraze (df@cromulence.com)
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -30,9 +30,9 @@ unsigned int getBet(gamestate *state) {
 	unsigned int wager;
 
 	put("How much would you like to wager? ");
-	bzero(got, 16);
+	__bzero(got, 16);
 	recvUntil(0, got, 15, '\n');
-	wager = atoi(got);
+	wager = __atoi(got);
 	if(wager > 0 && wager <= state->hugcount) {
 		if(wager > 1000)
 			put("HIGH ROLLER COMING THROUGH!\n");
@@ -58,12 +58,12 @@ unsigned int hugsnextrand(gamestate *state) {
 void handleOutcome(gamestate *state, char outcome, unsigned int wagered) {
 	if(outcome == 1) {
 		put("YOU WIN!\nAdding ");
-		put(itoa(wagered));
+		put(__itoa(wagered));
 		put(" to your hug balance.\n\n");
 		state->hugcount+=wagered;
 	} else {
 		put("YOU LOSE!\nDebiting ");
-		put(itoa(wagered));
+		put(__itoa(wagered));
 		put(" from your hug balance.\n\n");
 		state->hugcount-=wagered;
 	}

@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -64,10 +64,10 @@ void RandomInfluent(void) {
 // Initialize the Influent system
 //
 void InitInfluent(void) {
-	bzero(&Influent, sizeof(PlantSystem));
+	__bzero(&Influent, sizeof(PlantSystem));
 
 	Influent.Type = INFLUENT;
-	strncpy(Influent.Name, "Influent", 31);
+	__strncpy(Influent.Name, "Influent", 31);
 	Influent.Flow = 1.6;
 	Influent.Cbod = 2680.0;
 	Influent.Tss = 3300.0;
@@ -141,7 +141,7 @@ void SetSystemName(pPlantSystem pSystem, char *NewName) {
 		return;
 	}
 
-	strncpy(pSystem->Name, NewName, 31);
+	__strncpy(pSystem->Name, NewName, 31);
 
 }
 
@@ -214,10 +214,10 @@ void ChangeNumActiveFilters(pPlantSystem pFilter, uint8_t NumFilters) {
 // Change the Headworks system
 //
 void InitHeadworks(void) {
-	bzero(&Headworks, sizeof(PlantSystem));
+	__bzero(&Headworks, sizeof(PlantSystem));
 
 	Headworks.Type = HEADWORKS;
-	strncpy(Headworks.Name, "Headworks", 31);
+	__strncpy(Headworks.Name, "Headworks", 31);
 	Headworks.Input[0] = &Influent;
 	Headworks.Output[0] = &HeadworksOutputValve;
 	Headworks.TssReductionPct = 30.0;
@@ -229,10 +229,10 @@ void InitHeadworks(void) {
 void InitHeadworksOutputValve(void) {
 	uint8_t i;
 
-	bzero(&HeadworksOutputValve, sizeof(PlantSystem));
+	__bzero(&HeadworksOutputValve, sizeof(PlantSystem));
 
 	HeadworksOutputValve.Type = VALVE;
-	strncpy(HeadworksOutputValve.Name, "V1", 31);
+	__strncpy(HeadworksOutputValve.Name, "V1", 31);
 
 	// inputs
 	HeadworksOutputValve.Input[0] = &Headworks;
@@ -250,7 +250,7 @@ void InitHeadworksOutputValve(void) {
 void InitAsp(void) {
 	uint8_t i;
 
-	bzero(&Asp, sizeof(Asp));
+	__bzero(&Asp, sizeof(Asp));
 
 	for (i = 0; i < NumAsp; i++) {
 		Asp[i].Type = ASP;
@@ -272,10 +272,10 @@ void InitAsp(void) {
 void InitAspOutputValve(void) {
 	uint8_t i;
 
-	bzero(&AspOutputValve, sizeof(PlantSystem));
+	__bzero(&AspOutputValve, sizeof(PlantSystem));
 
 	AspOutputValve.Type = VALVE;
-	strncpy(AspOutputValve.Name, "V2", 31);
+	__strncpy(AspOutputValve.Name, "V2", 31);
 
 	// inputs
 	for (i = 0; i < NumAsp; i++) {
@@ -297,7 +297,7 @@ void InitFilters(void) {
 	uint8_t i;
 	double Gpm;
 
-	bzero(&Filter, sizeof(Filter));
+	__bzero(&Filter, sizeof(Filter));
 
 	for (i = 0; i < NumFilters; i++) {
 		Filter[i].Type = FILTER;
@@ -322,10 +322,10 @@ void InitFilters(void) {
 void InitFilterOutputValve(void) {
 	uint8_t i;
 
-	bzero(&FilterOutputValve, sizeof(PlantSystem));
+	__bzero(&FilterOutputValve, sizeof(PlantSystem));
 
 	FilterOutputValve.Type = VALVE;
-	strncpy(FilterOutputValve.Name, "V3", 31);
+	__strncpy(FilterOutputValve.Name, "V3", 31);
 
 	// inputs
 	for (i = 0; i < NumFilters; i++) {
@@ -346,7 +346,7 @@ void InitFilterOutputValve(void) {
 void InitDisinfection(void) {
 	uint8_t i;
 
-	bzero(&Disinfection, sizeof(Disinfection));
+	__bzero(&Disinfection, sizeof(Disinfection));
 
 	for (i = 0; i < NumDisinfection; i++) {
 		Disinfection[i].Type = DISINFECTION;
@@ -364,10 +364,10 @@ void InitDisinfection(void) {
 void InitDisinfectionOutputValve(void) {
 	uint8_t i;
 
-	bzero(&DisinfectionOutputValve, sizeof(PlantSystem));
+	__bzero(&DisinfectionOutputValve, sizeof(PlantSystem));
 
 	DisinfectionOutputValve.Type = VALVE;
-	strncpy(DisinfectionOutputValve.Name, "V4", 31);
+	__strncpy(DisinfectionOutputValve.Name, "V4", 31);
 
 	// inputs from the disinfection systems
 	for (i = 0; i < NumDisinfection; i++) {
@@ -384,10 +384,10 @@ void InitDisinfectionOutputValve(void) {
 // Initialize the Effluent system
 //
 void InitEffluent(void) {
-	bzero(&Effluent, sizeof(PlantSystem));
+	__bzero(&Effluent, sizeof(PlantSystem));
 
 	Effluent.Type = EFFLUENT;
-	strncpy(Effluent.Name, "Effluent", 31);
+	__strncpy(Effluent.Name, "Effluent", 31);
 	Effluent.Input[0] = &DisinfectionOutputValve;
 }
 

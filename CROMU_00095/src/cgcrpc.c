@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -38,7 +38,7 @@ CGCRPC_Endpoint endpoints[MAX_CGCRPC_ENDPOINTS];
 
 void InitializeCGCRPC()
 {
-  strcpy(endpoints[0].name, "NETSTUFF");
+  __strcpy(endpoints[0].name, "NETSTUFF");
   endpoints[0].version = 0xDC;
   endpoints[0].handler = &NETSTUFF_Handler;
 
@@ -64,7 +64,7 @@ uint32_t BindEndpoint(char *name, uint16_t version)
   {
     if (endpoints[i].name[0] != '\0')
     {
-      if ((strcmp(endpoints[i].name, name) == 0) && (endpoints[i].version == version))
+      if ((__strcmp(endpoints[i].name, name) == 0) && (endpoints[i].version == version))
       {
         return AddConnection(&endpoints[i]);
       }
@@ -120,17 +120,17 @@ uint32_t HandleCGCRPCMessage(void *data, uint32_t dataLength, void **output, uin
       {
         return CGCRPC_ERROR_FORMAT;
       }
-      char *name = calloc(nameLength + 1);
-      memcpy(name, data, nameLength);
+      char *name = __calloc(nameLength + 1);
+      __memcpy(name, data, nameLength);
       data += nameLength;
       uint16_t version = *(uint16_t *)data;
       uint32_t bindID = BindEndpoint(name, version);
-      free(name);
+      __free(name);
       if (bindID == 0)
       {
         return CGCRPC_ERROR_NOT_FOUND;
       }
-      uint8_t *response = calloc(2 + 1 + 4);
+      uint8_t *response = __calloc(2 + 1 + 4);
       *output = response;
       *(uint16_t *)response = CGCRPC_BIND_RESPONSE;
       response += 2;
@@ -175,7 +175,7 @@ uint32_t HandleCGCRPCMessage(void *data, uint32_t dataLength, void **output, uin
       {
         endpointDataLength = MAX_CGCRPC_RESPONSE_SIZE;
       }
-      uint8_t *response = calloc(2 + 4 + 2 + endpointDataLength);
+      uint8_t *response = __calloc(2 + 4 + 2 + endpointDataLength);
       *output = response;
       
       *(uint16_t *)response = CGCRPC_WRITE_TO_PIPE_RESPONSE;
@@ -184,9 +184,9 @@ uint32_t HandleCGCRPCMessage(void *data, uint32_t dataLength, void **output, uin
       response += 4;
       *(uint16_t *)response = endpointDataLength;
       response += 2;
-      memcpy(response, endpointData, endpointDataLength);
+      __memcpy(response, endpointData, endpointDataLength);
       
-      free(endpointData);
+      __free(endpointData);
       *outputLength = 2 + 4 + 2 + endpointDataLength;
       break;
     }

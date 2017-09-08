@@ -4,7 +4,7 @@ Author: John Berry <hj@cromulence.co>
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,21 +37,21 @@ int main( void )
 	pPlanet pp = NULL;
 	char *temp = NULL;
 
-	bzero( solarSystem, sizeof(pPlanet) * 10 );
+	__bzero( solarSystem, sizeof(pPlanet) * 10 );
 
 	while (1) {
-		printf("\nPlanet Markup Language Main\n");
-		printf("1) Print Planets\n");
-		printf("2) Add PML\n");
-		printf("3) Add Planet\n");
-		printf("4) Select Planet\n");
-		printf("5) Exit\n");
-		printf("Selection: ");
+		__printf("\nPlanet Markup Language Main\n");
+		__printf("1) Print Planets\n");
+		__printf("2) Add PML\n");
+		__printf("3) Add Planet\n");
+		__printf("4) Select Planet\n");
+		__printf("5) Exit\n");
+		__printf("Selection: ");
 
-		bzero(selection, 30);
-		receive_until( selection, '\n', 4 );
+		__bzero(selection, 30);
+		__receive_until( selection, '\n', 4 );
 
-		choice = atoi( selection );
+		choice = __atoi( selection );
 
 		switch (choice) {
 			case 1:
@@ -67,9 +67,9 @@ int main( void )
 					continue;
 				}
 	
-				printf("PML: ");
-				bzero( temp, 4096);
-				receive_until( temp, '\n', 4095);
+				__printf("PML: ");
+				__bzero( temp, 4096);
+				__receive_until( temp, '\n', 4095);
 				tl = initString( temp );
 				deallocate(temp, 4096);
 
@@ -99,10 +99,10 @@ int main( void )
 				freeString(tl);
 				break;
 			case 3:
-				printf("\n-> ");
-				bzero(selection, 30);
+				__printf("\n-> ");
+				__bzero(selection, 30);
 
-				receive_until( selection, '\n', 29 );
+				__receive_until( selection, '\n', 29 );
 
 				choice = 0;
 				while ( choice < 10 ) {
@@ -127,7 +127,7 @@ int main( void )
 				solarSystem[choice] = pp;
 
 				choice = 0;
-				while ( isalnum(selection[choice]) ) {
+				while ( __isalnum(selection[choice]) ) {
 					pp->name[choice] = selection[choice];
 					choice++;
 				}
@@ -136,23 +136,23 @@ int main( void )
 			case 4:
 				for (choice=0; choice < 10; choice++) {
 					if ( solarSystem[choice] != NULL ) {
-						printf("@d) @s\n", choice +1, solarSystem[choice]->name);
+						__printf("@d) @s\n", choice +1, solarSystem[choice]->name);
 					}
 				}
 
-				bzero( selection, 30);
-				printf("\n-> ");
-				receive_until(selection, '\n', 4 );
+				__bzero( selection, 30);
+				__printf("\n-> ");
+				__receive_until(selection, '\n', 4 );
 
-				choice = atoi(selection);
+				choice = __atoi(selection);
 
 				if ( choice < 1 || choice > 10 ) {
-					printf("Invalid\n");
+					__printf("Invalid\n");
 					continue;
 				}
 
 				if ( solarSystem[choice-1] == NULL ) {
-					printf("Invalid\n");
+					__printf("Invalid\n");
 					continue;
 				}
 
@@ -162,10 +162,10 @@ int main( void )
 
 				break;
 			case 5:
-				printf("Exitting..\n");
+				__printf("Exitting..\n");
 				return 0;
 			default:
-				printf("Invalid...\n");
+				__printf("Invalid...\n");
 				break;
 		};
 	}

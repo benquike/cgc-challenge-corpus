@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -73,15 +73,15 @@ void list()
     while (res.status == SUCCESS)
     {
 #ifdef PATCHED
-        if (strlen(buf) + strlen((char*)res.rec.data->k.data.data) + 30 > sizeof(buf))
+        if (__strlen(buf) + __strlen((char*)res.rec.data->k.data.data) + 30 > sizeof(buf))
             break;
 #endif
         item_details *d = (item_details *)res.rec.data->data.data;
-        sprintf(buf, "%s%s (Price: %d.%02d, Count: %d)\n", buf, res.rec.data->k.data.data,
+        __sprintf(buf, "%s%s (Price: %d.%02d, Count: %d)\n", buf, res.rec.data->k.data.data,
             (int)(d->price / 100), abs(d->price % 100), d->count);
         res = db_next(res.rec.data->k);
     }
-    transmit(STDOUT, buf, strlen(buf), &bytes);
+    transmit(STDOUT, buf, __strlen(buf), &bytes);
 }
 
 void buy()
@@ -91,7 +91,7 @@ void buy()
     result res;
 
     read_until(STDIN, name, 200, '\n');
-    k.data.count = strlen(name) + 1;
+    k.data.count = __strlen(name) + 1;
     k.data.data = (opaque *)name;
 
     res = db_lookup(k);
@@ -100,7 +100,7 @@ void buy()
         item_details *d = (item_details *)res.rec.data->data.data;
         if (d->count < 1)
         {
-            printf("Not enought items\n");
+            __printf("Not enought items\n");
         }
         else
         {
@@ -113,7 +113,7 @@ void buy()
     }
     else
     {
-        printf("Item not found\n");
+        __printf("Item not found\n");
     }
 }
 
@@ -125,14 +125,14 @@ void sell()
     record rec;
     item_details d;
 
-    name = malloc(200);
+    name = __malloc(200);
     read_until(STDIN, name, 200, '\n');
     read_until(STDIN, tmp, sizeof(tmp), '\n');
-    d.price = strtol(tmp, NULL, 10);
+    d.price = __strtol(tmp, NULL, 10);
     read_until(STDIN, tmp, sizeof(tmp), '\n');
-    d.count = strtoul(tmp, NULL, 10);
+    d.count = __strtoul(tmp, NULL, 10);
     
-    rec.k.data.count = strlen(name) + 1;
+    rec.k.data.count = __strlen(name) + 1;
     rec.k.data.data = (opaque *)name;
     rec.data.count = sizeof(d);
     rec.data.data = (opaque *)&d;
@@ -144,7 +144,7 @@ char menu()
     char choice;
     size_t bytes;
 
-    printf("\nPlease make a selection:\n\ta) List products\n\tb) Buy a product\n\tc) Sell a product\n");
+    __printf("\nPlease make a selection:\n\ta) List products\n\tb) Buy a product\n\tc) Sell a product\n");
 
     if (receive(STDIN, &choice, 1, &bytes) != 0 || bytes != 1)
         return 0;
@@ -156,11 +156,11 @@ void init_db()
 {
     int i;
     record rec;
-    memset(&rec, 0, sizeof(rec));
+    __memset(&rec, 0, sizeof(rec));
 
     for (i = 0; i < sizeof(g_items) / sizeof(g_items[0]); i++)
     {
-        rec.k.data.count = strlen(g_items[i].name) + 1;
+        rec.k.data.count = __strlen(g_items[i].name) + 1;
         rec.k.data.data = (opaque *)g_items[i].name;
         rec.data.count = sizeof(g_items[i].details);
         rec.data.data = (opaque *)&g_items[i].details;
@@ -173,7 +173,7 @@ int main()
     database_init(3);
     init_db();
 
-    printf("Welcome to eCommerce v0.1\n");
+    __printf("Welcome to eCommerce v0.1\n");
 
     while (1)
     {
@@ -187,7 +187,7 @@ int main()
         else if (choice == 'c')
             sell();
         else
-            printf("Invalid selection\n");
+            __printf("Invalid selection\n");
     }
 
     database_close();

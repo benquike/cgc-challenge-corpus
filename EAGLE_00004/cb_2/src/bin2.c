@@ -58,10 +58,10 @@ int parse_op(char *opstr, inst_t *inst, int opnum) {
    if (*opstr == 'r') {
       inst->optypes[opnum] = 0;
       errno = 0;
-      inst->opvals[opnum] = strtol(opstr + 1, NULL, 0);
+      inst->opvals[opnum] = __strtol(opstr + 1, NULL, 0);
       if (errno) {
 #ifdef DEBUG
-         fprintf(stderr, "strtol error  in reg parsing\n");
+         fprintf(stderr, "__strtol error  in reg parsing\n");
 #endif
          result = -22;
          goto done;
@@ -84,10 +84,10 @@ int parse_op(char *opstr, inst_t *inst, int opnum) {
    else if (*opstr == 'm') {
       inst->optypes[opnum] = 1;
       errno = 0;
-      inst->opvals[opnum] = strtol(opstr + 1, NULL, 0);
+      inst->opvals[opnum] = __strtol(opstr + 1, NULL, 0);
       if (errno) {
 #ifdef DEBUG
-         fprintf(stderr, "strtol error  in mem parsing\n");
+         fprintf(stderr, "__strtol error  in mem parsing\n");
 #endif
          result = -22;
          goto done;
@@ -106,10 +106,10 @@ int parse_op(char *opstr, inst_t *inst, int opnum) {
    else {
       inst->optypes[opnum] = 2;
       errno = 0;
-      inst->opvals[opnum] = strtol(opstr, NULL, 0);
+      inst->opvals[opnum] = __strtol(opstr, NULL, 0);
       if (errno) {
 #ifdef DEBUG
-         fprintf(stderr, "strtol error  in imm parsing\n");
+         fprintf(stderr, "__strtol error  in imm parsing\n");
 #endif
          result = -22;
          goto done;
@@ -139,7 +139,7 @@ int parse_inst(char *inbuf, inst_t *inst) {
    fprintf(stderr, "child %d %s | %s | %s\n", child_num, part1, part2, part3);
 #endif
    for (count = 0; iset[count].mnem; count++) {
-      if (strcmp(iset[count].mnem, part1) == 0) {
+      if (__strcmp(iset[count].mnem, part1) == 0) {
          inst->opcode = iset[count].opcode;
          break;
       }
@@ -209,8 +209,8 @@ int parse_instructions() {
    char buf[256];
    inst_t inst;
    int result;
-   memset(buf, 0, sizeof(buf));
-   memset(&inst, 0, sizeof(inst));
+   __memset(buf, 0, sizeof(buf));
+   __memset(&inst, 0, sizeof(inst));
 #ifdef DEBUG
    fprintf(stderr, "parse_instructions hitting illegal inst\n");
 #endif
@@ -220,30 +220,30 @@ int parse_instructions() {
 #endif
    while ((i1 = read_until_delim(PIPEFD_IN, buf, 255, '\n')) > 0) {
 #ifdef DEBUG
-      fprintf(stderr, "read %d bytes from pipe 01\n", i1);
+      fprintf(stderr, "__read %d bytes from pipe 01\n", i1);
 #endif
       buf[i1] = 0;
-      if (memcmp(buf, "END", 3) == 0) {
-         memset(&inst, 0xff, sizeof(inst));
-         //make the effort to write all, but we are quitting anyway so nothing
+      if (__memcmp(buf, "END", 3) == 0) {
+         __memset(&inst, 0xff, sizeof(inst));
+         //make the effort to __write all, but we are quitting anyway so nothing
          //we can do it this comes back short
          write_all(PIPEFD_OUT, (void *) &inst, sizeof(inst));
          break;
       }
       if (parse_inst(buf, &inst)) {
-         printf("ERROR: Invalid Instruction Source (%s)\n", buf);
+         __printf("ERROR: Invalid Instruction Source (%s)\n", buf);
          result = -1;
          goto done;
       }
       if (write_all(PIPEFD_OUT, (void *) &inst, sizeof(inst)) != sizeof(inst)) {
-         printf("ERROR: transmit to runner failed!\n");
+         __printf("ERROR: transmit to runner failed!\n");
          result = -1;
          goto done;
       }
 #ifdef DEBUG
       fprintf(stderr, "wrote %d bytes to pipe 12\n", sizeof(inst));
 #endif
-      memset(buf, 0, sizeof(buf));
+      __memset(buf, 0, sizeof(buf));
    }
 #ifdef DEBUG
    fprintf(stderr, "child 2 done in parse_instructions\n");
@@ -251,9 +251,9 @@ int parse_instructions() {
    result = 0;
 done:
    if (result == -1) {
-      memset(&inst, 0xff, sizeof(inst));
+      __memset(&inst, 0xff, sizeof(inst));
       inst.opcode = -2;
-      //make the effort to write all, but we are quitting anyway
+      //make the effort to __write all, but we are quitting anyway
       //so nothing we can do if this is short
       write_all(PIPEFD_OUT, (void *) &inst, sizeof(inst)); 
    }

@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.co>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -74,28 +74,28 @@ size_t i, j;
 				break;
 		}	
 
-		padded_input_data = malloc(padded_input_size);
+		padded_input_data = __malloc(padded_input_size);
 
 		if (padded_input_data == 0) {
 
-			printf("unable to malloc()\n");
+			__printf("unable to __malloc()\n");
 			_terminate(-1);
 		}
 
-		bzero(padded_input_data, padded_input_size);
+		__bzero(padded_input_data, padded_input_size);
 
-		memcpy(padded_input_data, data, data_size);
+		__memcpy(padded_input_data, data, data_size);
 
-		output_data = malloc(output_size);
+		output_data = __malloc(output_size);
 
 		if (output_data == 0) {
 
-			printf("unable to malloc()\n");
+			__printf("unable to __malloc()\n");
 			_terminate(-1);
 
 		}
 
-		bzero(output_data, output_size);
+		__bzero(output_data, output_size);
 
 		for (i=0, j=0; i< padded_input_size; i+=3, j+=4) {
 
@@ -111,7 +111,7 @@ size_t i, j;
 
 		}
 
-		free(padded_input_data);
+		__free(padded_input_data);
 
 		*out_data_size = output_size;
 
@@ -128,26 +128,26 @@ size_t i;
 int count;
 unsigned char *input_data;
 
-	printf("How many bytes of data:\n");
+	__printf("How many bytes of data:\n");
 
 	getline( buffer, 100 );
 
-	count = atoi(buffer);
+	count = __atoi(buffer);
 
 	if (count > 0) {
 	
-		input_data = malloc(count);
+		input_data = __malloc(count);
 
 		if (input_data == 0) {
 
-			printf("unable to malloc()\n");
+			__printf("unable to __malloc()\n");
 			_terminate(-1);
 		}
 	}
 	else
 		return;
 
-	printf("Enter data to be encoded:\n");
+	__printf("Enter data to be encoded:\n");
 
 	receive_bytes( input_data, count );
 
@@ -157,11 +157,11 @@ unsigned char *input_data;
 	flush_input(STDIN);
 
 	for (i=0; i< encoded_size; ++i)
-			printf("@c", encoded[i]);
+			__printf("@c", encoded[i]);
 
-	printf("\n");
+	__printf("\n");
 
-	free(encoded);
+	__free(encoded);
 
 
 }

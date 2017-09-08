@@ -4,7 +4,7 @@ Author: James Connor (jymbo@cromulence.com)
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -41,8 +41,8 @@ int main(){
 }
 
 pState init_state(){
-	pState state = malloc (sizeof(sState));
-	bzero(state,sizeof(sState));
+	pState state = __malloc (sizeof(sState));
+	__bzero(state,sizeof(sState));
 	//initialize
 	state->currentTemp = 75;
 	state->sensorCount = 0;
@@ -52,7 +52,7 @@ pState init_state(){
 	state->currentStep = -1;
 	state->smoke = OFF;
 	state->ambientTemp = 75;
-	bzero(state->history, sizeof(unsigned short int) * HISTSIZE);
+	__bzero(state->history, sizeof(unsigned short int) * HISTSIZE);
 	state->historyPosition = 0;
 	state->finished = FALSE;
 	state->currentTime = 0;
@@ -70,7 +70,7 @@ void new_state(pState state){
 	state->currentStep = -1;
 	state->smoke = OFF;
 	state->ambientTemp = 75;
-	// bzero(state->history, sizeof(unsigned short int) * HISTSIZE);
+	// __bzero(state->history, sizeof(unsigned short int) * HISTSIZE);
 	state->historyPosition = 0;
 	state->finished = FALSE;
 	state->currentTime = 0;
@@ -133,7 +133,7 @@ int add_sensor(pState state, unsigned short int sensorID, unsigned int sensorAdd
 	pSensor thisSensor = state->sensorList;
 
 	if (tempSensor == NULL){//no sensors
-		thisSensor = malloc(sizeof(sSensor));
+		thisSensor = __malloc(sizeof(sSensor));
 		state->sensorList = thisSensor;//set list head
 		thisSensor->prev = NULL;//prev of list head is null
 
@@ -142,9 +142,9 @@ int add_sensor(pState state, unsigned short int sensorID, unsigned int sensorAdd
 		while (tempSensor != NULL){
 			thisSensor = tempSensor;
 			tempSensor = tempSensor->next;
-		}//write next and prev, then set thisSensor
+		}//__write next and prev, then set thisSensor
 
-		thisSensor->next = malloc(sizeof(sSensor));
+		thisSensor->next = __malloc(sizeof(sSensor));
 		thisSensor->next->prev =  thisSensor;
 		thisSensor = thisSensor->next;
 	}
@@ -194,13 +194,13 @@ int remove_sensor(pState state, unsigned short sensorID){
 		thisSensor->prev->next = thisSensor->next;
 	}
 	state->sensorCount = state->sensorCount - 1;
-	free(thisSensor);
+	__free(thisSensor);
 
 	return 0;
 }
 
 void free_program(pState state){
-	//free each program node in programList
+	//__free each program node in programList
 	if (state->programList == NULL){
 		return;
 	}
@@ -209,7 +209,7 @@ void free_program(pState state){
 	while (nextProgram != NULL){
 		thisProgram = nextProgram;
 		nextProgram = nextProgram->next;
-		free(thisProgram);
+		__free(thisProgram);
 	}
 	state->programList = NULL;
 	state->numSteps = 0;
@@ -223,7 +223,7 @@ int add_steps(pState state, unsigned int numSteps, pStep steps ){
 	if (numSteps>10){									
 		return 5;
 	}
-	//each step for numSteps must be read, checked and added to pstate->programList
+	//each step for numSteps must be __read, checked and added to pstate->programList
 	for (unsigned int i=0;i<numSteps;i++){
 		// int allows bad type that isn't checked for valid timeval, allowing the
 		// program to run for indeterminated time, which writes off the end of history buffer
@@ -281,8 +281,8 @@ int add_step(pState state, unsigned int type, unsigned int val, unsigned int tem
 	pProgram program = state->programList;
 	pProgram tempProgram = program;
 	if (program == NULL ){
-		program = malloc(sizeof(sProgram));
-		bzero(program,sizeof(sProgram));
+		program = __malloc(sizeof(sProgram));
+		__bzero(program,sizeof(sProgram));
 		program->prev = NULL;
 		state->programList = program;
 	} else {
@@ -290,8 +290,8 @@ int add_step(pState state, unsigned int type, unsigned int val, unsigned int tem
 			program = tempProgram;
 			tempProgram = tempProgram->next;
 		}//go to end of list
-		program->next = malloc(sizeof(sProgram));
-		bzero(program->next,sizeof(sProgram));
+		program->next = __malloc(sizeof(sProgram));
+		__bzero(program->next,sizeof(sProgram));
 		program = program->next;
 	}
 	program->next = NULL;
@@ -354,12 +354,12 @@ void get_sensors(pState state,unsigned int sensors[40*sizeof(int)]){
 		tempSensor = tempSensor->next;
 		i = i + 1;
 	}
-	memcpy(sensors,temp,(i*sizeof(int)*4));
+	__memcpy(sensors,temp,(i*sizeof(int)*4));
 }
 
 
 void update_sensors(pState state){
-	//for each sensor in sensorlist write sensor.currentTemp = (state.currentTemp - sensor.currentTemp) * (0.5 + (sensor.coeff/20000))
+	//for each sensor in sensorlist __write sensor.currentTemp = (state.currentTemp - sensor.currentTemp) * (0.5 + (sensor.coeff/20000))
 	pSensor tempSensor = state->sensorList;
 	while (tempSensor != NULL){
 		//sensor coeff of 10000 means sensor is not places in food

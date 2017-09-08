@@ -22,7 +22,7 @@ ssize_t readLine(int fd, char* buf, size_t len)
     return (-EINVAL);
   }
 
-  //loop until the character is read
+  //loop until the character is __read
   do
   {
     ret = receive(fd, &c, sizeof(char), &numRead);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -45,10 +45,10 @@ void FreeQueue(queue* Queue)
   {
     if (Queue->Elements)
     {
-      free(Queue->Elements);
+      __free(Queue->Elements);
     }
 
-    free(Queue);
+    __free(Queue);
   }
 }
 
@@ -99,9 +99,9 @@ void Enqueue(queue* Queue, void* Element)
     Assert(NewCapacity > Queue->Capacity, "E2");
 
     void** NewElements = xcalloc(sizeof(void *), NewCapacity);
-    memcpy(NewElements, Queue->Elements, sizeof(void *) * Queue->Size);
+    __memcpy(NewElements, Queue->Elements, sizeof(void *) * Queue->Size);
 
-    free(Queue->Elements);
+    __free(Queue->Elements);
     Queue->Elements = NewElements;
     Queue->Capacity = NewCapacity;
   }

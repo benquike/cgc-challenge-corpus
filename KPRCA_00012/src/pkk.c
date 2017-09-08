@@ -4,7 +4,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -50,7 +50,7 @@ pkk_t* parse_pkk(char *data, unsigned int len)
   if (data == NULL)
     goto fail;
 
-  pkk = (pkk_t *) malloc(sizeof(pkk_t));
+  pkk = (pkk_t *) __malloc(sizeof(pkk_t));
   if (pkk == NULL)
     goto fail;
 
@@ -75,20 +75,20 @@ pkk_t* parse_pkk(char *data, unsigned int len)
 
   /* Width and Height */
   int width, height;
-  height = strtoul(c, &c, 10);
-  width = strtoul(c, &c, 10);
+  height = __strtoul(c, &c, 10);
+  width = __strtoul(c, &c, 10);
 
   c = skip_whitespace(c, data + len - c);
 
   /* Max color value */
-  if (strtoul(c, &c, 10) != 255)
+  if (__strtoul(c, &c, 10) != 255)
     goto fail;
 
   /* Skip one byte (whitespace) */
   c++;
 
   /* Copy pixel data */
-  pkk = (pkk_t *) malloc(sizeof(pkk_t));
+  pkk = (pkk_t *) __malloc(sizeof(pkk_t));
   pkk->width = width;
   pkk->height = height;
   if (sizeof(pixel_t) > (0xFFFFFFFF / width) / height)
@@ -99,10 +99,10 @@ pkk_t* parse_pkk(char *data, unsigned int len)
   if (c + sizeof(pixel_t) * width * height > data + len)
 #endif
     goto fail;
-  pkk->pixels = (pixel_t *) malloc(sizeof(pixel_t) * width * height);
+  pkk->pixels = (pixel_t *) __malloc(sizeof(pixel_t) * width * height);
   if (pkk->pixels == NULL)
     goto fail;
-  memcpy(pkk->pixels, c, sizeof(pixel_t) * width * height);
+  __memcpy(pkk->pixels, c, sizeof(pixel_t) * width * height);
   return pkk;
 
 fail:
@@ -117,13 +117,13 @@ char* output_pkk(pkk_t *pkk, int *out_len)
   len = sizeof(pixel_t) * pkk->width * pkk->height + 3 + 50 + 1 + 3 + 1;
   char *buffer = NULL;
 
-  buffer = malloc(len);
+  buffer = __malloc(len);
   if (buffer == NULL)
     goto fail;
-  memset(buffer, '\0', len);
+  __memset(buffer, '\0', len);
 
   cur = buffer;
-  strcpy(cur, "PK\n");
+  __strcpy(cur, "PK\n");
 
   cur += 3;
   int n = sprintf(cur, "%d %d\n255\n", pkk->height, pkk->width);
@@ -145,7 +145,7 @@ char* output_pkk(pkk_t *pkk, int *out_len)
 
 fail:
   if (buffer)
-    free(buffer);
+    __free(buffer);
   *out_len = 0;
   return NULL;
 }
@@ -155,7 +155,7 @@ void free_pkk(pkk_t *pkk)
   if (pkk)
   {
     if (pkk->pixels)
-      free(pkk->pixels);
-    free(pkk);
+      __free(pkk->pixels);
+    __free(pkk);
   }
 }

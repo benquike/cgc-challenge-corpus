@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -121,7 +121,7 @@ void addLine(Program *program, char* buf) {
 	}
 
     program->lineNumber++;
-	memcpy(&program->lines[program->lineNumber*MAX_LINE_SIZE], buf, MAX_LINE_SIZE);
+	__memcpy(&program->lines[program->lineNumber*MAX_LINE_SIZE], buf, MAX_LINE_SIZE);
 
 }
 
@@ -152,7 +152,7 @@ void executeProgram(Program* program) {
 			element = (char *) popElement(&stack);
 
 			len = strnlen(element, MAX_ARG_SIZE);
-			memset(element, 0, len);
+			__memset(element, 0, len);
 
 			program->lineNumber++;
 		}
@@ -172,12 +172,12 @@ void executeProgram(Program* program) {
 			a_str = itoaB10(a); 
 
 			len = strnlen(a_element, MAX_ARG_SIZE);
-			memset(a_element, 0, len);
+			__memset(a_element, 0, len);
 
 			len = strnlen(b_element, MAX_ARG_SIZE);
-			memset(b_element, 0, len);
+			__memset(b_element, 0, len);
 
-			len = strlen(a_str);
+			len = __strlen(a_str);
 			pushElement(&stack, a_str);
 			
 			ret = deallocate(a_str, len); 
@@ -199,7 +199,7 @@ void executeProgram(Program* program) {
 				_terminate(15);	
 
 			len = strnlen(element, MAX_ARG_SIZE);
-			memset(element, 0, len);
+			__memset(element, 0, len);
 
 			program->lineNumber++;
 		}

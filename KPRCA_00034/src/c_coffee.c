@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -85,7 +85,7 @@ static int coffee_init(code_t *code, const unsigned char *k)
     const uint32_t *k32 = (const uint32_t *)k;
     coffee_priv_t *priv;
 
-    code->priv = priv = malloc(sizeof(coffee_priv_t));
+    code->priv = priv = __malloc(sizeof(coffee_priv_t));
     if (priv == NULL)
         return FAILURE;
 
@@ -105,7 +105,7 @@ static int coffee_init(code_t *code, const unsigned char *k)
 
 static void coffee_destroy(code_t *code)
 {
-    free(code->priv);
+    __free(code->priv);
 }
 
 static int coffee_encode(code_t *code, unsigned char *b)

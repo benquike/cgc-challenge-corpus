@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -25,7 +25,7 @@
 
 static list_t *create_node(void *item)
 {
-    list_t *node = malloc(sizeof(list_t));
+    list_t *node = __malloc(sizeof(list_t));
     if (!node)
         return NULL;
 
@@ -116,7 +116,7 @@ void *popfront(list_t **list)
     *list = iter->next;
     iter->next = NULL;
     item = iter->item;
-    free(iter);
+    __free(iter);
     return item;
 }
 
@@ -135,7 +135,7 @@ void *popback(list_t **list)
         *list = NULL;
     else
         prev->next = NULL;
-    free(iter);
+    __free(iter);
     return item;
 }
 
@@ -169,7 +169,7 @@ void *pop(list_t **list, void *item, int (*compare)(void *a, void *b))
                 *list = iter->next;
 
             popval = iter->item;
-            free(iter);
+            __free(iter);
             return popval;
         }
         prev = iter;

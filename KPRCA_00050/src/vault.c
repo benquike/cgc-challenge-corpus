@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -50,16 +50,16 @@ static void write_msg(uint8_t cmd, void *data, size_t n)
     uint8_t hdr[7];
     
     n++; /* for cmd byte */
-    *(uint16_t *)&hdr[0] = htobe16(PROTOCOL_VAULT);
+    *(uint16_t *)&hdr[0] = __htobe16(PROTOCOL_VAULT);
     if (n < 0x8000)
     {
-        *(uint16_t *)&hdr[2] = htobe16(n);
+        *(uint16_t *)&hdr[2] = __htobe16(n);
         hdr[4] = cmd;
         write_bytes(hdr, 5);
     }
     else
     {
-        *(uint32_t *)&hdr[2] = htobe32(n | 0x80000000);
+        *(uint32_t *)&hdr[2] = __htobe32(n | 0x80000000);
         hdr[6] = cmd;
         write_bytes(hdr, 7);
     }
@@ -69,7 +69,7 @@ static void write_msg(uint8_t cmd, void *data, size_t n)
 
 void init_vault()
 {
-    the_vault = malloc(sizeof(vault_t));
+    the_vault = __malloc(sizeof(vault_t));
     /* 2014-12-24 23:00:00 */
     the_vault->open_time = ((2208988800ULL + 1419462000) * 1000);
     the_vault->open_length = (3600 * 1000);
@@ -91,7 +91,7 @@ int handle_msg_vault(void *data, unsigned int n)
     if (cmd == 1) /* LIST */
     {
         int i;
-        uint32_t *buf = malloc(the_vault->num_contents * 8);
+        uint32_t *buf = __malloc(the_vault->num_contents * 8);
         if (buf == NULL)
         {
             write_msg(1, NULL, 0);
@@ -100,23 +100,23 @@ int handle_msg_vault(void *data, unsigned int n)
         {
             for (i = 0; i < the_vault->num_contents; i++)
             {
-                buf[i * 2] = htobe32((uint32_t)&the_vault->contents[i]);
-                buf[i * 2 + 1] = htobe32(the_vault->contents[i].len);
+                buf[i * 2] = __htobe32((uint32_t)&the_vault->contents[i]);
+                buf[i * 2 + 1] = __htobe32(the_vault->contents[i].len);
             }
             
             write_msg(1, buf, the_vault->num_contents * 8);
-            free(buf);
+            __free(buf);
         }
     }
     else if (cmd == 2) /* STORE */
     {
-        id = htobe32(store_in_vault(0, data, n));
+        id = __htobe32(store_in_vault(0, data, n));
         write_msg(2, &id, sizeof(uint32_t));
     }
     else if (cmd == 3 && n >= 4) /* UPDATE */
     {
         id = betoh32(*(uint32_t *)data);
-        id = htobe32(store_in_vault(id, data + 4, n - 4));
+        id = __htobe32(store_in_vault(id, data + 4, n - 4));
         write_msg(3, &id, sizeof(uint32_t));
     }
     else if (cmd == 4 && n >= 4) /* RETRIEVE */
@@ -129,7 +129,7 @@ int handle_msg_vault(void *data, unsigned int n)
             write_msg(4, NULL, 0);
         else
             write_msg(4, outdata, len);
-        free(outdata);
+        __free(outdata);
     }
 
     return 1;
@@ -157,11 +157,11 @@ uint32_t store_in_vault(uint32_t id, void *data, unsigned int n)
 #endif
     }
 
-    copy = malloc(n);
+    copy = __malloc(n);
     if (copy == NULL)
         return 0;
 
-    memcpy(copy, data, n);
+    __memcpy(copy, data, n);
     locker->data = copy;
     locker->len = n;
     return (uint32_t)locker;

@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -51,7 +51,7 @@ typedef struct route {
     uint8_t reserved;
     uint8_t flag1 : 1;
     uint8_t drop : 1;
-    uint8_t free : 1;
+    uint8_t __free : 1;
     uint8_t length : 5;
 } route_t;
 
@@ -76,7 +76,7 @@ route_mem_t **g_route_memory;
 static void print(const char *s)
 {
     size_t bytes;
-    transmit(STDOUT, s, strlen(s), &bytes);
+    transmit(STDOUT, s, __strlen(s), &bytes);
 }
 
 static char *readline(const char *prompt)
@@ -113,13 +113,13 @@ static int parse_ip(char *line, unsigned int *out)
     if ((s4 = strsep(&line, ".")) == NULL)
         return 0;
     unsigned int i1, i2, i3, i4;
-    if ((i1 = strtoul(s1, NULL, 10)) >= 256)
+    if ((i1 = __strtoul(s1, NULL, 10)) >= 256)
         return 0;
-    if ((i2 = strtoul(s2, NULL, 10)) >= 256)
+    if ((i2 = __strtoul(s2, NULL, 10)) >= 256)
         return 0;
-    if ((i3 = strtoul(s3, NULL, 10)) >= 256)
+    if ((i3 = __strtoul(s3, NULL, 10)) >= 256)
         return 0;
-    if ((i4 = strtoul(s4, NULL, 10)) >= 256)
+    if ((i4 = __strtoul(s4, NULL, 10)) >= 256)
         return 0;
     *out = (i1 << 24) | (i2 << 16) | (i3 << 8) | i4;
     return 1;
@@ -172,7 +172,7 @@ static route_t *route_child(route_t *parent, uint32_t ip)
 static void print_route(route_t *route, int level)
 {
     unsigned int mask = route_mask(route);
-    printf(" [%d] %08x %08x %d\n", level,
+    __printf(" [%d] %08x %08x %d\n", level,
         route->ip,
         mask,
         route->asn);
@@ -226,25 +226,25 @@ static route_t *lookup_route(uint32_t ip, unsigned int length, route_t **parent)
 static void prompt_edit_router(router_t *router)
 {
     char *line;
-    printf("AS %d\n", router->asn);
-    printf(" Name: %s\n", router->name);
-    printf(" IP: %d.%d.%d.%d\n", router->ip >> 24, 
+    __printf("AS %d\n", router->asn);
+    __printf(" Name: %s\n", router->name);
+    __printf(" IP: %d.%d.%d.%d\n", router->ip >> 24, 
         (router->ip >> 16) & 0xff,
         (router->ip >> 8) & 0xff,
         (router->ip >> 0) & 0xff);
 
     line = readline("Modify name? ");
-    if (line && strcmp(line, "y") == 0)
+    if (line && __strcmp(line, "y") == 0)
     {
         line = readline("New name? ");
         if (line)
         {
-            strncpy(router->name, line, sizeof(router->name));
+            __strncpy(router->name, line, sizeof(router->name));
             router->name[sizeof(router->name)-1] = 0;
         }
     }
     line = readline("Modify IP? ");
-    if (line && strcmp(line, "y") == 0)
+    if (line && __strcmp(line, "y") == 0)
     {
         unsigned int ip;
         line = readline("New IP? ");
@@ -280,7 +280,7 @@ static route_t *allocate_route()
         for (i = 1; i <= sizeof(avail_mem->routes) / sizeof(avail_mem->routes[0]); i++)
         {
             route_t *route = &avail_mem->routes[i - 1];
-            route->free = 1;
+            route->__free = 1;
             if (i == sizeof(avail_mem->routes) / sizeof(avail_mem->routes[0]))
                 route->ip = 0;
             else
@@ -290,7 +290,7 @@ static route_t *allocate_route()
     }
     route_t *route = &avail_mem->routes[avail_mem->free_head - 1];
     avail_mem->free_head = route->ip;
-    memset(route, 0, sizeof(route_t));
+    __memset(route, 0, sizeof(route_t));
     return route;
 }
 
@@ -304,22 +304,22 @@ static void free_route(route_t *route)
             continue;
         if ((intptr_t)route - (intptr_t)mem < sizeof(route_mem_t))
         {
-            route->free = 1;
+            route->__free = 1;
             route->ip = mem->free_head;
             mem->free_head = ((intptr_t)route - (intptr_t)mem) / sizeof(route_t);
             return;
         }
     }
-    exit(9);
+    __exit(9);
 }
 
 static void delete_route(route_t *route, route_t *parent)
 {
     if (parent == NULL)
         if (lookup_route(route->ip, route->length + 1, &parent) == NULL)
-            exit(1);
+            __exit(1);
     if (parent == NULL)
-        exit(2);
+        __exit(2);
 
     route_t *sibling, **slot;
     if (parent->left == route)
@@ -334,7 +334,7 @@ static void delete_route(route_t *route, route_t *parent)
     }
     else
     {
-        exit(3);
+        __exit(3);
     }
 
     route->asn = INVALID_ASN;
@@ -391,7 +391,7 @@ static void cmd_add_route(char *line)
     word = strsep(&line, " ");
     if (word == NULL)
         goto bad_arguments;
-    asn = strtoul(word, NULL, 10);
+    asn = __strtoul(word, NULL, 10);
     if (asn > MAX_ROUTERS)
         goto bad_arguments;
 
@@ -599,18 +599,18 @@ static void cmd_query_route(char *line)
         route = (ip & bit) == 0 ? route->left : route->right;
     }
 
-    printf("Next hop for %d.%d.%d.%d is ", ip >> 24,
+    __printf("Next hop for %d.%d.%d.%d is ", ip >> 24,
         (ip >> 16) & 0xff,
         (ip >> 8) & 0xff,
         (ip >> 0) & 0xff);
     if (next_hop == INVALID_ASN)
     {
-        printf("BLACKHOLE.\n");
+        __printf("BLACKHOLE.\n");
     }
     else
     {
         router_t *router = get_router(next_hop);
-        printf("%d.%d.%d.%d, AS %d (%s)\n", router->ip >> 24,
+        __printf("%d.%d.%d.%d, AS %d (%s)\n", router->ip >> 24,
             (router->ip >> 16) & 0xff,
             (router->ip >> 8) & 0xff,
             (router->ip >> 0) & 0xff,
@@ -629,7 +629,7 @@ static void cmd_add_router(char *line)
     if (word == NULL)
         goto bad_arguments;
     
-    unsigned int asn = strtoul(word, NULL, 10);
+    unsigned int asn = __strtoul(word, NULL, 10);
     if (asn == INVALID_ASN || asn > MAX_ROUTERS)
         goto bad_arguments;
 
@@ -637,7 +637,7 @@ static void cmd_add_router(char *line)
     if (valid_router(router))
         goto bad_arguments;
 
-    memset(router, 0, sizeof(router_t));
+    __memset(router, 0, sizeof(router_t));
     router->asn = asn;
     prompt_edit_router(router);
     return;
@@ -653,7 +653,7 @@ static void cmd_delete_router(char *line)
     if (word == NULL)
         goto bad_arguments;
     
-    unsigned int asn = strtoul(word, NULL, 10);
+    unsigned int asn = __strtoul(word, NULL, 10);
     if (asn == INVALID_ASN || asn > MAX_ROUTERS)
         goto bad_arguments;
 
@@ -669,7 +669,7 @@ static void cmd_delete_router(char *line)
         for (j = 0; j < sizeof(mem->routes)/sizeof(mem->routes[0]); j++)
         {
             route_t *route = &mem->routes[j];
-            if (!route->free && route->asn == asn)
+            if (!route->__free && route->asn == asn)
             {
                 delete_route(route, NULL);
             }
@@ -695,7 +695,7 @@ static void cmd_edit_router(char *line)
     if (word == NULL)
         goto bad_arguments;
     
-    unsigned int asn = strtoul(word, NULL, 10);
+    unsigned int asn = __strtoul(word, NULL, 10);
 #ifdef PATCHED
     if (asn == INVALID_ASN || asn > MAX_ROUTERS)
         goto bad_arguments;
@@ -724,9 +724,9 @@ static void cmd_list_router(char *line)
         router_t *router = get_router(i);
         if (!valid_router(router))
             continue;
-        printf("AS %d\n", router->asn);
-        printf(" Name: %s\n", router->name);
-        printf(" IP: %d.%d.%d.%d\n", router->ip >> 24, 
+        __printf("AS %d\n", router->asn);
+        __printf(" Name: %s\n", router->name);
+        __printf(" IP: %d.%d.%d.%d\n", router->ip >> 24, 
             (router->ip >> 16) & 0xff,
             (router->ip >> 8) & 0xff,
             (router->ip >> 0) & 0xff);
@@ -738,7 +738,7 @@ static void cmd_enable_mode(char *line)
     char *word = strsep(&line, " ");
     if (word == NULL)
         print("BAD ARGUMENTS\n");
-    else if (strcmp(word, ENABLE_PASSWORD) == 0)
+    else if (__strcmp(word, ENABLE_PASSWORD) == 0)
         g_enable = 1;
     else
         print("BAD PASSWORD\n");
@@ -756,28 +756,28 @@ int main()
         char *word = strsep(&line, " ");
         if (g_enable == 0)
         {
-            if (strcmp(word, "add") == 0)
+            if (__strcmp(word, "add") == 0)
                 cmd_add_route(line);
-            if (strcmp(word, "delete") == 0)
+            if (__strcmp(word, "delete") == 0)
                 cmd_delete_route(line);
-            if (strcmp(word, "query") == 0)
+            if (__strcmp(word, "query") == 0)
                 cmd_query_route(line);
-            if (strcmp(word, "enable") == 0)
+            if (__strcmp(word, "enable") == 0)
                 cmd_enable_mode(line);
-            if (strcmp(word, "quit") == 0)
+            if (__strcmp(word, "quit") == 0)
                 break;
         }
         else
         {
-            if (strcmp(word, "add") == 0)
+            if (__strcmp(word, "add") == 0)
                 cmd_add_router(line);
-            if (strcmp(word, "delete") == 0)
+            if (__strcmp(word, "delete") == 0)
                 cmd_delete_router(line);
-            if (strcmp(word, "edit") == 0)
+            if (__strcmp(word, "edit") == 0)
                 cmd_edit_router(line);
-            if (strcmp(word, "list") == 0)
+            if (__strcmp(word, "list") == 0)
                 cmd_list_router(line);
-            if (strcmp(word, "quit") == 0)
+            if (__strcmp(word, "quit") == 0)
                 g_enable = 0;
         }
     }

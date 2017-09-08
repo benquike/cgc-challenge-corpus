@@ -4,7 +4,7 @@ Author: James Nuttall (james@cromulence.co)
 
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -42,13 +42,13 @@ Game_Info game_info;
 int print_menu()
 {
 	int ret;
-	printf("1. Solve Equation\n");
-	printf("2. Create Equation\n");
-	printf("3. Solve Area\n");
-	printf("4. Solve Perimeter\n");
-	printf("5. Solve Volume\n");
-	printf("6. View Statistics\n");
-	printf("7. Exit\n");
+	__printf("1. Solve Equation\n");
+	__printf("2. Create Equation\n");
+	__printf("3. Solve Area\n");
+	__printf("4. Solve Perimeter\n");
+	__printf("5. Solve Volume\n");
+	__printf("6. View Statistics\n");
+	__printf("7. Exit\n");
 
 	get_user_answer(&ret);
 	return ret;
@@ -57,56 +57,56 @@ int print_menu()
 void print_statistics()
 {
 	char name[32];
-	printf("Total won: @d\n", game_stats.num_won_total);
-	printf("Total lost: @d\n", game_stats.num_lost_total);
-	printf("Equations solved correctly: @d\n", game_stats.num_won_solved_equation);
-	printf("Equations solved incorrectly: @d\n", game_stats.num_lost_solved_equation);
-	printf("Equations created correctly: @d\n", game_stats.num_won_created_equations);
-	printf("Equations created incorrectly: @d\n", game_stats.num_lost_created_equations);
-	printf("Solved perimeter problems @d\n", game_stats.num_won_perimeter);
-	printf("Unsolved perimeter problems @d\n", game_stats.num_lost_perimeter);
-	printf("Solved volume problems @d\n", game_stats.num_won_volume);
-	printf("Unsolved volume problems @d\n", game_stats.num_lost_volume);
-	printf("Solved area problems @d\n", game_stats.num_won_area);
-	printf("Unsolved area problems @d\n", game_stats.num_lost_area);
+	__printf("Total won: @d\n", game_stats.num_won_total);
+	__printf("Total lost: @d\n", game_stats.num_lost_total);
+	__printf("Equations solved correctly: @d\n", game_stats.num_won_solved_equation);
+	__printf("Equations solved incorrectly: @d\n", game_stats.num_lost_solved_equation);
+	__printf("Equations created correctly: @d\n", game_stats.num_won_created_equations);
+	__printf("Equations created incorrectly: @d\n", game_stats.num_lost_created_equations);
+	__printf("Solved perimeter problems @d\n", game_stats.num_won_perimeter);
+	__printf("Unsolved perimeter problems @d\n", game_stats.num_lost_perimeter);
+	__printf("Solved volume problems @d\n", game_stats.num_won_volume);
+	__printf("Unsolved volume problems @d\n", game_stats.num_lost_volume);
+	__printf("Solved area problems @d\n", game_stats.num_won_area);
+	__printf("Unsolved area problems @d\n", game_stats.num_lost_area);
 	
 // Vulnerability 1
 	if (game_stats.num_won_created_equations == 20)
 	{
-		printf("Wow, you created 20 equations! What's your name?:");
-		bzero(name, sizeof(name));
+		__printf("Wow, you created 20 equations! What's your name?:");
+		__bzero(name, sizeof(name));
 		#ifdef PATCHED
 			receive(STDIN, name, sizeof(name) -1 , NULL);
 		#else
 			receive(STDIN, name, sizeof(name) + 45, NULL);
 		#endif
-		printf("Good job, @s!\n", name);
+		__printf("Good job, @s!\n", name);
 	}
 
 // Vulnerability 2
 	if (game_stats.num_won_solved_equation == 20)
 	{
-		printf("Wow, you solved 20 equations! What's your name?:");
-		bzero(name, sizeof(name));
+		__printf("Wow, you solved 20 equations! What's your name?:");
+		__bzero(name, sizeof(name));
 		#ifdef PATCHED
 			receive(STDIN, name, sizeof(name) -1 , NULL);
 		#else
 			receive(STDIN, name, sizeof(name) + 45, NULL);
 		#endif
-		printf("Good job, @s!\n", name);
+		__printf("Good job, @s!\n", name);
 	}
 
 // Vulnerability 3
 	if (game_stats.num_won_area == 20)
 	{
-		printf("Wow, you solved 20 area problems! What's your name?:");
-		bzero(name, sizeof(name));
+		__printf("Wow, you solved 20 area problems! What's your name?:");
+		__bzero(name, sizeof(name));
 		#ifdef PATCHED
 			receive(STDIN, name, sizeof(name) -1 , NULL);
 		#else
 			receive(STDIN, name, sizeof(name) + 45, NULL);
 		#endif
-		printf("Good job, @s!\n", name);
+		__printf("Good job, @s!\n", name);
 	}
 }
 
@@ -237,7 +237,7 @@ int main()
 				// Exit
 				return 0;
 			default:
-				printf("improper input. exiting\n");
+				__printf("improper input. exiting\n");
 				return 0;
 		}
 	}

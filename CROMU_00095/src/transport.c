@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -93,7 +93,7 @@ void ResetTransportMessage(TransportMessage *tpMessage)
 
 int ReceiveTransportMessage(TransportMessage **ptpMessage)
 {
-  TransportMessage *tpMessage= calloc(sizeof(TransportMessage));
+  TransportMessage *tpMessage= __calloc(sizeof(TransportMessage));
   ReceiveBytes((uint8_t *)&tpMessage->reserved, sizeof(tpMessage->reserved));
   if (tpMessage->reserved != 0)
   {
@@ -104,7 +104,7 @@ int ReceiveTransportMessage(TransportMessage **ptpMessage)
   {
     goto FAIL;
   }
-  tpMessage->data = calloc(tpMessage->size);
+  tpMessage->data = __calloc(tpMessage->size);
   ReceiveBytes((uint8_t *)tpMessage->data, tpMessage->size);
   
   *ptpMessage = tpMessage;
@@ -129,10 +129,10 @@ void DestroyTransportMessage(TransportMessage **ptpMessage)
   }
   if (tpMessage->data != NULL) 
   {
-    free(tpMessage->data);
+    __free(tpMessage->data);
     tpMessage->data = NULL;
   }
-  free(tpMessage);
+  __free(tpMessage);
   *ptpMessage = NULL;
 
 }
@@ -158,7 +158,7 @@ int ReadFromTransportMessage(TransportMessage *tpMessage, uint8_t *buffer, int s
   {
     return -1;
   }
-  memcpy(buffer, (uint8_t *)tpMessage->data + tpMessage->currentOffset, size);
+  __memcpy(buffer, (uint8_t *)tpMessage->data + tpMessage->currentOffset, size);
   tpMessage->currentOffset += size;
 
   return 0;

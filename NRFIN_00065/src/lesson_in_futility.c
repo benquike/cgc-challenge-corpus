@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -29,7 +29,7 @@
 static void
 defcon_1(void)
 {
-    printf("A strange game. The only winning move is not to play.\n");
+    __printf("A strange game. The only winning move is not to play.\n");
 }
 
 static void
@@ -39,16 +39,16 @@ defcon_2(void)
     unsigned int lat, lon;
     void __attribute__((regparm(1))) (*fnptr)(unsigned int);
 
-    printf("Enter target latitude:\n");
+    __printf("Enter target latitude:\n");
     if (fread_until(buf, '\n', sizeof(buf), stdin) == EXIT_FAILURE)
         return;
-    if (strlen(buf) == 0 || strtou(buf, 16, &lat) == EXIT_FAILURE)
+    if (__strlen(buf) == 0 || strtou(buf, 16, &lat) == EXIT_FAILURE)
         return;
 
-    printf("Enter target longitude:\n");
+    __printf("Enter target longitude:\n");
     if (fread_until(buf, '\n', sizeof(buf), stdin) == EXIT_FAILURE)
         return;
-    if (strlen(buf) == 0 || strtou(buf, 16, &lon) == EXIT_FAILURE)
+    if (__strlen(buf) == 0 || strtou(buf, 16, &lon) == EXIT_FAILURE)
         return;
 
     fnptr = (void *)(lat | 0xf0000000);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -80,13 +80,13 @@ int IO::readnum(size_t max_size)
     if (i == max_size || i == 0)
         return 0;
 
-    return strtol(&iobuf[0], NULL, 10);
+    return __strtol(&iobuf[0], NULL, 10);
 }
 
 char *IO::iotextdup(size_t max_size)
 {
     size_t rx, i = 0, multiplier = 0;
-    size_t tilde_count = 0; //``` = exit str
+    size_t tilde_count = 0; //``` = __exit str
     char *strbuf;
     if (max_size < 3)
         return NULL;
@@ -111,7 +111,7 @@ char *IO::iotextdup(size_t max_size)
                 return NULL;
             }
 
-            memcpy(temp, strbuf, MAX_IO_SIZE << multiplier);
+            __memcpy(temp, strbuf, MAX_IO_SIZE << multiplier);
             delete[] strbuf;
             strbuf = temp;
         }
@@ -151,20 +151,20 @@ File *IO::upload_file()
     File *new_file = NULL;
 
 
-    memset(file_name, 0, sizeof(file_name));
-    printf("Enter Filename: ");
+    __memset(file_name, 0, sizeof(file_name));
+    __printf("Enter Filename: ");
     if (IO::readline()) {
-        if (strlen(IO::buf()) > 2 && strlen(IO::buf()) < 64) {
-            memcpy(file_name, IO::buf(), strlen(IO::buf()));
+        if (__strlen(IO::buf()) > 2 && __strlen(IO::buf()) < 64) {
+            __memcpy(file_name, IO::buf(), __strlen(IO::buf()));
         }
         else {
-            memcpy(file_name, IO::buf(), sizeof(file_name) - 1);
+            __memcpy(file_name, IO::buf(), sizeof(file_name) - 1);
         }
     }
 
-    printf("--Begin Uploading File--\n");
+    __printf("--Begin Uploading File--\n");
     if (!IO::readnbytes(sizeof(unsigned int), header)) {
-        printf("Could not read magic num\n");
+        __printf("Could not __read magic num\n");
         return NULL;
     }
 
@@ -172,27 +172,27 @@ File *IO::upload_file()
 
     ft = get_filetype_m(magic);
     if (!ft) {
-        printf("Unsupported file\n");
+        __printf("Unsupported file\n");
         return NULL;
     }
 
     if (ft->type == ASCIIART) {
         if (!IO::readnbytes(AsciiArt::find_header_size() - sizeof(magic), &header[sizeof(magic)])){
-            printf("Could not read header\n");
+            __printf("Could not read.header\n");
             return NULL;
         }
 
         data_size = AsciiArt::find_data_size(header);
         data = new char[data_size];
         if (!IO::readnbytes(data_size, data)) {
-            printf("Could not read data\n");
+            __printf("Could not __read data\n");
             delete[] data;
             return NULL;
         }
 
         new_file = new AsciiArt(header, data, file_name);
         if (!new_file->get_data_size()) {
-            printf("Malformed Data\n");
+            __printf("Malformed Data\n");
             delete[] data;
             delete new_file;
             return NULL;
@@ -201,7 +201,7 @@ File *IO::upload_file()
         return new_file;
     } else if (ft->type == PICTURE) {
         if (!IO::readnbytes(Picture::find_header_size() - sizeof(magic), &header[sizeof(magic)])){
-            printf("Could not read header\n");
+            __printf("Could not read.header\n");
             return NULL;
         }
 
@@ -209,14 +209,14 @@ File *IO::upload_file()
 
         data = new char[data_size];
         if (!IO::readnbytes(data_size, data)) {
-            printf("Could not read data\n");
+            __printf("Could not __read data\n");
             delete[] data;
             return NULL;
         }
 
         new_file = new Picture(header, data, file_name);
         if (!new_file->get_data_size()) {
-            printf("Malformed Data\n");
+            __printf("Malformed Data\n");
             delete[] data;
             delete new_file;
             return NULL;
@@ -225,7 +225,7 @@ File *IO::upload_file()
         delete[] data;
         return new_file;
     } else {
-        printf("Unsupported Upload Type\n");
+        __printf("Unsupported Upload Type\n");
         return NULL;
     }
 }

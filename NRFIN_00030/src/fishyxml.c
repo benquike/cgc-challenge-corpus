@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -32,7 +32,7 @@
  *
  * @param xml Char string with binary xml to parse
  * @param cards Array to hold the pointer to the resulting card.
- * @return Number of chars read or ERR_INVALID_CARD, 
+ * @return Number of chars __read or ERR_INVALID_CARD, 
  *	ERR_INVALID_XML on error.
  */
 int parse_xml_card(char *xml, struct card *cards[]) {
@@ -136,9 +136,9 @@ int parse_xml_player_name(char *xml, char **player_name, uint8_t len) {
 
 	char *name = NULL;
 	uint8_t name_len = len - 8;
-	name = calloc(name_len);
+	name = __calloc(name_len);
 
-	strncpy(name, &xml[4], name_len);
+	__strncpy(name, &xml[4], name_len);
 	*player_name = name;
 
 	if ((END != xml[len - 4]) ||

@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.co>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -50,11 +50,11 @@ int32_t DestroyVARS(void) {
 		return(0);
 	}
 
-	// walk the vars and free everything
+	// walk the vars and __free everything
 	pm = pVARS;
 	while (pm) {
 		pm_next = pm->next;
-		free(pm);
+		__free(pm);
 		pm = pm_next;
 	}
 	
@@ -73,7 +73,7 @@ vars_t *SearchVARS(char *target_name) {
 	// walk the VARS and find the target	
 	pm = pVARS;
 	while (pm) {
-		if (strcmp(pm->name, target_name) == 0) {
+		if (__strcmp(pm->name, target_name) == 0) {
 			return(pm);
 		}	
 
@@ -95,18 +95,18 @@ vars_t *CreateVARSObject(char *name, uint8_t type, void *value) {
 	}
 
 	// create the object
-	if ((pm = calloc(1, sizeof(vars_t))) == NULL) {
+	if ((pm = __calloc(1, sizeof(vars_t))) == NULL) {
 		_terminate(-1);
 	}
 
 	// Copy the data into the object
-	strncpy(pm->name, name, MAX_NAME_LEN-1);
+	__strncpy(pm->name, name, MAX_NAME_LEN-1);
 
 	pm->type = type;
 	if (type == STRING) {
-		strncpy((char *)pm->value, value, MAX_VALUE_LEN-1);
+		__strncpy((char *)pm->value, value, MAX_VALUE_LEN-1);
 	} else if (type == INT32) {
-		memcpy(pm->value, value, 4);
+		__memcpy(pm->value, value, 4);
 	}
 
 	return(pm);
@@ -138,14 +138,14 @@ int32_t DeleteVARSObject(vars_t *target) {
 
 	pm = pVARS;
 	while (pm) {
-		if (strcmp(pm->name, target->name) != 0) {
+		if (__strcmp(pm->name, target->name) != 0) {
 			continue;
 		}
 
 		// handle case where target is head object
 		if (pm == pVARS) {
 			pVARS = pm->next;
-			free(pm);
+			__free(pm);
 			return(1);
 		}
 
@@ -154,7 +154,7 @@ int32_t DeleteVARSObject(vars_t *target) {
 		if (pm->next) {
 			pm->next->prev = pm->prev;
 		}
-		free(pm);
+		__free(pm);
 
 		return(1);
 	}
@@ -190,10 +190,10 @@ vars_t *UpdateVARSObject(char *name, uint8_t type, void *value) {
 	}
 
 	if (type == STRING) {
-		strncpy((char *)pm->value, value, MAX_VALUE_LEN-1);
+		__strncpy((char *)pm->value, value, MAX_VALUE_LEN-1);
 
 	} else if (type == INT32) {
-		memcpy(pm->value, value, 4);
+		__memcpy(pm->value, value, 4);
 	}
 
 	return(pm);

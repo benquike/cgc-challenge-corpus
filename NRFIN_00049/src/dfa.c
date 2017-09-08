@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -36,7 +36,7 @@ dfa_init(struct dfa *dfa)
 
     for (i = 0; i < MAX_NUM_STATES; i++) {
         for (j = 0; j < 256; j++)
-            dfa->states[i].transitions[j] = SENTINEL;
+	  dfa->states[i].transitions[j] = (char)SENTINEL;
 
         dfa->states[i].onmatch = NULL;
         dfa->states[i].data = NULL;
@@ -91,14 +91,14 @@ dfa_parse_desc(struct dfa *dfa, char *line, onmatch_handler onmatch, void *data)
     if (strncmp(line, "state", sizeof("state") - 1) == 0) {
         dfa->current = (dfa->current == NULL ? &dfa->states[0] : dfa->current + 1);
         // Don't let our start state be an accept state
-        if (strcmp(line + sizeof("state ") - 1, "accept") == 0 && dfa->current != &dfa->states[0]) {
+        if (__strcmp(line + sizeof("state ") - 1, "accept") == 0 && dfa->current != &dfa->states[0]) {
             dfa->current->onmatch = onmatch;
             dfa->current->data = data;
             return bitset_set_bit(&dfa->accept.bitset, GET_CURRENT_INDEX(dfa));
         }
 
         return EXIT_SUCCESS;
-    } else if (strcmp(line, "done") == 0) {
+    } else if (__strcmp(line, "done") == 0) {
         if (validate_dfa(dfa, GET_CURRENT_INDEX(dfa) + 1) != EXIT_SUCCESS)
             return EXIT_FAILURE;
 

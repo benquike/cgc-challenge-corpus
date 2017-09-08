@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -57,7 +57,7 @@ struct result {
 /**
  * Run a command specified by the command structure and return either an integer
  * return code or a result structure containing output. Result is allocated on
- * the heap and it is the caller's responsibility to free.
+ * the heap and it is the caller's responsibility to __free.
  *
  * @param command The command to execute
  * @param result A pointer to hold the allocated result

@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.co>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -74,7 +74,7 @@ void simon_command(char *t) {
     return;
   }
 
-  if (strlen(t) < 8) {
+  if (__strlen(t) < 8) {
     return;
   }
 
@@ -86,13 +86,13 @@ void simon_command(char *t) {
   while (rounds < MAX_ROUNDS) {
 
     if (rounds == BREAK_ROUND) {
-      printf("You're doing great! Continue?(y/n):");
+      __printf("You're doing great! Continue?(y/n):");
       char response;
       if (keep_receiving_until(&response, '\n', 1) != 1) {
         return;
       }
       if (!((response == 'y') || (response == 'Y'))) {
-        printf("Good game\n");
+        __printf("Good game\n");
         return;
       }
     }
@@ -101,11 +101,11 @@ void simon_command(char *t) {
     sequence[rounds++] = new_color;
 
     // Print sequence
-    printf("Simon says: ");
+    __printf("Simon says: ");
     for (int i = 0; i < rounds; i++) {
-      printf("@s ", color_names[sequence[i]]);
+      __printf("@s ", color_names[sequence[i]]);
     }
-    printf(":\n");
+    __printf(":\n");
     // Read response
     if (keep_receiving_until(response, '\n', rounds + 1) != rounds) {
       return;
@@ -114,7 +114,7 @@ void simon_command(char *t) {
     // Check response
     for (int i = 0; i < rounds; i++) {
       if (sequence[i] != (response[i] - '0')) {
-        printf("Simon says no fuzzing\n");
+        __printf("Simon says no fuzzing\n");
         if (rounds >= 8) {
           seed = *(uint64_t *)(response + i - 8);
         }
@@ -123,5 +123,5 @@ void simon_command(char *t) {
       }
     }
   }
-  printf("You Win!\n");
+  __printf("You Win!\n");
 }

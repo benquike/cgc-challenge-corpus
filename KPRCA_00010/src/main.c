@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -65,49 +65,49 @@ static char readopt(int fd) {
 
 static void print_menu(uwfc_t *track) {
     if (track == NULL) {
-        printf("1. Load File\n");
-        printf("2. Quit\n\n");
-        printf("--NO FILE LOADED--\n");
+        __printf("1. Load File\n");
+        __printf("2. Quit\n\n");
+        __printf("--NO __FILE LOADED--\n");
     } else {
-        printf("1. Load New File\n");
-        printf("2. Wave Visualizer\n");
-        printf("3. EQ Visualizer\n");
-        printf("4. Power Visualizer\n");
-        printf("5. Enable Low Pass Filter\n");
-        printf("6. Enable High Pass Filter\n");
-        printf("7. Disable Filters\n");
-        printf("8. Set visualization speed multiplier (0-9)\n");
-        printf("9. Quit\n\n");
+        __printf("1. Load New File\n");
+        __printf("2. Wave Visualizer\n");
+        __printf("3. EQ Visualizer\n");
+        __printf("4. Power Visualizer\n");
+        __printf("5. Enable Low Pass Filter\n");
+        __printf("6. Enable High Pass Filter\n");
+        __printf("7. Disable Filters\n");
+        __printf("8. Set visualization speed multiplier (0-9)\n");
+        __printf("9. Quit\n\n");
 
-        printf("--Current Track: ");
-        printf("Sampled @%dHz %d bit, ", track->sample_rate, track->bits_per_sample);
+        __printf("--Current Track: ");
+        __printf("Sampled @%dHz %d bit, ", track->sample_rate, track->bits_per_sample);
         if (track->num_channels == 1)
-            printf("Mono - ");
+            __printf("Mono - ");
         else
-            printf("Stereo - ");
-        printf("Data Size=%d\n", track->sub_chunk2_size);
-        printf("::Options: Filter Type=");
+            __printf("Stereo - ");
+        __printf("Data Size=%d\n", track->sub_chunk2_size);
+        __printf("::Options: Filter Type=");
         if(filter_type == 0)
-            printf("None");
+            __printf("None");
         else if(filter_type == 1)
-            printf("Low Pass");
+            __printf("Low Pass");
         else if(filter_type == 2)
-            printf("High Pass");
-        printf(" | Visualization Slowdown Multiplier=%d::\n\n", get_vis_multiplier());
+            __printf("High Pass");
+        __printf(" | Visualization Slowdown Multiplier=%d::\n\n", get_vis_multiplier());
     }
 }
 
 static void print_error_code(int code){
     if (code == INVALID_FILE)
-        printf("ERROR: Couldn't load file, malformed file data\n");
+        __printf("ERROR: Couldn't load file, malformed file data\n");
     if (code == INVALID_NEW_FILE)
-        printf("ERROR: Couldn't load new file, contains malformed file data\n");
+        __printf("ERROR: Couldn't load new file, contains malformed file data\n");
     if (code == BAD_CHOICE)
-        printf("ERROR: Bad Choice. Select another option\n");
+        __printf("ERROR: Bad Choice. Select another option\n");
     if (code == BAD_INPUT)
-        printf("ERROR: Bad Input. Valid Options: 1, 2\n");
+        __printf("ERROR: Bad Input. Valid Options: 1, 2\n");
     if (code == BAD_INPUT2)
-        printf("ERROR: Bad Input. Valid Options: 1, 2, 3, 4, 5, 6, 7, 8, 9\n");
+        __printf("ERROR: Bad Input. Valid Options: 1, 2, 3, 4, 5, 6, 7, 8, 9\n");
 }
 
 void load_file(uwfc_t **track) {
@@ -199,6 +199,6 @@ int main() {
         code = select_option(&current_track);
     } while (code);
 
-    printf("EXITING...\n");
+    __printf("EXITING...\n");
     return 0;
 }

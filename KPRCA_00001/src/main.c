@@ -3,7 +3,7 @@
  * 
  * Copyright (c) 2014 Kaprica Security, Inc.
  * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -102,7 +102,7 @@ static void output_write(char *s, size_t n)
         n = bytes_remaining;
     if (n > 0)
     {
-        memcpy(g_output_buf + g_output_len, s, n);
+        __memcpy(g_output_buf + g_output_len, s, n);
         g_output_len += n;
     }
 }
@@ -142,22 +142,22 @@ static int send_error(int code)
 int main()
 {
     char buf[1024];
-    g_output_buf = malloc(MAX_OUTPUT);
+    g_output_buf = __malloc(MAX_OUTPUT);
     while (readuntil(STDIN, buf, sizeof(buf), '\n') == 0)
     {
         char *tok, *input = buf;
-        if (strlen(buf) == 0)
+        if (__strlen(buf) == 0)
             break;
-        buf[strlen(buf)-1] = '\0'; /* remove newline */
+        buf[__strlen(buf)-1] = '\0'; /* remove newline */
         tok = strsep(&input, " ");
         if (tok == NULL)
             break;
-        if (strcmp(tok, TOKEN_BYE) == 0)
+        if (__strcmp(tok, TOKEN_BYE) == 0)
             break;
 
         handler_map_t *hm;
         for (hm = commands; hm->name != NULL; hm++)
-            if (strcmp(hm->name, tok) == 0)
+            if (__strcmp(hm->name, tok) == 0)
                 break;
 
         if (hm->name == NULL)
@@ -191,7 +191,7 @@ static int handle_auth(char *input)
     char *arg = strsep(&input, " ");
     if (arg == NULL)
         return send_error(500);
-    unsigned int token = strtoul(arg, NULL, 16);
+    unsigned int token = __strtoul(arg, NULL, 16);
     if (token != g_token)
         return send_error(403);
     g_auth = 1;
@@ -208,14 +208,14 @@ static int handle_set(char *input)
     char *arg_value = input;
     if (arg_value == NULL)
         return send_error(500);
-    variable_t *var = malloc(sizeof(variable_t) + strlen(arg_name) + strlen(arg_value) + 2);
+    variable_t *var = __malloc(sizeof(variable_t) + __strlen(arg_name) + __strlen(arg_value) + 2);
     if (var == NULL)
         return send_error(500);
     char *data = var->data;
-    strcpy(data, arg_name);
+    __strcpy(data, arg_name);
     var->name = data;
-    data += strlen(var->name) + 1;
-    strcpy(data, arg_value);
+    data += __strlen(var->name) + 1;
+    __strcpy(data, arg_value);
     var->value = data;
     var->next = variables;
     variables = var;
@@ -234,7 +234,7 @@ static int handle_call(char *input)
 
     page_map_t *hm;
     for (hm = functions; hm->name != NULL; hm++)
-        if (strcmp(hm->name, input) == 0)
+        if (__strcmp(hm->name, input) == 0)
             break;
 
     if (hm->name == NULL)
@@ -250,7 +250,7 @@ static char *variable_get(const char *name)
 {
     variable_t *var;
     for (var = variables; var != NULL; var = var->next)
-        if (strcmp(name, var->name) == 0)
+        if (__strcmp(name, var->name) == 0)
             return var->value;
     return NULL;
 }
@@ -276,12 +276,12 @@ static int page_root64(char *input)
         return 1;
     }
 
-    if (strcmp(mode, "encode") == 0)
+    if (__strcmp(mode, "encode") == 0)
     {
 #if PATCHED
-        if (strlen(data) * 4 / 3 <= sizeof(buf))
+        if (__strlen(data) * 4 / 3 <= sizeof(buf))
 #else
-        if (strlen(data) / 3 * 4 <= sizeof(buf))
+        if (__strlen(data) / 3 * 4 <= sizeof(buf))
 #endif
         {
             size_t n = root64_encode(buf, data);
@@ -293,9 +293,9 @@ static int page_root64(char *input)
             return 1;
         }
     }
-    else if (strcmp(mode, "decode") == 0)
+    else if (__strcmp(mode, "decode") == 0)
     {
-        if (strlen(data) <= sizeof(buf))
+        if (__strlen(data) <= sizeof(buf))
         {
             size_t n = root64_decode(buf, data);
             output_write(buf, n);
@@ -324,11 +324,11 @@ static int page_parcour(char *input)
         send_error(500);
         return 1;
     }
-    int keylen = strlen(key);
+    int keylen = __strlen(key);
     if (keylen > 2)
         keylen = 2;
     parcour_init(key, keylen);
-    size_t i, n = strlen(data);
+    size_t i, n = __strlen(data);
     for (i = 0; i < n; i++)
         data[i] ^= parcour_byte();
     output_write(data, n);

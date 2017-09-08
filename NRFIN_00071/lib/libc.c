@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -70,7 +70,7 @@ size_t sendall(int fd, char *buf, size_t s) {
     return s;
 }
 
-void *memset(void *s, int c, size_t n) {
+void *__memset(void *s, int c, size_t n) {
     size_t i;
 
     for (i=0; i < n; i++)
@@ -85,7 +85,7 @@ int streq(char *s1, char *s2) {
     return (*(s1-1) == *(s2-1));
 }
 
-int strlen(const char *s) {
+int __strlen(const char *s) {
     const char *o = s;
 
     while(*s++);
@@ -93,18 +93,18 @@ int strlen(const char *s) {
     return s-o-1;
 }
 
-void strcpy(char *s1, const char *s2) {
+void __strcpy(char *s1, const char *s2) {
     while ((*s1++ = *s2++));
 }
 
-void memcpy(void *dest, void *src, size_t len) {
+void __memcpy(void *dest, void *src, size_t len) {
     int i = 0;
 
     for (i = 0; i < len; i++)
         *((char*)dest+i) = *((char*)src+i);
 }
 
-unsigned int atoi(char *s) {
+unsigned int __atoi(char *s) {
     unsigned int res = 0;
 
     while(*s)
@@ -113,7 +113,7 @@ unsigned int atoi(char *s) {
     return res;
 }
 
-char * strcat(char *dest, const char *src) {
+char * __strcat(char *dest, const char *src) {
     char *res = dest;
 
     while(*dest++);
@@ -139,14 +139,14 @@ char *tohex(int val, char *s) {
     return s;
 }
 
-void sprintf(char *buf, const char *fmt, ...) {
+void __sprintf(char *buf, const char *fmt, ...) {
     va_list argp;
     va_start(argp, fmt);
-    vsprintf(buf, fmt, argp);
+    __vsprintf(buf, fmt, argp);
     va_end(argp);
 }
 
-void vsprintf(char *buf, const char *fmt, va_list argp) {
+void __vsprintf(char *buf, const char *fmt, va_list argp) {
     char num[9] = {0};
     char *s, *p;
     int i;
@@ -161,15 +161,15 @@ void vsprintf(char *buf, const char *fmt, va_list argp) {
             case 'b':
                 //char buffer
                 s = va_arg(argp, char *);
-                strcpy(buf, s);
-                buf += strlen(s);
+                __strcpy(buf, s);
+                buf += __strlen(s);
                 break;
             case 'i':
                 //print hex
                 i = va_arg(argp, int);
                 tohex(i, num);
-                strcpy(buf, num);
-                buf += strlen(num);
+                __strcpy(buf, num);
+                buf += __strlen(num);
                 break;
             case FMTCHAR:
                 *buf++ = *p;
@@ -178,21 +178,21 @@ void vsprintf(char *buf, const char *fmt, va_list argp) {
     }
 }
 
-void printf(const char *fmt, ...) {
+void __printf(const char *fmt, ...) {
     va_list argp;
     va_start(argp, fmt);
-    vfdprintf(stdout, fmt, argp);
+    __vfdprintf(stdout, fmt, argp);
     va_end(argp);
 }
 
-void fdprintf(int fd, const char *fmt, ...) {
+void __fdprintf(int fd, const char *fmt, ...) {
     va_list argp;
     va_start(argp, fmt);
-    vfdprintf(fd, fmt, argp);
+    __vfdprintf(fd, fmt, argp);
     va_end(argp);
 }
 
-void vfdprintf(int fd, const char *fmt, va_list argp) {
+void __vfdprintf(int fd, const char *fmt, va_list argp) {
     char hex[9];
     char *s, *p;
     int i;
@@ -207,13 +207,13 @@ void vfdprintf(int fd, const char *fmt, va_list argp) {
             case 'b':
                 //char buffer
                 s = va_arg(argp, char *);
-                sendall(fd, s, strlen(s));
+                sendall(fd, s, __strlen(s));
                 break;
             case 'h':
                 //print hex
                 i = va_arg(argp, int);
                 tohex(i, hex);
-                sendall(fd, hex, strlen(hex));
+                sendall(fd, hex, __strlen(hex));
                 break;
             case FMTCHAR:
                 sendall(fd, p, 1);
@@ -222,7 +222,7 @@ void vfdprintf(int fd, const char *fmt, va_list argp) {
     }
 }
 
-char *strtok(char *s, char sep) {
+char *__strtok(char *s, char sep) {
     char *cur;
 
     if (s == NULL) {
@@ -247,7 +247,7 @@ char *strtok(char *s, char sep) {
 }
 
 
-int memeq(void *b1, void *b2, size_t len) {
+int __memeq(void *b1, void *b2, size_t len) {
     int i;
 
     for (i=0; i < len; i++) {

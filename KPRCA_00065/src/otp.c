@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -36,9 +36,9 @@ void _otp_populate(otp_t *o)
     char tmp[4096];
 
     idx = o->seed_idx % 4096;
-    memcpy(tmp, &secret[idx], 4096 - idx);
+    __memcpy(tmp, &secret[idx], 4096 - idx);
     if (idx != 0)
-        memcpy(&tmp[4096 - idx], secret, idx);
+        __memcpy(&tmp[4096 - idx], secret, idx);
 
     for (idx = i = o->data_len; i < MAX_OTP_LEN; ++i)
     {
@@ -55,7 +55,7 @@ void _otp_consume(otp_t *o, size_t sz)
     size_t i;
     if (o->data_len < sz)
         return;
-    memcpy(o->data, &o->data[sz], o->data_len - sz);
+    __memcpy(o->data, &o->data[sz], o->data_len - sz);
     o->data_len -= sz;
 }
 
@@ -63,13 +63,13 @@ void otp_handshake(otp_t **o)
 {
     if (*o)
     {
-        free(*o);
+        __free(*o);
         *o = NULL;
     }
 
     unsigned int challenge[2], response[2];
     random(challenge, sizeof(challenge), NULL);
-    fwrite(challenge, sizeof(challenge), stdout);
+    __fwrite(challenge, sizeof(challenge), stdout);
 
     int i;
     unsigned char *c = (unsigned char *) &challenge;
@@ -87,23 +87,23 @@ void otp_handshake(otp_t **o)
         memcmp((void *)secret, response, sizeof(challenge)) != 0)
         goto fail;
 
-    otp_t *otp = (otp_t *) malloc(sizeof(otp_t));
-    memset(otp, 0, sizeof(otp_t));
+    otp_t *otp = (otp_t *) __malloc(sizeof(otp_t));
+    __memset(otp, 0, sizeof(otp_t));
     otp->seed_value = sv;
     unsigned int *sp = (unsigned int *) secret;
     for (i = 0; i < 4096 / 4; ++i)
         otp->seed_idx += sp[i];
     otp->seed_idx %= 4096;
 
-    fwrite(&otp->seed_idx, sizeof(unsigned int), stdout);
-    fwrite("\x00", 1, stdout);
+    __fwrite(&otp->seed_idx, sizeof(unsigned int), stdout);
+    __fwrite("\x00", 1, stdout);
     otp->num_reqs = 3;
     *o = otp;
     return;
 
 fail:
     *o = NULL;
-    fwrite("\xFF", 1, stdout);
+    __fwrite("\xFF", 1, stdout);
 }
 
 void otp_generate_otp(otp_t *o)
@@ -126,15 +126,15 @@ void otp_generate_otp(otp_t *o)
 
     int i;
     for (i = 0; i < sz; ++i)
-        printf("%02X", o->data[i]);
+        __printf("%02X", o->data[i]);
     _otp_consume(o, sz);
 
-    fwrite("\x00", 1, stdout);
+    __fwrite("\x00", 1, stdout);
     o->num_reqs--;
     return;
 
 fail:
-    fwrite("\xFF", 1, stdout);
+    __fwrite("\xFF", 1, stdout);
 }
 
 void otp_extend_session(otp_t *o)
@@ -160,16 +160,16 @@ void otp_extend_session(otp_t *o)
 #endif
         goto fail;
 
-    resp = malloc(sz + 1);
+    resp = __malloc(sz + 1);
     resp[0] = '\x00';
-    memcpy(&resp[1], buf, sz);
+    __memcpy(&resp[1], buf, sz);
     o->num_reqs = 3;
-    fwrite(resp, sz + 1, stdout);
-    free(resp);
+    __fwrite(resp, sz + 1, stdout);
+    __free(resp);
     return;
 
 fail:
-    fwrite("\xFF", 1, stdout);
+    __fwrite("\xFF", 1, stdout);
 }
 
 void otp_set_seeds(otp_t *o)
@@ -186,14 +186,14 @@ void otp_set_seeds(otp_t *o)
     o->seed_value = sv;
     o->seed_idx = idx;
     o->data_len = 0;
-    memset(o->data, 0, MAX_OTP_LEN);
+    __memset(o->data, 0, MAX_OTP_LEN);
     _otp_populate(o);
 
-    fwrite("\x00", 1, stdout);
+    __fwrite("\x00", 1, stdout);
     return;
 
 fail:
-    fwrite("\xFF", 1, stdout);
+    __fwrite("\xFF", 1, stdout);
 }
 
 void otp_verify_otp(otp_t *o)
@@ -213,7 +213,7 @@ void otp_verify_otp(otp_t *o)
         goto fail;
 
     otp_t tmp;
-    memset(&tmp, 0, sizeof(otp_t));
+    __memset(&tmp, 0, sizeof(otp_t));
     tmp.seed_value = sv;
     tmp.seed_idx = idx;
     _otp_populate(&tmp);
@@ -221,10 +221,10 @@ void otp_verify_otp(otp_t *o)
     if (memcmp(tmp.data, token, sz) != 0)
         goto fail;
 
-    fwrite("\x00", 1, stdout);
+    __fwrite("\x00", 1, stdout);
     return;
 
 fail:
-    fwrite("\xFF", 1, stdout);
+    __fwrite("\xFF", 1, stdout);
 }
 

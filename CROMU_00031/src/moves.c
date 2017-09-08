@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.co>
 
 Copyright (c) 2014-2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -110,11 +110,11 @@ int IsLateralClear(char b[X_MAX][Y_MAX], char srcx, char srcy, char dstx, char d
 int IsMemberPiece(char *PIECES, char piece) {
 	char *t;
 
-	t = strchr(PIECES, piece);
+	t = __strchr(PIECES, piece);
 	if (t == NULL) {
 		return(0);
 	} else {
-		if (t == PIECES+strlen(PIECES)) {
+		if (t == PIECES+__strlen(PIECES)) {
 			return(0);
 		} else {
 			return(1);
@@ -131,16 +131,16 @@ int IsValidMove(char b[X_MAX][Y_MAX], char srcx, char srcy, char dstx, char dsty
 	}
 
 	// make sure the src coordinate is the current player's piece
-	if (!strcmp(CURR_PLAYER, "WHITE") && IsMemberPiece(W_PIECES, b[srcx][srcy]) == 0) {
+	if (!__strcmp(CURR_PLAYER, "WHITE") && IsMemberPiece(W_PIECES, b[srcx][srcy]) == 0) {
 		return(0);
-	} else if (!strcmp(CURR_PLAYER, "BLACK") && IsMemberPiece(B_PIECES, b[srcx][srcy]) == 0) {
+	} else if (!__strcmp(CURR_PLAYER, "BLACK") && IsMemberPiece(B_PIECES, b[srcx][srcy]) == 0) {
 		return(0);
 	}
 
 	// make sure the dest coordinate isn't the current player's piece
-	if (!strcmp(CURR_PLAYER, "WHITE") && IsMemberPiece(W_PIECES, b[dstx][dsty])) {
+	if (!__strcmp(CURR_PLAYER, "WHITE") && IsMemberPiece(W_PIECES, b[dstx][dsty])) {
 		return(0);
-	} else if (!strcmp(CURR_PLAYER, "BLACK") && IsMemberPiece(B_PIECES, b[dstx][dsty])) {
+	} else if (!__strcmp(CURR_PLAYER, "BLACK") && IsMemberPiece(B_PIECES, b[dstx][dsty])) {
 		return(0);
 	}
 
@@ -237,42 +237,42 @@ int AcceptMove(char b[X_MAX][Y_MAX], char *srcx, char *srcy, char *dstx, char *d
 	size_t rxcount;
 
 	while (1) {
-		printf("@s: ", CURR_PLAYER);
-		bzero(s.input, 15);
+		__printf("@s: ", CURR_PLAYER);
+		__bzero(s.input, 15);
 #ifdef PATCHED
-		if ((rxcount = receive_until(s.input, '\n', 14)) == 0) {
+		if ((rxcount = __receive_until(s.input, '\n', 14)) == 0) {
 #else
-		if ((rxcount = receive_until(s.input, '\n', 16)) == 0) {
+		if ((rxcount = __receive_until(s.input, '\n', 16)) == 0) {
 #endif
 			if (rxcount == 0) {
 				_terminate(1);
 			}
 		}
 
-		if (s.input[strlen(s.input)-1] == '\n') {
-			s.input[strlen(s.input)-1] = '\0';
+		if (s.input[__strlen(s.input)-1] == '\n') {
+			s.input[__strlen(s.input)-1] = '\0';
 		}
 
 		// see if the player just wants to display the board
-		if (!strcmp("9", s.input)) {
+		if (!__strcmp("9", s.input)) {
 			PrintBoard(b);
 			continue;
 		}
 
-		// see if the player wants to exit
-		if (!strcmp("666", s.input)) {
+		// see if the player wants to __exit
+		if (!__strcmp("666", s.input)) {
 			return(0);
 		}	
 
-		if (strlen(s.input) > 7) {
-			puts("incorrect input");
-			puts("Not a legal move format");
+		if (__strlen(s.input) > 7) {
+			__puts("incorrect input");
+			__puts("Not a legal move format");
 			continue;
 		}
 
 		// try to parse move 
 		coord1 = coord2 = NULL;
-		for (i = 0; i < strlen(s.input); i++) {
+		for (i = 0; i < __strlen(s.input); i++) {
 			if (s.input[i] == ' ') {
 				s.input[i] = '\0';
 				coord2 = s.input+i+1;
@@ -280,28 +280,28 @@ int AcceptMove(char b[X_MAX][Y_MAX], char *srcx, char *srcy, char *dstx, char *d
 			}
 		}
 		if (coord1 == NULL) {
-			puts("incorrect input");
-			puts("Not a legal move format");
+			__puts("incorrect input");
+			__puts("Not a legal move format");
 			continue;
 		}
 	
 		// parse each coordinate
-		if (!strchr(s.allowed_chars, coord1[0]) || 
+		if (!__strchr(s.allowed_chars, coord1[0]) || 
 		    (coord1[1] != ',') ||
-		    !strchr(s.allowed_chars, coord1[2]) ||
-		    strlen(coord1) != 3) {
-			puts("incorrect input");
-			puts("Not a legal move format");
+		    !__strchr(s.allowed_chars, coord1[2]) ||
+		    __strlen(coord1) != 3) {
+			__puts("incorrect input");
+			__puts("Not a legal move format");
 			continue;
 		}
 		*srcx = coord1[0] - '0';
 		*srcy = coord1[2] - '0';
-		if (!strchr(s.allowed_chars, coord2[0]) || 
+		if (!__strchr(s.allowed_chars, coord2[0]) || 
 		    (coord2[1] != ',') ||
-		    !strchr(s.allowed_chars, coord2[2]) ||
-		    strlen(coord2) != 3) {
-			puts("incorrect input");
-			puts("Not a legal move format");
+		    !__strchr(s.allowed_chars, coord2[2]) ||
+		    __strlen(coord2) != 3) {
+			__puts("incorrect input");
+			__puts("Not a legal move format");
 			continue;
 		}
 		*dstx = coord2[0] - '0';

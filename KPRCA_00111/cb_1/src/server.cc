@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -41,8 +41,8 @@ unsigned long x = ID * 983985;
 
 typedef struct
 {
-  FILE* tx;
-  FILE* rx;
+  __FILE* tx;
+  __FILE* rx;
   int n;
   int fd;
   bool registered;
@@ -64,12 +64,12 @@ client_state* new_client(int n)
   else
   {
     c->fd = 3 + (2 * (n - 1) + 1);
-    c->tx = fopen(c->fd, F_WRITE);
-    c->rx = fopen(c->fd, F_READ);
+    c->tx = __fopen(c->fd, F_WRITE);
+    c->rx = __fopen(c->fd, F_READ);
   }
 
-  fbuffered(c->tx, 0);
-  fbuffered(c->rx, 0);
+  __fbuffered(c->tx, 0);
+  __fbuffered(c->rx, 0);
 
   c->last_read = 0;
   c->registered = false;
@@ -83,7 +83,7 @@ typedef struct
   size_t num_clients;
   size_t num_alive;
   bool finished = false;
-  FILE* log;
+  __FILE* log;
 } server_state;
 
 server_state* new_server(size_t n)
@@ -91,7 +91,7 @@ server_state* new_server(size_t n)
   server_state* s = new server_state;
   s->log = stderr;
   s->num_clients = n;
-  s->clients = (client_state **)calloc(sizeof(client_state*), n);
+  s->clients = (client_state **)__calloc(sizeof(client_state*), n);
 
   dbg("Allocating %d clients", n);
   for (size_t i = 0; i < n; ++i)
@@ -143,14 +143,14 @@ void handle_read(server_state* s, client_state* c)
 
   int to_read = unread.length();
   dbg("Sending %d %d blubs", c->n, to_read);
-  fwrite(&to_read, sizeof(to_read), c->tx);
+  __fwrite(&to_read, sizeof(to_read), c->tx);
 
   for (size_t i = 0; i < to_read; ++i)
   {
     blub* b = (blub*)unread.get(i);
-    fwrite(&b->id, sizeof(b->id), c->tx);
-    fwrite(b->username, USERNAME_MAX, c->tx);
-    fwrite(b->content, BLUB_MAX, c->tx);
+    __fwrite(&b->id, sizeof(b->id), c->tx);
+    __fwrite(b->username, USERNAME_MAX, c->tx);
+    __fwrite(b->content, BLUB_MAX, c->tx);
     c->last_read = b->ts;
   }
 }
@@ -161,14 +161,14 @@ void handle_blub(client_state* c)
   {
     char tmp[BLUB_MAX + 1];
     fprintf(c->tx, "...: ");
-    if (!client_ready(c) || freaduntil(tmp, BLUB_MAX, EOT_C, c->rx) < 0)
+    if (!client_ready(c) || __freaduntil(tmp, BLUB_MAX, EOT_C, c->rx) < 0)
     {
-      dbg("Failed to read blub");
+      dbg("Failed to __read blub");
       return;
     }
     tmp[BLUB_MAX] = '\0';
 
-    dbg("Recorded blub (%s) %d", tmp, strlen(tmp))
+    dbg("Recorded blub (%s) %d", tmp, __strlen(tmp))
     c->blubber->record_blub(tmp);
   }
   else
@@ -176,7 +176,7 @@ void handle_blub(client_state* c)
     blub* b = c->blubber->gen_blub();
     if (b)
     {
-      dbg("Recorded blub (%s) %d", b->content, strlen(b->content));
+      dbg("Recorded blub (%s) %d", b->content, __strlen(b->content));
       dbg("Genned blub (%s)", b->content);
     }
   }
@@ -185,29 +185,29 @@ void handle_blub(client_state* c)
 void handle_reblub(server_state* s, client_state* c)
 {
   char username[USERNAME_MAX + 1];
-  if (!client_ready(c) || freaduntil(username, USERNAME_MAX, EOT_C, c->rx) < 0)
+  if (!client_ready(c) || __freaduntil(username, USERNAME_MAX, EOT_C, c->rx) < 0)
   {
-    dbg("Failed to read reblub username");
+    dbg("Failed to __read reblub username");
     return;
   }
   username[USERNAME_MAX] = '\0';
 
   int idx = 0;
   char num[16];
-  if (!client_ready(c) || freaduntil(num, sizeof(num) - 1, EOT_C, c->rx) < 0)
+  if (!client_ready(c) || __freaduntil(num, sizeof(num) - 1, EOT_C, c->rx) < 0)
   {
-    dbg("Failed to read reblub number");
+    dbg("Failed to __read reblub number");
     return;
   }
 
-  idx = strtol(num, NULL, 10);
+  idx = __strtol(num, NULL, 10);
 
   dbg("(%s) attempting to reblub (%s)'s %d blub", c->blubber->username, username, idx);
   for (size_t i = 0; i < s->num_clients; ++i)
   {
     client_state* other = s->clients[i];
     // Make sure author exists and client is subbed to them.
-    if (strcmp(other->blubber->username, username) == 0 && c->blubber->subs.contains(other->blubber))
+    if (__strcmp(other->blubber->username, username) == 0 && c->blubber->subs.contains(other->blubber))
     {
       dbg("Found (%s) in (%s)'s subs", other->blubber->username, c->blubber->username);
       if (other->blubber->blubs.length() > idx)
@@ -228,9 +228,9 @@ void handle_reblub(server_state* s, client_state* c)
 void handle_sub(server_state* s, client_state* c)
 {
   char username[USERNAME_MAX + 1];
-  if (!client_ready(c) || freaduntil(username, USERNAME_MAX, EOT_C, c->rx) < 0)
+  if (!client_ready(c) || __freaduntil(username, USERNAME_MAX, EOT_C, c->rx) < 0)
   {
-    dbg("Failed read sub username");
+    dbg("Failed __read sub username");
     return;
   }
   username[USERNAME_MAX] = '\0';
@@ -239,7 +239,7 @@ void handle_sub(server_state* s, client_state* c)
   for (size_t i = 0; i < s->num_clients; ++i)
   {
     client_state* other = s->clients[i];
-    if (strcmp(other->blubber->username, username) == 0)
+    if (__strcmp(other->blubber->username, username) == 0)
     {
       if (c->blubber->subs.contains(other->blubber))
       {
@@ -266,8 +266,8 @@ int run_server(server_state* state)
     if (!c->registered && !state->finished)
     {
       char username[USERNAME_MAX + 1];
-      memset(username, 0, sizeof(username));
-      if (!client_ready(c) || freaduntil(username, USERNAME_MAX, EOT_C, c->rx) < 0)
+      __memset(username, 0, sizeof(username));
+      if (!client_ready(c) || __freaduntil(username, USERNAME_MAX, EOT_C, c->rx) < 0)
       {
         continue;
       }
@@ -309,7 +309,7 @@ int run_server(server_state* state)
 
     // Get command
     char command = '\x00';
-    if (!client_ready(c) || fread(&command, 1, c->rx) != 1)
+    if (!client_ready(c) || __fread(&command, 1, c->rx) != 1)
     {
       continue;
     }
@@ -317,7 +317,7 @@ int run_server(server_state* state)
     char dump;
     if (client_ready(c))
     {
-      freaduntil(&dump, 1, EOT_C, c->rx);
+      __freaduntil(&dump, 1, EOT_C, c->rx);
       dbg("Unwaiting %d", c->n);
       c->waiting = false;
     }
@@ -355,8 +355,8 @@ int run_server(server_state* state)
 extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
 {
 #ifndef DEBUG
-    fxlat(stdin, "9an538n9av3;5");
-    fxlat(stdout, "9an538n9av3;5");
+    __fxlat(stdin, "9an538n9av3;5");
+    __fxlat(stdout, "9an538n9av3;5");
 #endif
 
     uint32_t volatile *secret_page = (uint32_t *)secret_page_i;
@@ -365,7 +365,7 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
     {
       sig ^= *(secret_page + i);
     }
-    fwrite(&sig, sizeof(sig), stdout);
+    __fwrite(&sig, sizeof(sig), stdout);
 
     dbg("Starting");
     server_state* state = new_server(NUM_CLIENTS);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -75,7 +75,7 @@ static int valid_mem(vm_reg_t *reg, unsigned int offset, unsigned int length)
 static vm_mem_t *new_mem(vm_mem_t *mem, unsigned char *base, unsigned int length)
 {
     if (mem == NULL)
-        mem = malloc(sizeof(vm_mem_t));
+        mem = __malloc(sizeof(vm_mem_t));
     mem->base = base;
     mem->length = length;
     return mem;
@@ -95,14 +95,14 @@ unsigned int filter_execute(filter_t *filter, unsigned char *ctx, unsigned int c
     };
     unsigned int src, retval;
     vm_mem_t *smem;
-    unsigned char *stack = malloc(STACK_SIZE);
+    unsigned char *stack = __malloc(STACK_SIZE);
     vm_reg_t *dst;
     vm_t *vm;
 
-    vm = malloc(sizeof(vm_t));
+    vm = __malloc(sizeof(vm_t));
     vm->filter = filter;
     vm->pc = 0;
-    memset(vm->registers, 0, sizeof(vm->registers));
+    __memset(vm->registers, 0, sizeof(vm->registers));
 
     /* setup ctx and frame pointers */
     vm->registers[0].ptr = ctx;
@@ -110,7 +110,7 @@ unsigned int filter_execute(filter_t *filter, unsigned char *ctx, unsigned int c
     vm->registers[15].ptr = stack;
     vm->registers[15].mem = new_mem(&vm->stack_mem, stack, STACK_SIZE);
 
-    memset(stack, 0, STACK_SIZE);
+    __memset(stack, 0, STACK_SIZE);
 
     while (1)
     {
@@ -248,8 +248,8 @@ do_ret:
     retval = 0xFFFFFFFF;
 
 cleanup:
-    free(stack);
-    free(vm);
+    __free(stack);
+    __free(vm);
     return retval;
 }
 
@@ -260,7 +260,7 @@ int syscall_receive(vm_t *vm)
     if (!valid_mem(&vm->registers[0], 0, length))
         return 0;
     fflush(stdout);
-    ret = fread(vm->registers[0].ptr, length, stdin);
+    ret = __fread(vm->registers[0].ptr, length, stdin);
     vm->registers[0].number = ret;
 #ifdef PATCHED_1
     vm->registers[0].mem = NULL;
@@ -274,7 +274,7 @@ int syscall_transmit(vm_t *vm)
     unsigned int length = vm->registers[1].number;
     if (!valid_mem(&vm->registers[0], 0, length))
         return 0;
-    ret = fwrite(vm->registers[0].ptr, length, stdout);
+    ret = __fwrite(vm->registers[0].ptr, length, stdout);
     vm->registers[0].number = ret;
 #ifdef PATCHED_1
     vm->registers[0].mem = NULL;

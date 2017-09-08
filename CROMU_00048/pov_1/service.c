@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -172,7 +172,7 @@ int pov_strncmp(char *s1, char *s2, unsigned int len) {
 	return(0);
 }
 
-void itoa(unsigned int i, char *buf) {
+void __itoa(unsigned int i, char *buf) {
 	unsigned int t;
 	unsigned int digit = 0;
 
@@ -208,7 +208,7 @@ void itoa(unsigned int i, char *buf) {
 void ftoa(double f, char *buf) {
         unsigned int len;
 
-        itoa((unsigned int)f, buf);
+        __itoa((unsigned int)f, buf);
         len = pov_strlen(buf);
         *(buf+len) = '.';
         f -= (unsigned int)f;
@@ -221,7 +221,7 @@ void ftoa(double f, char *buf) {
 
 }
 
-double atof(char *buf) {
+double __atof(char *buf) {
 	double whole = 0.0;
 	double fraction = 0.0;
 	double divisor = 10.0;
@@ -281,19 +281,19 @@ void ParsePlantStatus(char *buf, double *Flow, double *Cbod, double *Tss, double
 			}
 			// parse the values from the Influent line
 			str_range(line, value, 16, 25);
-			*Flow = atof(value);
+			*Flow = __atof(value);
 
 			str_range(line, value, 26, 36);
-			*Cbod = atof(value);
+			*Cbod = __atof(value);
 
 			str_range(line, value, 37, 47);
-			*Tss = atof(value);
+			*Tss = __atof(value);
 
 			str_range(line, value, 48, 58);
-			*Tn = atof(value);
+			*Tn = __atof(value);
 
 			str_range(line, value, 59, 69);
-			*Tp = atof(value);
+			*Tp = __atof(value);
 		}
 
 		buf = line + pov_strlen(line)+1;

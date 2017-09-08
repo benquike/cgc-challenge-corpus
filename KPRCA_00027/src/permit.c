@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -35,7 +35,7 @@ ppermit_t* permit_new(char *license_number, int num_entrances, int spot_number)
   if (_validate_license_number(license_number) != 0 ||
       spot_number > MAX_SPOT_NUMBER)
     return NULL;
-  if ((permit = (ppermit_t *) malloc(sizeof(ppermit_t))) != NULL)
+  if ((permit = (ppermit_t *) __malloc(sizeof(ppermit_t))) != NULL)
   {
     int i, cs;
     random(permit->permit_token, sizeof(permit->permit_token), NULL);
@@ -43,7 +43,7 @@ ppermit_t* permit_new(char *license_number, int num_entrances, int spot_number)
     for (i = 0; i < sizeof(permit->permit_token) - 1; ++i)
       cs += ((int) permit->permit_token[i]) & 0xFF;
     permit->permit_token[sizeof(permit->permit_token) - 1] = (char) (cs % 0xAB);
-    strncpy(permit->license_number, license_number, sizeof(permit->license_number) - 1);
+    __strncpy(permit->license_number, license_number, sizeof(permit->license_number) - 1);
     permit->num_entrances = num_entrances;
     permit->spot_number = spot_number;
   }
@@ -53,13 +53,13 @@ ppermit_t* permit_new(char *license_number, int num_entrances, int spot_number)
 ppring_t* pring_new(int num_permits, ppermit_t permits[])
 {
   ppring_t *pring = NULL;
-  if ((pring = (ppring_t *) malloc(sizeof(ppring_t))) != NULL)
+  if ((pring = (ppring_t *) __malloc(sizeof(ppring_t))) != NULL)
   {
     int i;
     ppermit_t *permit;
-    memset(pring, 0, sizeof(ppring_t));
+    __memset(pring, 0, sizeof(ppring_t));
     for (i = 0; i < num_permits; ++i)
-      memcpy(&pring->permits[i], &permits[i], sizeof(ppermit_t));
+      __memcpy(&pring->permits[i], &permits[i], sizeof(ppermit_t));
     pring->num_permits = num_permits;
   }
   return pring;
@@ -83,7 +83,7 @@ ppring_t* pring_refactor(ppring_t *pring)
           count++;
           for (j = i; j < pring->num_permits - 1; ++j)
           {
-            memcpy(&pring->permits[j], &pring->permits[j + 1], sizeof(ppermit_t));
+            __memcpy(&pring->permits[j], &pring->permits[j + 1], sizeof(ppermit_t));
           }
           pring->num_permits--;
           break;
@@ -91,7 +91,7 @@ ppring_t* pring_refactor(ppring_t *pring)
       }
     }
     if (count > 0)
-      memset(&pring->permits[n - count], 0, count * sizeof(ppermit_t));
+      __memset(&pring->permits[n - count], 0, count * sizeof(ppermit_t));
   }
   return pring;
 }
@@ -111,13 +111,13 @@ int _validate_permit_token(char *token)
 int _validate_license_number(char *license_number)
 {
   int i, count = 0;
-  if (strlen(license_number) > 9)
+  if (__strlen(license_number) > 9)
     return -1;
-  for (i = 0; i < strlen(license_number); ++i)
+  for (i = 0; i < __strlen(license_number); ++i)
   {
-    if (!isalnum(license_number[i] & 0xFF))
+    if (!__isalnum(license_number[i] & 0xFF))
       return -1;
-    if (!isalpha(license_number[i] & 0xFF))
+    if (!__isalpha(license_number[i] & 0xFF))
       count++;
   }
   if (count < 1 || count > 4)
@@ -132,7 +132,7 @@ int permit_test(ppermit_t *permit, int spot_number, char *license_number)
     if (_validate_permit_token(permit->permit_token) != 0)
       return PRES_INVALID_TOKEN;
     if (_validate_license_number(permit->license_number) != 0 ||
-        strcmp(permit->license_number, license_number) != 0)
+        __strcmp(permit->license_number, license_number) != 0)
       return PRES_INVALID_LICENSE;
     if (permit->num_entrances <= 0)
       return PRES_EXPIRED;
@@ -165,11 +165,11 @@ int pring_test(ppring_t *pring, int spot_numbers[], char* license_numbers)
 void destroy_permit(ppermit_t *permit)
 {
   if (permit)
-    free(permit);
+    __free(permit);
 }
 
 void destroy_permit_ring(ppring_t *pring)
 {
   if (pring)
-    free(pring);
+    __free(pring);
 }

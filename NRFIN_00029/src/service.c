@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -43,16 +43,16 @@ static int
 canonicalize_path(utf8char *dst, const utf8char *src)
 {
 #ifdef PATCHED
-    strncpy(dst, pubroot_path, sizeof(pubroot_path));
+    __strncpy(dst, pubroot_path, sizeof(pubroot_path));
     utf8_canonicalize(dst + sizeof(pubroot_path) - 1, src, MAX_PATH_LENGTH);
 
-    if (strchr(dst + sizeof(pubroot_path) - 1, '/') != NULL)
+    if (__strchr(dst + sizeof(pubroot_path) - 1, '/') != NULL)
         return -1;
 #else
-    if (strchr(src, '/') != NULL)
+    if (__strchr(src, '/') != NULL)
         return -1;
 
-    strncpy(dst, pubroot_path, sizeof(pubroot_path));
+    __strncpy(dst, pubroot_path, sizeof(pubroot_path));
     utf8_canonicalize(dst + sizeof(pubroot_path) - 1, src, MAX_PATH_LENGTH);
 #endif
 
@@ -115,7 +115,7 @@ write_file(void)
     if (file->parent == admin) {
         file->contents = *(unsigned char **)filename;
     } else {
-        if ((file->contents = calloc(size)) == NULL) {
+        if ((file->contents = __calloc(size)) == NULL) {
             delete_file(&vfs, file);
             return -1;
         }

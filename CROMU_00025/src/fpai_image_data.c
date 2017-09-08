@@ -1,7 +1,7 @@
 /*
 Copyright (c) 2014 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -69,7 +69,7 @@ int fpai_add_pixel( pfpai_image_data fid, char *image, int x, int y, char pixel)
 	}
 
 	image[index] = pixel;
-	//printf("index: @d\n", index);
+	//__printf("index: @d\n", index);
 	return 1;
 }
 
@@ -118,7 +118,7 @@ int fpai_display_img( pfpai_image_data fid )
 	}
 
 	if ( fpai_calc_cksum( fid ) == 0 ) {
-		printf("[ERROR] Checksum failed\n");
+		__printf("[ERROR] Checksum failed\n");
 		return 0;
 	}
 
@@ -165,39 +165,39 @@ int fpai_display_img( pfpai_image_data fid )
 		return 0;
 	}
 
-	memset( image, ' ', image_length );
+	__memset( image, ' ', image_length );
 	image[image_length] = '\x00';
 
-	//printf("minx: @d maxx: @d miny: @d maxy: @d\n", minx, maxx, miny, maxy);
-	//printf("x: @d y: @d axis: @d csum: @d\n", fid->xlen, fid->ylen, fid->axist, fid->checksum);
+	//__printf("minx: @d maxx: @d miny: @d maxy: @d\n", minx, maxx, miny, maxy);
+	//__printf("x: @d y: @d axis: @d csum: @d\n", fid->xlen, fid->ylen, fid->axist, fid->checksum);
 
 	while ( fpai_read_pixel( fid, &x, &y, &pchar) != 0 ) {
-		//printf("x: @d y: @d pchar: @c\n", x,y,pchar);
+		//__printf("x: @d y: @d pchar: @c\n", x,y,pchar);
 		if ( x < minx || x > maxx ) {
-			printf("X out of bounds\n");
+			__printf("X out of bounds\n");
 			return 0;
 		}
 
 		if ( y < miny || y > maxy ) {
-			printf("Y out of bounds\n");
+			__printf("Y out of bounds\n");
 			return 0;
 		}
 
 		if ( fpai_add_pixel( fid, image, x, y, (char)pchar) == 0 ) {
-			printf("pixel placement failed\n");
+			__printf("pixel placement failed\n");
 			return 0;
 		}
 	}
 
         for (int i = 0; i < image_length; i++) {
                 if (i%fid->xlen == 0 && i != 0) {
-                        printf("\n");
+                        __printf("\n");
                 }
 
-                printf("@c", image[i]);
+                __printf("@c", image[i]);
         }
 
-	printf("\n");
+	__printf("\n");
 	return 1;
 
 }
@@ -410,7 +410,7 @@ int fpai_calc_cksum( pfpai_image_data fid )
 	}
 
 	if ( cksum != fid->checksum ) {
-		printf("[ERROR] Checksum failed\n");
+		__printf("[ERROR] Checksum failed\n");
 		return 0;
 	}
 

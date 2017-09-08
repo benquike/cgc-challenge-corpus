@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -43,8 +43,8 @@
 */
 
 namespace {
-    FILE *g_fd_in;
-    FILE *g_fd_out;
+    __FILE *g_fd_in;
+    __FILE *g_fd_out;
 
 void HandleChatPacket(BrcPacket *pkt) {
     pkt->ClearPacket();
@@ -84,7 +84,7 @@ bool ReceiveServerResponse(BrcPacket *pkt) {
 
 namespace BrcClient {
 
-void InitServerFd(FILE *fd_in, FILE *fd_out) {
+void InitServerFd(__FILE *fd_in, __FILE *fd_out) {
     g_fd_in = fd_in;
     g_fd_out = fd_out;
 }
@@ -625,7 +625,7 @@ bool ExitServer() {
     brc_resp = (BrcResponse *)pkt->GetProtocol();
     pcmd = (char *)brc_resp->msg();
     if (brc_resp->response_code() != EXIT_SERVER_ID) {
-        PRINTF("Received a failure response trying to exit\n");
+        PRINTF("Received a failure response trying to __exit\n");
         goto finish;
     }
     exitted = true;
@@ -652,7 +652,7 @@ bool RemoteAdminTokenRequest(User *user, unsigned short page_idx, int *token) {
 
     APPEND_PARAM(pcmd, BrcGlobals::remote_admin_token_request_code(), sizeof(BrcGlobals::remote_admin_token_request_code()));
     APPEND_PARAM(pcmd, user->name(), user->name_length());
-    memcpy(pcmd, &page_idx, sizeof(page_idx));
+    __memcpy(pcmd, &page_idx, sizeof(page_idx));
     pcmd += sizeof(page_idx);
     APPEND_EOM(pcmd);
     BrcCommand *bcmd = new BrcCommand(user->name(), cmd, user->name_length(), cmd_length);
@@ -679,7 +679,7 @@ bool RemoteAdminTokenRequest(User *user, unsigned short page_idx, int *token) {
         goto finish;
     }
 
-    memcpy(token, brc_resp->msg(), sizeof(*token));
+    __memcpy(token, brc_resp->msg(), sizeof(*token));
     success = true;
 finish:
     delete pkt;

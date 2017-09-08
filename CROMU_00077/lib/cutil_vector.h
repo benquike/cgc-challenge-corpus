@@ -4,7 +4,7 @@ Copyright (c) 2015 Cromulence LLC
 
 Authors: Jason Williams <jdw@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -134,7 +134,7 @@ namespace CUtil
 	{
 		T *pTemp = new T[ m_vectorSize ];
 
-		memcpy( pTemp, m_pContainer, (m_vectorSize * sizeof(T)) );
+		__memcpy( pTemp, m_pContainer, (m_vectorSize * sizeof(T)) );
 
 		delete [] m_pContainer;
 
@@ -142,7 +142,7 @@ namespace CUtil
 
 		m_allocSize += m_growSize;
 
-		memcpy( m_pContainer, pTemp, (m_vectorSize * sizeof(T)) );
+		__memcpy( m_pContainer, pTemp, (m_vectorSize * sizeof(T)) );
 
 		delete [] pTemp;
 	}

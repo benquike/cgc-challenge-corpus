@@ -4,7 +4,7 @@ Author: Joe Rogers <joe@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -38,13 +38,13 @@ void SendEchoRequest(void) {
 	pL3Hdr pL3 = (pL3Hdr)Packet;
 	pL4Hdr pL4 = (pL4Hdr)(Packet+sizeof(L3Hdr));
 
-	bzero(Packet, MAX_FRAME_LEN);
+	__bzero(Packet, MAX_FRAME_LEN);
 
 	// build up the L4 header
 	pL4->Dst = 7; // echo port
 	pL4->Src = 1; // src port, don't care
 	pL4->Len = 4;
-	memcpy(Packet+sizeof(L3Hdr)+sizeof(L4Hdr), (void *)0x4347C000, 4);
+	__memcpy(Packet+sizeof(L3Hdr)+sizeof(L4Hdr), (void *)0x4347C000, 4);
 
 	// build up the L3 header
 	pL3->Dst = 0x0a010202;
@@ -67,7 +67,7 @@ int main(void) {
 	SendEchoRequest();
 
 	while (1) {
-		bzero(Packet, MAX_FRAME_LEN);
+		__bzero(Packet, MAX_FRAME_LEN);
 		if (L3_RxPacket(FD_ROUTER, Packet)) {
 			L3_ForwardPacket(Packet);
 		}

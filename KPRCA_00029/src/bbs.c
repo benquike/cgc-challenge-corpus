@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -69,7 +69,7 @@ static void send_string(const char *str)
 #ifdef DEBUG
     fdprintf(STDERR, "%s\n", str);
 #endif
-    modem_output((void *)str, strlen(str));
+    modem_output((void *)str, __strlen(str));
 }
 
 void bbs_help()
@@ -189,7 +189,7 @@ void do_list(const char *str)
 {
     if (str[1] == ' ')
     {
-        int id = strtol(&str[2], NULL, 10);
+        int id = __strtol(&str[2], NULL, 10);
         thread_t *t = find_thread(id);
         if (t)
             send_message_list(t->messages);
@@ -207,7 +207,7 @@ void do_post(const char *str)
     thread_t *t = NULL;
     if (str[1] == ' ')
     {
-        int id = strtol(&str[2], NULL, 10);
+        int id = __strtol(&str[2], NULL, 10);
         t = find_thread(id);
         if (t == NULL)
         {
@@ -229,7 +229,7 @@ void do_read(const char *str)
         return;
     }
 
-    int id = strtol(&str[2], NULL, 10);
+    int id = __strtol(&str[2], NULL, 10);
     message_t *m = find_message(id);
     if (m)
         send_message(m);
@@ -241,7 +241,7 @@ void handle_post(const char *str)
 {
     if (g_state.state == S_POST_WAIT_TOPIC)
     {
-        strncpy(g_state.post.topic, str, sizeof(g_state.post.topic)-1);
+        __strncpy(g_state.post.topic, str, sizeof(g_state.post.topic)-1);
         g_state.post.topic[sizeof(g_state.post.topic)-1] = 0;
 
         send_string("Body?\n");
@@ -252,23 +252,23 @@ void handle_post(const char *str)
         thread_t *t = g_state.post.thread;
         if (t == NULL)
         {
-            t = malloc(sizeof(thread_t));
+            t = __malloc(sizeof(thread_t));
             if (t == NULL)
                 goto fail;
 
-            strcpy(t->topic, g_state.post.topic);
+            __strcpy(t->topic, g_state.post.topic);
             t->id = g_next_id++;
             t->next = g_threads;
             t->messages = NULL;
             g_threads = t;
         }
 
-        message_t *m = malloc(sizeof(message_t));
+        message_t *m = __malloc(sizeof(message_t));
         if (m)
         {
             m->id = g_next_id++;
-            strcpy(m->topic, g_state.post.topic);
-            m->body = strdup(str);
+            __strcpy(m->topic, g_state.post.topic);
+            m->body = __strdup(str);
             if (m->body == NULL)
                 goto fail;
 
@@ -329,7 +329,7 @@ void handle_menu(const char *str)
         break;
     case 'Q':
     case 'q':
-        exit(0);
+        __exit(0);
         break;
     default:
         send_string("Bad input. Unknown command.\n");
@@ -346,10 +346,10 @@ void bbs_rx(const uint8_t *data, size_t count)
         count = sizeof(str)-1;
 #endif
 
-    memcpy(str, data, count);
+    __memcpy(str, data, count);
     str[count] = 0; // make sure string is NULL-terminated
 
-    if (strlen(str) == 0)
+    if (__strlen(str) == 0)
         return;
 
 #ifdef DEBUG

@@ -2,7 +2,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -92,36 +92,36 @@ void load_menu(Menu *menu) {
     const char *side = NULL;
 
     // Appetizer template
-    a = malloc(sizeof(Appetizer));
+    a = __malloc(sizeof(Appetizer));
     MALLOC_OK(a);
-    memset(a, '\\0', sizeof(Appetizer));
+    __memset(a, '\\0', sizeof(Appetizer));
     a->ftype = APP_TYPE;
     name = "{0}";
-    memcpy(a->name, name, strlen(name, '\\0'));
+    __memcpy(a->name, name, __strlen(name, '\\0'));
     add_appetizer(menu,a);
 
     // Meal template
-    m = malloc(sizeof(Meal));
+    m = __malloc(sizeof(Meal));
     MALLOC_OK(m);
-    memset(m, '\\0', sizeof(Meal));
+    __memset(m, '\\0', sizeof(Meal));
     m->ftype = MEAL_TYPE;
     name = "{0}";
-    memcpy(m->name, name, strlen(name, '\\0'));
+    __memcpy(m->name, name, __strlen(name, '\\0'));
     main = "{1}";
-    memcpy(m->main, main, strlen(main, '\\0'));
+    __memcpy(m->main, main, __strlen(main, '\\0'));
     veggies = "{2}";
-    memcpy(m->veggies, veggies, strlen(veggies, '\\0'));
+    __memcpy(m->veggies, veggies, __strlen(veggies, '\\0'));
     side = "{3}";
-    memcpy(m->side, side, strlen(side, '\\0'));
+    __memcpy(m->side, side, __strlen(side, '\\0'));
     add_meal(menu, m);
 
     // Dessert template
-    d = malloc(sizeof(Dessert));
+    d = __malloc(sizeof(Dessert));
     MALLOC_OK(d);
-    memset(d, '\\0', sizeof(Dessert));
+    __memset(d, '\\0', sizeof(Dessert));
     d->ftype = DES_TYPE;
     name = "{0}";
-    memcpy(d->name, name, strlen(name, '\\0'));
+    __memcpy(d->name, name, __strlen(name, '\\0'));
     add_dessert(menu,d);
 
 }

@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -56,14 +56,14 @@ static const unsigned char _xdigit[NUM_ASCII_CHAR] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-int isalnum(int c)
+int __isalnum(int c)
 {
-  return isalpha(c) || isdigit(c);
+  return __isalpha(c) || __isdigit(c);
 }
 
-int isalpha(int c)
+int __isalpha(int c)
 {
-  return islower(c) || isupper(c);
+  return __islower(c) || __isupper(c);
 }
 
 int isascii(int c)
@@ -81,7 +81,7 @@ int iscntrl(int c)
   return c == DEL || c < SPACE;
 }
 
-int isdigit(int c)
+int __isdigit(int c)
 {
   return (unsigned int ) c - '0' < 10;
 }
@@ -91,7 +91,7 @@ int isgraph(int c)
   return c != ' ' && isprint(c);
 }
 
-int islower(int c)
+int __islower(int c)
 {
   return (unsigned int) c - 'a' < 26;
 }
@@ -106,12 +106,12 @@ int ispunct(int c)
   return _punct[c];
 }
 
-int isspace(int c)
+int __isspace(int c)
 {
   return (c > 8 && c < 14) || c == ' ';
 }
 
-int isupper(int c)
+int __isupper(int c)
 {
   return (unsigned int ) c - 'A' < 26;
 }
@@ -128,7 +128,7 @@ int toascii(int c)
 
 int tolower(int c)
 {
-  if (isupper(c))
+  if (__isupper(c))
     return c | SPACE;
 
   return c;
@@ -136,7 +136,7 @@ int tolower(int c)
 
 int toupper(int c)
 {
-  if (islower(c))
+  if (__islower(c))
     return c & (~SPACE & ASCII_MASK);
 
   return c;
