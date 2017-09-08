@@ -7,7 +7,7 @@
 #define NAME_SIZE 4
 #define BUF_SIZE 1024
 
-size_t printf(const char *format, ...);
+size_t __printf(const char *format, ...);
 
 char * get_name(void *secret_page);
 size_t receive_line(int fd, char *buf, size_t size);
@@ -35,14 +35,14 @@ char * get_name(void *secret_page) {
 size_t receive_line(int fd, char *buf, size_t size) {
     char c;
     size_t total = 0;
-    size_t read = 0;
+    size_t __read = 0;
 
     while (1) {
-        if (receive(fd, &c, 1, &read) != 0) {
+        if (receive(fd, &c, 1, &__read) != 0) {
             _terminate(1);
         }
 
-        if (read == 0) {
+        if (__read == 0) {
             return 0;
         }
 
