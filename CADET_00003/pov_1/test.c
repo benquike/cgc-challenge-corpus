@@ -23,8 +23,8 @@ int main(void) {
         }
         type1vals[0] = type1vals[0] | 0x01010101;
         type1vals[1] = type1vals[1] | 0x01010101;
-        putenv("TYPE1_IP", (unsigned char*)&type1vals[0], sizeof(unsigned int));
-        putenv("TYPE1_REG", (unsigned char*)&type1vals[1], sizeof(unsigned int));
+        __libpov_putenv("TYPE1_IP", (unsigned char*)&type1vals[0], sizeof(unsigned int));
+        __libpov_putenv("TYPE1_REG", (unsigned char*)&type1vals[1], sizeof(unsigned int));
     } while(0);
 
     do {
@@ -34,7 +34,7 @@ int main(void) {
         unsigned char *read_00000 = NULL;
         unsigned int read_00000_len = 0;
         int read_00000_res = delimited_read(0, &read_00000, &read_00000_len, read_00000_delim, 1);
-        free(read_00000);
+        __libpov_free(read_00000);
     } while (0);
     
     do {
@@ -44,7 +44,7 @@ int main(void) {
         unsigned char *read_00001 = NULL;
         unsigned int read_00001_len = 0;
         int read_00001_res = delimited_read(0, &read_00001, &read_00001_len, read_00001_delim, 1);
-        free(read_00001);
+        __libpov_free(read_00001);
     } while (0);
     
     do {
@@ -54,15 +54,15 @@ int main(void) {
         unsigned char *read_00002 = NULL;
         unsigned int read_00002_len = 0;
         int read_00002_res = delimited_read(0, &read_00002, &read_00002_len, read_00002_delim, 1);
-        free(read_00002);
+        __libpov_free(read_00002);
     } while (0);
     
     do {
         //**** length read
-        unsigned char *read_00003 = (unsigned char*)malloc(37);
+        unsigned char *read_00003 = (unsigned char*)__libpov_malloc(37);
         unsigned int read_00003_len = 37;
         int read_00003_res = length_read(0, read_00003, 37);
-        free(read_00003);
+        __libpov_free(read_00003);
     } while (0);
     
     do {
@@ -90,6 +90,6 @@ int main(void) {
         if (write_00000_len > 0) {
             transmit_all(1, write_00000, write_00000_len);
         }
-        free(write_00000);
+        __libpov_free(write_00000);
     } while (0);
 }
