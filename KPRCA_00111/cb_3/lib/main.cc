@@ -35,7 +35,7 @@ extern "C"
 {
     extern void (*__init_array_start[])(int, char **, char **) __hidden;
     extern void (*__init_array_end[])(int, char **, char **) __hidden;
-    extern extern extern extern extern extern extern extern extern void *__dso_handle;
+    extern void *__dso_handle;
 };
 
 void ctors()
