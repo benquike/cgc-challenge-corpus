@@ -22,7 +22,7 @@
 #include <libpov.h>
 #include "atox.h"
 #include "service.h"
-#include "__bzero.h"
+#include "bzero.h"
 #include "atoi.h"
 
 int harborMap[25][24] = {
