@@ -200,7 +200,7 @@ long __strtol(const char *str, char **endptr, int base) {
       long next = result * base + digit;
       if (next < result) {
          //overflow
-         errno = ERANGE;
+         errno = __CGC_ERANGE_;
          return neg ? LONG_MIN : LONG_MAX;
       }
       result = next;

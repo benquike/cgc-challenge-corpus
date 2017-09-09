@@ -3,7 +3,7 @@
 
 #define LONG_MAX 0x7FFFFFFF
 #define LONG_MIN 0x80000000
-#define ERANGE 20
+#define __CGC_ERANGE_ 20
 
 unsigned int htonl(unsigned int hostlong);
 
