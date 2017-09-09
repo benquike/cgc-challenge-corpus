@@ -3,4 +3,8 @@ SERVICE_ID = 00048
 CFLAGS     = -O0 -g -Werror -Wno-overlength-strings -Wno-packed -mstack-alignment=3
 VULN_COUNT = 1
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

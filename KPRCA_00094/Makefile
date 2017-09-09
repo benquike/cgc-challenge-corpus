@@ -4,4 +4,8 @@ CFLAGS     = -O3 -g -Werror -Wno-overlength-strings -Wno-packed -DPRINTF_CHAR=59
 VULN_COUNT = 1
 POLLS_RELEASE_MAX_DEPTH = 1500
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

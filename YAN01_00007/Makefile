@@ -4,4 +4,8 @@ AUTHOR_ID  = YAN01
 SERVICE_ID = 00007
 CFLAGS     = -O0 -g -Werror -Wno-overlength-strings -Wno-packed -fno-rtti
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

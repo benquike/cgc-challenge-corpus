@@ -4,4 +4,8 @@ CFLAGS     = -g -Werror -std=c99
 
 VULN_COUNT = 2
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

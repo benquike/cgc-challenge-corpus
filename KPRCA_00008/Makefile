@@ -4,4 +4,8 @@ SERVICE_ID = 00008
 POLLS_RELEASE_SEED = 189673785
 CFLAGS     = -Os -g -Werror -msse
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

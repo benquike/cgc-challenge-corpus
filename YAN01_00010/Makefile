@@ -3,4 +3,8 @@ POLLS_TESTING_SEED= -962093213
 AUTHOR_ID  = YAN01
 SERVICE_ID = 00010
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

@@ -7,4 +7,8 @@ POLLS_TESTING_COUNT = 1000
 CXXFLAGS    = -fno-exceptions -fno-rtti
 CFLAGS      = -O0 -g -fno-exceptions -fno-rtti
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

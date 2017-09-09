@@ -6,4 +6,8 @@ CFLAGS     = -O0 -g -Werror -Wno-overlength-strings -Wno-packed
 POLLS_RELEASE_SEED = 854437448
 POLLS_TESTING_SEED = 1892282553
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

@@ -3,4 +3,8 @@ SERVICE_ID = 00071
 CFLAGS     = -g -Wall -Wextra -pedantic -Werror -Wshadow -Wstrict-overflow -fpack-struct=32 -mstack-alignment=64 -mstackrealign -Wall -Wno-overlength-strings -Wno-packed -Wno-sign-compare -Wno-variadic-macros -fPIE
 VULN_COUNT = 1
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

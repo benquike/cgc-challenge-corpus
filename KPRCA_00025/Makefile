@@ -7,4 +7,8 @@ POLLS_TESTING_SEED = -399189653
 POLLS_RELEASE_COUNT = 1
 POLLS_RELEASE_SEED = 90
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

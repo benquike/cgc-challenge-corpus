@@ -7,4 +7,8 @@ NO_STRIP   = 1
 POLLS_RELEASE_MAX_DEPTH=20
 POLLS_RELEASE_SEED=40
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

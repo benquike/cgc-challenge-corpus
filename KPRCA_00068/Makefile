@@ -5,4 +5,8 @@ CXXFLAGS   = --std=c++11 -fno-exceptions -fno-rtti -DCPLUSPLUS -Dmain=_main
 VULN_COUNT = 1
 POLLS_RELEASE_MAX_DEPTH = 2000
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

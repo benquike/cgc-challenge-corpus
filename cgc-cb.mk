@@ -59,8 +59,8 @@ PATH		:= /usr/i386-linux-cgc/bin:$(PATH)
 else
 # HOST OS
 
-LIBS       = -L../../libcgc -lcgc
-POV_LIBS   = -L../../libpov -lpov
+LIBS       = -L$(ROOT_DIR)/../libcgc -lcgc
+POV_LIBS   = -L$(ROOT_DIR)/../libpov -lpov
 
 # __PREFIX=/home/huip/src/compilers/llvm/build/bin/
 __PREFIX=
@@ -71,8 +71,8 @@ LD			= $(CC)
 OBJCOPY			= objcopy
 LD_ELF                  = ld
 
-CGC_CFLAGS = -fno-builtin -I../../libcgc -Iinclude -Ilib $(CFLAGS) -DCGC_BIN_COUNT=$(BIN_COUNT) -m32 -D_CGC_EMU -fsanitize=address
-POV_CFLAGS = -fno-builtin -Iinclude -Ilib $(CFLAGS) -m32 -D_CGC_EMU -fsanitize=address
+CGC_CFLAGS = -fno-builtin -I$(ROOT_DIR)/../libcgc -Iinclude -Ilib $(CFLAGS) -DCGC_BIN_COUNT=$(BIN_COUNT) -m32 -D_CGC_EMU -fsanitize=address
+POV_CFLAGS = -fno-builtin -I$(ROOT_DIR)/../libcgc -Iinclude -Ilib $(CFLAGS) -m32 -D_CGC_EMU -fsanitize=address
 
 CXXFLAGS = -std=c++11
 
@@ -209,7 +209,7 @@ $(POV_BINS): build_pov_objs
 pov: prep $(POV_XML_BINS) $(POV_BINS)
 
 $(BINS): cb_%:
-	( cd $@; make -f ../Makefile build build-partial SERVICE_ID=$(SERVICE_ID)_$* BIN_COUNT=$(words $(BINS)) VULN_COUNT=$(VULN_COUNT))
+	( cd $@; make -f ../Makefile build build-partial SERVICE_ID=$(SERVICE_ID)_$* BIN_COUNT=$(words $(BINS)) VULN_COUNT=$(VULN_COUNT) ROOT_DIR=../..)
 	cp $@/$(BIN_DIR)/* $(BIN_DIR)
 
 build-binaries: $(BINS)
@@ -363,7 +363,11 @@ endif
 
 else
 
-build:release
+ifeq ($(strip $(BINS)),)
+build: prep release
+else
+build: prep build-binaries
+endif
 
 endif
 

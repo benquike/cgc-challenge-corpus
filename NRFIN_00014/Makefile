@@ -6,4 +6,8 @@ POLLS_RELEASE_MAX_DEPTH = 750
 
 CFLAGS = -Wno-overlength-strings -Wno-packed -Wno-trigraphs -Wno-switch -g
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

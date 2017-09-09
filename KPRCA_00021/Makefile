@@ -4,4 +4,8 @@ SERVICE_ID = 00021
 CFLAGS     = -O0 -g -Werror -Wno-overlength-strings -Wno-packed -Wall -Wno-unused-variable -Wno-unused-function
 POLLS_RELEASE_SEED = 952316475
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

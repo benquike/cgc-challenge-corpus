@@ -5,4 +5,8 @@ VULN_COUNT = 1
 CFLAGS     = -O0 -g -Werror -Wno-overlength-strings -Wno-packed
 CXXFLAGS   = -fno-exceptions -fno-rtti
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

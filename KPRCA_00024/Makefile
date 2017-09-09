@@ -4,4 +4,8 @@ SERVICE_ID = 00024
 CFLAGS     = -O3 -g -Wno-overlength-strings -Wno-packed -DDB_CURRENT -fno-strict-aliasing
 POLLS_TESTING_SEED = 1804088789
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

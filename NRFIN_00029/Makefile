@@ -4,4 +4,8 @@ AUTHOR_ID  = NRFIN
 SERVICE_ID = 00029
 CFLAGS     = -O0 -g -Wall -Wextra -Wno-missing-field-initializers -Wno-pointer-sign -Wno-sign-compare
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

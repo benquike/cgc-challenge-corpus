@@ -5,4 +5,8 @@ NO_STRIP = 1
 POLLS_RELEASE_SEED=388550987
 POLLS_TESTING_SEED=-803034210
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

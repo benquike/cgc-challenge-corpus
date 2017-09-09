@@ -5,4 +5,8 @@ CFLAGS = -g -Ofast -Werror -Wall -Wno-unused-function -Wno-unused -Wno-compare-d
 POLLS_RELEASE_SEED = -868333550
 POLLS_RELEASE_COUNT = 0
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

@@ -4,4 +4,8 @@ AUTHOR_ID  = CROMU
 SERVICE_ID = 00024
 POLLS_RELEASE_COUNT=1000
 CFLAGS     = -O0 -g -Werror -Wno-overlength-strings -Wno-packed
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

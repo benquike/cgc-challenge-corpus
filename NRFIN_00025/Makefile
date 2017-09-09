@@ -4,4 +4,8 @@ AUTHOR_ID  = NRFIN
 SERVICE_ID = 00025
 CFLAGS     = -g -O0 -Werror -Wno-overlength-strings -Wno-packed
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

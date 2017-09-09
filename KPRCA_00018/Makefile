@@ -6,4 +6,8 @@ POLLS_RELEASE_SEED = 259379680
 NO_CB_DPKG=1
 NO_CB_EXTENDED_APP=1
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

@@ -7,4 +7,8 @@ NO_STRIP = 1
 POLLS_TESTING_COUNT = 1000
 POLLS_RELEASE_COUNT = 100
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk

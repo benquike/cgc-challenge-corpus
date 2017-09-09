@@ -5,4 +5,8 @@ CFLAGS     = -Ofast -g -Werror -Wno-overlength-strings -Wno-packed
 POLLS_TESTING_COUNT = 1000
 POLLS_TESTING_SEED = -1438114493
 
-include ../cgc-cb.mk
+ifndef ROOT_DIR
+	ROOT_DIR=..
+endif
+
+include $(ROOT_DIR)/cgc-cb.mk
