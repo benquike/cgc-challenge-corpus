@@ -3,7 +3,7 @@ AUTHOR_ID  = CROMU
 SERVICE_ID = 00040
 POLLS_RELEASE_COUNT=1000
 POLLS_RELEASE_SEED=2555627392
-CFLAGS     = -O0 -g -Werror -Wno-overlength-strings -Wno-packed
+CFLAGS     = -O0 -g -Wno-overlength-strings -Wno-packed
 ifndef ROOT_DIR
 	ROOT_DIR=..
 endif
