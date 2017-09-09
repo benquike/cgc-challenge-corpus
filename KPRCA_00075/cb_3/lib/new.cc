@@ -39,12 +39,12 @@ void *operator new[](unsigned int length)
     return ptr;
 }
 
-void operator delete(void *ptr) throw() throw() throw() throw() throw() throw() throw() throw() throw() throw()
+void operator delete(void *ptr) throw()
 {
     __free(ptr);
 }
 
-void operator delete[](void *ptr) throw() throw() throw() throw() throw() throw() throw() throw() throw() throw()
+void operator delete[](void *ptr) throw()
 {
     __free(ptr);
 }
