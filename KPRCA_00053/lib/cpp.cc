@@ -20,12 +20,12 @@ void *operator new[](unsigned int size)
     return ::operator new(size);
 }
 
-void operator delete(void *p) throw() throw() throw() throw() throw() throw() throw() throw() throw() throw()
+void operator delete(void *p) throw()
 {
     __free(p);
 }
 
-void operator delete[](void *p) throw() throw() throw() throw() throw() throw() throw() throw() throw() throw()
+void operator delete[](void *p) throw()
 {
     ::operator delete(p);
 }
