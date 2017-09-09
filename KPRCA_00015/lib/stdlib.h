@@ -9,11 +9,11 @@ extern int writeall(int fd, const void *buf, size_t n);
 extern int readuntil(int fd, char *buf, size_t n, char delim);
 
 extern int debug_printf(const char *fmt, ...);
-extern int fdprintf(int fd, const char *fmt, ...);
-extern int sprintf(char *s, const char *fmt, ...);
+extern int __cgc_fdprintf(int fd, const char *fmt, ...);
+extern int __cgc_sprintf(char *s, const char *fmt, ...);
 extern int snprintf(char *s, size_t size, const char *fmt, ...);
 extern int vsnprintf(char *s, size_t size, const char *fmt, va_list ap);
-#define __printf(...) fdprintf(1, __VA_ARGS__)
+#define __printf(...) __cgc_fdprintf(1, __VA_ARGS__)
 
 long __strtol(const char *str, char **endptr, int base);
 unsigned long __strtoul(const char *str, char **endptr, int base);

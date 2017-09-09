@@ -109,7 +109,7 @@ CUtil::String CCPU::DumpRegisters( void )
 {
 	char szTemp[1024];
 
-	sprintf( szTemp, "Instructions: $d\nR0  = $08X R1  = $08X R2  = $08X R3  = $08X\nR4  = $08X R5  = $08X R6  = $08X R7  = $08X\nR8  = $08X R9  = $08X R10 = $08X R11 = $08X\nR12 = $08X R13 = $08X SP  = $08X PC  = $08X", m_instrCount, m_regs[0], m_regs[1], m_regs[2], m_regs[3], m_regs[4], m_regs[5], m_regs[6], m_regs[7], m_regs[8], m_regs[9], m_regs[10], m_regs[11], m_regs[12], m_regs[13], m_regs[14], m_regs[15] );
+	__cgc_sprintf( szTemp, "Instructions: $d\nR0  = $08X R1  = $08X R2  = $08X R3  = $08X\nR4  = $08X R5  = $08X R6  = $08X R7  = $08X\nR8  = $08X R9  = $08X R10 = $08X R11 = $08X\nR12 = $08X R13 = $08X SP  = $08X PC  = $08X", m_instrCount, m_regs[0], m_regs[1], m_regs[2], m_regs[3], m_regs[4], m_regs[5], m_regs[6], m_regs[7], m_regs[8], m_regs[9], m_regs[10], m_regs[11], m_regs[12], m_regs[13], m_regs[14], m_regs[15] );
 
 	return CUtil::String(szTemp);	
 }
@@ -461,7 +461,7 @@ uint16_t CCPU::GetMagicPageSeed( void )
 
 void CCPU::GetSeedMaterial( uint8_t reg )
 {
-	m_regs[reg] = (prng()&0xFFFF ^ GetMagicPageSeed( ) );
+  m_regs[reg] = ((prng()&0xFFFF) ^ GetMagicPageSeed( ) );
 }
 
 void CCPU::LoadRegister( uint8_t regD, uint8_t regAddr )

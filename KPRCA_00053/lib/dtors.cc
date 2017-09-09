@@ -12,7 +12,7 @@ extern "C" {
 
 extern "C" {
 	int __cxa_atexit(void (*destructor)(void *), void *, void *);
-	extern extern extern extern extern extern extern void *__dso_handle;
+	extern extern extern extern extern extern extern extern extern extern void *__dso_handle;
 };
 
 struct __cxa_destructor_list {

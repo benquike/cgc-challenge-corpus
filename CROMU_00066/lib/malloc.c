@@ -42,7 +42,7 @@ typedef struct meta {
 ///  However, the freelist bucket 0 also uses the prev pointer
 pmeta lookaside[128] = {NULL};
 
-void link( pmeta linkme )
+void __cgc_link( pmeta linkme )
 {
 	pmeta walker = lookaside[0];
 
@@ -104,7 +104,7 @@ void add_freelist_block( size_t length )
 		return;
 	}
 
-	link( block );
+	__cgc_link( block );
 
 	return;
 }
@@ -115,7 +115,7 @@ void __free( void *block )
 
 	if ( block ) {
 		nb = (pmeta) (( (char*)block) - 4);
-		link(nb);
+		__cgc_link(nb);
 	}
 
 	return;
@@ -215,7 +215,7 @@ void *freelist_alloc( size_t length )
 		//__printf("Broke $d into $d and $d\n", walker->length, length, newone->length);
 		walker->length = length;
 
-		link(newone);
+		__cgc_link(newone);
 
 		//__printf("Returning size: $d\n", walker->length);
 		return ((char*)walker) + 4;

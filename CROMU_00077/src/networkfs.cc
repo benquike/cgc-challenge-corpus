@@ -308,7 +308,7 @@ void CNetworkFS::HandleCFSDir( void )
 	char *pszFileList = new char[dataSize];
 	uint32_t pos = 0;
 
-	pos += sprintf( pszFileList, "$-32s $-32s $-8s $-4s $-10s\n", "Filename", "Owner", "Size", "Mode", "Timestamp" );
+	pos += __cgc_sprintf( pszFileList, "$-32s $-32s $-8s $-4s $-10s\n", "Filename", "Owner", "Size", "Mode", "Timestamp" );
 
 	uint32_t sendSize = 0;	
 	
@@ -333,7 +333,7 @@ void CNetworkFS::HandleCFSDir( void )
 		if ( modeBits & FS_MODE_OTHER_WRITE )
 			modeStr[3] = 'w';
 
-		pos += sprintf( pszFileList+pos, "$-32s $-32s $-8d $-4s $-10d\n", pFile->GetName().c_str(), pFile->GetOwner().c_str(), pFile->GetFileSize(), modeStr, pFile->GetAccessTime() );
+		pos += __cgc_sprintf( pszFileList+pos, "$-32s $-32s $-8d $-4s $-10d\n", pFile->GetName().c_str(), pFile->GetOwner().c_str(), pFile->GetFileSize(), modeStr, pFile->GetAccessTime() );
 	}
 
 	// Delete all the temporary storage holders

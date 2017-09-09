@@ -75,11 +75,11 @@ void OutgoingMessage::SendAsExtended()
 
 	char arr[512];
 	__bzero(arr, 512);
-	sprintf( arr, "$04x", swap( m_response ) );
+	__cgc_sprintf( arr, "$04x", swap( m_response ) );
 	message += arr; // 2B
 	__bzero(arr, 512);
 
-	sprintf( arr, "$08x", swap_int( m_message.GetLength() / 2 ) );
+	__cgc_sprintf( arr, "$08x", swap_int( m_message.GetLength() / 2 ) );
 	message += arr; // ext message size 4B
 
 	message += m_message;
@@ -109,7 +109,7 @@ void OutgoingMessage::SendAsBasic()
 	message += BASIC_RESPONSE; // message type 2B
 
 	char arr[512];
-	int ret = sprintf( arr, "$04x", swap ( m_response ) );
+	int ret = __cgc_sprintf( arr, "$04x", swap ( m_response ) );
 	message += arr; // 2B
 
 	message += BASIC_EXT_RESPONSE; // ext message size 4B

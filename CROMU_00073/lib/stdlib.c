@@ -161,7 +161,7 @@ void *__memcpy( void *pDest, const void *pSource, size_t nbytes )
 	return (pDestReturn);
 }
 
-long int strtol( const char *str, char **endptr, int base )
+long int __cgc_strtol( const char *str, char **endptr, int base )
 {
 	long int value = 0;
 	int neg = 0;

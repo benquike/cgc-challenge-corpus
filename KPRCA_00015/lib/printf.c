@@ -248,7 +248,7 @@ static int _consumer_string_checked(void *arg, const char *buf, size_t n)
     return (int)n;
 }
 
-int fdprintf(int fd, const char *fmt, ...)
+int __cgc_fdprintf(int fd, const char *fmt, ...)
 {
     va_list ap;
     va_start(ap, fmt);
@@ -257,7 +257,7 @@ int fdprintf(int fd, const char *fmt, ...)
     return ret;
 }
 
-int sprintf(char *s, const char *fmt, ...)
+int __cgc_sprintf(char *s, const char *fmt, ...)
 {
     va_list ap;
     va_start(ap, fmt);

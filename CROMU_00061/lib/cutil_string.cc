@@ -70,7 +70,7 @@ bool String::operator==( const String &rhs ) const
 	if ( m_length != rhs.m_length )
 		return (false);
 
-	return memcmp( m_pData, rhs.m_pData, m_length ) == 0;
+	return __cgc_memcmp( m_pData, rhs.m_pData, m_length ) == 0;
 }
 
 bool String::operator!=( const String &rhs ) const

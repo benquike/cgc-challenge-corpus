@@ -9,7 +9,7 @@
 #define __isnan(x) __builtin_isnan(x)
 
 extern int __printf(const char *fmt, ...);
-extern int sprintf(char *s, const char *fmt, ...);
+extern int __cgc_sprintf(char *s, const char *fmt, ...);
 
 long __strtol(const char *str, char **endptr, int base);
 unsigned long __strtoul(const char *str, char **endptr, int base);

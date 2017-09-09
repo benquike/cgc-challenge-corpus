@@ -58,8 +58,8 @@ char* ConvertToHexChars( uint8_t *pData, uint32_t dataLen )
 
 	for ( uint32_t i = 0; i < dataLen; i++ )
 	{
-		sprintf( &str[ i * 2 ], "$x", (pData[i] >> 4) & 0xF );
-		sprintf( &str[ ( i * 2 )+1 ], "$x", pData[i] & 0xF );
+		__cgc_sprintf( &str[ i * 2 ], "$x", (pData[i] >> 4) & 0xF );
+		__cgc_sprintf( &str[ ( i * 2 )+1 ], "$x", pData[i] & 0xF );
 	}
 	
 	return str;

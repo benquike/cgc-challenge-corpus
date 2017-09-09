@@ -182,7 +182,7 @@ char *__strcat(char *restrict s1, const char *restrict s2) {
 	return(s1);
 }
 
-int memcmp( const void *s1, const void *s2, size_t n )
+int __cgc_memcmp( const void *s1, const void *s2, size_t n )
 {
 	for ( size_t pos = 0; pos < n; pos++ )
 	{

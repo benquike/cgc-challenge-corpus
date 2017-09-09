@@ -40,6 +40,6 @@ char *__strcpy( char *pDest, const char *pSource );
 char *__strncpy( char *pDest, const char *pSource, size_t maxlen );
 void *__memcpy( void *pDest, const void *pSrc, size_t nbytes );
 
-long int strtol( const char *str, char **endptr, int base );
+long int __cgc_strtol( const char *str, char **endptr, int base );
 
 #endif // STDLIB_H__

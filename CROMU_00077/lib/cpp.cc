@@ -43,12 +43,12 @@ void *operator new[]( uint32_t size )
 	return (void *)__malloc( size );
 }
 
-void operator delete( void *ptr )
+void operator delete( void *ptr ) throw() throw()
 {
 	__free( ptr );
 }
 
-void operator delete[]( void *ptr )
+void operator delete[]( void *ptr ) throw() throw()
 {
 	__free( ptr );
 }

@@ -77,10 +77,10 @@ uint8_t Pwdgen(unsigned char *Data, uint8_t DataLen, unsigned char *Response, ui
 	for (NumPasswords = 0; NumPasswords < 6; NumPasswords++) {
 		Password[0] = '\0';
 		for (Syllables = 0; Syllables < 10; Syllables++) {
-			sprintf(Password, "$s$s", Password, Words[(uint8_t)(*rand_bytes)]);
+			__cgc_sprintf(Password, "$s$s", Password, Words[(uint8_t)(*rand_bytes)]);
 			rand_bytes += Pwdgen_Offset;
 		}
-		sprintf((char *)Response, "$s$s\n", Response, Password);
+		__cgc_sprintf((char *)Response, "$s$s\n", Response, Password);
 	}
 
 	*ResponseLen = __strlen((char *)Response);

@@ -266,7 +266,7 @@ int main(void)
 		_terminate(-1);
 	}
 
-	if ( memcmp( read_data, szExpectLine, read_len ) != 0 )
+	if ( __cgc_memcmp( read_data, szExpectLine, read_len ) != 0 )
 		_terminate(-1);
 
 	// Next line has equipment ID -- which is type 2 memory leak

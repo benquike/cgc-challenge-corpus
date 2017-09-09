@@ -150,12 +150,11 @@ void SetSystemName(pPlantSystem pSystem, char *NewName) {
 //
 void ChangeAerationPercent(pPlantSystem pAsp, double NewPct) {
 
-	if (!Asp || Asp->Type != ASP || NewPct < 0.0 || NewPct > 100.0) {
+  if (/*!Asp ||*/ Asp->Type != ASP || NewPct < 0.0 || NewPct > 100.0) {
 		return;
 	}
 
 	pAsp->AerationPct = NewPct;
-
 }
 
 //
@@ -163,7 +162,7 @@ void ChangeAerationPercent(pPlantSystem pAsp, double NewPct) {
 //
 void ChangeGlycerinRate(pPlantSystem pAsp, double NewRate) {
 
-	if (!Asp || Asp->Type != ASP || NewRate < 0.0 || NewRate > 100.0) {
+  if (/*!Asp ||*/ Asp->Type != ASP || NewRate < 0.0 || NewRate > 100.0) {
 		return;
 	}
 
@@ -176,7 +175,7 @@ void ChangeGlycerinRate(pPlantSystem pAsp, double NewRate) {
 //
 void ChangeAlumRate(pPlantSystem pAsp, double NewRate) {
 
-	if (!Asp || Asp->Type != ASP || NewRate < 0.0 || NewRate > 100.0) {
+  if ( /*!Asp ||*/ Asp->Type != ASP || NewRate < 0.0 || NewRate > 100.0) {
 		return;
 	}
 

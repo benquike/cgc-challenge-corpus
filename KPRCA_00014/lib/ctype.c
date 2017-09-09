@@ -66,7 +66,7 @@ int __isalpha(int c)
   return __islower(c) || __isupper(c);
 }
 
-int isascii(int c)
+int __cgc_isascii(int c)
 {
   return !(c & ~ASCII_MASK);
 }
@@ -76,7 +76,7 @@ int isblank(int c)
   return (c == ' ' || c == '\t');
 }
 
-int iscntrl(int c)
+int __cgc_iscntrl(int c)
 {
   return c == DEL || c < SPACE;
 }
@@ -101,7 +101,7 @@ int isprint(int c)
   return c >= SPACE && c != DEL;
 }
 
-int ispunct(int c)
+int __cgc_ispunct(int c)
 {
   return _punct[c];
 }
@@ -116,7 +116,7 @@ int __isupper(int c)
   return (unsigned int ) c - 'A' < 26;
 }
 
-int isxdigit(int c)
+int __cgc_isxdigit(int c)
 {
   return _xdigit[c];
 }

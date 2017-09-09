@@ -6,7 +6,7 @@
 extern void *__memcpy(void *dest, const void *src, size_t n);
 extern void *memmove(void *dest, const void *src, size_t n);
 extern void *__memset(void *dest, int c, size_t n);
-extern int memcmp(void *s1, const void *s2, size_t n);
+extern int __cgc_memcmp(void *s1, const void *s2, size_t n);
 extern void *memchr(const void *s, int c, size_t n);
 
 extern size_t __strlen(const char *s);

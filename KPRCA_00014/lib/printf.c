@@ -170,7 +170,7 @@ void output_number_sprintf(int *n, char **s, unsigned int x, int base, int min, 
         OUTPUT_BYTE(n, s, NUM_TO_LOWER(x))
 }
 
-int sprintf(char *str, const char *fmt, ...)
+int __cgc_sprintf(char *str, const char *fmt, ...)
 {
     char *astring;
     int aint, i, n = 0, flags = 0, min = 0;

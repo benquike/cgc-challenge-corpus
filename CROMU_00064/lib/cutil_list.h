@@ -45,7 +45,7 @@ namespace CUtil
 {
 	// Easy means of declaring linked list data structures
 #define DLL_LINK( T ) DoubleLink<T>
-#define DLL_LIST( T, link ) DoubleListDeclare<T, offsetof( T, link )>
+#define DLL_LIST( T, __cgc_link ) DoubleListDeclare<T, offsetof( T, __cgc_link )>
 #define DLL_PTR( T ) DoubleList<T> *
 
 	template<class T>
@@ -104,7 +104,7 @@ namespace CUtil
 
 		template<class U, uint32_t linkOffset> friend class DoubleListDeclare;
 
-		uint32_t m_listLinkOffset;	// Contains the offset for the list link member variable in the item class
+		uint32_t m_listLinkOffset;	// Contains the offset for the list __cgc_link member variable in the item class
 
 		DoubleLink<T> m_first;
 		DoubleLink<T> m_last;
@@ -117,7 +117,7 @@ namespace CUtil
 		DoubleListDeclare();
 	};
 
-	// Declare a double list class with the appropriate link offset
+	// Declare a double list class with the appropriate __cgc_link offset
 	template<class T, uint32_t linkOffset>
 	DoubleListDeclare<T, linkOffset>::DoubleListDeclare()
 		: DoubleList<T>( linkOffset )

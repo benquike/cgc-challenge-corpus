@@ -41,7 +41,7 @@ THE SOFTWARE.
 #define FLOAT_NON_EXPONENT_MAX		10000000000.0
 #define DEFAULT_FLOAT_PRECISION		6
 
-// Wrapper functions for vprintf and vsprintf
+// Wrapper functions for vprintf and __cgc_vsprintf
 typedef int (*tPrintfWrapperFP)( void *ctx, int c, size_t pos );
 
 int wrapper_output( void *ctx, tPrintfWrapperFP fpOut, size_t pos, const char *format, va_list args );
