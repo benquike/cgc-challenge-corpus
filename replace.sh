@@ -24,6 +24,6 @@ ag -l "__cgc_strtok\.h" | xargs sed -i "s/__cgc_strtok\.h/strtok\.h/g"
 ag -l "__cgc_sleep\.h" | xargs sed -i "s/__cgc_sleep\.h/sleep\.h/g"
 ag -l "__cgc_strtol\.c" | xargs sed -i 's/__cgc_strtol\.c/strtol\.c/g'
 ag -l "__cgc_atoi\.h" | xargs sed -i 's/__cgc_atoi\.h/atoi\.h/g'
-ag -l "^void operator delete.*$" | xargs sed -E -i 's/^(void operator delete.*)$/\1 throw\(\)/g'
+ag -l "^void operator delete.*$" | xargs sed -E -i 's/^(void operator delete((?!throw).)*)$/\1 throw\(\)/g'
 ag -l __dso_handle | xargs sed -i -E 's/void \*__dso_handle/extern void \*__dso_handle/g'
 ag -l _SC_PAGESIZE | xargs sed -i 's/\b_SC_PAGESIZE\b/__CGC_SC_PAGESIZE_/g'
