@@ -198,7 +198,7 @@ int force_newline(char *s, int size, int bytes) {
 }
 
 
-int getopt(int argc, char **argv, char *optstring, int *opt_index) {
+int __cgc_getopt(int argc, char **argv, char *optstring, int *opt_index) {
   
   int option = -1;
   if (*opt_index >= argc || !argv[*opt_index]) {

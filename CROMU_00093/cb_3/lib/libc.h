@@ -38,7 +38,7 @@ int receive_until_fd(int fd, char *buf, int length, char delim);
 int equals(char *s, char *d);
 int replace(char *s, char find, char replace, int num);
 int force_newline(char *s, int size, int bytes);
-int getopt(int argc, char **argv, char *optstring, int *opt_index);
+int __cgc_getopt(int argc, char **argv, char *optstring, int *opt_index);
 void bcopy(char *s, char *d, size_t size);
 void __exit(int e);
 
