@@ -123,7 +123,7 @@ typedef int (*handler)(__FILE* in, __FILE* out, char** components, size_t num_co
 
 int handle_command_error(__FILE* in, __FILE* out, char** components, size_t num_components)
 {
-  fprintf(out, "Invalid command" EOL);
+  __cgc_fprintf(out, "Invalid command" EOL);
   return 0;
 }
 
@@ -252,7 +252,7 @@ int handle_status_command(__FILE* in, __FILE* out, char** components, size_t num
 
 int handle_quit(__FILE* in, __FILE* out, char** components, size_t num_components)
 {
-  fprintf(out, "TERMINATING TERRIBLE TICKET TRACKER" EOL);
+  __cgc_fprintf(out, "TERMINATING TERRIBLE TICKET TRACKER" EOL);
   return -1;
 }
 
@@ -384,7 +384,7 @@ void run_server(__FILE* in, __FILE* out, unsigned char* secrets)
   commands[1] = (char *)"5";
   handle_hire_command(in, out, commands, 2);
 
-  fprintf(out, "Welcome to the terrible ticket tracker" EOL);
+  __cgc_fprintf(out, "Welcome to the terrible ticket tracker" EOL);
   for (;;)
   {
     // Tick
@@ -402,7 +402,7 @@ void run_server(__FILE* in, __FILE* out, unsigned char* secrets)
     }
 
     // Read components
-    fprintf(out, "$ ");
+    __cgc_fprintf(out, "$ ");
     command = read_command(in, &components, &num_components);
 
     // Dispatch command
@@ -412,7 +412,7 @@ void run_server(__FILE* in, __FILE* out, unsigned char* secrets)
       break;
     }
 
-    fprintf(out, "OK" EOL);
+    __cgc_fprintf(out, "OK" EOL);
   }
 }
 
