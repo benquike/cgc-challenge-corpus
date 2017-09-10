@@ -47,12 +47,12 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
     char *secret_page = (char *)secret_page_i;
     (void) secret_page;
     /* If you want to obfuscate input/output, uncomment and change */
-    fxlat(stdin, "2281771");
-    fxlat(stdout, "2281771");
+    __cgc_fxlat(stdin, "2281771");
+    __cgc_fxlat(stdout, "2281771");
 
     p1 = *((unsigned int *)(&secret_page[400]));
     p2 = *((unsigned int *)(&secret_page[404]));
-    fbuffered(stdout, 1);
+    __cgc_fbuffered(stdout, 1);
 
     __printf("MOUNT FILEMORE v 1.0" NL);
     __printf(NL NL);
@@ -71,8 +71,8 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
             __printf("1. Mount File" NL);
             __printf("2. Exit" NL);
             __printf(":> ");
-            fflush(stdout);
-            if (freaduntil(input, sizeof(input), *NL, stdin) < 0)
+            __cgc_fflush(stdout);
+            if (__cgc_freaduntil(input, sizeof(input), *NL, stdin) < 0)
                 break;
             if (input[0] == 0)
                 continue;
@@ -84,7 +84,7 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
                     __printf("Successfully mounted file system" NL);
                 else
                     __printf("Could not mount file system" NL);
-                fflush(stdout);
+                __cgc_fflush(stdout);
             }
             else if (choice == 2)
             {
@@ -107,8 +107,8 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
             __printf("12. Unmount Filesystem" NL);
             __printf("13. Exit" NL);
             __printf(":> ");
-            fflush(stdout);
-            if (freaduntil(input, sizeof(input), *NL, stdin) < 0)
+            __cgc_fflush(stdout);
+            if (__cgc_freaduntil(input, sizeof(input), *NL, stdin) < 0)
                 break;
             if (input[0] == 0)
                 continue;
@@ -118,8 +118,8 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
             {
                 __printf("Enter Path" NL);
                 __printf(":> ");
-                fflush(stdout);
-                if (freaduntil(input, sizeof(input), *NL, stdin) <= 0)
+                __cgc_fflush(stdout);
+                if (__cgc_freaduntil(input, sizeof(input), *NL, stdin) <= 0)
                     continue;
 
                 img.ListFiles(input, false);
@@ -128,8 +128,8 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
             {
                 __printf("Enter Path To Recurse" NL);
                 __printf(":> ");
-                fflush(stdout);
-                if (freaduntil(input, sizeof(input), *NL, stdin) <= 0)
+                __cgc_fflush(stdout);
+                if (__cgc_freaduntil(input, sizeof(input), *NL, stdin) <= 0)
                     continue;
 
                 img.ListFiles(input, true);
@@ -140,14 +140,14 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
                 unsigned int num_bytes = 0;
                 __printf("Enter Path Of File To Preview" NL);
                 __printf(":> ");
-                fflush(stdout);
-                if (freaduntil(input, sizeof(input), *NL, stdin) <= 0)
+                __cgc_fflush(stdout);
+                if (__cgc_freaduntil(input, sizeof(input), *NL, stdin) <= 0)
                     continue;
 
                 if (img.PreviewFile(input, &file_preview, &num_bytes) && file_preview && num_bytes)
                 {
                     PRINT_ARR_BYTES(file_preview, num_bytes);
-                    fflush(stdout);
+                    __cgc_fflush(stdout);
                     delete[] file_preview;
                 }
             }
@@ -161,20 +161,20 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
                 unsigned int bytes_to_read = 0;
                 __printf("Enter Path Of File To Read From" NL);
                 __printf(":> ");
-                fflush(stdout);
-                if (freaduntil(input, sizeof(input), *NL, stdin) <= 0)
+                __cgc_fflush(stdout);
+                if (__cgc_freaduntil(input, sizeof(input), *NL, stdin) <= 0)
                     continue;
 
                 __printf("Enter Offset" NL);
                 __printf(":> ");
-                fflush(stdout);
-                if (freaduntil(offset_buf, sizeof(offset_buf), *NL, stdin) <= 0)
+                __cgc_fflush(stdout);
+                if (__cgc_freaduntil(offset_buf, sizeof(offset_buf), *NL, stdin) <= 0)
                     continue;
 
                 __printf("Enter Number Of Bytes To Read" NL);
                 __printf(":> ");
-                fflush(stdout);
-                if (freaduntil(bytes_to_read_buf, sizeof(bytes_to_read_buf), *NL, stdin) <= 0)
+                __cgc_fflush(stdout);
+                if (__cgc_freaduntil(bytes_to_read_buf, sizeof(bytes_to_read_buf), *NL, stdin) <= 0)
                     continue;
 
                 offset = __strtol(offset_buf, NULL, 10);
@@ -182,7 +182,7 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
                 if (img.ReadFromFile(input, offset, bytes_to_read,  &file_data, &num_bytes) && file_data && num_bytes)
                 {
                     PRINT_ARR_BYTES(file_data, num_bytes);
-                    fflush(stdout);
+                    __cgc_fflush(stdout);
                     delete[] file_data;
                 }
             }
@@ -196,20 +196,20 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
                 unsigned int bytes_to_write = 0;
                 __printf("Enter Path Of File To Write To" NL);
                 __printf(":> ");
-                fflush(stdout);
-                if (freaduntil(input, sizeof(input), *NL, stdin) <= 0)
+                __cgc_fflush(stdout);
+                if (__cgc_freaduntil(input, sizeof(input), *NL, stdin) <= 0)
                     continue;
 
                 __printf("Enter Offset" NL);
                 __printf(":> ");
-                fflush(stdout);
-                if (freaduntil(offset_buf, sizeof(offset_buf), *NL, stdin) <= 0)
+                __cgc_fflush(stdout);
+                if (__cgc_freaduntil(offset_buf, sizeof(offset_buf), *NL, stdin) <= 0)
                     continue;
 
                 __printf("Enter Number Of Bytes To Write" NL);
                 __printf(":> ");
-                fflush(stdout);
-                if (freaduntil(bytes_to_write_buf, sizeof(bytes_to_write_buf), *NL, stdin) <= 0)
+                __cgc_fflush(stdout);
+                if (__cgc_freaduntil(bytes_to_write_buf, sizeof(bytes_to_write_buf), *NL, stdin) <= 0)
                     continue;
 
                 offset = __strtol(offset_buf, NULL, 10);
@@ -220,7 +220,7 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
 
                 file_data = new char[bytes_to_write];
                 __printf("Enter File Data To Be Written: [" ESC "d bytes]" NL, bytes_to_write);
-                fflush(stdout);
+                __cgc_fflush(stdout);
                 if (__fread(file_data, bytes_to_write, stdin) <= 0)
                 {
                     delete[] file_data;
@@ -231,7 +231,7 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
                 {
                     __printf("Successfully wrote: " NL);
                     PRINT_ARR_BYTES(file_data, num_bytes);
-                    fflush(stdout);
+                    __cgc_fflush(stdout);
                 }
                 delete[] file_data;
             }
@@ -241,26 +241,26 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
                 unsigned int new_size = 0;
                 __printf("Enter Path Of File To Update" NL);
                 __printf(":> ");
-                fflush(stdout);
-                if (freaduntil(input, sizeof(input), *NL, stdin) <= 0)
+                __cgc_fflush(stdout);
+                if (__cgc_freaduntil(input, sizeof(input), *NL, stdin) <= 0)
                     continue;
 
                 __printf("Enter New Size" NL);
                 __printf(":> ");
-                fflush(stdout);
-                if (freaduntil(new_size_buf, sizeof(new_size_buf), *NL, stdin) <= 0)
+                __cgc_fflush(stdout);
+                if (__cgc_freaduntil(new_size_buf, sizeof(new_size_buf), *NL, stdin) <= 0)
                     continue;
 
                 new_size = __strtol(new_size_buf, NULL, 10);
                 if (img.UpdateFileSize(input, new_size))
                 {
                     __printf("File " ESC "s has a new file size of: " ESC "d" NL, input, new_size);
-                    fflush(stdout);
+                    __cgc_fflush(stdout);
                 }
                 else
                 {
                     __printf("Could not update file size" NL);
-                    fflush(stdout);
+                    __cgc_fflush(stdout);
                 }
             }
             else if (choice == 7)
@@ -275,19 +275,19 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
                 unsigned int add_data_yn;
                 __printf("Enter Parent Directory Of New File" NL);
                 __printf(":> ");
-                fflush(stdout);
-                if (freaduntil(input, sizeof(input), *NL, stdin) <= 0)
+                __cgc_fflush(stdout);
+                if (__cgc_freaduntil(input, sizeof(input), *NL, stdin) <= 0)
                     continue;
 
                 __printf("Enter Name Of New File" NL);
                 __printf(":> ");
-                fflush(stdout);
-                if (freaduntil(filename_buf, sizeof(filename_buf), *NL, stdin) <= 0)
+                __cgc_fflush(stdout);
+                if (__cgc_freaduntil(filename_buf, sizeof(filename_buf), *NL, stdin) <= 0)
                     continue;
                 __printf("Enter Size Of New File" NL);
                 __printf(":> ");
-                fflush(stdout);
-                if (freaduntil(file_size_buf, sizeof(file_size_buf), *NL, stdin) <= 0)
+                __cgc_fflush(stdout);
+                if (__cgc_freaduntil(file_size_buf, sizeof(file_size_buf), *NL, stdin) <= 0)
                     continue;
 
                 __printf("Input File Data?" NL);
@@ -295,8 +295,8 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
                 __printf("2. No" NL);
                 __printf("3. Fill With Random Data" NL);
                 __printf(":> ");
-                fflush(stdout);
-                if (freaduntil(add_data_yn_buf, sizeof(add_data_yn_buf), *NL, stdin) <= 0)
+                __cgc_fflush(stdout);
+                if (__cgc_freaduntil(add_data_yn_buf, sizeof(add_data_yn_buf), *NL, stdin) <= 0)
                     continue;
 
                 file_size = __strtol(file_size_buf, NULL, 10);
@@ -306,7 +306,7 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
                 {
                     file_data = new char[file_size];
                     __printf("Enter File Data To Be Written: [" ESC "d bytes]" NL, file_size);
-                    fflush(stdout);
+                    __cgc_fflush(stdout);
                     if (__fread(file_data, file_size, stdin) <= 0)
                     {
                         delete[] file_data;
@@ -330,7 +330,7 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
                         __printf("Data written to disk: " NL);
                         PRINT_ARR_BYTES(file_data, file_size);
                     }
-                    fflush(stdout);
+                    __cgc_fflush(stdout);
                 }
                 if (file_data)
                     delete[] file_data;
@@ -343,14 +343,14 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
                 __memset(dirname_buf, 0, sizeof(dirname_buf));
                 __printf("Enter Parent Directory Of New Directory" NL);
                 __printf(":> ");
-                fflush(stdout);
-                if (freaduntil(input, sizeof(input), *NL, stdin) <= 0)
+                __cgc_fflush(stdout);
+                if (__cgc_freaduntil(input, sizeof(input), *NL, stdin) <= 0)
                     continue;
 
                 __printf("Enter Name Of New Directory" NL);
                 __printf(":> ");
-                fflush(stdout);
-                if (freaduntil(dirname_buf, sizeof(dirname_buf), *NL, stdin) <= 0)
+                __cgc_fflush(stdout);
+                if (__cgc_freaduntil(dirname_buf, sizeof(dirname_buf), *NL, stdin) <= 0)
                     continue;
 
                 if (img.AddDirectory(input, dirname_buf))
@@ -359,39 +359,39 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
                     __printf("Parent dir: " ESC "s" NL, input);
                     __printf("New directory name: ");
                     PRINT_ARR_CHARS(dirname_buf, __strlen(dirname_buf));
-                    fflush(stdout);
+                    __cgc_fflush(stdout);
                 }
             }
             else if (choice == 9)
             {
                 __printf("Enter Path Of File To Delete" NL);
                 __printf(":> ");
-                fflush(stdout);
+                __cgc_fflush(stdout);
 
-                if (freaduntil(input, sizeof(input), *NL, stdin) <= 0)
+                if (__cgc_freaduntil(input, sizeof(input), *NL, stdin) <= 0)
                     continue;
 
                 if (img.DeleteFile(input))
                 {
                     __printf("Successfully deleted file" NL);
                     __printf("Deleted file: " ESC "s" NL, input);
-                    fflush(stdout);
+                    __cgc_fflush(stdout);
                 }
             }
             else if (choice == 10)
             {
                 __printf("Enter Path Of Directory To Delete" NL);
                 __printf(":> ");
-                fflush(stdout);
+                __cgc_fflush(stdout);
 
-                if (freaduntil(input, sizeof(input), *NL, stdin) <= 0)
+                if (__cgc_freaduntil(input, sizeof(input), *NL, stdin) <= 0)
                     continue;
 
                 if (img.DeleteDirectory(input))
                 {
                     __printf("Successfully deleted directory" NL);
                     __printf("Deleted directory: " ESC "s" NL, input);
-                    fflush(stdout);
+                    __cgc_fflush(stdout);
                 }
             }
             else if (choice == 11)
@@ -407,7 +407,7 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
                     __printf("Successfully unmounted file system" NL);
                 else
                     __printf("Could not unmount file system" NL);
-                fflush(stdout);
+                __cgc_fflush(stdout);
             }
             else if (choice == 13)
             {
@@ -417,7 +417,7 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
     }
 
     __printf("Exiting...." NL);
-    fflush(stdout);
+    __cgc_fflush(stdout);
 
     return 0;
 }

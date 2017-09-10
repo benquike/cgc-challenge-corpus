@@ -70,7 +70,7 @@ int main()
         char val = 0;
         length_read(STDIN, buf, 4);
         buf[4] = '\0';
-        val = strtol((char *)buf+2, NULL, 16);
+        val = __libpov_strtol((char *)buf+2, NULL, 16);
         secret_buf[i] = val;
     }
 

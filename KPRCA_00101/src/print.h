@@ -45,9 +45,9 @@
         unsigned char * __array = (unsigned char *)(_array); \
         for (int _i=0; _i < (_size); _i++) \
         { \
-            fprintf(stderr, ESC "c", (__array)[_i]); \
+            __cgc_fprintf(stderr, ESC "c", (__array)[_i]); \
         } \
-        fprintf(stderr, NL); \
+        __cgc_fprintf(stderr, NL); \
     } while (0)
 
 #define PRINT_ARR_BYTES(_array, _size) \
@@ -66,9 +66,9 @@
         unsigned char * __array = (unsigned char *)(_array); \
         for (int _i=0; _i < (_size); _i++) \
         { \
-            fprintf(stderr, "\\x" ESC "02x", (__array)[_i]); \
+            __cgc_fprintf(stderr, "\\x" ESC "02x", (__array)[_i]); \
         } \
-        fprintf(stderr, NL); \
+        __cgc_fprintf(stderr, NL); \
     } while (0)
 
 #define PRINT_ARR_HEXDUMP(_array, _size) \

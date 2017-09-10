@@ -418,7 +418,7 @@ void CgFsImg::DebugMetadata()
         __printf("First 64 bytes of the cluster region:" NL);
         PRINT_ARR_BYTES(cluster_region_, 64);
         __printf("********END METADATA INFO********" NL);
-        fflush(stdout);
+        __cgc_fflush(stdout);
     }
 }
 

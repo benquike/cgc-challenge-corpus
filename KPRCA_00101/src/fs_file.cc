@@ -94,7 +94,7 @@ bool NameEquals(const fs_file *file_metadata, const char *filename, unsigned int
 {
     if (name_len > sizeof(((fs_file *)0)->name))
         return false;
-    if (memcmp(file_metadata->name, filename, name_len) != 0)
+    if (__cgc_memcmp(file_metadata->name, filename, name_len) != 0)
         return false;
     for (int i = name_len; i < sizeof(((fs_file *)0)->name); i++)
     {

@@ -56,7 +56,7 @@ void debug_bhdr(const bhdr &header)
     __printf("End of Header Signature: \\x" ESC "02x\\0x" ESC "02x\n", header.end_signature[0], header.end_signature[1]);
     __printf("Total header size: " ESC "d\n", sizeof(header));
     __printf("****End Bios Header****\n");
-    fflush(stdout);
+    __cgc_fflush(stdout);
 }
 
 void debug_fs_info(const fs_info_sector &fs_info)
@@ -73,7 +73,7 @@ void debug_fs_info(const fs_info_sector &fs_info)
     __printf("End of Header Signature: \\x" ESC "02x\\0x" ESC "02x\\x" ESC "02x\\0x" ESC "02x\n", fs_info.end_signature[0], fs_info.end_signature[1],
                                                                         fs_info.end_signature[2], fs_info.end_signature[3]);
     __printf("****End FS Info****\n");
-    fflush(stdout);
+    __cgc_fflush(stdout);
 
 }
 
@@ -87,7 +87,7 @@ void debug_file_metadata(const fs_file *file_metadata)
     __printf("Starting Cluster Index: " ESC "d\n", file_metadata->starting_cluster);
     __printf("File size = " ESC "d\n", file_metadata->size);
     __printf("****End File Metadata****\n");
-    fflush(stdout);
+    __cgc_fflush(stdout);
 }
 
 void debug_file(Array<cluster_data> file_clusters)
@@ -97,5 +97,5 @@ void debug_file(Array<cluster_data> file_clusters)
         PRINT_ARR_HEXDUMP(file_clusters[i].data, file_clusters[i].cluster_size);
     }
     __printf("****End File Hex View****\n");
-    fflush(stdout);
+    __cgc_fflush(stdout);
 }
