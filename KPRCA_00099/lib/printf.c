@@ -60,7 +60,7 @@ static void _convert_unsigned(char *buf, unsigned x, int base, int upper)
     }
 
     /* move to beginning of buf */
-    memmove(buf, tmp, 20 - (buf - tmp));
+    __cgc_memmove(buf, tmp, 20 - (buf - tmp));
 }
 
 static void _convert_signed(char *buf, int x, int base, int upper)
@@ -257,13 +257,13 @@ int __printf(const char *fmt, ...)
     va_list ap;
 
     va_start(ap, fmt);
-    ret = vprintf(fmt, ap);
+    ret = __cgc_vprintf(fmt, ap);
     va_end(ap);
 
     return ret;
 }
 
-int fprintf(__FILE *stream, const char *fmt, ...)
+int __cgc_fprintf(__FILE *stream, const char *fmt, ...)
 {
     int ret;
     va_list ap;
@@ -287,7 +287,7 @@ int __sprintf(char *str, const char *fmt, ...)
     return ret;
 }
 
-int vprintf(const char *fmt, va_list ap)
+int __cgc_vprintf(const char *fmt, va_list ap)
 {
     return __vfprintf(stdout, fmt, ap);
 }

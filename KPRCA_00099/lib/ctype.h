@@ -4,7 +4,7 @@
 int __digittoint(int c);
 int __isascii(int c);
 int __isdigit(int c);
-int isprint(int c);
+int __cgc_isprint(int c);
 int __isalnum(int c);
 int __isalpha(int c);
 int __islower(int c);

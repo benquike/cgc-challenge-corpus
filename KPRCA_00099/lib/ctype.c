@@ -63,7 +63,7 @@ int __isdigit(int c)
     return __ctype[c & 0xff] & IS_DIGIT;
 }
 
-int isprint(int c)
+int __cgc_isprint(int c)
 {
     return __ctype[c & 0xff] & IS_PRINT;
 }
