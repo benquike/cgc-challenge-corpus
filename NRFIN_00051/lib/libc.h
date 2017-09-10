@@ -56,10 +56,10 @@ typedef uint8_t bool;
 
 #ifdef DEBUG
 #include "debug.h"
-#define dbg(args...) fprintf(stderr, "[D] %s:%d @ %s | ", __FILE__, __LINE__, __func__);fprintf(stderr, args);
+#define dbg(args...) __cgc_fprintf(stderr, "[D] %s:%d @ %s | ", __FILE__, __LINE__, __func__);__cgc_fprintf(stderr, args);
 #define err(args...) \
-	fprintf(stderr, "[E] %s:%d @ %s | ", __FILE__, __LINE__, __func__);\
-	fprintf(stderr, args);\
+	__cgc_fprintf(stderr, "[E] %s:%d @ %s | ", __FILE__, __LINE__, __func__);\
+	__cgc_fprintf(stderr, args);\
 	if(SUCCESS == ret) { ret = -1; }\
 	goto bail;
 #else

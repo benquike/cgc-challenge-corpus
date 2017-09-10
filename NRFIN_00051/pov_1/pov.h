@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __libpov_free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -25,6 +25,7 @@
 
 // #define DEBUG 1
 
+#include <libc.h>
 #include <libpov.h>
 
 typedef uint8_t byte_t;
@@ -60,10 +61,10 @@ typedef uint8_t bool;
 
 #ifdef DEBUG
 #include "pov_debug.h"
-#define dbg(args...) fprintf(stderr, "[D] %s:%d @ %s | ", __FILE__, __LINE__, __func__);fprintf(stderr, args);
+#define dbg(args...) __libpov_fprintf(stderr, "[D] %s:%d @ %s | ", __FILE__, __LINE__, __func__);__libpov_fprintf(stderr, args);
 #define err(args...) \
-    fprintf(stderr, "[E] %s:%d @ %s | ", __FILE__, __LINE__, __func__);\
-    fprintf(stderr, args);\
+    __libpov_fprintf(stderr, "[E] %s:%d @ %s | ", __FILE__, __LINE__, __func__);\
+    __libpov_fprintf(stderr, args);\
     if(SUCCESS == ret) { ret = -1; }\
     goto bail;
 #else

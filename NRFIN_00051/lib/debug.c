@@ -59,7 +59,7 @@ int __vfprintf(__FILE * stream, const char *format, my_va_list ap) {
    return vdprintf(stream->fd, format, ap);
 }
 
-int fprintf(__FILE * stream, const char *format, ...) {
+int __cgc_fprintf(__FILE * stream, const char *format, ...) {
    my_va_list va;
    my_va_start(va, format);
    return __vfprintf(stream, format, va);
@@ -470,7 +470,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      }
                   }
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                      if ((flags & FLAGS_ZERO) != 0 && prec_value < width_value) {
                         //widen precision if necessary to pad to width with '0'
@@ -579,7 +579,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      width_value = len;
                   }
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                      if ((flags & FLAGS_ZERO) != 0 && prec_value < width_value) {
                         //widen precision if necessary to pad to width with '0'
@@ -648,7 +648,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      width_value = len;
                   }
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                      if ((flags & FLAGS_ZERO) != 0 && prec_value < width_value) {
                         //widen precision if necessary to pad to width with '0'
@@ -719,7 +719,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      width_value = len;
                   }
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                      if ((flags & FLAGS_ZERO) != 0 && prec_value < width_value) {
                         //widen precision if necessary to pad to width with '0'
@@ -834,7 +834,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      width_value = len;
                   }
                   if (prec_value == -1 || prec_value > len) {
-                     //by default max is entire string but no less than width
+                     //by default __cgc_max is entire string but no less than width
                      prec_value = len;
                   }
                   if (flags & FLAGS_LEFT) {
@@ -868,7 +868,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                   num_ptr = r_xtoa((unsigned int)args[field_arg], num_buf, 0);
                   len = num_ptr - num_buf + 1;
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                   }
                   else {
