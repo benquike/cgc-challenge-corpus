@@ -1,24 +1,24 @@
 #include "stdio_private.h"
 
-__FILE _stdin = {
+FILE _stdin = {
     .fd = STDIN,
     .rw = F_READ,
     .idx = 0,
     .length = 0
 };
-__FILE _stdout = {
+FILE _stdout = {
     .fd = STDOUT,
     .rw = F_WRITE,
     .idx = -1,
     .length = 0
 };
-__FILE _stderr = {
+FILE _stderr = {
     .fd = STDERR,
     .rw = F_WRITE,
     .idx = -1,
     .length = 0
 };
 
-__FILE * const stdin = &_stdin;
-__FILE * const stdout = &_stdout;
-__FILE * const stderr = &_stderr;
+FILE * const stdin = &_stdin;
+FILE * const stdout = &_stdout;
+FILE * const stderr = &_stderr;

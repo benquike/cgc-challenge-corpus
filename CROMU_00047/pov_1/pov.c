@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, __free of charge, to any person obtaining a copy
+Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -68,7 +68,7 @@ void send_pov_packet( void )
 	uint32_t samples_sent = 0;
 	uint32_t i;
 
-	__memset( emptySpace, 0, 4 );
+	memset( emptySpace, 0, 4 );
 
 	// Preamble 1010 1010 1010 1010 1010...
 	packet_header_data[0] = 0xAA;
@@ -84,7 +84,7 @@ void send_pov_packet( void )
 	// Length	
 	packet_header_data[7] = init_data_len + 12;
 
-	__memset( init_data, 0xAA, 49 );
+	memset( init_data, 0xAA, 49 );
 	init_data[0] = 3;
 	init_data[4] = 0xAA;
 
@@ -104,10 +104,10 @@ void send_pov_packet( void )
 	send_data = append_buf( send_data, &send_length, checksum_buffer, checksum_buffer_length );	
 	
 	// Free the packet data
-	__free( packet_data );
+	free( packet_data );
 
 	// Send 256-bytes of NULL to seed FIR filter
-	__memset( firFilterInit, 0, 256 );
+	memset( firFilterInit, 0, 256 );
 
 	for ( uint32_t t = 0; t < 2; t++ )
 	{
@@ -146,7 +146,7 @@ void send_pov_packet( void )
 	}
 
 	// Free the send data
-	__free( send_data );
+	free( send_data );
 
 	for ( ; samples_sent < SAMPLE_SEND_MAX; samples_sent++ )
 	{
@@ -172,13 +172,13 @@ int main(void)
 		unsigned char *read_00000;
 		unsigned int read_00000_len;
 		unsigned int read_00000_ptr = 0;
-		//**** delimited __read
+		//**** delimited read
 		static unsigned char read_00000_delim[] = 
 		 "\x0a";
 		read_00000 = NULL;
 		read_00000_len = 0;
 		int read_00000_res = delimited_read(0, &read_00000, &read_00000_len, read_00000_delim, 1);
-		__free(read_00000);
+		free(read_00000);
 
 	}
 }

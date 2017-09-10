@@ -4,7 +4,7 @@ Author: Debbie Nuttall <debbie@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, __free of charge, to any person obtaining a copy
+Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -97,7 +97,7 @@ int main(void) {
   ReceiveFromCB(input, 10);
   char bytes[55] = "ish hostname +p password +l username dump 1128775680 \n";
   //print_integer(bytes + 42, t2vals.region_addr);
-  SendToCB(bytes, __strlen(bytes));
+  SendToCB(bytes, strlen(bytes));
   unsigned int i = 0xffffffff;
   SendToCB("quit\n", 5);
   ReceiveFromCB((char *)&i, 4);

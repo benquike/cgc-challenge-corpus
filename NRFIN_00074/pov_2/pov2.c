@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, __free of charge, to any person obtaining a
+ * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -35,7 +35,7 @@ int main(void) {
       if (write_00000_len > 0) {
          transmit_all(1, write_00000, write_00000_len);
       }
-      __free(write_00000);
+      free(write_00000);
    } while (0);
    do {
       //*** writing data
@@ -49,7 +49,7 @@ int main(void) {
       if (write_00001_len > 0) {
          transmit_all(1, write_00001, write_00001_len);
       }
-      __free(write_00001);
+      free(write_00001);
    } while (0);
    do {
       //*** writing data
@@ -121,7 +121,7 @@ int main(void) {
       if (write_00002_len > 0) {
          transmit_all(1, write_00002, write_00002_len);
       }
-      __free(write_00002);
+      free(write_00002);
    } while (0);
    do {
       //*** writing data
@@ -135,7 +135,7 @@ int main(void) {
       if (write_00003_len > 0) {
          transmit_all(1, write_00003, write_00003_len);
       }
-      __free(write_00003);
+      free(write_00003);
    } while (0);
    do {
       //*** writing data
@@ -1206,7 +1206,7 @@ int main(void) {
       if (write_00004_len > 0) {
          transmit_all(1, write_00004, write_00004_len);
       }
-      __free(write_00004);
+      free(write_00004);
    } while (0);
    do {
       //*** writing data
@@ -1220,7 +1220,7 @@ int main(void) {
       if (write_00005_len > 0) {
          transmit_all(1, write_00005, write_00005_len);
       }
-      __free(write_00005);
+      free(write_00005);
    } while (0);
    do {
       //*** writing data
@@ -1233,38 +1233,38 @@ int main(void) {
       if (write_00006_len > 0) {
          transmit_all(1, write_00006, write_00006_len);
       }
-      __free(write_00006);
+      free(write_00006);
    } while (0);
    do {
       unsigned char *read_00000;
       unsigned int read_00000_len;
       unsigned int read_00000_ptr = 0;
-      //**** delimited __read
+      //**** delimited read
       static unsigned char read_00000_delim[] = 
          "\x0a";
       read_00000 = NULL;
       read_00000_len = 0;
       int read_00000_res = delimited_read(0, &read_00000, &read_00000_len, read_00000_delim, 1);
       if (read_00000_res) {} //silence unused variable warning
-      //**** __read match data
+      //**** read match data
       static unsigned char match_00000_00000[] = 
          "\x44\x6f\x63\x75\x6d\x65\x6e\x74\x20\x49\x44\x3a\x20\x37\x0a";
       read_00000_ptr += data_match(read_00000 + read_00000_ptr, read_00000_len - read_00000_ptr, match_00000_00000, 15);
-      __free(read_00000);
+      free(read_00000);
       if (read_00000_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
       unsigned char *read_00001;
       unsigned int read_00001_len;
       unsigned int read_00001_ptr = 0;
-      //**** delimited __read
+      //**** delimited read
       static unsigned char read_00001_delim[] = 
          "\x23";
       read_00001 = NULL;
       read_00001_len = 0;
       int read_00001_res = delimited_read(0, &read_00001, &read_00001_len, read_00001_delim, 1);
       if (read_00001_res) {} //silence unused variable warning
-      /* __read match pcre:
+      /* read match pcre:
 [=]{135}
 (
 |.{63}\s{4}.{63}\s{4}
@@ -1310,7 +1310,7 @@ int main(void) {
          //this is a pov so what does this even mean?
          //why would we quit on failed regex compile, just keep sending stuff.
       }
-      __free(read_00001);
+      free(read_00001);
       if (read_00001_ptr) {}  //silence unused variable warning if any
    } while (0);
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, __free of charge, to any person obtaining a
+ * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -48,7 +48,7 @@ main(void)
     if (length_read(STDIN, (unsigned char *)buf, INITIAL_BOARD_LEN) != INITIAL_BOARD_LEN)
         return -1;
 
-    len = __strlen(pov);
+    len = strlen(pov);
     if (transmit_all(STDOUT, pov, len) != 0)
         return -1;
 
@@ -58,12 +58,12 @@ main(void)
 
     // Printed move string
     delimited_read(STDIN, (unsigned char **)&line, (unsigned int *)&len, (unsigned char *)"\n", 1);
-    flag = __strtoul(line + len - 9, &endp, 16);
+    flag = strtoul(line + len - 9, &endp, 16);
 
     if (transmit_all(NEGOTIATE_FD, &flag, sizeof(flag)) != 0)
         return -1;
 
-    len = __strlen(quit);
+    len = strlen(quit);
     if (transmit_all(STDOUT, quit, len) != 0)
         return -1;
 

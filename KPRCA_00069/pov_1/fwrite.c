@@ -17,24 +17,24 @@ unbuffered:
     {
         if (size >= sizeof(stream->buffer))
         {
-            fflush(stream);
+            __cgc_fflush(stream);
             goto unbuffered;
         }
 
         if (stream->length + size >= sizeof(stream->buffer))
         {
             tx = sizeof(stream->buffer) - stream->length;
-            __memcpy(stream->buffer + stream->length, buf, tx);
+            __libpov_memcpy(stream->buffer + stream->length, buf, tx);
             stream->length += tx;
             idx += tx;
 
-            fflush(stream);
+            __cgc_fflush(stream);
         }
 
         if (idx < size)
         {
             tx = size - idx;
-            __memcpy(stream->buffer + stream->length, buf + idx, tx);
+            __libpov_memcpy(stream->buffer + stream->length, buf + idx, tx);
             stream->length += tx;
             idx += tx;
         }

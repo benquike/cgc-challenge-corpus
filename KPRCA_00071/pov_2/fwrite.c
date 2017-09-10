@@ -1,7 +1,7 @@
 #include <libpov.h>
 #include "stdio_private.h"
 
-ssize_t __fwrite(const void *ptr, size_t size, __FILE *stream)
+ssize_t fwrite(const void *ptr, size_t size, FILE *stream)
 {
     const char *buf = ptr;
     size_t idx = 0, tx;
@@ -24,7 +24,7 @@ unbuffered:
         if (stream->length + size >= sizeof(stream->buffer))
         {
             tx = sizeof(stream->buffer) - stream->length;
-            __memcpy(stream->buffer + stream->length, buf, tx);
+            memcpy(stream->buffer + stream->length, buf, tx);
             stream->length += tx;
             idx += tx;
 
@@ -34,7 +34,7 @@ unbuffered:
         if (idx < size)
         {
             tx = size - idx;
-            __memcpy(stream->buffer + stream->length, buf + idx, tx);
+            memcpy(stream->buffer + stream->length, buf + idx, tx);
             stream->length += tx;
             idx += tx;
         }

@@ -26,7 +26,7 @@
 #include "stdio.h"
 #include "povbarcode.h"
 
-#define transmit_str(_str) transmit_all(STDOUT, (_str), __strlen((_str)))
+#define transmit_str(_str) transmit_all(STDOUT, (_str), __libpov_strlen((_str)))
 #define transmit_type2_byte(_pov) transmit_all(3, (_pov), sizeof(char))
 #define transmit_type2_short(_pov) transmit_all(3, (_pov), sizeof(short))
 #define transmit_type2_int(_pov) transmit_all(3, (_pov), sizeof(int))
@@ -40,7 +40,7 @@ void read_until_line(char *line)
     while (!ready) {
         delimited_read(STDIN, &resp, &resp_len, (unsigned char *)"\n", 1);
         transmit_all(STDERR, resp, resp_len);
-        if (memcmp(resp, line, __strlen(line)) == 0) {
+        if (__libpov_memcmp(resp, line, __libpov_strlen(line)) == 0) {
             ready = 1;
         }
     }
@@ -104,7 +104,7 @@ int main()
     {
         if (length_read(STDIN, &c, 1) != 1)
             _terminate(0);
-        fprintf(stderr, "%c", c);
+        __cgc_fprintf(stderr, "%c", c);
 
         if (c == '!')
             break;

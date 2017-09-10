@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, __free of charge, to any person obtaining a
+ * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -29,7 +29,7 @@
 
 #include "stdio.h"
 
-struct __FILE {
+struct FILE {
     int fd;
     enum mode mode;
     unsigned char *buf;
@@ -40,15 +40,15 @@ struct __FILE {
 #define BUFSIZE 256
 static unsigned char stdbuf[3][BUFSIZE];
 
-static __FILE stdfiles[3] = {
+static FILE stdfiles[3] = {
     { STDIN, READ, stdbuf[0], BUFSIZE, 0 },
     { STDOUT, WRITE, stdbuf[1], BUFSIZE, 0 },
     { STDERR, WRITE, stdbuf[2], BUFSIZE, 0 }
 };
 
-__FILE *stdin = &stdfiles[0];
-__FILE *stdout = &stdfiles[1];
-__FILE *stderr = &stdfiles[2];
+FILE *stdin = &stdfiles[0];
+FILE *stdout = &stdfiles[1];
+FILE *stderr = &stdfiles[2];
 
 ssize_t
 read_all(int fd, void *ptr, size_t size)
@@ -117,7 +117,7 @@ write_all(int fd, const void *ptr, size_t size)
 }
 
 int
-__fflush(__FILE *stream)
+fflush(FILE *stream)
 {
     ssize_t written;
 
@@ -136,43 +136,43 @@ __fflush(__FILE *stream)
 }
 
 ssize_t
-__fread(void *ptr, size_t size, __FILE *stream)
+fread(void *ptr, size_t size, FILE *stream)
 {
     //TEMP
     return read_all(stream->fd, ptr, size);
 }
 
 ssize_t
-fread_until(void *ptr, unsigned char delim, size_t size, __FILE *stream)
+fread_until(void *ptr, unsigned char delim, size_t size, FILE *stream)
 {
     //TEMP
     return read_until(stream->fd, ptr, delim, size);
 }
 
 ssize_t
-__fwrite(const void *ptr, size_t size, __FILE *stream)
+fwrite(const void *ptr, size_t size, FILE *stream)
 {
     //TEMP
     return write_all(stream->fd, ptr, size);
 }
 
 int
-fgetc(__FILE *stream)
+fgetc(FILE *stream)
 {
     char c;
-    ssize_t __read;
+    ssize_t read;
 
-    __read = __fread(&c, 1, stream);
-    if (__read < 0)
-        return __read;
+    read = fread(&c, 1, stream);
+    if (read < 0)
+        return read;
 
     return c;
 }
 
 int
-fputc(int character, __FILE *stream)
+fputc(int character, FILE *stream)
 {
-    return __fwrite(&character, 1, stream);
+    return fwrite(&character, 1, stream);
 }
 
 static int
@@ -219,13 +219,13 @@ printf_core(const char *format, void (*printfn)(char c, void *data),
                 break;
             case 'x':
             case 'X':
-                if (utostr(va_arg(args, unsigned int), 16, __isupper(f), buf, sizeof(buf)) != EXIT_SUCCESS)
+                if (utostr(va_arg(args, unsigned int), 16, isupper(f), buf, sizeof(buf)) != EXIT_SUCCESS)
                     return EXIT_FAILURE;
 
                 // Pad out with 8 zeros
-                if ((buflen = __strlen(buf)) < 2 * sizeof(unsigned int)) {
+                if ((buflen = strlen(buf)) < 2 * sizeof(unsigned int)) {
                     memmove(buf + (2 * sizeof(unsigned int) - buflen), buf, buflen + 1);
-                    __memset(buf, '0', 2 * sizeof(unsigned int) - buflen);
+                    memset(buf, '0', 2 * sizeof(unsigned int) - buflen);
                 }
 
                 s = buf;
@@ -266,7 +266,7 @@ string_printer(char c, void *data)
 }
 
 int
-__vfprintf(__FILE *stream, const char *format, va_list args)
+vfprintf(FILE *stream, const char *format, va_list args)
 {
     return printf_core(format, file_printer, stream, args);
 }
@@ -274,7 +274,7 @@ __vfprintf(__FILE *stream, const char *format, va_list args)
 int
 vprintf(const char *format, va_list args) 
 {
-    return __vfprintf(stdout, format, args);
+    return vfprintf(stdout, format, args);
 }
 
 int
@@ -285,24 +285,24 @@ vsnprintf(char *s, size_t num, const char *format, va_list args)
 }
 
 int
-__vsprintf(char *s, const char *format, va_list args)
+vsprintf(char *s, const char *format, va_list args)
 {
     return vsnprintf(s, (size_t)SIZE_MAX, format, args);
 }
 
 int
-fprintf(__FILE *stream, const char *format, ...)
+fprintf(FILE *stream, const char *format, ...)
 {
     int ret;
     va_list args;
     va_start(args, format);
-    ret = __vfprintf(stream, format, args);
+    ret = vfprintf(stream, format, args);
     va_end(args);
     return ret;
 }
 
 int
-__printf(const char *format, ...)
+printf(const char *format, ...)
 {
     int ret;
     va_list args;
@@ -324,12 +324,12 @@ snprintf(char *s, size_t num, const char *format, ...)
 }
 
 int
-__sprintf(char *s, const char *format, ...)
+sprintf(char *s, const char *format, ...)
 {
     int ret;
     va_list args;
     va_start(args, format);
-    ret = __vsprintf(s, format, args);
+    ret = vsprintf(s, format, args);
     va_end(args);
     return ret;
 }

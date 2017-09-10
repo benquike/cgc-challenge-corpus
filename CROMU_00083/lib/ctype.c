@@ -4,7 +4,7 @@ Copyright (c) 2015 Cromulence LLC
 
 Authors: Cromulence <cgc@cromulence.com>
 
-Permission is hereby granted, __free of charge, to any person obtaining a copy
+Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -34,7 +34,7 @@ THE SOFTWARE.
 #define 	FF	0x0c
 #define		CR	0x0d
 
-int __isdigit( int c )
+int isdigit( int c )
 {
 	if ( c >= '0' && c <= '9' )
 		return 1;
@@ -42,7 +42,7 @@ int __isdigit( int c )
 		return 0;
 }
 
-int __isupper( int c )
+int isupper( int c )
 {
 	if ( c >= 'A' && c <= 'Z' )
 		return 1;
@@ -50,7 +50,7 @@ int __isupper( int c )
 		return 0;
 }
 
-int __islower( int c )
+int islower( int c )
 {
 	if ( c >= 'a' && c <= 'z' )
 		return 1;
@@ -58,17 +58,17 @@ int __islower( int c )
 		return 0;
 }
 
-int __isalpha( int c )
+int isalpha( int c )
 {
-	if ( __isupper( c ) || __islower( c ) )
+	if ( isupper( c ) || islower( c ) )
 		return 1;
 	else
 		return 0;
 }
 
-int __isalnum( int c )
+int isalnum( int c )
 {
-	if ( __isalpha( c ) || __isdigit( c ) )
+	if ( isalpha( c ) || isdigit( c ) )
 		return 1;
 	else
 		return 0;
@@ -84,7 +84,7 @@ int isprint( int c )
 
 int toupper( int c )
 {
-	if ( __islower( c ) )
+	if ( islower( c ) )
 		return (c - 'a') + 'A';
 	else
 		return c;
@@ -92,13 +92,13 @@ int toupper( int c )
 
 int tolower( int c )
 {
-	if ( __isupper( c ) )
+	if ( isupper( c ) )
 	       return (c - 'A') + 'a';
 	else
 		return c;	
 }
 
-int __isspace( int c )
+int isspace( int c )
 {
 	if ( c == SPC ||
 	     c == TAB ||

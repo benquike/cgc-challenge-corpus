@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, __free of charge, to any person obtaining a
+ * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -37,7 +37,7 @@ bitset_init(struct bitset *bitset, size_t size)
 void
 bitset_clear(struct bitset *bitset)
 {
-    __memset(bitset->data, '\0', ALIGN(bitset->size, 8) / 8);
+    memset(bitset->data, '\0', ALIGN(bitset->size, 8) / 8);
 }
 
 static int

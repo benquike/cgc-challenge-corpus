@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, __free of charge, to any person obtaining a
+ * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -72,36 +72,36 @@ unsigned char
 play_game(void)
 {
     unsigned char guess, lo = 0, hi = 255;
-    unsigned char *__read;
+    unsigned char *read;
     unsigned int len;
     char buf[10];
 
     // I'm thinking of a magic number, can you guess it ?!?!\n
-    delimited_read(STDIN, &__read, &len, (unsigned char *)"\n", 1);
-    __free(__read);
+    delimited_read(STDIN, &read, &len, (unsigned char *)"\n", 1);
+    free(read);
 
     while (1) {
         guess = (lo + hi) / 2;
         utostr(guess, 10, 0, buf, sizeof(buf));
 
-        transmit_all(STDOUT, buf, __strlen(buf));
+        transmit_all(STDOUT, buf, strlen(buf));
         transmit_all(STDOUT, "\n", 1);
 
-        delimited_read(STDIN, &__read, &len, (unsigned char *)"\n", 1);
-        if (strncmp((char *)__read, "Just right!\n", len) == 0)
+        delimited_read(STDIN, &read, &len, (unsigned char *)"\n", 1);
+        if (strncmp((char *)read, "Just right!\n", len) == 0)
             break;
-        else if (strncmp((char *)__read, "Haha, too small!\n", len) == 0)
+        else if (strncmp((char *)read, "Haha, too small!\n", len) == 0)
             lo = guess + 1;
-        else if (strncmp((char *)__read, "Whoa, too big\n", len) == 0)
+        else if (strncmp((char *)read, "Whoa, too big\n", len) == 0)
             hi = guess - 1;
-        __free(__read);
+        free(read);
 
         // WRONG!\n
-        delimited_read(STDIN, &__read, &len, (unsigned char *)"\n", 1);
-        __free(__read);
+        delimited_read(STDIN, &read, &len, (unsigned char *)"\n", 1);
+        free(read);
     }
 
-    __free(__read);
+    free(read);
     return guess;
 }
 
@@ -111,18 +111,18 @@ get_byte(unsigned int byte)
     unsigned char ret;
     char index = 'a' + byte;
     char buf[] = "transition % 1\n";
-    unsigned char *__read;
+    unsigned char *read;
     unsigned int len;
 
     transmit_all(STDOUT, "reset\n", sizeof("reset\n") - 1);
     // Please re-enter state machine\n
-    delimited_read(STDIN, &__read, &len, (unsigned char *)"\n", 1);
-    __free(__read);
+    delimited_read(STDIN, &read, &len, (unsigned char *)"\n", 1);
+    free(read);
 
     transmit_all(STDOUT, "onmatch magic\n", sizeof("onmatch magic\n") - 1);
     // Match action updated\n
-    delimited_read(STDIN, &__read, &len, (unsigned char *)"\n", 1);
-    __free(__read);
+    delimited_read(STDIN, &read, &len, (unsigned char *)"\n", 1);
+    free(read);
 
     transmit_all(STDOUT, "state\n", sizeof("state\n") - 1);
     buf[sizeof("transition ") - 1] = index;
@@ -131,14 +131,14 @@ get_byte(unsigned int byte)
     transmit_all(STDOUT, "done\n", sizeof("done\n") - 1);
 
     // Ok, matching input now\n
-    delimited_read(STDIN, &__read, &len, (unsigned char *)"\n", 1);
-    __free(__read);
+    delimited_read(STDIN, &read, &len, (unsigned char *)"\n", 1);
+    free(read);
 
     transmit_all(STDOUT, &index, 1);
     transmit_all(STDOUT, "\n", 1);
 
     ret = play_game();
-    delimited_read(STDIN, &__read, &len, (unsigned char *)"\n", 1);
+    delimited_read(STDIN, &read, &len, (unsigned char *)"\n", 1);
     return ret;
 }
 

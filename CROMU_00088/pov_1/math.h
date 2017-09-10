@@ -4,7 +4,7 @@ Copyright (c) 2015 Cromulence LLC
 
 Authors: Cromulence <cgc@cromulence.com>
 
-Permission is hereby granted, __free of charge, to any person obtaining a copy
+Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -29,7 +29,7 @@ THE SOFTWARE.
 double round( double val );
 double floor( double val );
 
-#define __isnan( val )  __builtin_isnan( val )
-#define __isinf( val )  __builtin_isinf( val )
+#define isnan( val )  __builtin_isnan( val )
+#define isinf( val )  __builtin_isinf( val )
 
 #endif // __MATH_H__

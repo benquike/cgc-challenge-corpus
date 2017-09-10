@@ -1,6 +1,6 @@
 #include "stdio_private.h"
 
-int fflush(__FILE *stream)
+int __cgc_fflush(__FILE *stream)
 {
     if (stream->idx == INVALID_IDX)
         return 0;

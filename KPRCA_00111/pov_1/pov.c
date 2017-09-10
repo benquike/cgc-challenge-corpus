@@ -17,7 +17,7 @@
 #define BLUB_MAX 140
 #define QUIT_ID 0xdeadbeef
 
-void __sleep(uint32_t usec)
+void sleep(uint32_t usec)
 {
   struct timeval t;
   t.tv_sec = usec / 1000000;
@@ -86,14 +86,14 @@ static void _convert_signed(char *buf, int x, int base, int upper)
 
 static void send_string(int fd, const char* s)
 {
-  transmit_all(fd, s, __strlen(s));
+  transmit_all(fd, s, strlen(s));
 }
 
-static void __strcat(char* s1, const char* s2)
+static void strcat(char* s1, const char* s2)
 {
   char* p = s1;
   while (*p != '\0') p++;
-  __strcpy(p, s2);
+  strcpy(p, s2);
 }
 
 int main(void)
@@ -141,16 +141,16 @@ int main(void)
   _convert_signed(buf, -idx, 10, 0);
 
   char tosend[1024];
-  __strcat(tosend, "y");
-  __strcat(tosend, EOT_S);
-  __strcat(tosend, "charlie");
-  __strcat(tosend, EOT_S);
-  __strcat(tosend, buf);
-  __strcat(tosend, EOT_S);
+  strcat(tosend, "y");
+  strcat(tosend, EOT_S);
+  strcat(tosend, "charlie");
+  strcat(tosend, EOT_S);
+  strcat(tosend, buf);
+  strcat(tosend, EOT_S);
   send_string(1, tosend);
   send_string(1, read_blubs);
-  const char* __exit = "e" EOT_S;
-  send_string(1, __exit);
+  const char* exit = "e" EOT_S;
+  send_string(1, exit);
 
 #ifndef TESTING
   length_read(0, (unsigned char*)buf, 336);

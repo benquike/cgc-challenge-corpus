@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, __free of charge, to any person obtaining a
+ * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -34,7 +34,7 @@
  * @param c The char to examine
  * @return 1 if c is a decimal digit, 0 otherwise
  */
-int __isdigit(int c);
+int isdigit(int c);
 
 /**
  * Return 1 if c is a hexadecmimal digit, 0 otherwise.
@@ -50,7 +50,7 @@ int ishexdigit(int c);
  * @param c The char to examine
  * @return 1 if c is an uppercase or lowercase alphabet character, 0 otherwise
  */
-int __isalpha(int c);
+int isalpha(int c);
 
 /**
  * Return 1 if c is an uppercase alphabet character, 0 otherwise.
@@ -58,7 +58,7 @@ int __isalpha(int c);
  * @param c The char to examine
  * @return 1 if c is an uppercase alphabet character, 0 otherwise
  */
-int __islower(int c);
+int islower(int c);
 
 /**
  * Return 1 if c is a lowercase alphabet character, 0 otherwise.
@@ -66,7 +66,7 @@ int __islower(int c);
  * @param c The char to examine
  * @return 1 if c is a lowercase alphabet character, 0 otherwise
  */
-int __isupper(int c);
+int isupper(int c);
 
 /**
  * Convert c to an uppercase alphabet character if possible.

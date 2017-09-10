@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, __free of charge, to any person obtaining a
+ * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -37,7 +37,7 @@ int main(void) {
         if (write_00000_len > 0) {
             transmit_all(1, write_00000, write_00000_len);
         }
-        __free(write_00000);
+        free(write_00000);
     } while (0);
     do {
         //*** writing data
@@ -51,7 +51,7 @@ int main(void) {
         if (write_00001_len > 0) {
             transmit_all(1, write_00001, write_00001_len);
         }
-        __free(write_00001);
+        free(write_00001);
     } while (0);
     do {
         //*** writing data
@@ -64,7 +64,7 @@ int main(void) {
         if (write_00002_len > 0) {
             transmit_all(1, write_00002, write_00002_len);
         }
-        __free(write_00002);
+        free(write_00002);
     } while (0);
     do {
         //*** writing data
@@ -77,7 +77,7 @@ int main(void) {
         if (write_00003_len > 0) {
             transmit_all(1, write_00003, write_00003_len);
         }
-        __free(write_00003);
+        free(write_00003);
     } while (0);
     do {
         //*** writing data
@@ -90,7 +90,7 @@ int main(void) {
         if (write_00004_len > 0) {
             transmit_all(1, write_00004, write_00004_len);
         }
-        __free(write_00004);
+        free(write_00004);
     } while (0);
     do {
         //*** writing data
@@ -103,7 +103,7 @@ int main(void) {
         if (write_00005_len > 0) {
             transmit_all(1, write_00005, write_00005_len);
         }
-        __free(write_00005);
+        free(write_00005);
     } while (0);
     do {
         //*** writing data
@@ -116,7 +116,7 @@ int main(void) {
         if (write_00006_len > 0) {
             transmit_all(1, write_00006, write_00006_len);
         }
-        __free(write_00006);
+        free(write_00006);
     } while (0);
     do {
         //*** writing data
@@ -129,7 +129,7 @@ int main(void) {
         if (write_00007_len > 0) {
             transmit_all(1, write_00007, write_00007_len);
         }
-        __free(write_00007);
+        free(write_00007);
     } while (0);
     do {
         //*** writing data
@@ -142,7 +142,7 @@ int main(void) {
         if (write_00008_len > 0) {
             transmit_all(1, write_00008, write_00008_len);
         }
-        __free(write_00008);
+        free(write_00008);
     } while (0);
     do {
         //*** writing data
@@ -155,7 +155,7 @@ int main(void) {
         if (write_00009_len > 0) {
             transmit_all(1, write_00009, write_00009_len);
         }
-        __free(write_00009);
+        free(write_00009);
     } while (0);
     do {
         //*** writing data
@@ -168,7 +168,7 @@ int main(void) {
         if (write_00010_len > 0) {
             transmit_all(1, write_00010, write_00010_len);
         }
-        __free(write_00010);
+        free(write_00010);
     } while (0);
     do {
         //*** writing data
@@ -181,7 +181,7 @@ int main(void) {
         if (write_00011_len > 0) {
             transmit_all(1, write_00011, write_00011_len);
         }
-        __free(write_00011);
+        free(write_00011);
     } while (0);
     do {
         //*** writing data
@@ -194,7 +194,7 @@ int main(void) {
         if (write_00012_len > 0) {
             transmit_all(1, write_00012, write_00012_len);
         }
-        __free(write_00012);
+        free(write_00012);
     } while (0);
     do {
         //*** writing data
@@ -207,7 +207,7 @@ int main(void) {
         if (write_00013_len > 0) {
             transmit_all(1, write_00013, write_00013_len);
         }
-        __free(write_00013);
+        free(write_00013);
     } while (0);
     do {
         //*** writing data
@@ -220,7 +220,7 @@ int main(void) {
         if (write_00014_len > 0) {
             transmit_all(1, write_00014, write_00014_len);
         }
-        __free(write_00014);
+        free(write_00014);
     } while (0);
     do {
         //*** writing data
@@ -233,7 +233,7 @@ int main(void) {
         if (write_00015_len > 0) {
             transmit_all(1, write_00015, write_00015_len);
         }
-        __free(write_00015);
+        free(write_00015);
     } while (0);
     do {
         //*** writing data
@@ -246,7 +246,7 @@ int main(void) {
         if (write_00016_len > 0) {
             transmit_all(1, write_00016, write_00016_len);
         }
-        __free(write_00016);
+        free(write_00016);
     } while (0);
     do {
         //*** writing data
@@ -259,7 +259,7 @@ int main(void) {
         if (write_00017_len > 0) {
             transmit_all(1, write_00017, write_00017_len);
         }
-        __free(write_00017);
+        free(write_00017);
     } while (0);
     do {
         //*** writing data
@@ -272,7 +272,7 @@ int main(void) {
         if (write_00018_len > 0) {
             transmit_all(1, write_00018, write_00018_len);
         }
-        __free(write_00018);
+        free(write_00018);
     } while (0);
     do {
         //*** writing data
@@ -285,7 +285,7 @@ int main(void) {
         if (write_00019_len > 0) {
             transmit_all(1, write_00019, write_00019_len);
         }
-        __free(write_00019);
+        free(write_00019);
     } while (0);
     do {
         //*** writing data
@@ -298,7 +298,7 @@ int main(void) {
         if (write_00020_len > 0) {
             transmit_all(1, write_00020, write_00020_len);
         }
-        __free(write_00020);
+        free(write_00020);
     } while (0);
     do {
         //*** writing data
@@ -311,7 +311,7 @@ int main(void) {
         if (write_00021_len > 0) {
             transmit_all(1, write_00021, write_00021_len);
         }
-        __free(write_00021);
+        free(write_00021);
     } while (0);
     do {
         //*** writing data
@@ -324,7 +324,7 @@ int main(void) {
         if (write_00022_len > 0) {
             transmit_all(1, write_00022, write_00022_len);
         }
-        __free(write_00022);
+        free(write_00022);
     } while (0);
     do {
         //*** writing data
@@ -337,7 +337,7 @@ int main(void) {
         if (write_00023_len > 0) {
             transmit_all(1, write_00023, write_00023_len);
         }
-        __free(write_00023);
+        free(write_00023);
     } while (0);
     do {
         //*** writing data
@@ -350,7 +350,7 @@ int main(void) {
         if (write_00024_len > 0) {
             transmit_all(1, write_00024, write_00024_len);
         }
-        __free(write_00024);
+        free(write_00024);
     } while (0);
     do {
         //*** writing data
@@ -363,7 +363,7 @@ int main(void) {
         if (write_00025_len > 0) {
             transmit_all(1, write_00025, write_00025_len);
         }
-        __free(write_00025);
+        free(write_00025);
     } while (0);
     do {
         //*** writing data
@@ -376,7 +376,7 @@ int main(void) {
         if (write_00026_len > 0) {
             transmit_all(1, write_00026, write_00026_len);
         }
-        __free(write_00026);
+        free(write_00026);
     } while (0);
     do {
         //*** writing data
@@ -389,7 +389,7 @@ int main(void) {
         if (write_00027_len > 0) {
             transmit_all(1, write_00027, write_00027_len);
         }
-        __free(write_00027);
+        free(write_00027);
     } while (0);
     do {
         //*** writing data
@@ -402,7 +402,7 @@ int main(void) {
         if (write_00028_len > 0) {
             transmit_all(1, write_00028, write_00028_len);
         }
-        __free(write_00028);
+        free(write_00028);
     } while (0);
     do {
         //*** writing data
@@ -415,7 +415,7 @@ int main(void) {
         if (write_00029_len > 0) {
             transmit_all(1, write_00029, write_00029_len);
         }
-        __free(write_00029);
+        free(write_00029);
     } while (0);
     do {
         //*** writing data
@@ -428,7 +428,7 @@ int main(void) {
         if (write_00030_len > 0) {
             transmit_all(1, write_00030, write_00030_len);
         }
-        __free(write_00030);
+        free(write_00030);
     } while (0);
     do {
         //*** writing data
@@ -441,7 +441,7 @@ int main(void) {
         if (write_00031_len > 0) {
             transmit_all(1, write_00031, write_00031_len);
         }
-        __free(write_00031);
+        free(write_00031);
     } while (0);
     do {
         //*** writing data
@@ -454,7 +454,7 @@ int main(void) {
         if (write_00032_len > 0) {
             transmit_all(1, write_00032, write_00032_len);
         }
-        __free(write_00032);
+        free(write_00032);
     } while (0);
     do {
         //*** writing data
@@ -467,7 +467,7 @@ int main(void) {
         if (write_00033_len > 0) {
             transmit_all(1, write_00033, write_00033_len);
         }
-        __free(write_00033);
+        free(write_00033);
     } while (0);
     do {
         //*** writing data
@@ -480,7 +480,7 @@ int main(void) {
         if (write_00034_len > 0) {
             transmit_all(1, write_00034, write_00034_len);
         }
-        __free(write_00034);
+        free(write_00034);
     } while (0);
     do {
         //*** writing data
@@ -493,7 +493,7 @@ int main(void) {
         if (write_00035_len > 0) {
             transmit_all(1, write_00035, write_00035_len);
         }
-        __free(write_00035);
+        free(write_00035);
     } while (0);
     do {
         //*** writing data
@@ -506,7 +506,7 @@ int main(void) {
         if (write_00036_len > 0) {
             transmit_all(1, write_00036, write_00036_len);
         }
-        __free(write_00036);
+        free(write_00036);
     } while (0);
     do {
         //*** writing data
@@ -519,7 +519,7 @@ int main(void) {
         if (write_00037_len > 0) {
             transmit_all(1, write_00037, write_00037_len);
         }
-        __free(write_00037);
+        free(write_00037);
     } while (0);
     do {
         //*** writing data
@@ -532,7 +532,7 @@ int main(void) {
         if (write_00038_len > 0) {
             transmit_all(1, write_00038, write_00038_len);
         }
-        __free(write_00038);
+        free(write_00038);
     } while (0);
     do {
         //*** writing data
@@ -545,7 +545,7 @@ int main(void) {
         if (write_00039_len > 0) {
             transmit_all(1, write_00039, write_00039_len);
         }
-        __free(write_00039);
+        free(write_00039);
     } while (0);
     do {
         //*** writing data
@@ -558,7 +558,7 @@ int main(void) {
         if (write_00040_len > 0) {
             transmit_all(1, write_00040, write_00040_len);
         }
-        __free(write_00040);
+        free(write_00040);
     } while (0);
     do {
         //*** writing data
@@ -571,7 +571,7 @@ int main(void) {
         if (write_00041_len > 0) {
             transmit_all(1, write_00041, write_00041_len);
         }
-        __free(write_00041);
+        free(write_00041);
     } while (0);
     do {
         //*** writing data
@@ -584,7 +584,7 @@ int main(void) {
         if (write_00042_len > 0) {
             transmit_all(1, write_00042, write_00042_len);
         }
-        __free(write_00042);
+        free(write_00042);
     } while (0);
     do {
         //*** writing data
@@ -597,7 +597,7 @@ int main(void) {
         if (write_00043_len > 0) {
             transmit_all(1, write_00043, write_00043_len);
         }
-        __free(write_00043);
+        free(write_00043);
     } while (0);
     do {
         //*** writing data
@@ -610,7 +610,7 @@ int main(void) {
         if (write_00044_len > 0) {
             transmit_all(1, write_00044, write_00044_len);
         }
-        __free(write_00044);
+        free(write_00044);
     } while (0);
     do {
         //*** writing data
@@ -623,7 +623,7 @@ int main(void) {
         if (write_00045_len > 0) {
             transmit_all(1, write_00045, write_00045_len);
         }
-        __free(write_00045);
+        free(write_00045);
     } while (0);
     do {
         //*** writing data
@@ -636,7 +636,7 @@ int main(void) {
         if (write_00046_len > 0) {
             transmit_all(1, write_00046, write_00046_len);
         }
-        __free(write_00046);
+        free(write_00046);
     } while (0);
     do {
         //*** writing data
@@ -649,7 +649,7 @@ int main(void) {
         if (write_00047_len > 0) {
             transmit_all(1, write_00047, write_00047_len);
         }
-        __free(write_00047);
+        free(write_00047);
     } while (0);
     do {
         //*** writing data
@@ -662,7 +662,7 @@ int main(void) {
         if (write_00048_len > 0) {
             transmit_all(1, write_00048, write_00048_len);
         }
-        __free(write_00048);
+        free(write_00048);
     } while (0);
     do {
         //*** writing data
@@ -675,7 +675,7 @@ int main(void) {
         if (write_00049_len > 0) {
             transmit_all(1, write_00049, write_00049_len);
         }
-        __free(write_00049);
+        free(write_00049);
     } while (0);
     do {
         //*** writing data
@@ -688,7 +688,7 @@ int main(void) {
         if (write_00050_len > 0) {
             transmit_all(1, write_00050, write_00050_len);
         }
-        __free(write_00050);
+        free(write_00050);
     } while (0);
     do {
         //*** writing data
@@ -701,7 +701,7 @@ int main(void) {
         if (write_00051_len > 0) {
             transmit_all(1, write_00051, write_00051_len);
         }
-        __free(write_00051);
+        free(write_00051);
     } while (0);
     do {
         //*** writing data
@@ -714,7 +714,7 @@ int main(void) {
         if (write_00052_len > 0) {
             transmit_all(1, write_00052, write_00052_len);
         }
-        __free(write_00052);
+        free(write_00052);
     } while (0);
     do {
         //*** writing data
@@ -727,7 +727,7 @@ int main(void) {
         if (write_00053_len > 0) {
             transmit_all(1, write_00053, write_00053_len);
         }
-        __free(write_00053);
+        free(write_00053);
     } while (0);
     do {
         //*** writing data
@@ -740,7 +740,7 @@ int main(void) {
         if (write_00054_len > 0) {
             transmit_all(1, write_00054, write_00054_len);
         }
-        __free(write_00054);
+        free(write_00054);
     } while (0);
     do {
         //*** writing data
@@ -753,7 +753,7 @@ int main(void) {
         if (write_00055_len > 0) {
             transmit_all(1, write_00055, write_00055_len);
         }
-        __free(write_00055);
+        free(write_00055);
     } while (0);
     do {
         //*** writing data
@@ -766,7 +766,7 @@ int main(void) {
         if (write_00056_len > 0) {
             transmit_all(1, write_00056, write_00056_len);
         }
-        __free(write_00056);
+        free(write_00056);
     } while (0);
     do {
         //*** writing data
@@ -779,7 +779,7 @@ int main(void) {
         if (write_00057_len > 0) {
             transmit_all(1, write_00057, write_00057_len);
         }
-        __free(write_00057);
+        free(write_00057);
     } while (0);
     do {
         //*** writing data
@@ -792,7 +792,7 @@ int main(void) {
         if (write_00058_len > 0) {
             transmit_all(1, write_00058, write_00058_len);
         }
-        __free(write_00058);
+        free(write_00058);
     } while (0);
     do {
         //*** writing data
@@ -805,7 +805,7 @@ int main(void) {
         if (write_00059_len > 0) {
             transmit_all(1, write_00059, write_00059_len);
         }
-        __free(write_00059);
+        free(write_00059);
     } while (0);
     do {
         //*** writing data
@@ -818,7 +818,7 @@ int main(void) {
         if (write_00060_len > 0) {
             transmit_all(1, write_00060, write_00060_len);
         }
-        __free(write_00060);
+        free(write_00060);
     } while (0);
     do {
         //*** writing data
@@ -831,7 +831,7 @@ int main(void) {
         if (write_00061_len > 0) {
             transmit_all(1, write_00061, write_00061_len);
         }
-        __free(write_00061);
+        free(write_00061);
     } while (0);
     do {
         //*** writing data
@@ -844,7 +844,7 @@ int main(void) {
         if (write_00062_len > 0) {
             transmit_all(1, write_00062, write_00062_len);
         }
-        __free(write_00062);
+        free(write_00062);
     } while (0);
     do {
         //*** writing data
@@ -857,7 +857,7 @@ int main(void) {
         if (write_00063_len > 0) {
             transmit_all(1, write_00063, write_00063_len);
         }
-        __free(write_00063);
+        free(write_00063);
     } while (0);
     do {
         //*** writing data
@@ -870,7 +870,7 @@ int main(void) {
         if (write_00064_len > 0) {
             transmit_all(1, write_00064, write_00064_len);
         }
-        __free(write_00064);
+        free(write_00064);
     } while (0);
     do {
         //*** writing data
@@ -883,7 +883,7 @@ int main(void) {
         if (write_00065_len > 0) {
             transmit_all(1, write_00065, write_00065_len);
         }
-        __free(write_00065);
+        free(write_00065);
     } while (0);
     do {
         //*** writing data
@@ -896,7 +896,7 @@ int main(void) {
         if (write_00066_len > 0) {
             transmit_all(1, write_00066, write_00066_len);
         }
-        __free(write_00066);
+        free(write_00066);
     } while (0);
     do {
         //*** writing data
@@ -909,7 +909,7 @@ int main(void) {
         if (write_00067_len > 0) {
             transmit_all(1, write_00067, write_00067_len);
         }
-        __free(write_00067);
+        free(write_00067);
     } while (0);
     do {
         //*** writing data
@@ -922,7 +922,7 @@ int main(void) {
         if (write_00068_len > 0) {
             transmit_all(1, write_00068, write_00068_len);
         }
-        __free(write_00068);
+        free(write_00068);
     } while (0);
     do {
         //*** writing data
@@ -935,7 +935,7 @@ int main(void) {
         if (write_00069_len > 0) {
             transmit_all(1, write_00069, write_00069_len);
         }
-        __free(write_00069);
+        free(write_00069);
     } while (0);
     do {
         //*** writing data
@@ -948,7 +948,7 @@ int main(void) {
         if (write_00070_len > 0) {
             transmit_all(1, write_00070, write_00070_len);
         }
-        __free(write_00070);
+        free(write_00070);
     } while (0);
     do {
         //*** writing data
@@ -961,7 +961,7 @@ int main(void) {
         if (write_00071_len > 0) {
             transmit_all(1, write_00071, write_00071_len);
         }
-        __free(write_00071);
+        free(write_00071);
     } while (0);
     do {
         //*** writing data
@@ -974,7 +974,7 @@ int main(void) {
         if (write_00072_len > 0) {
             transmit_all(1, write_00072, write_00072_len);
         }
-        __free(write_00072);
+        free(write_00072);
     } while (0);
     do {
         //*** writing data
@@ -987,7 +987,7 @@ int main(void) {
         if (write_00073_len > 0) {
             transmit_all(1, write_00073, write_00073_len);
         }
-        __free(write_00073);
+        free(write_00073);
     } while (0);
     do {
         //*** writing data
@@ -1000,7 +1000,7 @@ int main(void) {
         if (write_00074_len > 0) {
             transmit_all(1, write_00074, write_00074_len);
         }
-        __free(write_00074);
+        free(write_00074);
     } while (0);
     do {
         //*** writing data
@@ -1013,7 +1013,7 @@ int main(void) {
         if (write_00075_len > 0) {
             transmit_all(1, write_00075, write_00075_len);
         }
-        __free(write_00075);
+        free(write_00075);
     } while (0);
     do {
         //*** writing data
@@ -1026,7 +1026,7 @@ int main(void) {
         if (write_00076_len > 0) {
             transmit_all(1, write_00076, write_00076_len);
         }
-        __free(write_00076);
+        free(write_00076);
     } while (0);
     do {
         //*** writing data
@@ -1039,7 +1039,7 @@ int main(void) {
         if (write_00077_len > 0) {
             transmit_all(1, write_00077, write_00077_len);
         }
-        __free(write_00077);
+        free(write_00077);
     } while (0);
     do {
         //*** writing data
@@ -1052,7 +1052,7 @@ int main(void) {
         if (write_00078_len > 0) {
             transmit_all(1, write_00078, write_00078_len);
         }
-        __free(write_00078);
+        free(write_00078);
     } while (0);
     do {
         //*** writing data
@@ -1065,7 +1065,7 @@ int main(void) {
         if (write_00079_len > 0) {
             transmit_all(1, write_00079, write_00079_len);
         }
-        __free(write_00079);
+        free(write_00079);
     } while (0);
     do {
         //*** writing data
@@ -1078,7 +1078,7 @@ int main(void) {
         if (write_00080_len > 0) {
             transmit_all(1, write_00080, write_00080_len);
         }
-        __free(write_00080);
+        free(write_00080);
     } while (0);
     do {
         //*** writing data
@@ -1091,7 +1091,7 @@ int main(void) {
         if (write_00081_len > 0) {
             transmit_all(1, write_00081, write_00081_len);
         }
-        __free(write_00081);
+        free(write_00081);
     } while (0);
     do {
         //*** writing data
@@ -1104,7 +1104,7 @@ int main(void) {
         if (write_00082_len > 0) {
             transmit_all(1, write_00082, write_00082_len);
         }
-        __free(write_00082);
+        free(write_00082);
     } while (0);
     do {
         //*** writing data
@@ -1117,7 +1117,7 @@ int main(void) {
         if (write_00083_len > 0) {
             transmit_all(1, write_00083, write_00083_len);
         }
-        __free(write_00083);
+        free(write_00083);
     } while (0);
     do {
         //*** writing data
@@ -1130,7 +1130,7 @@ int main(void) {
         if (write_00084_len > 0) {
             transmit_all(1, write_00084, write_00084_len);
         }
-        __free(write_00084);
+        free(write_00084);
     } while (0);
     do {
         //*** writing data
@@ -1143,7 +1143,7 @@ int main(void) {
         if (write_00085_len > 0) {
             transmit_all(1, write_00085, write_00085_len);
         }
-        __free(write_00085);
+        free(write_00085);
     } while (0);
     do {
         //*** writing data
@@ -1156,7 +1156,7 @@ int main(void) {
         if (write_00086_len > 0) {
             transmit_all(1, write_00086, write_00086_len);
         }
-        __free(write_00086);
+        free(write_00086);
     } while (0);
     do {
         //*** writing data
@@ -1169,7 +1169,7 @@ int main(void) {
         if (write_00087_len > 0) {
             transmit_all(1, write_00087, write_00087_len);
         }
-        __free(write_00087);
+        free(write_00087);
     } while (0);
     do {
         //*** writing data
@@ -1182,7 +1182,7 @@ int main(void) {
         if (write_00088_len > 0) {
             transmit_all(1, write_00088, write_00088_len);
         }
-        __free(write_00088);
+        free(write_00088);
     } while (0);
     do {
         //*** writing data
@@ -1195,7 +1195,7 @@ int main(void) {
         if (write_00089_len > 0) {
             transmit_all(1, write_00089, write_00089_len);
         }
-        __free(write_00089);
+        free(write_00089);
     } while (0);
     do {
         //*** writing data
@@ -1208,7 +1208,7 @@ int main(void) {
         if (write_00090_len > 0) {
             transmit_all(1, write_00090, write_00090_len);
         }
-        __free(write_00090);
+        free(write_00090);
     } while (0);
     do {
         //*** writing data
@@ -1221,7 +1221,7 @@ int main(void) {
         if (write_00091_len > 0) {
             transmit_all(1, write_00091, write_00091_len);
         }
-        __free(write_00091);
+        free(write_00091);
     } while (0);
     do {
         //*** writing data
@@ -1234,7 +1234,7 @@ int main(void) {
         if (write_00092_len > 0) {
             transmit_all(1, write_00092, write_00092_len);
         }
-        __free(write_00092);
+        free(write_00092);
     } while (0);
     do {
         //*** writing data
@@ -1247,7 +1247,7 @@ int main(void) {
         if (write_00093_len > 0) {
             transmit_all(1, write_00093, write_00093_len);
         }
-        __free(write_00093);
+        free(write_00093);
     } while (0);
     do {
         //*** writing data
@@ -1260,7 +1260,7 @@ int main(void) {
         if (write_00094_len > 0) {
             transmit_all(1, write_00094, write_00094_len);
         }
-        __free(write_00094);
+        free(write_00094);
     } while (0);
     do {
         //*** writing data
@@ -1273,7 +1273,7 @@ int main(void) {
         if (write_00095_len > 0) {
             transmit_all(1, write_00095, write_00095_len);
         }
-        __free(write_00095);
+        free(write_00095);
     } while (0);
     do {
         //*** writing data
@@ -1286,7 +1286,7 @@ int main(void) {
         if (write_00096_len > 0) {
             transmit_all(1, write_00096, write_00096_len);
         }
-        __free(write_00096);
+        free(write_00096);
     } while (0);
     do {
         //*** writing data
@@ -1299,7 +1299,7 @@ int main(void) {
         if (write_00097_len > 0) {
             transmit_all(1, write_00097, write_00097_len);
         }
-        __free(write_00097);
+        free(write_00097);
     } while (0);
     do {
         //*** writing data
@@ -1312,7 +1312,7 @@ int main(void) {
         if (write_00098_len > 0) {
             transmit_all(1, write_00098, write_00098_len);
         }
-        __free(write_00098);
+        free(write_00098);
     } while (0);
     do {
         //*** writing data
@@ -1325,7 +1325,7 @@ int main(void) {
         if (write_00099_len > 0) {
             transmit_all(1, write_00099, write_00099_len);
         }
-        __free(write_00099);
+        free(write_00099);
     } while (0);
     do {
         //*** writing data
@@ -1338,7 +1338,7 @@ int main(void) {
         if (write_00100_len > 0) {
             transmit_all(1, write_00100, write_00100_len);
         }
-        __free(write_00100);
+        free(write_00100);
     } while (0);
     do {
         //*** writing data
@@ -1351,7 +1351,7 @@ int main(void) {
         if (write_00101_len > 0) {
             transmit_all(1, write_00101, write_00101_len);
         }
-        __free(write_00101);
+        free(write_00101);
     } while (0);
     do {
         //*** writing data
@@ -1364,7 +1364,7 @@ int main(void) {
         if (write_00102_len > 0) {
             transmit_all(1, write_00102, write_00102_len);
         }
-        __free(write_00102);
+        free(write_00102);
     } while (0);
     do {
         //*** writing data
@@ -1377,7 +1377,7 @@ int main(void) {
         if (write_00103_len > 0) {
             transmit_all(1, write_00103, write_00103_len);
         }
-        __free(write_00103);
+        free(write_00103);
     } while (0);
     do {
         //*** writing data
@@ -1390,7 +1390,7 @@ int main(void) {
         if (write_00104_len > 0) {
             transmit_all(1, write_00104, write_00104_len);
         }
-        __free(write_00104);
+        free(write_00104);
     } while (0);
     do {
         //*** writing data
@@ -1403,7 +1403,7 @@ int main(void) {
         if (write_00105_len > 0) {
             transmit_all(1, write_00105, write_00105_len);
         }
-        __free(write_00105);
+        free(write_00105);
     } while (0);
     do {
         //*** writing data
@@ -1416,7 +1416,7 @@ int main(void) {
         if (write_00106_len > 0) {
             transmit_all(1, write_00106, write_00106_len);
         }
-        __free(write_00106);
+        free(write_00106);
     } while (0);
     do {
         //*** writing data
@@ -1429,7 +1429,7 @@ int main(void) {
         if (write_00107_len > 0) {
             transmit_all(1, write_00107, write_00107_len);
         }
-        __free(write_00107);
+        free(write_00107);
     } while (0);
     do {
         //*** writing data
@@ -1442,7 +1442,7 @@ int main(void) {
         if (write_00108_len > 0) {
             transmit_all(1, write_00108, write_00108_len);
         }
-        __free(write_00108);
+        free(write_00108);
     } while (0);
     do {
         //*** writing data
@@ -1455,7 +1455,7 @@ int main(void) {
         if (write_00109_len > 0) {
             transmit_all(1, write_00109, write_00109_len);
         }
-        __free(write_00109);
+        free(write_00109);
     } while (0);
     do {
         //*** writing data
@@ -1468,7 +1468,7 @@ int main(void) {
         if (write_00110_len > 0) {
             transmit_all(1, write_00110, write_00110_len);
         }
-        __free(write_00110);
+        free(write_00110);
     } while (0);
     do {
         //*** writing data
@@ -1481,7 +1481,7 @@ int main(void) {
         if (write_00111_len > 0) {
             transmit_all(1, write_00111, write_00111_len);
         }
-        __free(write_00111);
+        free(write_00111);
     } while (0);
     do {
         //*** writing data
@@ -1494,7 +1494,7 @@ int main(void) {
         if (write_00112_len > 0) {
             transmit_all(1, write_00112, write_00112_len);
         }
-        __free(write_00112);
+        free(write_00112);
     } while (0);
     do {
         //*** writing data
@@ -1507,7 +1507,7 @@ int main(void) {
         if (write_00113_len > 0) {
             transmit_all(1, write_00113, write_00113_len);
         }
-        __free(write_00113);
+        free(write_00113);
     } while (0);
     do {
         //*** writing data
@@ -1520,7 +1520,7 @@ int main(void) {
         if (write_00114_len > 0) {
             transmit_all(1, write_00114, write_00114_len);
         }
-        __free(write_00114);
+        free(write_00114);
     } while (0);
     do {
         //*** writing data
@@ -1533,7 +1533,7 @@ int main(void) {
         if (write_00115_len > 0) {
             transmit_all(1, write_00115, write_00115_len);
         }
-        __free(write_00115);
+        free(write_00115);
     } while (0);
     do {
         //*** writing data
@@ -1546,7 +1546,7 @@ int main(void) {
         if (write_00116_len > 0) {
             transmit_all(1, write_00116, write_00116_len);
         }
-        __free(write_00116);
+        free(write_00116);
     } while (0);
     do {
         //*** writing data
@@ -1559,7 +1559,7 @@ int main(void) {
         if (write_00117_len > 0) {
             transmit_all(1, write_00117, write_00117_len);
         }
-        __free(write_00117);
+        free(write_00117);
     } while (0);
     do {
         //*** writing data
@@ -1572,7 +1572,7 @@ int main(void) {
         if (write_00118_len > 0) {
             transmit_all(1, write_00118, write_00118_len);
         }
-        __free(write_00118);
+        free(write_00118);
     } while (0);
     do {
         //*** writing data
@@ -1585,7 +1585,7 @@ int main(void) {
         if (write_00119_len > 0) {
             transmit_all(1, write_00119, write_00119_len);
         }
-        __free(write_00119);
+        free(write_00119);
     } while (0);
     do {
         //*** writing data
@@ -1598,7 +1598,7 @@ int main(void) {
         if (write_00120_len > 0) {
             transmit_all(1, write_00120, write_00120_len);
         }
-        __free(write_00120);
+        free(write_00120);
     } while (0);
     do {
         //*** writing data
@@ -1611,7 +1611,7 @@ int main(void) {
         if (write_00121_len > 0) {
             transmit_all(1, write_00121, write_00121_len);
         }
-        __free(write_00121);
+        free(write_00121);
     } while (0);
     do {
         //*** writing data
@@ -1624,7 +1624,7 @@ int main(void) {
         if (write_00122_len > 0) {
             transmit_all(1, write_00122, write_00122_len);
         }
-        __free(write_00122);
+        free(write_00122);
     } while (0);
     do {
         //*** writing data
@@ -1637,7 +1637,7 @@ int main(void) {
         if (write_00123_len > 0) {
             transmit_all(1, write_00123, write_00123_len);
         }
-        __free(write_00123);
+        free(write_00123);
     } while (0);
     do {
         //*** writing data
@@ -1650,7 +1650,7 @@ int main(void) {
         if (write_00124_len > 0) {
             transmit_all(1, write_00124, write_00124_len);
         }
-        __free(write_00124);
+        free(write_00124);
     } while (0);
     do {
         //*** writing data
@@ -1663,7 +1663,7 @@ int main(void) {
         if (write_00125_len > 0) {
             transmit_all(1, write_00125, write_00125_len);
         }
-        __free(write_00125);
+        free(write_00125);
     } while (0);
     do {
         //*** writing data
@@ -1676,7 +1676,7 @@ int main(void) {
         if (write_00126_len > 0) {
             transmit_all(1, write_00126, write_00126_len);
         }
-        __free(write_00126);
+        free(write_00126);
     } while (0);
     do {
         //*** writing data
@@ -1689,7 +1689,7 @@ int main(void) {
         if (write_00127_len > 0) {
             transmit_all(1, write_00127, write_00127_len);
         }
-        __free(write_00127);
+        free(write_00127);
     } while (0);
     do {
         //*** writing data
@@ -1702,7 +1702,7 @@ int main(void) {
         if (write_00128_len > 0) {
             transmit_all(1, write_00128, write_00128_len);
         }
-        __free(write_00128);
+        free(write_00128);
     } while (0);
     do {
         //*** writing data
@@ -1715,7 +1715,7 @@ int main(void) {
         if (write_00129_len > 0) {
             transmit_all(1, write_00129, write_00129_len);
         }
-        __free(write_00129);
+        free(write_00129);
     } while (0);
     do {
         //*** writing data
@@ -1728,7 +1728,7 @@ int main(void) {
         if (write_00130_len > 0) {
             transmit_all(1, write_00130, write_00130_len);
         }
-        __free(write_00130);
+        free(write_00130);
     } while (0);
     do {
         //*** writing data
@@ -1741,7 +1741,7 @@ int main(void) {
         if (write_00131_len > 0) {
             transmit_all(1, write_00131, write_00131_len);
         }
-        __free(write_00131);
+        free(write_00131);
     } while (0);
     do {
         //*** writing data
@@ -1754,25 +1754,25 @@ int main(void) {
         if (write_00132_len > 0) {
             transmit_all(1, write_00132, write_00132_len);
         }
-        __free(write_00132);
+        free(write_00132);
     } while (0);
     do {
         unsigned char *read_00000;
         unsigned int read_00000_len;
         unsigned int read_00000_ptr = 0;
-        //**** delimited __read
+        //**** delimited read
         static unsigned char read_00000_delim[] = 
             "\x0a";
         read_00000 = NULL;
         read_00000_len = 0;
         int read_00000_res = delimited_read(0, &read_00000, &read_00000_len, read_00000_delim, 1);
         if (read_00000_res) {} //silence unused variable warning
-        //**** __read match data
+        //**** read match data
         static unsigned char match_00000_00000[] = 
             "\x4f\x6b\x2c\x20\x6d\x61\x74\x63\x68\x69\x6e\x67\x20\x69\x6e\x70"
             "\x75\x74\x20\x6e\x6f\x77";
         read_00000_ptr += data_match(read_00000 + read_00000_ptr, read_00000_len - read_00000_ptr, match_00000_00000, 22);
-        __free(read_00000);
+        free(read_00000);
         if (read_00000_ptr) {}  //silence unused variable warning if any
     } while (0);
     do {
@@ -1804,20 +1804,20 @@ int main(void) {
         if (write_00133_len > 0) {
             transmit_all(1, write_00133, write_00133_len);
         }
-        __free(write_00133);
+        free(write_00133);
     } while (0);
     do {
         unsigned char *read_00001;
         unsigned int read_00001_len;
         unsigned int read_00001_ptr = 0;
-        //**** delimited __read
+        //**** delimited read
         static unsigned char read_00001_delim[] = 
             "\x0a";
         read_00001 = NULL;
         read_00001_len = 0;
         int read_00001_res = delimited_read(0, &read_00001, &read_00001_len, read_00001_delim, 1);
         if (read_00001_res) {} //silence unused variable warning
-        /* __read match pcre:
+        /* read match pcre:
            Got a match! ".*"
            */
         static char read_00001_00000_regex[] = 
@@ -1840,7 +1840,7 @@ int main(void) {
             //this is a pov so what does this even mean?
             //why would we quit on failed regex compile, just keep sending stuff.
         }
-        __free(read_00001);
+        free(read_00001);
         if (read_00001_ptr) {}  //silence unused variable warning if any
     } while (0);
     do {
@@ -1854,6 +1854,6 @@ int main(void) {
         if (write_00134_len > 0) {
             transmit_all(1, write_00134, write_00134_len);
         }
-        __free(write_00134);
+        free(write_00134);
     } while (0);
 }

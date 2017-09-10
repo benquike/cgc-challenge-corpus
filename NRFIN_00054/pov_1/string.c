@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, __free of charge, to any person obtaining a
+ * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -23,7 +23,7 @@
 #include "string.h"
 
 void *
-__memcpy(void *destination, const void *source, size_t num)
+memcpy(void *destination, const void *source, size_t num)
 {
     unsigned char *destination_ = destination;
     const unsigned char *source_ = source;
@@ -46,7 +46,7 @@ memmove(void *destination, const void *source, size_t num)
 }
 
 void *
-__memset(void *ptr, int value, size_t num)
+memset(void *ptr, int value, size_t num)
 {
     unsigned char *ptr_ = ptr;
     while (num--)
@@ -55,7 +55,7 @@ __memset(void *ptr, int value, size_t num)
 }
 
 size_t
-__strlen(const char *str)
+strlen(const char *str)
 {
     size_t ret = 0;
     while (*str++)
@@ -73,7 +73,7 @@ strnlen(const char *str, size_t num)
 }
 
 char *
-__strcpy(char *destination, const char *source)
+strcpy(char *destination, const char *source)
 {
     size_t i = 0;
     for (; source[i]; i++)
@@ -83,7 +83,7 @@ __strcpy(char *destination, const char *source)
 }
 
 char *
-__strncpy(char *destination, const char *source, size_t num)
+strncpy(char *destination, const char *source, size_t num)
 {
     size_t i = 0;
     for (; i < num && source[i]; i++)
@@ -94,22 +94,22 @@ __strncpy(char *destination, const char *source, size_t num)
 }
 
 char *
-__strcat(char *destination, const char *source)
+strcat(char *destination, const char *source)
 {
-    __strcpy(destination + __strlen(destination), source);
+    strcpy(destination + strlen(destination), source);
     return destination;
 }
 
 char *
-__strncat(char *destination, const char *source, size_t num)
+strncat(char *destination, const char *source, size_t num)
 {
-    __strncpy(destination + __strlen(destination), source, num);
+    strncpy(destination + strlen(destination), source, num);
     destination[num] = '\0';
     return destination;
 }
 
 int
-__memcmp(const void *ptr1, const void *ptr2, size_t num)
+memcmp(const void *ptr1, const void *ptr2, size_t num)
 {
     const unsigned char *ptr1_ = ptr1;
     const unsigned char *ptr2_ = ptr2;
@@ -124,7 +124,7 @@ __memcmp(const void *ptr1, const void *ptr2, size_t num)
 }
 
 int
-__strcmp(const char *str1, const char *str2)
+strcmp(const char *str1, const char *str2)
 {
     for (; *str1 && *str2 && *str1 == *str2; str1++, str2++)
         ;
@@ -153,7 +153,7 @@ memchr(void *ptr, int value, size_t num)
 }
 
 char *
-__strchr(char *str, int character)
+strchr(char *str, int character)
 {
     while (*str)
         if (*str == (char)character)
@@ -169,7 +169,7 @@ strpbrk(char *str1, const char *str2)
 {
     char *ret = NULL;
     while (*str1)
-        if (__strchr((char *)str2, *str1))
+        if (strchr((char *)str2, *str1))
             return str1;
         else
             str1++;
@@ -180,7 +180,7 @@ strpbrk(char *str1, const char *str2)
 char *
 strrchr(char *str, int character)
 {
-    str += __strlen(str) - 1;
+    str += strlen(str) - 1;
     while (*str)
         if (*str == (char)character)
             return str;
@@ -195,7 +195,7 @@ strstr(char *str1, const char *str2)
 {
     size_t str2_len;
 
-    str2_len = __strlen(str2);
+    str2_len = strlen(str2);
     while (*str1)
         if (strncmp(str1, str2, str2_len) == 0)
             return str1;
@@ -211,7 +211,7 @@ strcspn(const char *str1, const char *str2)
     const char *match;
 
     if ((match = strpbrk((char *)str1, str2)) == NULL)
-        return __strlen(str1);
+        return strlen(str1);
     else
         return match - str1;
 }
@@ -220,24 +220,24 @@ size_t
 strspn(const char *str1, const char *str2)
 {
     size_t ret = 0;
-    while (*str1 && __strchr((char *)str2, *str1))
+    while (*str1 && strchr((char *)str2, *str1))
         ret++;
     return ret;
 }
 
 char *
-__strtok(char *str, const char *delimiters)
+strtok(char *str, const char *delimiters)
 {
     char *ret;
     static char *last = NULL;
 
-    if (str == NULL && (last == NULL || __strlen(last) == 0))
+    if (str == NULL && (last == NULL || strlen(last) == 0))
         return NULL;
 
-    if (last == NULL || __strlen(last) == 0)
+    if (last == NULL || strlen(last) == 0)
         last = str;
 
-    while (__strchr((char *)delimiters, *last) != NULL)
+    while (strchr((char *)delimiters, *last) != NULL)
         last++;
 
     ret = last;

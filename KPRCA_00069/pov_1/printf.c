@@ -13,6 +13,10 @@
 #define PRINTF_CHAR '%'
 #endif
 
+#ifndef va_start
+#define va_start(v,l) __builtin_va_start(v,l)
+#endif
+
 static void _convert_unsigned(char *buf, unsigned x, int base, int upper)
 {
     const char *numbers;
@@ -82,7 +86,7 @@ static int _vsfprintf(const char *fmt, va_list ap, __FILE *stream, char *buf, si
         size_t cnt = buf_size - count; \
         if (cnt > sz) cnt = sz; \
         if (stream) __fwrite(str, cnt, stream); \
-        if (buf) __memcpy(buf + count, str, cnt); \
+        if (buf) __libpov_memcpy(buf + count, str, cnt); \
         if ((size_t)(count + sz) < (count)) _terminate(1); \
         count += sz; \
     } while (0)
@@ -124,7 +128,7 @@ static int _vsfprintf(const char *fmt, va_list ap, __FILE *stream, char *buf, si
 
         /* field width */
         if (*fmt >= '0' && *fmt <= '9')
-            field_size = __strtoul(fmt, (char **)&fmt, 10);
+            field_size = __libpov_strtoul(fmt, (char **)&fmt, 10);
 
         /* modifiers */
         switch ((ch = *fmt++))
@@ -189,7 +193,7 @@ static int _vsfprintf(const char *fmt, va_list ap, __FILE *stream, char *buf, si
                 _convert_unsigned(numbuf, uintarg, ch == 'u' ? 10 : 16, ch == 'X');
             }
 
-            numbuflen = __strlen(numbuf);
+            numbuflen = __libpov_strlen(numbuf);
             if (numbuflen < field_size)
             {
                 field_size -= numbuflen;
@@ -206,7 +210,7 @@ static int _vsfprintf(const char *fmt, va_list ap, __FILE *stream, char *buf, si
             break;
         case 's':
             strarg = va_arg(ap, const char *);
-            OUTPUT_STRING(strarg, __strlen(strarg));
+            OUTPUT_STRING(strarg, __libpov_strlen(strarg));
             break;
 #ifdef PRINTF_N_CHAR
         case PRINTF_N_CHAR:
@@ -235,47 +239,47 @@ int __printf(const char *fmt, ...)
     va_list ap;
 
     va_start(ap, fmt);
-    ret = vprintf(fmt, ap);
+    ret = __cgc_vprintf(fmt, ap);
     va_end(ap);
 
     return ret;
 }
 
-int fprintf(__FILE *stream, const char *fmt, ...)
+int __cgc_fprintf(__FILE *stream, const char *fmt, ...)
 {
     int ret;
     va_list ap;
 
     va_start(ap, fmt);
-    ret = vfprintf(stream, fmt, ap);
+    ret = __cgc_vfprintf(stream, fmt, ap);
     va_end(ap);
 
     return ret;
 }
 
-int sprintf(char *str, const char *fmt, ...)
+int __cgc_sprintf(char *str, const char *fmt, ...)
 {
     int ret;
     va_list ap;
 
     va_start(ap, fmt);
-    ret = vsprintf(str, fmt, ap);
+    ret = __cgc_vsprintf(str, fmt, ap);
     va_end(ap);
 
     return ret;
 }
 
-int vprintf(const char *fmt, va_list ap)
+int __cgc_vprintf(const char *fmt, va_list ap)
 {
-    return vfprintf(stdout, fmt, ap);
+    return __cgc_vfprintf(stdout, fmt, ap);
 }
 
-int vfprintf(__FILE *stream, const char *fmt, va_list ap)
+int __cgc_vfprintf(__FILE *stream, const char *fmt, va_list ap)
 {
     return _vsfprintf(fmt, ap, stream, NULL, INT_MAX);
 }
 
-int vsprintf(char *str, const char *fmt, va_list ap)
+int __cgc_vsprintf(char *str, const char *fmt, va_list ap)
 {
     return _vsfprintf(fmt, ap, NULL, str, INT_MAX);
 }

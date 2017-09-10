@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, __free of charge, to any person obtaining a copy
+Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -54,7 +54,7 @@ fileHandleType fh;
         {"make", makeFile },
         {"erase", eraseFile }, 
         {"list", listFiles },
-        {"__write", overwriteFile }, 
+        {"write", overwriteFile }, 
         {"show", dumpFile },
         {"last", readFromEnd },
         { "first", readFirstN }, 
@@ -68,7 +68,7 @@ fileHandleType fh;
 
     if (retcode != 0) {
 
-        __printf("Error making filesystem\n");
+        printf("Error making filesystem\n");
         _terminate(-1);
     }
 
@@ -77,7 +77,7 @@ fileHandleType fh;
 
     if ( retcode != 0 ) {
 
-        __printf("error making README\n");
+        printf("error making README\n");
         _terminate(-1);
     }
 
@@ -85,34 +85,34 @@ fileHandleType fh;
 
     if ( fh < 0 ) {
 
-        __printf("error making README\n");
+        printf("error making README\n");
         _terminate(-1);
 
     }
 
-    __strcpy(buffer, "Welcome to the interactive filesystem shell. ");
+    strcpy(buffer, "Welcome to the interactive filesystem shell. ");
 
-    retcode = writeFile(fh, buffer, __strlen(buffer), ROOT_ID);
+    retcode = writeFile(fh, buffer, strlen(buffer), ROOT_ID);
 
     if (retcode < 0 ) {
 
-        __printf("error making README\n");
+        printf("error making README\n");
         _terminate(-1);
 
     }
 
-    __strcpy(buffer, "Valid commands are make, makememfile, erase, list, copy, __write, show, first, last, and perms.");
+    strcpy(buffer, "Valid commands are make, makememfile, erase, list, copy, write, show, first, last, and perms.");
 
-    retcode = writeFile(fh, buffer, __strlen(buffer), ROOT_ID);
+    retcode = writeFile(fh, buffer, strlen(buffer), ROOT_ID);
 
     if (retcode < 0 ) {
 
-        __printf("error making Message of the Day\n");
+        printf("error making Message of the Day\n");
         _terminate(-1);
 
     }
 
-    // this should be __read-only but needs to be writable so it can be deleted for the exploit
+    // this should be read-only but needs to be writable so it can be deleted for the exploit
     setPerms(fh, 3, ROOT_ID);
 
     closeFile(fh);
@@ -123,16 +123,16 @@ fileHandleType fh;
 
         if (unauth) {
 
-            __printf("login: ");
+            printf("login: ");
         }
         else {
 
-            __printf("> ");
+            printf("> ");
         }
 
-        retcode = __receive_until(command, '\n', sizeof(command));
+        retcode = receive_until(command, '\n', sizeof(command));
 
-        if (__strlen(command) == 0) {
+        if (strlen(command) == 0) {
 
             continue;
         }
@@ -143,44 +143,44 @@ fileHandleType fh;
 
             if (argcount != 2) {
 
-                __free(args);
+                free(args);
                 continue;
             }
 
-            securityToken = __atoi(args[1]);
+            securityToken = atoi(args[1]);
 
             securityID = authenticate(args[0], securityToken);
 
             if (securityID == 0) {
 
-                __printf("Invalid login\n");
-                __free(args);
+                printf("Invalid login\n");
+                free(args);
                 continue;
             }
             else {
 
-                __printf("Access allowed\n");
+                printf("Access allowed\n");
                 lookupName(nameBuffer, securityID);
 
-                __printf("Welcome $s\n", nameBuffer);
+                printf("Welcome $s\n", nameBuffer);
 
             }
 
             unauth = 0;
 
-            __free(args);
+            free(args);
             continue;
 
         }
 
-        if (__strcmp(args[0], "logout") == 0) {
+        if (strcmp(args[0], "logout") == 0) {
 
-            __printf("bye felicia\n");
+            printf("bye felicia\n");
             unauth = 1;
             continue;
 
         }
-        else if (__strcmp(args[0], "__exit") == 0 ) {
+        else if (strcmp(args[0], "exit") == 0 ) {
 
             break;
 
@@ -189,7 +189,7 @@ fileHandleType fh;
 
             for ( i= 0; i < COMMAND_COUNT; ++i ) {
 
-                if ( __strcmp(args[0], commands[i].command) == 0 ) {
+                if ( strcmp(args[0], commands[i].command) == 0 ) {
 
                     retcode = commands[i].handler(argcount, args);
                     break;
@@ -197,9 +197,9 @@ fileHandleType fh;
 
             }
 
-            if ( i == COMMAND_COUNT && __strlen(args[0]) > 0 ) {
+            if ( i == COMMAND_COUNT && strlen(args[0]) > 0 ) {
 
-                __printf("unknown command $s\n", args[0]);
+                printf("unknown command $s\n", args[0]);
 
             }
             

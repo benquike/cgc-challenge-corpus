@@ -18,7 +18,7 @@ int main(void) {
       if (write_00000_len > 0) {
          transmit_all(1, write_00000, write_00000_len);
       }
-      __free(write_00000);
+      free(write_00000);
    } while (0);
    do {
       //*** writing data
@@ -31,18 +31,18 @@ int main(void) {
       if (write_00001_len > 0) {
          transmit_all(1, write_00001, write_00001_len);
       }
-      __free(write_00001);
+      free(write_00001);
    } while (0);
    do {
       unsigned char *read_00000;
       unsigned int read_00000_len;
       unsigned int read_00000_ptr = 0;
-      //**** length __read
+      //**** length read
       read_00000_len = 104;
-      read_00000 = (unsigned char*)__malloc(read_00000_len);
+      read_00000 = (unsigned char*)malloc(read_00000_len);
       int read_00000_res = length_read(0, read_00000, read_00000_len);
       if (read_00000_res) {} //silence unused variable warning
-      //**** __read assign to var "TYPE2_VALUE" from pcre: Token=[0-9]{8};Expiration=[0-9]*;Use=AAAABBBBCCCCDDDDAAAABBBBCCCCD\?(.*)
+      //**** read assign to var "TYPE2_VALUE" from pcre: Token=[0-9]{8};Expiration=[0-9]*;Use=AAAABBBBCCCCDDDDAAAABBBBCCCCD\?(.*)
       static char read_00000_regex[] = 
          "\x54\x6f\x6b\x65\x6e\x3d\x5b\x30\x2d\x39\x5d\x7b\x38\x7d\x3b\x45"
          "\x78\x70\x69\x72\x61\x74\x69\x6f\x6e\x3d\x5b\x30\x2d\x39\x5d\x2a"
@@ -50,7 +50,7 @@ int main(void) {
          "\x43\x44\x44\x44\x44\x41\x41\x41\x41\x42\x42\x42\x42\x43\x43\x43"
          "\x43\x44\x5c\x3f\x28\x2e\x2a\x29";
       assign_from_pcre("TYPE2_VALUE", read_00000, read_00000_len - read_00000_ptr, read_00000_regex, 1);
-      __free(read_00000);
+      free(read_00000);
       if (read_00000_ptr) {}  //silence unused variable warning if any
    } while (0);
 

@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, __free of charge, to any person obtaining a copy
+Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -137,14 +137,14 @@ void NegotiateType2Pov(unsigned int *type2_addr, unsigned int *type2_size, unsig
 
 void SendLine( int fd, const char *pszLine )
 {
-	size_t line_len = __strlen( pszLine );
+	size_t line_len = strlen( pszLine );
 
 	SendBytes( fd, (char *)pszLine, line_len );
 }	
 
 void SendCommand( const char *pszCommandData )
 {
-	size_t command_len = __strlen( pszCommandData );
+	size_t command_len = strlen( pszCommandData );
 
 	SendBytes( 1, (char *)pszCommandData, command_len );
 }
@@ -184,7 +184,7 @@ void ConsumeLines( size_t lineCount )
 {
 	char szMaxLineLen[2048];
 
-	// Limitation -- only 2048 bytes until line is __read!
+	// Limitation -- only 2048 bytes until line is read!
 	for ( size_t count = 0; count < lineCount; count++ )
 		RecvUntil( 0, '\n', szMaxLineLen, 2048 );
 }
@@ -291,7 +291,7 @@ int main(void)
 	*(pInstr++) = (0x3 << 13) | (6 << 8) | (regFrom << 4) | regLen;
 
 	// Send data
-	// [__FILE LENGTH - 32-bits][__FILE DATA]
+	// [FILE LENGTH - 32-bits][FILE DATA]
 	uint32_t clfFileLength = sizeof(oFileHeader) + sizeof(oSectionHeader) + 512;
 	SendBytes( STDOUT, (char *)&clfFileLength, 4 );
 	SendBytes( STDOUT, (char *)&oFileHeader, sizeof(oFileHeader) );

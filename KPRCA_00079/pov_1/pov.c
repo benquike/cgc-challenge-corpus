@@ -2,12 +2,12 @@
 
 static int moves = 0;
 
-char *__strcat(char *s1, const char *s2)
+char *strcat(char *s1, const char *s2)
 {
 	char *os1 = s1;
 	while (*s1)
 		s1++;
-	__strcpy(s1, s2);
+	strcpy(s1, s2);
 	return os1;
 }
 
@@ -16,7 +16,7 @@ void wait_for_move()
     unsigned char *buf = NULL;
     unsigned int buflen = 0;
     delimited_read(STDIN, &buf, &buflen, (unsigned char *)"DANCE MODE", 10);
-    __free(buf);
+    free(buf);
     moves++;
 }
 
@@ -44,19 +44,19 @@ int main(void) {
 
 	// Build the buffer
 	buf[0] = '\0';
-	__strcat((char *)buf, "magic\n");
+	strcat((char *)buf, "magic\n");
 
 	for (n = 0; n < 23; n++)
 	{
-		__strcat((char *)buf, "\n\n\n\nd\n");
+		strcat((char *)buf, "\n\n\n\nd\n");
 	}
 
 	for (n = 0; n < 16; n++)
 	{
-		__strcat((char *)buf, "\n");
+		strcat((char *)buf, "\n");
 	}
 
-	transmit_all(STDOUT, buf, __strlen((char *)buf));
+	transmit_all(STDOUT, buf, strlen((char *)buf));
 
 	for (n = 0; n < 280 - 12; n++)
 	{

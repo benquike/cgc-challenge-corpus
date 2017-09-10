@@ -7,7 +7,7 @@
 #define F_READ 1
 #define F_WRITE 2
 
-struct __FILE {
+struct FILE {
     int fd;
     int rw;
     int idx;

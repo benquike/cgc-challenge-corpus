@@ -55,7 +55,7 @@ static char *_print_signed(char *outbuf, int *n, int val)
 
 bio_t* bit_new(unsigned char *data)
 {
-    bio_t *bio = (bio_t *) __malloc(sizeof(bio_t));
+    bio_t *bio = (bio_t *) malloc(sizeof(bio_t));
     bio->data = data;
     bio->didx = 0;
     bio->bidx = 0;
@@ -98,7 +98,7 @@ int main(void) {
     eip = append_var("TYPE1_IP", eip, &eip_len);
     reg = append_var("TYPE1_REG", reg, &reg_len);
 
-    __memset(exploit, 0, sizeof(exploit));
+    memset(exploit, 0, sizeof(exploit));
     bio_t *bio = bit_new(exploit);
 
     for (i = 0; i < 2316; ++i)

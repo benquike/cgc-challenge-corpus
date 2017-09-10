@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, __free of charge, to any person obtaining a
+ * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -45,13 +45,13 @@ mantissa(double d)
 }
 
 int
-__isnan(double d)
+isnan(double d)
 {
     return exponent(d) == EXPMASK && mantissa(d) != 0;
 }
 
 int
-__isinf(double d)
+isinf(double d)
 {
     if (exponent(d) == EXPMASK && mantissa(d) == 0)
         return sign(d) ? -1 : 1;

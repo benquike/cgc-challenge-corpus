@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, __free of charge, to any person obtaining a
+ * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -51,10 +51,10 @@ int get_char(char *ch) {
 
 }
 
-int read_until_delim_or_n(unsigned int socket, char* buffer, char delim, size_t size, size_t* __read) {
+int read_until_delim_or_n(unsigned int socket, char* buffer, char delim, size_t size, size_t* read) {
 
 	size_t tmp=0;
-	*__read = 0;
+	*read = 0;
 	char tmp_char;
 	int result=0;
 
@@ -72,14 +72,14 @@ int read_until_delim_or_n(unsigned int socket, char* buffer, char delim, size_t 
 			return 0;
 
 		buffer[i] = tmp_char;
-		*__read += 1;
+		*read += 1;
 	}
 
 	return 0;
 }
 
-int read_n_bytes(unsigned int socket, char* buffer, size_t size, size_t* __read) {
-	return read_until_delim_or_n(socket, buffer, 0, size, __read);
+int read_n_bytes(unsigned int socket, char* buffer, size_t size, size_t* read) {
+	return read_until_delim_or_n(socket, buffer, 0, size, read);
 }
 
 
