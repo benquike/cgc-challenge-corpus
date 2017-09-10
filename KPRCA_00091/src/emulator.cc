@@ -253,11 +253,11 @@ void Emulator::set_operand(const Operand &opr, int value)
 #if 1
 void Emulator::print_state()
 {
-    fprintf(stderr, "IP: %08X\tStack: %08X\tHeap: %08X\n", d_ip, d_stack, d_heap);
+    __cgc_fprintf(stderr, "IP: %08X\tStack: %08X\tHeap: %08X\n", d_ip, d_stack, d_heap);
     for (unsigned int i = 0; i < REG__count; i++)
     {
-        fprintf(stderr, "R%d: %08X\n", i, d_reg[i]);
+        __cgc_fprintf(stderr, "R%d: %08X\n", i, d_reg[i]);
     }
-    fprintf(stderr, "\n");
+    __cgc_fprintf(stderr, "\n");
 }
 #endif

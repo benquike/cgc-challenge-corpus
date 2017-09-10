@@ -50,7 +50,7 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
 
     if (!eng.update_rules(ruleset, sizeof(ruleset)))
     {
-        fprintf(stderr, "failed to add secret rule\n");
+        __cgc_fprintf(stderr, "failed to add secret rule\n");
         return 0;
     }
 
