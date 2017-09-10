@@ -64,7 +64,7 @@ void msls_handle_application(SERVER_STATE *state, CLIENT_CONTEXT *connection,  S
       ap_response->type = APPLICATION_TYPE_RESPONSE;
       ap_response->length = sizeof(APPLICATION_RESPONSE_MSG);
       ap_response->contents = (uint8_t *)ar_msg;
-      sprintf((char *)ar_msg->message, "$d of $d slots filled\n", numMessages, APPLICATION_MAX_MESSAGES);
+      __cgc_sprintf((char *)ar_msg->message, "$d of $d slots filled\n", numMessages, APPLICATION_MAX_MESSAGES);
       msls_encrypt(ap_response->contents, ap_response->length, connection);
       msls_send_msg(response);
       msls_destroy_msg(response);
@@ -92,7 +92,7 @@ void msls_handle_application(SERVER_STATE *state, CLIENT_CONTEXT *connection,  S
       ap_response->type = APPLICATION_TYPE_RESPONSE;
       ap_response->length = sizeof(APPLICATION_RESPONSE_MSG);
       ap_response->contents = (uint8_t *)ar_msg;
-      sprintf((char *)ar_msg->message, "POST returned: $d\n", ret_code);
+      __cgc_sprintf((char *)ar_msg->message, "POST returned: $d\n", ret_code);
       msls_encrypt(ap_response->contents, ap_response->length, connection);
       msls_send_msg(response);
       msls_destroy_msg(response);
@@ -120,7 +120,7 @@ void msls_handle_application(SERVER_STATE *state, CLIENT_CONTEXT *connection,  S
       ap_response->type = APPLICATION_TYPE_RESPONSE;
       ap_response->length = sizeof(APPLICATION_RESPONSE_MSG);
       ap_response->contents = (uint8_t *)ar_msg;
-      sprintf((char *)ar_msg->message, "DELETE returned: $d\n", ret_code);
+      __cgc_sprintf((char *)ar_msg->message, "DELETE returned: $d\n", ret_code);
       msls_encrypt(ap_response->contents, ap_response->length, connection);
       msls_send_msg(response);
       msls_destroy_msg(response);
@@ -141,7 +141,7 @@ void msls_handle_application(SERVER_STATE *state, CLIENT_CONTEXT *connection,  S
       ap_response->type = APPLICATION_TYPE_RESPONSE;
       ap_response->length = sizeof(APPLICATION_RESPONSE_MSG);
       ap_response->contents = (uint8_t *)ar_msg;
-      sprintf((char *)ar_msg->message, "Cleared Board\n", numMessages, APPLICATION_MAX_MESSAGES);
+      __cgc_sprintf((char *)ar_msg->message, "Cleared Board\n", numMessages, APPLICATION_MAX_MESSAGES);
       msls_encrypt(ap_response->contents, ap_response->length, connection);
       msls_send_msg(response);
       msls_destroy_msg(response);
@@ -171,7 +171,7 @@ void msls_handle_application(SERVER_STATE *state, CLIENT_CONTEXT *connection,  S
       ap_response->contents = (uint8_t *)ar_msg;
       if (read_msg->msg_num >= APPLICATION_MAX_MESSAGES)
       {
-        sprintf((char *)ar_msg->message, "INVALID MESSAGE");
+        __cgc_sprintf((char *)ar_msg->message, "INVALID MESSAGE");
       } else {
         __memcpy((char *)ar_msg->message, APPLICATION_MSG_BOARD[read_msg->msg_num], APPLICATION_MSG_LENGTH);
       }

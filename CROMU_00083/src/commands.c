@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __cgc_free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -41,7 +41,7 @@ int retcode;
 
     if (argcount < 2) {
 
-        printf("invalid usage\n");
+        __cgc_printf("invalid usage\n");
         return -1;
     }
 
@@ -49,7 +49,7 @@ int retcode;
 
     if ( retcode != 0 ) {
 
-        printf("error\n");
+        __cgc_printf("error\n");
         return retcode;
     }
 
@@ -66,11 +66,11 @@ void *memptr;
 
     if (argcount < 3) {
 
-        printf("invalid usage\n");
+        __cgc_printf("invalid usage\n");
         return -1;
     }
 
-    memsize = atoi(args[2]);
+    memsize = __cgc_atoi(args[2]);
 
     if (memsize < 0 || memsize > 8192*10) {
 
@@ -78,7 +78,7 @@ void *memptr;
 
     }
 
-    memptr = malloc(memsize);
+    memptr = __cgc_malloc(memsize);
 
     if ( memptr < 0 ) {
 
@@ -86,12 +86,12 @@ void *memptr;
 
     }
 
-    bzero(memptr, memsize);
+    __cgc_bzero(memptr, memsize);
 
     retcode = makeMemoryFile(args[1], (unsigned int)memptr, memsize,  0,  securityID );
     if ( retcode != 0 ) {
 
-        printf("error\n");
+        __cgc_printf("error\n");
         return retcode;
     }
 
@@ -106,7 +106,7 @@ fileHandleType fh;
 
     if (argcount < 2) {
 
-        printf("invalid usage\n");
+        __cgc_printf("invalid usage\n");
         return -1;
     }
 
@@ -116,17 +116,17 @@ fileHandleType fh;
 
         case ERROR_NO_PERMISSION:
 
-            printf("permission denied\n");
+            __cgc_printf("permission denied\n");
             break;
 
         case ERROR_NOT_FOUND:
 
-            printf("file $s not found\n", args[1]);
+            __cgc_printf("file $s not found\n", args[1]);
             break;
 
         case ERROR_BAD_TYPE:
 
-            printf("bad type for erase\n");
+            __cgc_printf("bad type for erase\n");
             break;
 
     }
@@ -141,7 +141,7 @@ fileHandleType fh;
 
     if ( retcode < 0 ) {
 
-        printf("error erasing $s\n", args[1]);
+        __cgc_printf("error erasing $s\n", args[1]);
 
         closeFile(fh);
         return (retcode);
@@ -174,14 +174,14 @@ char ownerName[10];
     }
 
 
-    printf("FILENAME                   SIZE        OWNER     O-PERMS    TYPE\n");
-    printf("----------------------------------------------------------------\n");
+    __cgc_printf("FILENAME                   SIZE        OWNER     O-PERMS    TYPE\n");
+    __cgc_printf("----------------------------------------------------------------\n");
     while ( retcode == 0 ) {
 
         if (lookupName(ownerName, fileInfoHandle->currentFile->securityID) == -1)
-            strcpy(ownerName, "       ");
+            __cgc_strcpy(ownerName, "       ");
 
-        printf("$-25s  $10d  $-8s  $2s    $3s\n", fileInfoHandle->currentFile->name, 
+        __cgc_printf("$-25s  $10d  $-8s  $2s    $3s\n", fileInfoHandle->currentFile->name, 
                                     fileInfoHandle->currentFile->fileSize,
                                     ownerName, 
                                     otherperms[fileInfoHandle->currentFile->othersPermissions], 
@@ -190,7 +190,7 @@ char ownerName[10];
         retcode = findNextFile(fileInfoHandle);
 
     }
-    printf("\n");
+    __cgc_printf("\n");
 
     return 0;
 
@@ -204,7 +204,7 @@ char text[1024];
 
     if (argcount < 2) {
 
-        printf("invalid usage\n");
+        __cgc_printf("invalid usage\n");
         return -1;
     }
 
@@ -216,22 +216,22 @@ char text[1024];
 
             case ERROR_NO_PERMISSION:
 
-                printf("permission denied\n");
+                __cgc_printf("permission denied\n");
                 break;
 
             case ERROR_NOT_FOUND:
 
-                printf("file $s not found\n", args[1]);
+                __cgc_printf("file $s not found\n", args[1]);
                 break;
 
             case ERROR_BAD_TYPE:
 
-                printf("unable to write files of this type\n");
+                __cgc_printf("unable to __cgc_write files of this type\n");
                 break;
 
             default:
         
-                printf("Error opening $s\n", args[1]);
+                __cgc_printf("Error opening $s\n", args[1]);
         
         }
         
@@ -246,12 +246,12 @@ char text[1024];
 
             case ERROR_NO_PERMISSION:
 
-                printf("permission denied for write\n");
+                __cgc_printf("permission denied for __cgc_write\n");
                 break;
 
             default:
         
-                printf("Error writing to $s\n", args[1]);
+                __cgc_printf("Error writing to $s\n", args[1]);
         
         }
 
@@ -261,18 +261,18 @@ char text[1024];
 
     while (1) {
 
-        receive_until(text, '\n', sizeof(text));
+        __cgc_receive_until(text, '\n', sizeof(text));
 
-        if ( strlen(text) == 0 ) {
+        if ( __cgc_strlen(text) == 0 ) {
 
             break;
         }
 
-        retcode = writeFile(fh, text, strlen(text), securityID);
+        retcode = writeFile(fh, text, __cgc_strlen(text), securityID);
 
         if ( retcode < 0 ) {
 
-            printf("Error writing to $s\n", args[1]);
+            __cgc_printf("Error writing to $s\n", args[1]);
             closeFile(fh);
             return (retcode);
 
@@ -296,7 +296,7 @@ unsigned int readcount;
 
     if (argcount < 2) {
 
-        printf("invalid usage\n");
+        __cgc_printf("invalid usage\n");
         return -1;
     }
 
@@ -308,29 +308,29 @@ unsigned int readcount;
 
             case ERROR_NO_PERMISSION:
 
-                printf("permission denied\n");
+                __cgc_printf("permission denied\n");
                 break;
 
             case ERROR_NOT_FOUND:
 
-                printf("file $s not found\n", args[1]);
+                __cgc_printf("file $s not found\n", args[1]);
                 break;
                 
             case ERROR_BAD_TYPE:
 
-                printf("unable to display files of this type\n");
+                __cgc_printf("unable to display files of this type\n");
                 break;
 
             default:
         
-                printf("Error opening $s\n", args[1]);
+                __cgc_printf("Error opening $s\n", args[1]);
         
         }
         
         return (fh);
     }
 
-    bzero(buffer, sizeof(buffer));
+    __cgc_bzero(buffer, sizeof(buffer));
 
     retcode = readFile(fh, buffer, sizeof(buffer), 0, &readcount, securityID);
 
@@ -340,12 +340,12 @@ unsigned int readcount;
 
             case ERROR_NO_PERMISSION:
 
-                printf("permission denied for read\n");
+                __cgc_printf("permission denied for __cgc_read\n");
                 break;
 
             default:
         
-                printf("Error reading from $s\n", args[1]);
+                __cgc_printf("Error reading from $s\n", args[1]);
         
         }
 
@@ -357,15 +357,15 @@ unsigned int readcount;
 
     while ( retcode == 0 ) {
 
-        write(STDOUT, buffer, readcount);
-        bzero(buffer, sizeof(buffer));
+        __cgc_write(STDOUT, buffer, readcount);
+        __cgc_bzero(buffer, sizeof(buffer));
         retcode = readFile(fh, buffer, sizeof(buffer), 0, &readcount, securityID);
     
     }
 
     closeFile(fh);
 
-    printf("\n");
+    __cgc_printf("\n");
 
     if (retcode == ERROR_EOF ) {
 
@@ -374,7 +374,7 @@ unsigned int readcount;
     }
     else {
 
-        printf("Error reading file\n");
+        __cgc_printf("Error reading file\n");
         return -1;
 
     }
@@ -392,13 +392,13 @@ fileInfoType fileinfo;
 
     if (argcount < 3) {
 
-        printf("invalid usage\n");
+        __cgc_printf("invalid usage\n");
         return -1;
     }
 
     if ( statusFile( args[1],  &fileinfo) != 0 ) {
 
-        printf("unable to stat file $s\n", args[1]);
+        __cgc_printf("unable to stat file $s\n", args[1]);
         return -1;
 
     }
@@ -411,26 +411,26 @@ fileInfoType fileinfo;
 
             case ERROR_NO_PERMISSION:
 
-                printf("permission denied\n");
+                __cgc_printf("permission denied\n");
                 break;
 
             case ERROR_NOT_FOUND:
 
-                printf("file $s not found\n", args[1]);
+                __cgc_printf("file $s not found\n", args[1]);
                 break;
                 
             default:
         
-                printf("Error opening $s\n", args[1]);
+                __cgc_printf("Error opening $s\n", args[1]);
         
         }
         
         return (fh);
     }
 
-    fileReadPosition(fh, fileinfo.size - atoi(args[2]));
+    fileReadPosition(fh, fileinfo.size - __cgc_atoi(args[2]));
 
-    bzero(buffer, sizeof(buffer));
+    __cgc_bzero(buffer, sizeof(buffer));
 
     retcode = readFile(fh, buffer, sizeof(buffer), 0, &readcount, securityID);
 
@@ -440,13 +440,13 @@ fileInfoType fileinfo;
 
             case ERROR_NO_PERMISSION:
 
-                printf("permission denied for read\n");
+                __cgc_printf("permission denied for __cgc_read\n");
                 break;
 
             default:
         
-                printf("Error reading from $s\n", args[1]);
-                printf("errno is $d\n", retcode);
+                __cgc_printf("Error reading from $s\n", args[1]);
+                __cgc_printf("errno is $d\n", retcode);
         
         }
 
@@ -458,20 +458,20 @@ fileInfoType fileinfo;
 
     if (readcount > 0 ) {
 
-        write(STDOUT, buffer, readcount);
+        __cgc_write(STDOUT, buffer, readcount);
     }
 
     while ( retcode == 0 ) {
 
-        bzero(buffer, sizeof(buffer));
+        __cgc_bzero(buffer, sizeof(buffer));
         retcode = readFile(fh, buffer, sizeof(buffer), 0, &readcount, securityID);
-        write(STDOUT, buffer, readcount);
+        __cgc_write(STDOUT, buffer, readcount);
     
     }
 
     closeFile(fh);
 
-    printf("\n");
+    __cgc_printf("\n");
 
     if (retcode == ERROR_EOF ) {
 
@@ -480,7 +480,7 @@ fileInfoType fileinfo;
     }
     else {
 
-        printf("Error reading file\n");
+        __cgc_printf("Error reading file\n");
         return -1;
 
     }
@@ -500,7 +500,7 @@ unsigned int totalRead;
 
     if (argcount < 3) {
 
-        printf("invalid usage\n");
+        __cgc_printf("invalid usage\n");
         return -1;
     }
 
@@ -512,24 +512,24 @@ unsigned int totalRead;
 
             case ERROR_NO_PERMISSION:
 
-                printf("permission denied\n");
+                __cgc_printf("permission denied\n");
                 break;
 
             case ERROR_NOT_FOUND:
 
-                printf("file $s not found\n", args[1]);
+                __cgc_printf("file $s not found\n", args[1]);
                 break;
                 
             default:
         
-                printf("Error opening $s\n", args[1]);
+                __cgc_printf("Error opening $s\n", args[1]);
         
         }
         
         return (fh);
     }
 
-    readTermCount = atoi(args[2]);
+    readTermCount = __cgc_atoi(args[2]);
 
     if ( readTermCount == 0 ) {
 
@@ -537,9 +537,9 @@ unsigned int totalRead;
     }
 
     totalRead = 0;
-    bzero(buffer, sizeof(buffer));
+    __cgc_bzero(buffer, sizeof(buffer));
 
-    retcode = readFile(fh, buffer, minimum(sizeof(buffer), readTermCount - totalRead), 0, &readCount, securityID);
+    retcode = readFile(fh, buffer, __cgc_minimum(sizeof(buffer), readTermCount - totalRead), 0, &readCount, securityID);
 
     if ( retcode <  0 && retcode != ERROR_EOF ) {
 
@@ -547,13 +547,13 @@ unsigned int totalRead;
 
             case ERROR_NO_PERMISSION:
 
-                printf("permission denied for read\n");
+                __cgc_printf("permission denied for __cgc_read\n");
                 break;
 
             default:
         
-                printf("Error reading from $s\n", args[1]);
-                printf("errno is $d\n", retcode);
+                __cgc_printf("Error reading from $s\n", args[1]);
+                __cgc_printf("errno is $d\n", retcode);
         
         }
 
@@ -566,21 +566,21 @@ unsigned int totalRead;
     if (readCount > 0 ) {
 
         totalRead += readCount;
-        write(STDOUT, buffer, readCount);
+        __cgc_write(STDOUT, buffer, readCount);
     }
 
     while ( retcode == 0 && totalRead < readTermCount ) {
 
-        bzero(buffer, sizeof(buffer));
-        retcode = readFile(fh, buffer, minimum(sizeof(buffer), readTermCount - totalRead), 0, &readCount, securityID);
-        write(STDOUT, buffer, readCount);
+        __cgc_bzero(buffer, sizeof(buffer));
+        retcode = readFile(fh, buffer, __cgc_minimum(sizeof(buffer), readTermCount - totalRead), 0, &readCount, securityID);
+        __cgc_write(STDOUT, buffer, readCount);
         totalRead += readCount;
     
     }
 
     closeFile(fh);
 
-    printf("\n");
+    __cgc_printf("\n");
 
     if (retcode == ERROR_EOF || retcode == NO_ERROR ) {
 
@@ -589,7 +589,7 @@ unsigned int totalRead;
     }
     else {
 
-        printf("Error reading file\n");
+        __cgc_printf("Error reading file\n");
         return -1;
 
     }
@@ -608,7 +608,7 @@ fileInfoType fileinfo;
 
     if (argcount < 3) {
 
-        printf("invalid usage\n");
+        __cgc_printf("invalid usage\n");
         return -1;
     }
 
@@ -620,17 +620,17 @@ fileInfoType fileinfo;
 
             case ERROR_NO_PERMISSION:
 
-                printf("permission denied\n");
+                __cgc_printf("permission denied\n");
                 break;
 
             case ERROR_NOT_FOUND:
 
-                printf("file $s not found\n", args[1]);
+                __cgc_printf("file $s not found\n", args[1]);
                 break;
                 
             default:
         
-                printf("error opening $s\n", args[1]);
+                __cgc_printf("error opening $s\n", args[1]);
         
         }
         
@@ -643,14 +643,14 @@ fileInfoType fileinfo;
 
         if ( retcode != 0 ) {
 
-            printf("error creating $s\n", args[2]);
+            __cgc_printf("error creating $s\n", args[2]);
             return -1;
         }
 
     }
     else {
 
-        printf("file $s already exists\n", args[2]);
+        __cgc_printf("file $s already exists\n", args[2]);
         closeFile(fh);
         return -1;
 
@@ -660,7 +660,7 @@ fileInfoType fileinfo;
 
     if ( fh2 < 0 ) {
 
-        printf("unable to open $s for writing\n", args[2]);
+        __cgc_printf("unable to open $s for writing\n", args[2]);
 
         closeFile(fh);
 
@@ -672,7 +672,7 @@ fileInfoType fileinfo;
 
     while ( retcode == 0 ) {
 
-        bzero(buffer, sizeof(buffer));
+        __cgc_bzero(buffer, sizeof(buffer));
 
         retcode = readFile(fh, buffer, sizeof(buffer), 0, &readcount, securityID);
 
@@ -694,7 +694,7 @@ fileInfoType fileinfo;
     }
     else if (retcode == ERROR_NO_PERMISSION) {
 
-        printf("permission denied for read\n");
+        __cgc_printf("permission denied for __cgc_read\n");
         retcode = deleteFile(fh2, securityID);
         closeFile(fh2);
         return -1;
@@ -702,7 +702,7 @@ fileInfoType fileinfo;
     else {
 
         retcode = deleteFile(fh2, securityID);
-        printf("error reading file\n");
+        __cgc_printf("error reading file\n");
         closeFile(fh2);
         return -1;
 
@@ -719,15 +719,15 @@ fileHandleType fh;
 
     if (argcount < 3) {
 
-        printf("invalid usage\n");
+        __cgc_printf("invalid usage\n");
         return -1;
     }
 
-    operms = atoi(args[2]);
+    operms = __cgc_atoi(args[2]);
 
     if ( operms > 3 ) {
 
-        printf("invalid usage\n");
+        __cgc_printf("invalid usage\n");
         return -1;
 
     }
@@ -740,13 +740,13 @@ fileHandleType fh;
 
             case ERROR_NOT_FOUND:
 
-                printf("file $s not found\n", args[1]);
+                __cgc_printf("file $s not found\n", args[1]);
                 return -1;
                 break;
 
             case ERROR_NO_PERMISSION:
 
-                printf("permission denied\n");
+                __cgc_printf("permission denied\n");
                 return fh;
                 break;
 
@@ -759,7 +759,7 @@ fileHandleType fh;
     if ( retcode != 0 ) {
 
         closeFile(fh);
-        printf("permission denied\n");
+        __cgc_printf("permission denied\n");
         return -1;
 
     }

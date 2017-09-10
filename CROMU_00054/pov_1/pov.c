@@ -4,7 +4,7 @@ Author: Jason Williams <jdw@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __libpov_free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -137,7 +137,7 @@ void NegotiateType2Pov(unsigned int *type2_addr, unsigned int *type2_size, unsig
 
 void SendCommand( const char *pszCommandData )
 {
-	size_t command_len = strlen( pszCommandData );
+	size_t command_len = __libpov_strlen( pszCommandData );
 
 	SendBytes( 1, (char *)pszCommandData, command_len );
 	// transmit_all( 1, (unsigned char *)pszCommandData, command_len );
@@ -259,14 +259,14 @@ int main(void)
 
 	const char *szExpectLine = "[MESSAGE][SRC=20][DEST=0][LENGTH=13]\n";
 
-	if ( read_len != strlen(szExpectLine) )
+	if ( read_len != __libpov_strlen(szExpectLine) )
 	{
 		char *szBlah = "0000";
 		SendBytes( 3, (char *)szBlah, 4 );
 		_terminate(-1);
 	}
 
-	if ( memcmp( read_data, szExpectLine, read_len ) != 0 )
+	if ( __libpov_memcmp( read_data, szExpectLine, read_len ) != 0 )
 		_terminate(-1);
 
 	// Next line has equipment ID -- which is type 2 memory leak

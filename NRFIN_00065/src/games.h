@@ -31,7 +31,7 @@ struct game_state {
     union {
         struct {
             unsigned int cookie;
-            unsigned int round;
+            unsigned int __cgc_round;
         } PACKED hugman;
         struct {
             char move[4];

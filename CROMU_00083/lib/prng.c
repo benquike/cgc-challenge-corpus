@@ -4,7 +4,7 @@ Copyright (c) 2015 Cromulence LLC
 
 Authors: Cromulence <cgc@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __cgc_free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -41,7 +41,7 @@ void seed_prng_array( uint32_t *pSeedArray, uint32_t arrayLen )
 	uint32_t i;
 
 	// CLear initial state
-	bzero( (void *)state, R*sizeof(uint32_t) );
+	__cgc_bzero( (void *)state, R*sizeof(uint32_t) );
 
 	state_n = 0;
 
@@ -89,17 +89,17 @@ uint32_t prng( void )
 	return newV0;	
 }
 
-// Random [min,max] (note that is inclusive)
-uint32_t random_in_range( uint32_t min, uint32_t max )
+// Random [min,__cgc_max] (note that is inclusive)
+uint32_t random_in_range( uint32_t min, uint32_t __cgc_max )
 {
-	if ( min > max )
+	if ( min > __cgc_max )
 		return 0;
 
-	if ( min == max )
+	if ( min == __cgc_max )
 		return min;
 
 	uint32_t random_value;
-	uint32_t delta = max - min + 1;
+	uint32_t delta = __cgc_max - min + 1;
 
 	// Check for [0, 0xffffffff]
 	if ( delta == 0 )

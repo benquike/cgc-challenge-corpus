@@ -454,30 +454,30 @@ static const char *my_random_dict_word()
 }
 
 uint32_t tornado();
-static uintptr_t my_randint(uintptr_t min, uintptr_t max)
+static uintptr_t my_randint(uintptr_t min, uintptr_t __cgc_max)
 {
     size_t bytes;
-    uintptr_t rand, range = max - min;
+    uintptr_t __cgc_rand, range = __cgc_max - min;
 
     int fd;
 try_again:
 #if 0
-    if (random(&rand, sizeof(rand), &bytes) != 0 || bytes != sizeof(rand))
+    if (random(&__cgc_rand, sizeof(__cgc_rand), &bytes) != 0 || bytes != sizeof(__cgc_rand))
         return min;
 #endif
-    rand = tornado();
+    __cgc_rand = tornado();
     
     uintptr_t q = UINTPTR_MAX - (UINTPTR_MAX % range);
-    if (rand >= q)
+    if (__cgc_rand >= q)
         goto try_again;
 
-    return min + (rand % range);
+    return min + (__cgc_rand % range);
 }
 
 static const char *my_random_word(htbl_t *tbl, uintptr_t cur_length)
 {
     size_t count = 0;
-    uintptr_t rand;
+    uintptr_t __cgc_rand;
     htbl_iter_t iter;
 
     for (CALL(HTBL_FIRST, tbl, &iter); iter.cur != NULL; CALL(HTBL_NEXT, tbl, &iter))
@@ -486,31 +486,31 @@ static const char *my_random_word(htbl_t *tbl, uintptr_t cur_length)
     if (count == 0)
         return NULL;
 
-    rand = CALL(RANDINT, 0, count);
+    __cgc_rand = CALL(RANDINT, 0, count);
     for (CALL(HTBL_FIRST, tbl, &iter); iter.cur != NULL; CALL(HTBL_NEXT, tbl, &iter))
     {
-        if (rand < iter.cur->value)
+        if (__cgc_rand < iter.cur->value)
             break;
-        rand -= iter.cur->value;
+        __cgc_rand -= iter.cur->value;
     }
 
     // end the sentence if possible and cur_length is large
     if (CALL(HTBL_GET, tbl, "") != 0)
     {
-        rand = CALL(RANDINT, 0, 10);
+        __cgc_rand = CALL(RANDINT, 0, 10);
         if (cur_length >= 30)
         {
-            if (rand >= 3)
+            if (__cgc_rand >= 3)
                 return "";
         }
         else if (cur_length >= 20)
         {
-            if (rand >= 5)
+            if (__cgc_rand >= 5)
                 return "";
         }
         else
         {
-            if (rand >= 9)
+            if (__cgc_rand >= 9)
                 return "";
         }
     }
@@ -726,14 +726,14 @@ static intptr_t my_read_uint(uintptr_t *pvalue)
     return 1;
 }
 
-static intptr_t my_read(char *buf, intptr_t max)
+static intptr_t my_read(char *buf, intptr_t __cgc_max)
 {
     uintptr_t rlen;
     
     if (!CALL(READ_UINT, &rlen))
         return -1;
 
-    if (rlen > max)
+    if (rlen > __cgc_max)
         return -1;
 
     if (!CALL(READ_ALL, buf, rlen))
@@ -742,12 +742,12 @@ static intptr_t my_read(char *buf, intptr_t max)
     return rlen;
 }
 
-static intptr_t my_read_string(char *buf, intptr_t max)
+static intptr_t my_read_string(char *buf, intptr_t __cgc_max)
 {
     intptr_t actual;
-    if (max == 0)
+    if (__cgc_max == 0)
         return 0;
-    actual = CALL(READ, buf, max-1);
+    actual = CALL(READ, buf, __cgc_max-1);
     if (actual < 0)
         return actual;
     buf[actual] = 0;

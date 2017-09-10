@@ -26,7 +26,7 @@ int main(void) {
       if (write_00000_len > 0) {
          transmit_all(1, write_00000, write_00000_len);
       }
-      free(write_00000);
+      __libpov_free(write_00000);
    } while (0);
 
    do {
@@ -41,7 +41,7 @@ int main(void) {
       if (write_00000_len > 0) {
          transmit_all(1, write_00000, write_00000_len);
       }
-      free(write_00000);
+      __libpov_free(write_00000);
    } while (0);
 
    do {
@@ -55,7 +55,7 @@ int main(void) {
       if (write_00000_len > 0) {
          transmit_all(1, write_00000, write_00000_len);
       }
-      free(write_00000);
+      __libpov_free(write_00000);
    } while (0);
 
    do {
@@ -70,7 +70,7 @@ int main(void) {
       if (write_00000_len > 0) {
          transmit_all(1, write_00000, write_00000_len);
       }
-      free(write_00000);
+      __libpov_free(write_00000);
    } while (0);
 
    do {
@@ -84,36 +84,36 @@ int main(void) {
       if (write_00000_len > 0) {
          transmit_all(1, write_00000, write_00000_len);
       }
-      free(write_00000);
+      __libpov_free(write_00000);
    } while (0);
 
    do {
       unsigned char *read_00000;
       unsigned int read_00000_len;
       unsigned int read_00000_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00000_len = 20;
-      read_00000 = (unsigned char*)malloc(read_00000_len);
+      read_00000 = (unsigned char*)__libpov_malloc(read_00000_len);
       int read_00000_res = length_read(0, read_00000, read_00000_len);
       if (read_00000_res) {} //silence unused variable warning
-      //**** read match data
+      //**** __cgc_read match data
       static unsigned char match_00000_00000[] = 
          "\x92\x10\x00\x00\x11\xd1\xe0\xa4\xec\xdf\x01\xbb\xba\xfd\xff\x03"
          "\x3a\xcc\x00\xe8";
       read_00000_ptr += data_match(read_00000 + read_00000_ptr, read_00000_len - read_00000_ptr, match_00000_00000, 20);
-      free(read_00000);
+      __libpov_free(read_00000);
       if (read_00000_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
       unsigned char *read_00001;
       unsigned int read_00001_len;
       unsigned int read_00001_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00001_len = 4;
-      read_00001 = (unsigned char*)malloc(read_00001_len);
+      read_00001 = (unsigned char*)__libpov_malloc(read_00001_len);
       int read_00001_res = length_read(0, read_00001, read_00001_len);
       if (read_00001_res) {} //silence unused variable warning
-      free(read_00001);
+      __libpov_free(read_00001);
       if (read_00001_ptr) {}  //silence unused variable warning if any
    } while (0);
 

@@ -91,7 +91,7 @@ void __fclose(__FILE *stream);
  * @param stream The __FILE to flush
  * @return EXIT_SUCCESS on success, else EXIT_FAILURE
  */
-int fflush(__FILE *stream);
+int __cgc_fflush(__FILE *stream);
 
 /**
  * Read exactly size bytes from __FILE pointer into ptr, buffered.
@@ -173,7 +173,7 @@ int vprintf(const char *format, va_list arg);
  * @param arg The va_list to retrieve values from
  * @return The number of bytes written on success, else EXIT_FAILURE
  */
-int vfprintf(__FILE *stream, const char *format, va_list arg);
+int __cgc_vfprintf(__FILE *stream, const char *format, va_list arg);
 
 /**
  * Write a formatted string to a buffer, taking parameters from a va_list.
@@ -183,7 +183,7 @@ int vfprintf(__FILE *stream, const char *format, va_list arg);
  * @param arg The va_list to retrieve values from
  * @return The number of bytes written on success, else EXIT_FAILURE
  */
-int vsprintf(char *s, const char *format, va_list arg);
+int __cgc_vsprintf(char *s, const char *format, va_list arg);
 
 /**
  * Write a formatted string to a buffer, writing at most num bytes, taking
@@ -258,7 +258,7 @@ int fprintf(__FILE *stream, const char *format, ...);
  * @param format The format string to use
  * @return The number of bytes written on success, else EXIT_FAILURE
  */
-int sprintf(char *s, const char *format, ...);
+int __cgc_sprintf(char *s, const char *format, ...);
 
 /**
  * Write a formatted string to a buffer, writing at most num bytes.

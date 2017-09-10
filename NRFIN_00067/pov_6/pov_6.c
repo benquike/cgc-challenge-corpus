@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __libpov_free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -101,14 +101,14 @@ int main(void) {
    	SEND_CMD(CMD_GET_ORDERS);
    	RECV_UCHAR(&o_count);
    	for (unsigned int i = 0; i < o_count; i++) {
-   		o = malloc(sizeof(Order));
+   		o = __libpov_malloc(sizeof(Order));
    		if (!o) return -1;
 
    		RECV_IDS(ids);
    		o->t_id = ids[0];
    		o->c_id = ids[1];
 
-   		app = malloc(sizeof(Appetizer));
+   		app = __libpov_malloc(sizeof(Appetizer));
    		if (!app) return -1;
    		RECV_FOOD(app, sizeof(Appetizer) - sizeof(void *));
    		o->item = app;
@@ -135,8 +135,8 @@ int main(void) {
    		app = o->item;
    		SEND_FOOD(app->name, APP_NAME_SZ);
 
-	   	free(o->item);
-	   	free(o);
+	   	__libpov_free(o->item);
+	   	__libpov_free(o);
 	   	o = pop_order_from_list(&o_list);
    	}
    	RECV_OK(ok_buf);
@@ -150,14 +150,14 @@ int main(void) {
    	SEND_CMD(CMD_GET_ORDERS);
    	RECV_UCHAR(&o_count);
    	for (unsigned int i = 0; i < o_count; i++) {
-   		o = malloc(sizeof(Order));
+   		o = __libpov_malloc(sizeof(Order));
    		if (!o) return -1;
 
    		RECV_IDS(ids);
    		o->t_id = ids[0];
    		o->c_id = ids[1];
 
-   		meal = malloc(sizeof(Meal));
+   		meal = __libpov_malloc(sizeof(Meal));
    		if (!meal) return -1;
    		RECV_FOOD(meal, sizeof(Meal) - sizeof(void *));
    		o->item = meal;
@@ -184,8 +184,8 @@ int main(void) {
    		meal = o->item;
    		SEND_FOOD(meal->name, MEAL_NAME_SZ + MEAL_MAIN_SZ + MEAL_VEG_SZ + MEAL_SIDE_SZ);
 
-	   	free(o->item);
-	   	free(o);
+	   	__libpov_free(o->item);
+	   	__libpov_free(o);
 	   	o = pop_order_from_list(&o_list);
    	}
    	RECV_OK(ok_buf);
@@ -199,14 +199,14 @@ int main(void) {
    	SEND_CMD(CMD_GET_ORDERS);
    	RECV_UCHAR(&o_count);
    	for (unsigned int i = 0; i < o_count; i++) {
-   		o = malloc(sizeof(Order));
+   		o = __libpov_malloc(sizeof(Order));
    		if (!o) return -1;
 
    		RECV_IDS(ids);
    		o->t_id = ids[0];
    		o->c_id = ids[1];
 
-   		des = malloc(sizeof(Dessert));
+   		des = __libpov_malloc(sizeof(Dessert));
    		if (!des) return -1;
    		RECV_FOOD(des, sizeof(Dessert) - sizeof(void *));
    		o->item = des;
@@ -248,8 +248,8 @@ int main(void) {
 	   		SEND_FOOD(des->name, DES_NAME_SZ);
    		}
 
-	   	free(o->item);
-	   	free(o);
+	   	__libpov_free(o->item);
+	   	__libpov_free(o);
 	   	o = pop_order_from_list(&o_list);
    	}
    	RECV_OK(ok_buf);

@@ -89,17 +89,17 @@ uint32_t prng( void )
 	return newV0;	
 }
 
-// Random [min,max] (note that is inclusive)
-uint32_t random_in_range( uint32_t min, uint32_t max )
+// Random [min,__cgc_max] (note that is inclusive)
+uint32_t random_in_range( uint32_t min, uint32_t __cgc_max )
 {
-	if ( min > max )
+	if ( min > __cgc_max )
 		return 0;
 
-	if ( min == max )
+	if ( min == __cgc_max )
 		return min;
 
 	uint32_t random_value;
-	uint32_t delta = max - min + 1;
+	uint32_t delta = __cgc_max - min + 1;
 
 	// Check for [0, 0xffffffff]
 	if ( delta == 0 )

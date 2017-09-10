@@ -59,8 +59,8 @@ void handle_compress()
 
     __printf("Data?\n");
     __memset(data, 0, sizeof(data));
-    fflush(stdout);
-    if (freaduntil((char *) data, sizeof(data), '\0', stdin) < 0)
+    __cgc_fflush(stdout);
+    if (__cgc_freaduntil((char *) data, sizeof(data), '\0', stdin) < 0)
         goto fail;
 
     sc = sc_new(buf);
@@ -109,8 +109,8 @@ void handle_decompress()
 
     __printf("Length?\n");
     __memset(data, 0, sizeof(data));
-    fflush(stdout);
-    if (freaduntil((char *) data, sizeof(data), '\n', stdin) < 0)
+    __cgc_fflush(stdout);
+    if (__cgc_freaduntil((char *) data, sizeof(data), '\n', stdin) < 0)
         goto fail;
     len = __strtoul((char *) data, NULL, 10);
     if (len > MAX_DATA_SIZE)
@@ -146,15 +146,15 @@ int main()
 {
     char buf[8];
     int i;
-    fbuffered(stdin, 1);
+    __cgc_fbuffered(stdin, 1);
     for (i = 0; i < 8; i += 2)
         __printf("%02X", secret[i] & 0xFF);
     __printf("\n");
     while(1)
     {
         print_menu();
-        fflush(stdout);
-        if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
+        __cgc_fflush(stdout);
+        if (__cgc_freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
             return -1;
         switch(__strtoul(buf, NULL, 10))
         {
@@ -166,7 +166,7 @@ int main()
                 break;
             case 3:
                 __printf("Bye.\n");
-                fflush(stdout);
+                __cgc_fflush(stdout);
                 __exit(0);
                 break;
             default:

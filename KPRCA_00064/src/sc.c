@@ -273,7 +273,7 @@ unsigned char* sc_bwt(sc_obj_t *sc, int op, size_t *outlen)
             }
             _sort(rot_table, to_copy, sc);
             for (oidx = 0; oidx < to_copy; ++oidx)
-                if (memcmp(rot_table[oidx], block, to_copy) == 0)
+                if (__cgc_memcmp(rot_table[oidx], block, to_copy) == 0)
                     break;
 
             *(unsigned short *)&out[size + num_blocks * sizeof(short)] = oidx;

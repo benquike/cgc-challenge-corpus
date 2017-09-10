@@ -43,7 +43,7 @@ int retcode;
 unsigned int count;
 int postSize;
 
-	sprintf(filename, "$x.post", postID);
+	__cgc_sprintf(filename, "$x.post", postID);
 
 	retcode = createFile(filename, REGULAR, ROOT_ID);
 
@@ -114,7 +114,7 @@ int retcode;
 unsigned int count;
 int postSize;
 
-    sprintf(filename, "$x.post", postID);
+    __cgc_sprintf(filename, "$x.post", postID);
 
     fh = openFile(filename, ROOT_ID);
 
@@ -172,7 +172,7 @@ unsigned int lastPostRead;
 unsigned int nextPost;
 unsigned int count;
 
-        sprintf(filename, "$x.user", sessionToken);
+        __cgc_sprintf(filename, "$x.user", sessionToken);
 
         fh = openFile(filename, ROOT_ID);
 
@@ -274,7 +274,7 @@ char commenter[REALNAME_LEN];
 unsigned int commenterID;
 unsigned int messageOffset;
 
-	sprintf(filename, "$x.post", postID);
+	__cgc_sprintf(filename, "$x.post", postID);
 
     fh = openFile(filename, ROOT_ID);
 
@@ -313,7 +313,7 @@ unsigned int messageOffset;
 
     }
 
-    sprintf(filename, "$x.user", postersID);
+    __cgc_sprintf(filename, "$x.user", postersID);
 
     fh2 = openFile(filename, ROOT_ID);
 
@@ -393,7 +393,7 @@ unsigned int messageOffset;
 
         commentSize = count;
 
-        sprintf(filename, "$x.user", commenterID);
+        __cgc_sprintf(filename, "$x.user", commenterID);
 
         fh2 = openFile(filename, ROOT_ID);
 

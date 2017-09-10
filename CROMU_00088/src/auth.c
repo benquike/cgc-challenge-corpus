@@ -178,7 +178,7 @@ char line[1024];
     } // while (retcode >= 0)	
 
     // at the end of the file and didn't find a username collision
-    sprintf(line, "$s:$s:$d\n", name, password, newID);
+    __cgc_sprintf(line, "$s:$s:$d\n", name, password, newID);
 
     retcode = writeFile(fh, line, __strlen(line), ROOT_ID );
 
@@ -191,7 +191,7 @@ char line[1024];
 
     closeFile(fh);
 
-    sprintf(filename, "$x.user", newID );
+    __cgc_sprintf(filename, "$x.user", newID );
 
 	retcode = createFile(filename, REGULAR, ROOT_ID);
 

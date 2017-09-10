@@ -175,7 +175,7 @@ int streq(char *s1, char *s2) {
     return (*s1 == '\0') && (*s2 == '\0');
 }
 
-int strncmp(char *s1, char *s2, size_t n) {
+int __cgc_strncmp(char *s1, char *s2, size_t n) {
     while (*s1 && *s2 && n--){
         if (*s1 != *s2)
             return 1;
@@ -291,7 +291,7 @@ int int2str(char* str_buf, int buf_size, int i) {
 // returns 0 if str_buf is "0" or has no digits.
 uint32_t str2uint(const char* str_buf) {
     int result = 0;
-    int max_chars = 10; // max number of chars __read from str_buf
+    int max_chars = 10; // __cgc_max number of chars __read from str_buf
     int i = 0;
 
     if (str_buf == NULL)

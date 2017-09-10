@@ -634,7 +634,7 @@ uint8_t ListFiles(char **Buf) {
 	}
 
 	if (Buf) {
-		sprintf(*Buf, "$-32s $-32s $-8s $-4s\n", "Filename", "Owner", "Size", "Mode");
+		__cgc_sprintf(*Buf, "$-32s $-32s $-8s $-4s\n", "Filename", "Owner", "Size", "Mode");
 	} else {
 		__printf("$-32s $-32s $-8s $-4s\n", "Filename", "Owner", "Size", "Mode");
 	}
@@ -643,7 +643,7 @@ uint8_t ListFiles(char **Buf) {
 			continue;
 		}
 		if (Buf) {
-			sprintf(*Buf, "$s$-32s $-32s $-8d ", 
+			__cgc_sprintf(*Buf, "$s$-32s $-32s $-8d ", 
 				*Buf,
 				FS->Inodes[i]->Filename,
 				FS->Inodes[i]->Owner,
@@ -666,7 +666,7 @@ uint8_t ListFiles(char **Buf) {
 		if (FS->Inodes[i]->Mode & FS_OTHER_WRITE)
 			Mode[3] = 'w';
 		if (Buf) {
-			sprintf(*Buf,"$s$-4s\n", *Buf, Mode);
+			__cgc_sprintf(*Buf,"$s$-4s\n", *Buf, Mode);
 		} else {
 			__printf("$-4s\n", Mode);
 		}
@@ -1065,7 +1065,7 @@ uint8_t AddUser(char *Username, char *Password) {
 	}
 
 	// __write the new passwd entry
-	sprintf(line, "$s:$s", Username, Password);
+	__cgc_sprintf(line, "$s:$s", Username, Password);
 	__fwrite(line, __strlen(line), 1, newpasswd);
 
 	// close the passwd file
@@ -1233,7 +1233,7 @@ uint8_t ChangePasswd(char *Username, char *NewPasswd) {
 		}
 		if (!__strcmp(User, Username)) {
 			// found it, __write the new passwd
-			sprintf(line, "$s:$s\n", Username, NewPasswd);
+			__cgc_sprintf(line, "$s:$s\n", Username, NewPasswd);
 			if (__fwrite(line, __strlen(line), 1, newpasswd) != __strlen(line)) {
 				__fclose(passwd);
 				__fclose(newpasswd);

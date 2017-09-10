@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2015 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __libpov_free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 */
 
-
+#include <libpov.h>
 #include <libcgc.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -33,6 +33,7 @@ THE SOFTWARE.
 #include <stdio.h>
 #include <math.h>
 #include <malloc.h>
+
 #define MAGIC 0
 #define LEN 2
 #define CMD 4
@@ -111,14 +112,14 @@ return 0;
 
 }
 void prime_buf(unsigned char *buf){
-	memset(buf, 0, 1000);
+	__libpov_memset(buf, 0, 1000);
 	unsigned char ok[12] = { 0xa5, 0x5a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-	memcpy(buf,ok,12);
+	__libpov_memcpy(buf,ok,12);
 	return;
 }
 
 
-int write( int fd, void *buffer, size_t count )
+int __cgc_write( int fd, void *buffer, size_t count )
 {
 	size_t written;
     int total_written;
@@ -153,9 +154,9 @@ int check_val(unsigned char *buf,unsigned short size){
 
 void send_msg(unsigned char *buf, unsigned short size){
 
-	memcpy(buf+2, &size, sizeof(short int));
+	__libpov_memcpy(buf+2, &size, sizeof(short int));
 	unsigned int checkval = check_val(buf, size);
-	memcpy(buf+size, &checkval,sizeof(int));
+	__libpov_memcpy(buf+size, &checkval,sizeof(int));
 
 }
 
@@ -184,16 +185,16 @@ int regvalue;
 	regnum = 5;
 
 
-	if (write(3, &pov_type, sizeof(pov_type)) == -1)
+	if (__cgc_write(3, &pov_type, sizeof(pov_type)) == -1)
 		_terminate(-1);
 
-	if (write(3, &ip_mask, sizeof(ip_mask)) == -1)
+	if (__cgc_write(3, &ip_mask, sizeof(ip_mask)) == -1)
 		_terminate(-1);
 
-	if (write(3, &regmask, sizeof(regmask)) == -1)
+	if (__cgc_write(3, &regmask, sizeof(regmask)) == -1)
 		_terminate(-1);
 
-	if (write(3, &regnum, sizeof(regnum)) == -1)
+	if (__cgc_write(3, &regnum, sizeof(regnum)) == -1)
 		_terminate(-1);
 
 
@@ -248,7 +249,7 @@ int regvalue;
 	theMessage.checkvalue = checkval;
 
 
-	if (write(STDOUT, (void *)&theMessage, sizeof(programMessageType)) == -1)
+	if (__cgc_write(STDOUT, (void *)&theMessage, sizeof(programMessageType)) == -1)
 		_terminate(-1);
 
 
@@ -270,7 +271,7 @@ int regvalue;
 	
 	setAmbientMessage.checkvalue = checkval;
 	
-	if (write(STDOUT, (void *)&setAmbientMessage, sizeof(setAmbientTempMessage)) == -1)
+	if (__cgc_write(STDOUT, (void *)&setAmbientMessage, sizeof(setAmbientTempMessage)) == -1)
 		_terminate(-1);
 
 	if ( receive_bytes( STDIN, buf, 12 ) == -1 )
@@ -293,7 +294,7 @@ int regvalue;
 	runMessage.checkvalue = checkval;
 
 
-	if (write(STDOUT, (void *)&runMessage, sizeof(runMessageType)) == -1)
+	if (__cgc_write(STDOUT, (void *)&runMessage, sizeof(runMessageType)) == -1)
 		_terminate(-1);
 
 	// send a terminate message to the application for the patched CB
@@ -301,7 +302,7 @@ int regvalue;
 	unsigned char buffer[] = { 0xff, 0xff, 0x08, 0x00, 0xff, 0x00, 0x00, 0x00, 0x6c, 0x06, 0x00, 0x00};
 
 
-	if (write(STDOUT, (void *)buffer, sizeof(buffer)) == -1)
+	if (__cgc_write(STDOUT, (void *)buffer, sizeof(buffer)) == -1)
 		_terminate(-1);
 
 

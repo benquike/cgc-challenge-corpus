@@ -74,7 +74,7 @@ int __isalnum( int c )
 		return 0;
 }
 
-int isprint( int c )
+int __cgc_isprint( int c )
 {
 	if ( c >= SPC && c != DEL )
 		return 1;

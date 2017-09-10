@@ -244,7 +244,7 @@ void *__malloc( size_t length )
 	int bucket = 0;
 	pmeta outb = NULL;
 	
-	// The minimum size for a valid request is 8 bytes
+	// The __cgc_minimum size for a valid request is 8 bytes
 	if ( length < 8 ) {
 		length = 8;
 	}

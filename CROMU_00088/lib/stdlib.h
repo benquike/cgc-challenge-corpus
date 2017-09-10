@@ -30,10 +30,10 @@ THE SOFTWARE.
 
 #define RAND_MAX	2147483647
 
-int minimum(unsigned int a, unsigned int b);
-int max(int a, int b);
-int rand( void );
-void srand( unsigned int seed );
+int __cgc_minimum(unsigned int a, unsigned int b);
+int __cgc_max(int a, int b);
+int __cgc_rand( void );
+void __cgc_srand( unsigned int seed );
 int __atoi( const char *pStr );
 double __atof( char *pStr );
  

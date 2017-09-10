@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __libpov_free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -32,9 +32,9 @@ int main(void) {
   delimited_read(STDIN, &line, &linesize, (unsigned char *)"\n", 1);
   delimited_read(STDIN, &line, &linesize, (unsigned char *)"\n", 1);
 
-  // program to read one byte and inc ptr
+  // program to __cgc_read one byte and inc ptr
   char* read_loop = "+[>,]\n";
-  transmit_all(STDOUT, read_loop, strlen(read_loop));
+  transmit_all(STDOUT, read_loop, __libpov_strlen(read_loop));
 
   char *payload = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!&";
   char term = 0;

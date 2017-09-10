@@ -102,7 +102,7 @@ static int _getc(__FILE *stream)
     }
 }
 
-ssize_t freaduntil(char *str, size_t size, char term, __FILE *stream)
+ssize_t __cgc_freaduntil(char *str, size_t size, char term, __FILE *stream)
 {
     size_t idx;
 

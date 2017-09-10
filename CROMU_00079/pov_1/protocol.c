@@ -15,7 +15,7 @@ void fail() {
 }
 
 void protocol_send_str(char* str) {
-  uint16 len = strlen(str);
+  uint16 len = __libpov_strlen(str);
   
   tx((char*)&(len), sizeof(len));
   tx(str, len);

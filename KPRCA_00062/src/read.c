@@ -41,7 +41,7 @@ int readline(char *buf, size_t buf_size)
         }
         else
         {
-            fflush(stdout);
+            __cgc_fflush(stdout);
             __exit(0);
         }
     }

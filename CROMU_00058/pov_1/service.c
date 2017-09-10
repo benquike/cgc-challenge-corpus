@@ -33,7 +33,7 @@ int main(void) {
       if (write_00000_len > 0) {
          transmit_all(1, write_00000, write_00000_len);
       }
-      free(write_00000);
+      __libpov_free(write_00000);
    } while (0);
    do {
       unsigned char *read_00000;
@@ -52,7 +52,7 @@ int main(void) {
          "\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d"
          "\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d\x3d";
       read_00000_ptr += data_match(read_00000 + read_00000_ptr, read_00000_len - read_00000_ptr, match_00000_00000, 44);
-      free(read_00000);
+      __libpov_free(read_00000);
       if (read_00000_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -71,7 +71,7 @@ int main(void) {
          "\x52\x30\x3a\x09\x30\x78\x32\x32\x32\x37\x35\x38\x30\x30\x09\x52"
          "\x31\x3a\x09\x30\x78\x30\x30\x30\x30\x30\x30\x35\x38";
       read_00001_ptr += data_match(read_00001 + read_00001_ptr, read_00001_len - read_00001_ptr, match_00001_00000, 29);
-      free(read_00001);
+      __libpov_free(read_00001);
       if (read_00001_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -80,7 +80,7 @@ int main(void) {
       unsigned int read_00002_ptr = 0;
       //**** length read
       read_00002_len = 21;
-      read_00002 = (unsigned char*)malloc(read_00002_len);
+      read_00002 = (unsigned char*)__libpov_malloc(read_00002_len);
       int read_00002_res = length_read(0, read_00002, read_00002_len);
       if (read_00002_res) {} //silence unused variable warning
       //**** read match data
@@ -88,7 +88,7 @@ int main(void) {
          "\x52\x32\x3a\x09\x30\x78\x30\x30\x30\x30\x30\x30\x30\x30\x09\x52"
          "\x33\x3a\x09\x30\x78";
       read_00002_ptr += data_match(read_00002 + read_00002_ptr, read_00002_len - read_00002_ptr, match_00002_00000, 21);
-      free(read_00002);
+      __libpov_free(read_00002);
       if (read_00002_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -100,7 +100,7 @@ int main(void) {
 
       //**** length read
 /*      read_00003_len = 8;
-      read_00003 = (unsigned char*)malloc(read_00003_len);
+      read_00003 = (unsigned char*)__libpov_malloc(read_00003_len);
       int read_00003_res = length_read(0, read_00003, read_00003_len);
       if (read_00003_res) {} //silence unused variable warning
 */
@@ -108,9 +108,9 @@ int main(void) {
       read_00003_res = length_read(0, (unsigned char *)gimme, 8);
       gimme[8] = 0;
       if (read_00003_res) {}
-      final_submit = strtoul(gimme, NULL, 16);
+      final_submit = __libpov_strtoul(gimme, NULL, 16);
       
-      free(read_00003);
+      __libpov_free(read_00003);
       if (read_00003_ptr) {}  //silence unused variable warning if any
    } while (0);
    //*** submitting type 2 POV results

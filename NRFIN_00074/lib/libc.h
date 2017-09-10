@@ -167,7 +167,7 @@ void *__memcpy(void *dst_, const void *src_, size_t n);
  * @param n The number of bytes to copy
  * @return dst
  */
-void *memmove(void *dst_, const void *src_, size_t n);
+void *__cgc_memmove(void *dst_, const void *src_, size_t n);
 
 /**
  * Compare n bytes from two buffers.
@@ -233,7 +233,7 @@ int __strcmp(const char *a, const char *b);
  * @param n The number of bytes to compare
  * @return negative if a < b, 0 if a == b, positive if a > b
  */
-int strncmp(const char *a, const char *b, size_t n);
+int __cgc_strncmp(const char *a, const char *b, size_t n);
 
 /**
  * Append the bytes of a null-terminated string to another.
@@ -367,7 +367,7 @@ extern __FILE *stderr;
  * @param format The format specifier
  * @return number of bytes written
  */
-int fprintf(__FILE * stream, const char *format, ...);
+int __cgc_fprintf(__FILE * stream, const char *format, ...);
 
 /**
  * Formatted output to stdout.
@@ -417,7 +417,7 @@ int ferror(__FILE *stream);
 int feof(__FILE *stream);
 
 int __printf(const char *format, ...);
-int fprintf(__FILE * stream, const char *format, ...);
+int __cgc_fprintf(__FILE * stream, const char *format, ...);
 
 #endif
 

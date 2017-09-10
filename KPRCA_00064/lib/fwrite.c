@@ -47,7 +47,7 @@ unbuffered:
     {
         if (size >= sizeof(stream->buffer))
         {
-            fflush(stream);
+            __cgc_fflush(stream);
             goto unbuffered;
         }
 
@@ -58,7 +58,7 @@ unbuffered:
             stream->length += tx;
             idx += tx;
 
-            fflush(stream);
+            __cgc_fflush(stream);
         }
 
         if (idx < size)

@@ -25,7 +25,7 @@
 
 #include <ctype.h>
 
-int strcasecmp(const char *s1, const char *s2)
+int __cgc_strcasecmp(const char *s1, const char *s2)
 {
   unsigned char *_s1 = (unsigned char *)s1;
   unsigned char *_s2 = (unsigned char *)s2;

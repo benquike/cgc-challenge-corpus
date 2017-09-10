@@ -30,7 +30,7 @@ THE SOFTWARE.
 
 size_t __strlen( const char *str );
 int __strcmp( const char *, const char *);
-int strncmp( const char *s1, const char *s2, size_t len );
+int __cgc_strncmp( const char *s1, const char *s2, size_t len );
 char *__strcpy( char *pDest, const char *pSource );
 char *__strncpy( char *pDest, const char *pSource, size_t maxlen );
 

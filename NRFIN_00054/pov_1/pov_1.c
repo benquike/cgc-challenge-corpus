@@ -16,7 +16,7 @@ int main(void) {
       if (write_00000_len > 0) {
          transmit_all(1, write_00000, write_00000_len);
       }
-      free(write_00000);
+      __libpov_free(write_00000);
    } while (0);
    do {
       //*** writing data
@@ -29,7 +29,7 @@ int main(void) {
       if (write_00001_len > 0) {
          transmit_all(1, write_00001, write_00001_len);
       }
-      free(write_00001);
+      __libpov_free(write_00001);
    } while (0);
    do {
       //*** writing data
@@ -42,7 +42,7 @@ int main(void) {
       if (write_00002_len > 0) {
          transmit_all(1, write_00002, write_00002_len);
       }
-      free(write_00002);
+      __libpov_free(write_00002);
    } while (0);
    do {
       //*** writing data
@@ -55,7 +55,7 @@ int main(void) {
       if (write_00003_len > 0) {
          transmit_all(1, write_00003, write_00003_len);
       }
-      free(write_00003);
+      __libpov_free(write_00003);
    } while (0);
    do {
       //*** writing data
@@ -68,7 +68,7 @@ int main(void) {
       if (write_00004_len > 0) {
          transmit_all(1, write_00004, write_00004_len);
       }
-      free(write_00004);
+      __libpov_free(write_00004);
    } while (0);
    do {
       //*** writing data
@@ -81,7 +81,7 @@ int main(void) {
       if (write_00005_len > 0) {
          transmit_all(1, write_00005, write_00005_len);
       }
-      free(write_00005);
+      __libpov_free(write_00005);
    } while (0);
    do {
       //*** writing data
@@ -107,20 +107,20 @@ int main(void) {
       pack.u.lo = vals.regval;
       dtostr(pack.d, dtostr_buf, sizeof(dtostr_buf));
 
-      write_00006 = append_buf(write_00006, &write_00006_len, (unsigned char *)dtostr_buf, strlen(dtostr_buf));
+      write_00006 = append_buf(write_00006, &write_00006_len, (unsigned char *)dtostr_buf, __libpov_strlen(dtostr_buf));
 
       write_00006 = append_buf(write_00006, &write_00006_len, write_00006_00000, write_00006_00000_len);
 
       pack.u.lo = vals.ipval;
       dtostr(pack.d, dtostr_buf, sizeof(dtostr_buf));
 
-      write_00006 = append_buf(write_00006, &write_00006_len, (unsigned char *)dtostr_buf, strlen(dtostr_buf));
+      write_00006 = append_buf(write_00006, &write_00006_len, (unsigned char *)dtostr_buf, __libpov_strlen(dtostr_buf));
 
       write_00006 = append_buf(write_00006, &write_00006_len, write_00006_00003, write_00006_00003_len);
       if (write_00006_len > 0) {
          transmit_all(1, write_00006, write_00006_len);
       }
-      free(write_00006);
+      __libpov_free(write_00006);
    } while (0);
    do {
       //*** writing data
@@ -133,7 +133,7 @@ int main(void) {
       if (write_00007_len > 0) {
          transmit_all(1, write_00007, write_00007_len);
       }
-      free(write_00007);
+      __libpov_free(write_00007);
    } while (0);
    do {
       //*** writing data
@@ -146,7 +146,7 @@ int main(void) {
       if (write_00008_len > 0) {
          transmit_all(1, write_00008, write_00008_len);
       }
-      free(write_00008);
+      __libpov_free(write_00008);
    } while (0);
    do {
       //*** writing data
@@ -159,7 +159,7 @@ int main(void) {
       if (write_00009_len > 0) {
          transmit_all(1, write_00009, write_00009_len);
       }
-      free(write_00009);
+      __libpov_free(write_00009);
    } while (0);
    do {
       //*** writing data
@@ -172,48 +172,48 @@ int main(void) {
       if (write_00010_len > 0) {
          transmit_all(1, write_00010, write_00010_len);
       }
-      free(write_00010);
+      __libpov_free(write_00010);
    } while (0);
    do {
       unsigned char *read_00000;
       unsigned int read_00000_len;
       unsigned int read_00000_ptr = 0;
-      //**** delimited read
+      //**** delimited __cgc_read
       static unsigned char read_00000_delim[] = 
          "\x0a";
       read_00000 = NULL;
       read_00000_len = 0;
       int read_00000_res = delimited_read(0, &read_00000, &read_00000_len, read_00000_delim, 1);
       if (read_00000_res) {} //silence unused variable warning
-      free(read_00000);
+      __libpov_free(read_00000);
       if (read_00000_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
       unsigned char *read_00001;
       unsigned int read_00001_len;
       unsigned int read_00001_ptr = 0;
-      //**** delimited read
+      //**** delimited __cgc_read
       static unsigned char read_00001_delim[] = 
          "\x0a";
       read_00001 = NULL;
       read_00001_len = 0;
       int read_00001_res = delimited_read(0, &read_00001, &read_00001_len, read_00001_delim, 1);
       if (read_00001_res) {} //silence unused variable warning
-      free(read_00001);
+      __libpov_free(read_00001);
       if (read_00001_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
       unsigned char *read_00002;
       unsigned int read_00002_len;
       unsigned int read_00002_ptr = 0;
-      //**** delimited read
+      //**** delimited __cgc_read
       static unsigned char read_00002_delim[] = 
          "\x0a";
       read_00002 = NULL;
       read_00002_len = 0;
       int read_00002_res = delimited_read(0, &read_00002, &read_00002_len, read_00002_delim, 1);
       if (read_00002_res) {} //silence unused variable warning
-      free(read_00002);
+      __libpov_free(read_00002);
       if (read_00002_ptr) {}  //silence unused variable warning if any
    } while (0);
    delay(100);
@@ -228,6 +228,6 @@ int main(void) {
       if (write_00011_len > 0) {
          transmit_all(1, write_00011, write_00011_len);
       }
-      free(write_00011);
+      __libpov_free(write_00011);
    } while (0);
 }

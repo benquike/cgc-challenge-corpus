@@ -48,7 +48,7 @@ int __strcmp( const char *s1, const char *s2 )
     return (*(const unsigned char *)s1 - *(const unsigned char *)s2);
 }
 
-int strncmp( const char *s1, const char *s2, size_t len )
+int __cgc_strncmp( const char *s1, const char *s2, size_t len )
 {
 size_t count = 0;
 

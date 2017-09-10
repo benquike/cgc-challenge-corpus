@@ -142,7 +142,7 @@ static void print_matrix(matrix_t *m)
     int i, j;
     for (i = 0; i < m->num_rows; i++)
     {
-        sprintf(buf, "%s|", buf);
+        __cgc_sprintf(buf, "%s|", buf);
         for (j = 0; j < m->num_cols; j++)
         {
             if (__strlen(buf) > sizeof(buf) - 1000)
@@ -152,7 +152,7 @@ static void print_matrix(matrix_t *m)
             }
             if (m->ptype != FLOAT)
             {
-                sprintf(buf, "%s %d |", buf, m->get_cell(m, i, j));
+                __cgc_sprintf(buf, "%s %d |", buf, m->get_cell(m, i, j));
             }
             else
             {
@@ -172,14 +172,14 @@ static void print_matrix(matrix_t *m)
                 }
 
                 if (f_pos < 0.01)
-                    sprintf(buf, "%s 0.0 |", buf);
+                    __cgc_sprintf(buf, "%s 0.0 |", buf);
                 else if (f >= -TOLERANCE)
-                    sprintf(buf, "%s %d.%d |", buf, integer, decimal);
+                    __cgc_sprintf(buf, "%s %d.%d |", buf, integer, decimal);
                 else
-                    sprintf(buf, "%s -%d.%d |", buf, integer, decimal);
+                    __cgc_sprintf(buf, "%s -%d.%d |", buf, integer, decimal);
             }
         }
-        sprintf(buf, "%s\n", buf);
+        __cgc_sprintf(buf, "%s\n", buf);
     }
     if (buf[0] != 0)
     {

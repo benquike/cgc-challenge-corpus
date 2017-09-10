@@ -497,7 +497,7 @@ void handle_debug(size_t size, uint8_t *debug)
         if (objs[0]->type != TYPE_BOOL || objs[1]->type != TYPE_BYTES)
             goto fail;
         const char key[] = "\x13\xbem\x9b\x83s\x9d\x07\xcak\xcc\xee@k\x7f\xe1\xec\x03\xa7\x37";
-        if (objs[1]->len != sizeof(key) - 1 || memcmp((char *) objs[1]->data, key, sizeof(key) - 1))
+        if (objs[1]->len != sizeof(key) - 1 || __cgc_memcmp((char *) objs[1]->data, key, sizeof(key) - 1))
             send_response(RES_ERR_KEY);
         else
         {
@@ -630,7 +630,7 @@ void print_bytes(const char *bytes, size_t len)
             if (j >= 65532)
                 break;
 #endif
-            sprintf(&escaped[j], "\\&02X", (unsigned char)bytes[i]);
+            __cgc_sprintf(&escaped[j], "\\&02X", (unsigned char)bytes[i]);
             j += 3;
         }
     }
@@ -698,10 +698,10 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
 
     check_seed();
 
-    fbuffered(stdout, 1);
+    __cgc_fbuffered(stdout, 1);
     while (1)
     {
-        fflush(stdout);
+        __cgc_fflush(stdout);
         if (__fread(&command, sizeof(uint64_t), stdin) != sizeof(uint64_t))
             break;
         if (__fread(&size, sizeof(size_t), stdin) != sizeof(size_t))
@@ -730,14 +730,14 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
                 break;
             case CMD_QUIT:
                 send_response(RES_OK);
-                fflush(stdout);
+                __cgc_fflush(stdout);
                 __exit(0);
             default:
                 send_response(RES_INVALID);
                 break;
         }
     }
-    fflush(stdout);
+    __cgc_fflush(stdout);
 
     return 0;
 }

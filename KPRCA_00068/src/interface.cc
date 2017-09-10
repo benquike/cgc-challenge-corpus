@@ -80,7 +80,7 @@ bool Interface::menuMain()
     while (true)
     {
         __fwrite(menuMainPrompt, __strlen(menuMainPrompt), stdout);
-        if (freaduntil(line, sizeof(line), '\n', stdin) < 0)
+        if (__cgc_freaduntil(line, sizeof(line), '\n', stdin) < 0)
             return false;
 
         if (line[0] == '9')
@@ -233,7 +233,7 @@ bool Interface::menuExport()
     while (true)
     {
         __fwrite(menuExportPrompt, __strlen(menuExportPrompt), stdout);
-        if (freaduntil(line, sizeof(line), '\n', stdin) < 0)
+        if (__cgc_freaduntil(line, sizeof(line), '\n', stdin) < 0)
             return false;
 
         if (line[0] == '4')
@@ -266,7 +266,7 @@ bool Interface::menuNew()
     while (true)
     {
         __fwrite(menuNewPrompt, __strlen(menuNewPrompt), stdout);
-        if (freaduntil(line, sizeof(line), '\n', stdin) < 0)
+        if (__cgc_freaduntil(line, sizeof(line), '\n', stdin) < 0)
             return false;
 
         if (line[0] == '5')
@@ -403,7 +403,7 @@ bool Interface::menuEffects()
     while (true)
     {
         __fwrite(menuEffectsPrompt, __strlen(menuEffectsPrompt), stdout);
-        if (freaduntil(line, sizeof(line), '\n', stdin) < 0)
+        if (__cgc_freaduntil(line, sizeof(line), '\n', stdin) < 0)
             return false;
 
         if (line[0] == '5')

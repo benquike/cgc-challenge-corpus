@@ -27,7 +27,7 @@
 #ifndef PRNG_H
 #define PRNG_H
 #include "stdint.h"
-void srand(uint32_t *seed);
+void __cgc_srand(uint32_t *seed);
 unsigned int getshifty();
 #endif
 

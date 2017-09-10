@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __libpov_free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -35,7 +35,7 @@
 
 // #include <errno.h>
 // #include <stdint.h>
-// #include "memset.h"
+// #include "__libpov_memset.h"
 // #include "send_bytes.h"
 // #include "recv_bytes.h"
 // #include "xxprintf.h"
@@ -53,8 +53,8 @@
 
 // #ifdef DEBUG
 // #define DBG(args...) \
-//  	fdprintf(STDERR, '%', '\0', "[CB1] %S:%U @ %S | ", __FILE__, __LINE__, __func__); \
-//  	fdprintf(STDERR, '%', '\0', args);
+//  	__cgc_fdprintf(STDERR, '%', '\0', "[CB1] %S:%U @ %S | ", __FILE__, __LINE__, __func__); \
+//  	__cgc_fdprintf(STDERR, '%', '\0', args);
 // // #define err(args...) \
 // // 	fprintf(stderr, "[E] %s:%d @ %s | ", __FILE__, __LINE__, __func__);\
 // // 	fprintf(stderr, args);\

@@ -2,12 +2,12 @@
 
 static int moves = 0;
 
-char *strcat(char *s1, const char *s2)
+char *__cgc_strcat(char *s1, const char *s2)
 {
 	char *os1 = s1;
 	while (*s1)
 		s1++;
-	strcpy(s1, s2);
+	__libpov_strcpy(s1, s2);
 	return os1;
 }
 
@@ -16,7 +16,7 @@ void wait_for_move()
     unsigned char *buf = NULL;
     unsigned int buflen = 0;
     delimited_read(STDIN, &buf, &buflen, (unsigned char *)"DANCE MODE", 10);
-    free(buf);
+    __libpov_free(buf);
     moves++;
 }
 
@@ -44,19 +44,19 @@ int main(void) {
 
 	// Build the buffer
 	buf[0] = '\0';
-	strcat((char *)buf, "magic\n");
+	__cgc_strcat((char *)buf, "magic\n");
 
 	for (n = 0; n < 23; n++)
 	{
-		strcat((char *)buf, "\n\n\n\nd\n");
+		__cgc_strcat((char *)buf, "\n\n\n\nd\n");
 	}
 
 	for (n = 0; n < 16; n++)
 	{
-		strcat((char *)buf, "\n");
+		__cgc_strcat((char *)buf, "\n");
 	}
 
-	transmit_all(STDOUT, buf, strlen((char *)buf));
+	transmit_all(STDOUT, buf, __libpov_strlen((char *)buf));
 
 	for (n = 0; n < 280 - 12; n++)
 	{

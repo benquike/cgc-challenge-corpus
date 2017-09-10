@@ -257,7 +257,7 @@ int __printf(const char *fmt, ...)
     va_list ap;
 
     va_start(ap, fmt);
-    ret = vprintf(fmt, ap);
+    ret = __cgc_vprintf(fmt, ap);
     va_end(ap);
 
     return ret;
@@ -287,7 +287,7 @@ int __sprintf(char *str, const char *fmt, ...)
     return ret;
 }
 
-int vprintf(const char *fmt, va_list ap)
+int __cgc_vprintf(const char *fmt, va_list ap)
 {
     return __vfprintf(stdout, fmt, ap);
 }

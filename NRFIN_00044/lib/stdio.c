@@ -161,7 +161,7 @@ __fclose(__FILE *stream)
 }
 
 int
-fflush(__FILE *stream)
+__cgc_fflush(__FILE *stream)
 {
     ssize_t written;
 
@@ -459,7 +459,7 @@ file_printer(char c, void *data)
     fputc(c, data);
 
     if (c == '\n')
-        fflush(data);
+        __cgc_fflush(data);
 }
 
 struct string_printer_ctx {
@@ -476,7 +476,7 @@ string_printer(char c, void *data)
 }
 
 int
-vfprintf(__FILE *stream, const char *format, va_list args)
+__cgc_vfprintf(__FILE *stream, const char *format, va_list args)
 {
     return printf_core(format, file_printer, stream, args);
 }
@@ -484,7 +484,7 @@ vfprintf(__FILE *stream, const char *format, va_list args)
 int
 vprintf(const char *format, va_list args) 
 {
-    return vfprintf(stdout, format, args);
+    return __cgc_vfprintf(stdout, format, args);
 }
 
 int
@@ -495,7 +495,7 @@ vsnprintf(char *s, size_t num, const char *format, va_list args)
 }
 
 int
-vsprintf(char *s, const char *format, va_list args)
+__cgc_vsprintf(char *s, const char *format, va_list args)
 {
     return vsnprintf(s, (size_t)SIZE_MAX, format, args);
 }
@@ -506,7 +506,7 @@ fprintf(__FILE *stream, const char *format, ...)
     int ret;
     va_list args;
     va_start(args, format);
-    ret = vfprintf(stream, format, args);
+    ret = __cgc_vfprintf(stream, format, args);
     va_end(args);
     return ret;
 }
@@ -534,12 +534,12 @@ snprintf(char *s, size_t num, const char *format, ...)
 }
 
 int
-sprintf(char *s, const char *format, ...)
+__cgc_sprintf(char *s, const char *format, ...)
 {
     int ret;
     va_list args;
     va_start(args, format);
-    ret = vsprintf(s, format, args);
+    ret = __cgc_vsprintf(s, format, args);
     va_end(args);
     return ret;
 }

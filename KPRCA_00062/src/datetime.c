@@ -300,7 +300,7 @@ void print_date(date_t *date)
 
 void get_date_str(char *date_str, date_t *date)
 {
-    sprintf(date_str, "%d-%d-%d", date->month, date->day, date->year);
+    __cgc_sprintf(date_str, "%d-%d-%d", date->month, date->day, date->year);
 }
 
 char *get_month(date_t *date)
@@ -361,6 +361,6 @@ void get_time_str(char *time_str, __time_t_ *time)
     else
         min_pad = emptystr;
 
-    sprintf(time_str, "%d:%s%d", time->hour, min_pad, time->minute);
+    __cgc_sprintf(time_str, "%d:%s%d", time->hour, min_pad, time->minute);
 }
 

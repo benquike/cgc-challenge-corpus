@@ -4,7 +4,7 @@ Author: Steve Wood <swood@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __cgc_free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -54,7 +54,7 @@ fileHandleType fh;
         {"make", makeFile },
         {"erase", eraseFile }, 
         {"list", listFiles },
-        {"write", overwriteFile }, 
+        {"__cgc_write", overwriteFile }, 
         {"show", dumpFile },
         {"last", readFromEnd },
         { "first", readFirstN }, 
@@ -68,7 +68,7 @@ fileHandleType fh;
 
     if (retcode != 0) {
 
-        printf("Error making filesystem\n");
+        __cgc_printf("Error making filesystem\n");
         _terminate(-1);
     }
 
@@ -77,7 +77,7 @@ fileHandleType fh;
 
     if ( retcode != 0 ) {
 
-        printf("error making README\n");
+        __cgc_printf("error making README\n");
         _terminate(-1);
     }
 
@@ -85,34 +85,34 @@ fileHandleType fh;
 
     if ( fh < 0 ) {
 
-        printf("error making README\n");
+        __cgc_printf("error making README\n");
         _terminate(-1);
 
     }
 
-    strcpy(buffer, "Welcome to the interactive filesystem shell. ");
+    __cgc_strcpy(buffer, "Welcome to the interactive filesystem shell. ");
 
-    retcode = writeFile(fh, buffer, strlen(buffer), ROOT_ID);
+    retcode = writeFile(fh, buffer, __cgc_strlen(buffer), ROOT_ID);
 
     if (retcode < 0 ) {
 
-        printf("error making README\n");
+        __cgc_printf("error making README\n");
         _terminate(-1);
 
     }
 
-    strcpy(buffer, "Valid commands are make, makememfile, erase, list, copy, write, show, first, last, and perms.");
+    __cgc_strcpy(buffer, "Valid commands are make, makememfile, erase, list, copy, __cgc_write, show, first, last, and perms.");
 
-    retcode = writeFile(fh, buffer, strlen(buffer), ROOT_ID);
+    retcode = writeFile(fh, buffer, __cgc_strlen(buffer), ROOT_ID);
 
     if (retcode < 0 ) {
 
-        printf("error making Message of the Day\n");
+        __cgc_printf("error making Message of the Day\n");
         _terminate(-1);
 
     }
 
-    // this should be read-only but needs to be writable so it can be deleted for the exploit
+    // this should be __cgc_read-only but needs to be writable so it can be deleted for the exploit
     setPerms(fh, 3, ROOT_ID);
 
     closeFile(fh);
@@ -123,16 +123,16 @@ fileHandleType fh;
 
         if (unauth) {
 
-            printf("login: ");
+            __cgc_printf("login: ");
         }
         else {
 
-            printf("> ");
+            __cgc_printf("> ");
         }
 
-        retcode = receive_until(command, '\n', sizeof(command));
+        retcode = __cgc_receive_until(command, '\n', sizeof(command));
 
-        if (strlen(command) == 0) {
+        if (__cgc_strlen(command) == 0) {
 
             continue;
         }
@@ -143,44 +143,44 @@ fileHandleType fh;
 
             if (argcount != 2) {
 
-                free(args);
+                __cgc_free(args);
                 continue;
             }
 
-            securityToken = atoi(args[1]);
+            securityToken = __cgc_atoi(args[1]);
 
             securityID = authenticate(args[0], securityToken);
 
             if (securityID == 0) {
 
-                printf("Invalid login\n");
-                free(args);
+                __cgc_printf("Invalid login\n");
+                __cgc_free(args);
                 continue;
             }
             else {
 
-                printf("Access allowed\n");
+                __cgc_printf("Access allowed\n");
                 lookupName(nameBuffer, securityID);
 
-                printf("Welcome $s\n", nameBuffer);
+                __cgc_printf("Welcome $s\n", nameBuffer);
 
             }
 
             unauth = 0;
 
-            free(args);
+            __cgc_free(args);
             continue;
 
         }
 
-        if (strcmp(args[0], "logout") == 0) {
+        if (__cgc_strcmp(args[0], "logout") == 0) {
 
-            printf("bye felicia\n");
+            __cgc_printf("bye felicia\n");
             unauth = 1;
             continue;
 
         }
-        else if (strcmp(args[0], "exit") == 0 ) {
+        else if (__cgc_strcmp(args[0], "__cgc_exit") == 0 ) {
 
             break;
 
@@ -189,7 +189,7 @@ fileHandleType fh;
 
             for ( i= 0; i < COMMAND_COUNT; ++i ) {
 
-                if ( strcmp(args[0], commands[i].command) == 0 ) {
+                if ( __cgc_strcmp(args[0], commands[i].command) == 0 ) {
 
                     retcode = commands[i].handler(argcount, args);
                     break;
@@ -197,9 +197,9 @@ fileHandleType fh;
 
             }
 
-            if ( i == COMMAND_COUNT && strlen(args[0]) > 0 ) {
+            if ( i == COMMAND_COUNT && __cgc_strlen(args[0]) > 0 ) {
 
-                printf("unknown command $s\n", args[0]);
+                __cgc_printf("unknown command $s\n", args[0]);
 
             }
             

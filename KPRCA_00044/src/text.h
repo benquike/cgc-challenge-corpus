@@ -265,7 +265,7 @@ const char text[] = "It is a melancholy object to those, who walk through this g
 "the author or authors will be pleased maturely to consider two points. " \
 "First, As things now stand, how they will be able to find food and " \
 "raiment for a hundred thousand useless mouths and backs. And secondly, " \
-"There being a round million of creatures in humane figure throughout " \
+"There being a __cgc_round million of creatures in humane figure throughout " \
 "this kingdom, whose whole subsistence put into a common stock, would " \
 "leave them in debt two million of pounds sterling, adding those who are " \
 "beggars by profession, to the bulk of farmers, cottagers and labourers, " \

@@ -468,7 +468,7 @@ void moveUserIfValid(int board[20][20], char userInput, int * pac_x_loc, int * p
         case 'q':
 			{
 				char * loc_buffer = (char *) __calloc(1, 250);
-				freaduntil(loc_buffer, 200, NL[0], stdin);
+				__cgc_freaduntil(loc_buffer, 200, NL[0], stdin);
 				
 				targetSpace_x = __strtol(loc_buffer,0,0)/20;
 				targetSpace_y = __strtol(loc_buffer,0,0)%20;
@@ -552,7 +552,7 @@ int startPacAttack()
         number_of_moves++;
         fprintf(stdout, "*d" NL, number_of_moves);
         drawBoard(board);
-        fflush(stdout);
+        __cgc_fflush(stdout);
         
         userInput = getUserInput();
         
@@ -565,9 +565,9 @@ int startPacAttack()
     if(userHasNotWon(board) == 0)
     {
         fprintf(stdout, "IMAGE MAGIC" NL);
-        fflush(stdout);
+        __cgc_fflush(stdout);
         performImageMagic();
-        fflush(stdout);
+        __cgc_fflush(stdout);
     }
     
     return 0;
@@ -585,9 +585,9 @@ void check_seed()
 int main()
 {
     check_seed();
-    fbuffered(stdout, 1);
+    __cgc_fbuffered(stdout, 1);
     startPacAttack();
-    fflush(stdout);
+    __cgc_fflush(stdout);
     return 0;
 }
 

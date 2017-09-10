@@ -26,8 +26,8 @@ THE SOFTWARE.
 #ifndef __MATH_H__
 #define __MATH_H__
 
-double round( double val );
-double floor( double val );
+double __cgc_round( double val );
+double __cgc_floor( double val );
 
 #define __isnan( val )  __builtin_isnan( val )
 #define __isinf( val )  __builtin_isinf( val )

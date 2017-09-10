@@ -32,12 +32,12 @@ THE SOFTWARE.
 #define LONG_MIN (0x80000000L)
 #define LONG_MAX (0x7FFFFFFFL)
 
-int rand( void )
+int __cgc_rand( void )
 {
 	return (random_in_range( 0, RAND_MAX-1 ));
 }
 
-void srand( unsigned int seed )
+void __cgc_srand( unsigned int seed )
 {
 	seed_prng( seed );
 }

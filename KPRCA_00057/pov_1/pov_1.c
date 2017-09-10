@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __libpov_free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -78,8 +78,8 @@ int main(void) {
   int gid = 256 + 512;
   int uid = offset / gid + 1;
 
-  glue_t *block = malloc(sizeof(glue_t));
-  memset(block, '\0', sizeof(glue_t));
+  glue_t *block = __libpov_malloc(sizeof(glue_t));
+  __libpov_memset(block, '\0', sizeof(glue_t));
 
   for (int i = 8 - 2; i >= 0; i--)
   {
@@ -93,9 +93,9 @@ int main(void) {
     uid /= 8;
   }
 
-  strcpy(block->f_name, "this is a test");
-  strcpy(block->f_mode, "07000");
-  strcpy(block->f_size, "0");
+  __libpov_strcpy(block->f_name, "this is a test");
+  __libpov_strcpy(block->f_mode, "07000");
+  __libpov_strcpy(block->f_size, "0");
 
   char zero[BLOCK_SIZE] = {0};
 
@@ -103,7 +103,7 @@ int main(void) {
   transmit_all(1, zero, BLOCK_SIZE - sizeof(glue_t));
 
   // 2 empty blocks
-  memset(block, '\0', sizeof(glue_t));
+  __libpov_memset(block, '\0', sizeof(glue_t));
 
   transmit_all(1, block, sizeof(glue_t));
   transmit_all(1, zero, BLOCK_SIZE - sizeof(glue_t));

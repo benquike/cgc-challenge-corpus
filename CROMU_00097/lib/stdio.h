@@ -34,8 +34,8 @@ int putchar( int c );
 
 int __printf( const char *format, ... );
 int vprintf( const char *format, va_list args );
-int sprintf( char *buf, const char *format, ... );
-int vsprintf( char *buf, const char *format, va_list args );
+int __cgc_sprintf( char *buf, const char *format, ... );
+int __cgc_vsprintf( char *buf, const char *format, va_list args );
 int __puts( const char *s );
 int debug_print( const char *format, ... );
 int receive_fixed(uint8_t *buffer, int length);

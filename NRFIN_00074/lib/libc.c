@@ -106,7 +106,7 @@ __memcpy(void *dst_, const void *src_, size_t n)
 }
 
 void *
-memmove(void *dst_, const void *src_, size_t n)
+__cgc_memmove(void *dst_, const void *src_, size_t n)
 {
     unsigned char *dst = dst_;
     const unsigned char *src = src_;
@@ -162,7 +162,7 @@ __strcmp(const char *a, const char *b)
 }
 
 int
-strncmp(const char *a, const char *b, size_t n)
+__cgc_strncmp(const char *a, const char *b, size_t n)
 {
     for (; --n && *a && *a == *b; a++, b++)
         ;
@@ -436,7 +436,7 @@ int __vfprintf(__FILE * stream, const char *format, va_list ap) {
    return vdprintf(stream->fd, format, ap);
 }
 
-int fprintf(__FILE * stream, const char *format, ...) {
+int __cgc_fprintf(__FILE * stream, const char *format, ...) {
    va_list va;
    va_start(va, format);
    return __vfprintf(stream, format, va);
@@ -889,7 +889,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      }
                   }
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                      if ((flags & FLAGS_ZERO) != 0 && prec_value < width_value) {
                         //widen precision if necessary to pad to width with '0'
@@ -998,7 +998,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      width_value = len;
                   }
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                      if ((flags & FLAGS_ZERO) != 0 && prec_value < width_value) {
                         //widen precision if necessary to pad to width with '0'
@@ -1067,7 +1067,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      width_value = len;
                   }
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                      if ((flags & FLAGS_ZERO) != 0 && prec_value < width_value) {
                         //widen precision if necessary to pad to width with '0'
@@ -1138,7 +1138,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      width_value = len;
                   }
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                      if ((flags & FLAGS_ZERO) != 0 && prec_value < width_value) {
                         //widen precision if necessary to pad to width with '0'
@@ -1253,7 +1253,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      width_value = len;
                   }
                   if (prec_value == -1 || prec_value > len) {
-                     //by default max is entire string but no less than width
+                     //by default __cgc_max is entire string but no less than width
                      prec_value = len;
                   }
                   if (flags & FLAGS_LEFT) {
@@ -1287,7 +1287,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                   num_ptr = r_xtoa((unsigned int)args[field_arg], num_buf, 0);
                   len = num_ptr - num_buf + 1;
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                   }
                   else {
@@ -1407,7 +1407,7 @@ typedef __builtin_va_list va_list;
 struct _FILE {
    int fd;
    int state;
-   size_t max;
+   size_t __cgc_max;
    size_t curr;
    unsigned char buf[4096];
 };
@@ -1418,7 +1418,7 @@ __FILE *stdin = &std_files[0];
 __FILE *stdout = &std_files[1];
 __FILE *stderr = &std_files[2];
 
-int vprintf(const char *format, va_list ap);
+int __cgc_vprintf(const char *format, va_list ap);
 int __vfprintf(__FILE *stream, const char *format, va_list ap);
 int vdprintf(int fd, const char *format, va_list ap);
 
@@ -1490,12 +1490,12 @@ int __islower(int c) {
    return (type_flags[c & 0xff] & IS_LOWER) != 0;
 }
 
-int isprint(int c) {
+int __cgc_isprint(int c) {
    return c >= ' ' && c <= '~';
 }
 
 int __ispunct(int c) {
-   return isprint(c) && (type_flags[c & 0xff] & (IS_SPACE | IS_ALNUM)) == 0;
+   return __cgc_isprint(c) && (type_flags[c & 0xff] & (IS_SPACE | IS_ALNUM)) == 0;
 }
 
 int __isspace(int c) {
@@ -1549,10 +1549,10 @@ int transmit_all(int fd, const void *buf, const size_t size) {
 int __printf(const char *format, ...) {
    va_list va;
    va_start(va, format);
-   return vprintf(format, va);
+   return __cgc_vprintf(format, va);
 }
 
-int vprintf(const char *format, va_list ap) {
+int __cgc_vprintf(const char *format, va_list ap) {
    return __vfprintf(stdout, format, ap);
 }
 
@@ -2015,7 +2015,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      }
                   }
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                      if ((flags & FLAGS_ZERO) != 0 && prec_value < width_value) {
                         //widen precision if necessary to pad to width with '0'
@@ -2124,7 +2124,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      width_value = len;
                   }
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                      if ((flags & FLAGS_ZERO) != 0 && prec_value < width_value) {
                         //widen precision if necessary to pad to width with '0'
@@ -2193,7 +2193,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      width_value = len;
                   }
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                      if ((flags & FLAGS_ZERO) != 0 && prec_value < width_value) {
                         //widen precision if necessary to pad to width with '0'
@@ -2264,7 +2264,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      width_value = len;
                   }
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                      if ((flags & FLAGS_ZERO) != 0 && prec_value < width_value) {
                         //widen precision if necessary to pad to width with '0'
@@ -2379,7 +2379,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      width_value = len;
                   }
                   if (prec_value == -1 || prec_value > len) {
-                     //by default max is entire string but no less than width
+                     //by default __cgc_max is entire string but no less than width
                      prec_value = len;
                   }
                   if (flags & FLAGS_LEFT) {
@@ -2413,7 +2413,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                   num_ptr = r_xtoa((unsigned int)args[field_arg], num_buf, 0);
                   len = num_ptr - num_buf + 1;
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                   }
                   else {
@@ -2520,16 +2520,16 @@ int vdprintf(int fd, const char *format, va_list ap) {
 }
 
 int fgetc(__FILE *stream) {
-   if (stream->curr < stream->max) {
+   if (stream->curr < stream->__cgc_max) {
       return stream->buf[stream->curr++];
    }
-   stream->curr = stream->max = 0;
+   stream->curr = stream->__cgc_max = 0;
    
-   if (receive(stream->fd, stream->buf, sizeof(stream->buf), &stream->max) != 0) {
+   if (receive(stream->fd, stream->buf, sizeof(stream->buf), &stream->__cgc_max) != 0) {
       stream->state |= _FILE_STATE_ERROR;
       return EOF;
    }
-   else if (stream->max == 0) {
+   else if (stream->__cgc_max == 0) {
       stream->state |= _FILE_STATE_EOF;
       return EOF;
    }

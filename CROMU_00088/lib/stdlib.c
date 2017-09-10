@@ -30,7 +30,7 @@ THE SOFTWARE.
 #include <prng.h>
 
 
-int minimum(unsigned int a, unsigned int b) {
+int __cgc_minimum(unsigned int a, unsigned int b) {
 
 	if (a < b)
 		return a;
@@ -38,7 +38,7 @@ int minimum(unsigned int a, unsigned int b) {
 		return b;
 }
 
-int max(int a, int b) {
+int __cgc_max(int a, int b) {
 
 	if (a > b)
 		return a;
@@ -47,12 +47,12 @@ int max(int a, int b) {
 
 }
 
-int rand( void )
+int __cgc_rand( void )
 {
 	return (random_in_range( 0, RAND_MAX-1 ));
 }
 
-void srand( unsigned int seed )
+void __cgc_srand( unsigned int seed )
 {
 	seed_prng( seed );
 }

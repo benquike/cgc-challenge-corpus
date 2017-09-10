@@ -88,7 +88,7 @@ int __isdigit(int c)
 
 int isgraph(int c)
 {
-  return c != ' ' && isprint(c);
+  return c != ' ' && __cgc_isprint(c);
 }
 
 int __islower(int c)
@@ -96,7 +96,7 @@ int __islower(int c)
   return (unsigned int) c - 'a' < 26;
 }
 
-int isprint(int c)
+int __cgc_isprint(int c)
 {
   return c >= SPACE && c != DEL;
 }

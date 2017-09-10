@@ -41,7 +41,7 @@ THE SOFTWARE.
 #define FLOAT_NON_EXPONENT_MAX		10000000000.0
 #define DEFAULT_FLOAT_PRECISION		6
 
-// Wrapper functions for vprintf and vsprintf
+// Wrapper functions for vprintf and __cgc_vsprintf
 typedef int (*tPrintfWrapperFP)( void *ctx, int c, size_t pos );
 
 int wrapper_output( void *ctx, tPrintfWrapperFP fpOut, size_t pos, const char *format, va_list args );
@@ -179,19 +179,19 @@ int vprintf( const char *format, va_list args )
 	return wrapper_output( ctx, wrapper_putc, pos, format, args );	
 }
 
-int sprintf( char *buf, const char *format, ... )
+int __cgc_sprintf( char *buf, const char *format, ... )
 {
 	va_list args;
 	va_start(args, format);
 
-	int return_val = vsprintf( buf, format, args );
+	int return_val = __cgc_vsprintf( buf, format, args );
 
 	va_end(args);
 
 	return (return_val);	
 }
 
-int vsprintf( char *buf, const char *format, va_list args )
+int __cgc_vsprintf( char *buf, const char *format, va_list args )
 {
 	tPrintfWrapperFP wrapper_outc = &WRAPPER_OUTC;
 	void *ctx = buf;
@@ -210,7 +210,7 @@ int debug_print( const char *format, ... )
   va_start(args, format);
 
   char buf[2000];
-  int return_val = vsprintf( buf, format, args );
+  int return_val = __cgc_vsprintf( buf, format, args );
 
   va_end(args);
 

@@ -42,11 +42,11 @@ static const char *new_board =
 int
 do_hugman(void)
 {
-    size_t round = game_state.games.hugman.round % 4;
+    size_t __cgc_round = game_state.games.hugman.__cgc_round % 4;
 #ifdef PATCHED_1
-    size_t index = round * 256 + get_flag_byte(game_state.games.hugman.round);
+    size_t index = __cgc_round * 256 + get_flag_byte(game_state.games.hugman.__cgc_round);
 #else
-    size_t index = round * 256 + get_flag_byte_unsafe(game_state.games.hugman.round);
+    size_t index = __cgc_round * 256 + get_flag_byte_unsafe(game_state.games.hugman.__cgc_round);
 #endif
     const char *word = dict[index];
     int i, j, c_, success, win;
@@ -124,11 +124,11 @@ do_hugman(void)
     for (j = 0; j < sizeof(board) / sizeof(board[0]); j++)
         __printf("%s", board[j]);
 
-    game_state.games.hugman.round++;
+    game_state.games.hugman.__cgc_round++;
     // Avoid giving away a __free Missigno/Mewthree!
-    if (game_state.games.hugman.round == 6 ||
-            game_state.games.hugman.round == 0xffffffff)
-        game_state.games.hugman.round++;
+    if (game_state.games.hugman.__cgc_round == 6 ||
+            game_state.games.hugman.__cgc_round == 0xffffffff)
+        game_state.games.hugman.__cgc_round++;
 
     if (win)
         __printf("CONGRATULATIONS!\n");

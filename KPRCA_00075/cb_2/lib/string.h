@@ -40,7 +40,7 @@ char *strstr(const char *haystack, const char *needle);
 char *strcasestr(const char *haystack, const char *needle);
 
 int __strcmp(const char *s1, const char *s2);
-int strncmp(const char *s1, const char *s2, size_t n);
+int __cgc_strncmp(const char *s1, const char *s2, size_t n);
 int strcasecmp(const char *s1, const char *s2);
 int strncasecmp(const char *s1, const char *s2, size_t n);
 

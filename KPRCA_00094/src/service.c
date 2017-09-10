@@ -81,8 +81,8 @@ void handle_register_user(ctf_t *ctf)
     __printf("\n=== User Creation ===================\n");
     __printf("Nickname: ");
     err = ERR_INVALID_VALUE;
-    fflush(stdout);
-    if (freaduntil(buf, sizeof(buf), '\n', stdin) <= 0)
+    __cgc_fflush(stdout);
+    if (__cgc_freaduntil(buf, sizeof(buf), '\n', stdin) <= 0)
         goto fail;
     if (!is_alphanum(buf))
         goto fail;
@@ -90,16 +90,16 @@ void handle_register_user(ctf_t *ctf)
         goto fail;
     __printf("Password: ");
     err = ERR_INVALID_VALUE;
-    fflush(stdout);
-    if (freaduntil(buf, sizeof(buf), '\n', stdin) <= 0)
+    __cgc_fflush(stdout);
+    if (__cgc_freaduntil(buf, sizeof(buf), '\n', stdin) <= 0)
         goto fail;
     if (!is_alphanum(buf))
         goto fail;
     if ((err = user_set_pass(user, buf)) != ERR_OK)
         goto fail;
     __printf("Team token: ");
-    fflush(stdout);
-    if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
+    __cgc_fflush(stdout);
+    if (__cgc_freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
         goto fail;
     if (__strcmp(buf, "") == 0)
     {
@@ -108,18 +108,18 @@ void handle_register_user(ctf_t *ctf)
         __printf("\n=== Team Creation ===================\n");
         __printf("Team name: ");
         err = ERR_INVALID_VALUE;
-        fflush(stdout);
-        if (freaduntil(buf, sizeof(buf), '\n', stdin) <= 0)
+        __cgc_fflush(stdout);
+        if (__cgc_freaduntil(buf, sizeof(buf), '\n', stdin) <= 0)
             goto fail;
         if ((err = team_change_name(team, buf)) != ERR_OK)
             goto fail;
         __printf("Shoutout: ");
         err = ERR_INVALID_VALUE;
-        fflush(stdout);
+        __cgc_fflush(stdout);
 #ifdef PATCHED_1
-        if (freaduntil(shout, sizeof(shout), '\n', stdin) <= 0)
+        if (__cgc_freaduntil(shout, sizeof(shout), '\n', stdin) <= 0)
 #else
-        if (freaduntil(shout, sizeof(buf), '\n', stdin) <= 0)
+        if (__cgc_freaduntil(shout, sizeof(buf), '\n', stdin) <= 0)
 #endif
             goto fail;
         if ((err = team_set_shoutout(team, shout)) != ERR_OK)
@@ -133,7 +133,7 @@ void handle_register_user(ctf_t *ctf)
         int i;
         for (i = 0; i < ctf->num_teams; ++i)
         {
-            if (memcmp(ctf->teams[i]->code, buf, 32) == 0)
+            if (__cgc_memcmp(ctf->teams[i]->code, buf, 32) == 0)
             {
                 team = ctf->teams[i];
                 break;
@@ -174,14 +174,14 @@ void handle_login_user(ctf_t *ctf)
     __printf("\n=== Login ===================\n");
     __printf("Nick: ");
     err = ERR_INVALID_VALUE;
-    fflush(stdout);
-    if (freaduntil(nick, sizeof(nick), '\n', stdin) <= 0)
+    __cgc_fflush(stdout);
+    if (__cgc_freaduntil(nick, sizeof(nick), '\n', stdin) <= 0)
         goto fail;
     if (!is_alphanum(nick))
         goto fail;
     __printf("Password: ");
-    fflush(stdout);
-    if (freaduntil(pass, sizeof(pass), '\n', stdin) <= 0)
+    __cgc_fflush(stdout);
+    if (__cgc_freaduntil(pass, sizeof(pass), '\n', stdin) <= 0)
         goto fail;
     if (!is_alphanum(pass))
         goto fail;
@@ -285,8 +285,8 @@ void handle_view_challenge_detail(ctf_t *ctf)
     if (ctf->num_chals == 0)
         return;
     __printf("\nChoose idx: ");
-    fflush(stdout);
-    if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
+    __cgc_fflush(stdout);
+    if (__cgc_freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
         goto fail;
     error_t err;
     chal_t *chal = NULL;
@@ -326,8 +326,8 @@ void handle_view_ranking(ctf_t *ctf)
     while (1)
     {
         __printf("\nPage: ");
-        fflush(stdout);
-        if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
+        __cgc_fflush(stdout);
+        if (__cgc_freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
             goto fail;
         if (__strcmp(buf, "q") == 0)
             return;
@@ -348,8 +348,8 @@ void handle_view_team_profile(ctf_t *ctf)
     char buf[64];
     error_t err = ERR_NO_SUCH_TEAM;
     __printf("\nTeam name: ");
-    fflush(stdout);
-    if (freaduntil(buf, sizeof(buf), '\n', stdin) <= 0)
+    __cgc_fflush(stdout);
+    if (__cgc_freaduntil(buf, sizeof(buf), '\n', stdin) <= 0)
         goto fail;
     int i;
     team_t *t = NULL;
@@ -386,8 +386,8 @@ void handle_submit_flag(ctf_t *ctf)
     error_t err = ERR_INVALID_FLAG;
     __printf("\n=== Submit flag ===================\n");
     __printf("Flag: ");
-    fflush(stdout);
-    if (freaduntil(buf, sizeof(buf), '\n', stdin) <= 0)
+    __cgc_fflush(stdout);
+    if (__cgc_freaduntil(buf, sizeof(buf), '\n', stdin) <= 0)
         goto fail;
     if ((err = ctf_submit_flag(ctf, ctf->logged_in->team, buf)) != ERR_OK)
         goto fail;
@@ -408,7 +408,7 @@ void handle_logout_user(ctf_t *ctf)
 void handle_quit()
 {
     __printf("Bye.\n");
-    fflush(stdout);
+    __cgc_fflush(stdout);
     __exit(0);
 }
 
@@ -475,26 +475,26 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
 
     r = *(unsigned int *)secret_page ^ *(unsigned int *)&secret_page[20];
 
-    fbuffered(stdin, 1);
-    fbuffered(stdout, 1);
+    __cgc_fbuffered(stdin, 1);
+    __cgc_fbuffered(stdout, 1);
 
-    fxlat(stdin, "7943");
-    fxlat(stdout, "7943");
+    __cgc_fxlat(stdin, "7943");
+    __cgc_fxlat(stdout, "7943");
 
     ctf_t ctf;
     ctf_init(&ctf);
 
     __printf("Shout CTF CLI v0.1\n");
     __printf("=================\n");
-    fflush(stdout);
+    __cgc_fflush(stdout);
     while (1)
     {
         do_random_action(&ctf);
         if (!ctf.logged_in)
         {
             print_main_menu();
-            fflush(stdout);
-            if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
+            __cgc_fflush(stdout);
+            if (__cgc_freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
                 break;
             if (ctf.status == CTF_STAT_DOWN)
             {
@@ -513,8 +513,8 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
         else
         {
             print_ctf_menu(&ctf);
-            fflush(stdout);
-            if (freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
+            __cgc_fflush(stdout);
+            if (__cgc_freaduntil(buf, sizeof(buf), '\n', stdin) < 0)
                 break;
             if (ctf.status == CTF_STAT_DOWN)
             {
@@ -538,6 +538,6 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
         }
     }
 
-    fflush(stdout);
+    __cgc_fflush(stdout);
     return 0;
 }

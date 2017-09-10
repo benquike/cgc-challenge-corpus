@@ -268,7 +268,7 @@ int streq(char *s1, char *s2);
  * @param s2 String 2
  * @return 0 if identical, 1 if different
  */
-int strncmp(char *s1, char *s2, size_t n);
+int __cgc_strncmp(char *s1, char *s2, size_t n);
 
 /**
  * Check if a string starts with another string

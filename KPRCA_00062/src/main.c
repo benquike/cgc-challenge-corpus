@@ -224,7 +224,7 @@ bool add_user_event(user_t *user)
 
     while (!date_str) {
         char question[32];
-        sprintf(question, "End Date (MM-DD-YYYY) [%s]: ", start_date_str);
+        __cgc_sprintf(question, "End Date (MM-DD-YYYY) [%s]: ", start_date_str);
         date_str = q_and_a(question, MAX_DATE, line, LINE_SIZE, &recv_status, true);
         if (recv_status == ERROR)
             return false;
@@ -285,7 +285,7 @@ bool add_user_event(user_t *user)
 
         while (!time_str) {
             char question[32];
-            sprintf(question, "End time (HH:MM): ", time_str);
+            __cgc_sprintf(question, "End time (HH:MM): ", time_str);
             time_str = q_and_a(question, MAX_TIME, line, LINE_SIZE, &recv_status, false);
             if (recv_status == ERROR)
                 return false;

@@ -139,7 +139,7 @@ int validate_seg(segnode_t *curnode) {
         scramble(curnode->s->code, res, MEMBERSIZE(seg_t,code));
 
         #ifndef PATCHED_1
-        for (i=0; i < NUM_TRUSTED && (err = strncmp((char*)res,(char*)trusted[i],16)); i++);
+        for (i=0; i < NUM_TRUSTED && (err = __cgc_strncmp((char*)res,(char*)trusted[i],16)); i++);
         #else
         for (i=0; i < NUM_TRUSTED && (err = __memcmp(res,trusted[i],16)); i++);
         #endif

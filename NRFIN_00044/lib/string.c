@@ -110,7 +110,7 @@ __strncat(char *destination, const char *source, size_t num)
 }
 
 int
-memcmp(const void *ptr1, const void *ptr2, size_t num)
+__cgc_memcmp(const void *ptr1, const void *ptr2, size_t num)
 {
     const unsigned char *ptr1_ = ptr1;
     const unsigned char *ptr2_ = ptr2;

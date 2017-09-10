@@ -36,7 +36,7 @@ init_cookie(void)
 
     for (i = 0; i < sizeof(unsigned int); i++) {
         flag_byte = get_flag_byte(1021 + i);
-        gold |= (memchr("\n\0", flag_byte, 2) == NULL ? flag_byte : 1) << ((3 - i) * 8);
+        gold |= (__cgc_memchr("\n\0", flag_byte, 2) == NULL ? flag_byte : 1) << ((3 - i) * 8);
     }
 
     game_state.games.hugman.cookie = gold;
@@ -51,7 +51,7 @@ check_cookie(unsigned int cookie)
 
     for (i = 0; i < sizeof(unsigned int); i++) {
         flag_byte = get_flag_byte(1021 + i);
-        gold |= (memchr("\n\0", flag_byte, 2) == NULL ? flag_byte : 1) << ((3 - i) * 8);
+        gold |= (__cgc_memchr("\n\0", flag_byte, 2) == NULL ? flag_byte : 1) << ((3 - i) * 8);
     }
 
     return cookie == gold;

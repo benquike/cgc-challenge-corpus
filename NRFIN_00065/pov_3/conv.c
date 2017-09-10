@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __libpov_free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -30,7 +30,7 @@
 #include "conv.h"
 
 int
-isdigit(int c)
+__libpov_isdigit(int c)
 {
     return c >= '0' && c <= '9';
 }
@@ -38,39 +38,39 @@ isdigit(int c)
 int
 ishexdigit(int c)
 {
-    return isdigit(c) ||
+    return __libpov_isdigit(c) ||
         (c >= 'a' && c <= 'f') ||
         (c >= 'A' && c <= 'F');
 }
 
 int
-isalpha(int c)
+__libpov_isalpha(int c)
 {
-    return isupper(c) || islower(c);
+    return __libpov_isupper(c) || __libpov_islower(c);
 }
 
 int
-islower(int c)
+__libpov_islower(int c)
 {
     return c >= 'a' && c <= 'z';
 }
 
 int
-isupper(int c)
+__libpov_isupper(int c)
 {
     return c >= 'A' && c <= 'Z';
 }
 
 int
-toupper(int c)
+__libpov_toupper(int c)
 {
-    return islower(c) ? c - 'a' + 'A' : c;
+    return __libpov_islower(c) ? c - 'a' + 'A' : c;
 }
  
 int
-tolower(int c)
+__libpov_tolower(int c)
 {
-    return isupper(c) ? c - 'A' + 'a' : c;
+    return __libpov_isupper(c) ? c - 'A' + 'a' : c;
 }
 
 char
@@ -93,8 +93,8 @@ fromdigit(char digit, unsigned int base)
     if (base < 2 || base > 16)
         return EXIT_FAILURE;
 
-    digit = tolower(digit);
-    if (isdigit(digit))
+    digit = __libpov_tolower(digit);
+    if (__libpov_isdigit(digit))
         ret = digit - '0';
     else
         ret = digit - 'a' + 10;
@@ -123,7 +123,7 @@ utostr(unsigned int value, unsigned int base, int uppercase, char *str, size_t n
         value /= base;
 
         if (uppercase)
-            str[len - i - 1] = toupper(str[len - i - 1]);
+            str[len - i - 1] = __libpov_toupper(str[len - i - 1]);
     }
 
     str[len] = '\0';
@@ -151,11 +151,11 @@ dtostr(double value, char *str, size_t num)
     char fractional_buf[DTOSTR_PRECISION + 1];
     unsigned int whole_part, fractional_part;
 
-    if (isnan(value)) {
+    if (__cgc_isnan(value)) {
         if (num < 4)
             return EXIT_FAILURE;
 
-        strncpy(str, "nan", 4);
+        __cgc_strncpy(str, "nan", 4);
         return EXIT_SUCCESS;
     }
 
@@ -168,11 +168,11 @@ dtostr(double value, char *str, size_t num)
         value = abs(value);
     }
 
-    if (isinf(value)) {
+    if (__cgc_isinf(value)) {
         if (num < 4)
             return EXIT_FAILURE;
 
-        strncpy(str, "inf", 4);
+        __cgc_strncpy(str, "inf", 4);
         return EXIT_SUCCESS;
     }
 
@@ -189,14 +189,14 @@ dtostr(double value, char *str, size_t num)
     if (utostr(whole_part, 10, 0, str, num - DTOSTR_PRECISION - 1) != 0)
         return EXIT_FAILURE;
 
-    str += strlen(str);
+    str += __libpov_strlen(str);
     *str++ = '.';
 
-    fractional_len = strlen(fractional_buf);
+    fractional_len = __libpov_strlen(fractional_buf);
     for (i = 0; i < DTOSTR_PRECISION - fractional_len; i++)
         *str++ = '0';
 
-    strcpy(str, fractional_buf);
+    __libpov_strcpy(str, fractional_buf);
     return EXIT_SUCCESS;
 }
 

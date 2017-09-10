@@ -121,7 +121,7 @@ char *__strncat(char *destination, const char *source, size_t num);
  * @param num The maximum number of bytes to compare
  * @return 0 if ptr1 == ptr2, <0 if ptr1 < ptr2, >0 if ptr1 > ptr2
  */
-int memcmp(const void *ptr1, const void *ptr2, size_t num);
+int __cgc_memcmp(const void *ptr1, const void *ptr2, size_t num);
 
 /**
  * Compares str1 to str2.

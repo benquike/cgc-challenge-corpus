@@ -31,7 +31,7 @@ int __islower( int c );
 int __isupper( int c );
 int __isalpha( int c );
 int __isalnum( int c );
-int isprint( int c );
+int __cgc_isprint( int c );
 int __isspace( int c );
 
 int toupper( int c );

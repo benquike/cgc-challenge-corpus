@@ -22,7 +22,7 @@
  */
 #include <string.h>
 
-int memcmp(const void *s1, const void *s2, size_t n)
+int __cgc_memcmp(const void *s1, const void *s2, size_t n)
 {
     size_t i;
     const unsigned char *buf1 = s1, *buf2 = s2;

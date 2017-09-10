@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __libpov_free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -27,13 +27,13 @@
 static unsigned long long rand_seed = 0xdeadbeefull;
 
 void
-srand(unsigned int seed)
+__cgc_srand(unsigned int seed)
 {
     rand_seed = seed;
 }
 
 unsigned int
-rand(void)
+__cgc_rand(void)
 {
     // Constants from Knuth
     rand_seed = 6364136223846793005 * rand_seed + 1442695040888963407;

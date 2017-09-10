@@ -349,8 +349,8 @@ int setupNewGame() {
     // get the user's name
     fprintf(stdout, "Please input your name:\n");
     playerName = (char*) __calloc(sizeof(char), 256);
-    fflush(stdout);
-    freaduntil(playerName, 256, '\n', stdin);
+    __cgc_fflush(stdout);
+    __cgc_freaduntil(playerName, 256, '\n', stdin);
     
 #if 0
     // if someone put in more than 255 characters, throw the extra away
@@ -405,8 +405,8 @@ int setupNewGame() {
 char getUserInput() {
     //get the first char that the user hit
     char* buffer = (char*) __calloc(256, sizeof(char));
-    fflush(stdout);
-    freaduntil(buffer, 200, '\n', stdin);
+    __cgc_fflush(stdout);
+    __cgc_freaduntil(buffer, 200, '\n', stdin);
     
     return buffer[0];
 }
@@ -598,7 +598,7 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
 
     (void) secret_page;
     
-    fbuffered(stdout, 1);
+    __cgc_fbuffered(stdout, 1);
     if (turnCounter == 0) {
         setupNewGame();
         
@@ -695,7 +695,7 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
             
             // get user input
             fprintf(stdout, "Bust a move (w = +1, s=SaveDigit, d=FIRE, q=Quit)\n%x\n", currentChar);
-            fflush(stdout);
+            __cgc_fflush(stdout);
             char response = (char)__calloc(1, sizeof(char));
             response = getUserInput();
             if (response == 'q')
@@ -776,6 +776,6 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
         }
     }
 
-    fflush(stdout);
+    __cgc_fflush(stdout);
     return 0;
 }

@@ -268,7 +268,7 @@ list* SearchSignatureDatabase(signature_db* SignatureDatabase, trie_unit* Data, 
     {
       for (size_t SignatureDatabaseIndex = 0; SignatureDatabaseIndex < SignatureDatabase->SignatureCount; ++SignatureDatabaseIndex)
       {
-        if (memcmp(SignatureDatabase->Signatures[SignatureDatabaseIndex]->Data,
+        if (__cgc_memcmp(SignatureDatabase->Signatures[SignatureDatabaseIndex]->Data,
               MatchList->Value,
               SignatureDatabase->Signatures[SignatureDatabaseIndex]->DataSize) == 0)
         {

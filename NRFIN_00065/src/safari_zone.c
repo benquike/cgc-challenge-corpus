@@ -94,7 +94,7 @@ int
 do_safari_zone(void)
 {
     char buf[40] = { 0 };
-    unsigned int move, round, name;
+    unsigned int move, __cgc_round, name;
     size_t num_monsters = sizeof(data) / sizeof(data[0]);
     size_t index = game_state.games.safari_zone.encounter_data + 1;
     struct monster *monster;
@@ -114,7 +114,7 @@ do_safari_zone(void)
     game_state.games.safari_zone.encounter_data = get_flag_byte(index) % (num_monsters - 2);
     capture_chance = monster->capture_chance;
     run_chance = monster->run_chance;
-    round = 0;
+    __cgc_round = 0;
 
     __printf("A wild %s has appeared!\n", monster->name);
     while (1) {
@@ -129,14 +129,14 @@ do_safari_zone(void)
         if (__strlen(buf) == 0 || strtou(buf, 16, &move) == EXIT_FAILURE)
             return EXIT_FAILURE;
 
-        if (round > 10 || (round > 0 && run_chance >= get_flag_byte(round))) {
+        if (__cgc_round > 10 || (__cgc_round > 0 && run_chance >= get_flag_byte(__cgc_round))) {
             __printf("%s got away :(\n", monster->name);
             return EXIT_SUCCESS; 
         }
-        round++;
+        __cgc_round++;
 
         if (move == 1) {
-            if (capture_chance >= get_flag_byte(round++))
+            if (capture_chance >= get_flag_byte(__cgc_round++))
                 break;
             else
                 __printf("Darn! Almost had it!\n");

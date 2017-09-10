@@ -128,7 +128,7 @@ int add_sensor(pState state, unsigned short int sensorID, unsigned int sensorAdd
 	}//sensorID exists already}
 	if (state->sensorCount > (MAX_SENSOR-1)){
 		return 3;
-	}//max sensor count
+	}//__cgc_max sensor count
 	pSensor tempSensor = state->sensorList;
 	pSensor thisSensor = state->sensorList;
 

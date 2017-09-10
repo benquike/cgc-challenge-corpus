@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __libpov_free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -37,7 +37,7 @@
 #define ROUND_TO_PAGE(ptr) ((void *)((unsigned long)(ptr) & (PAGE_SIZE - 1)))
 
 /**
- * Return the max of a and b.
+ * Return the __cgc_max of a and b.
  *
  * @param a The first argument
  * @param b The second argument
@@ -71,7 +71,7 @@ typedef __builtin_va_list va_list;
  *
  * @param seed The value to seed the RNG with
  */
-void srand(unsigned int seed);
+void __cgc_srand(unsigned int seed);
 
 /**
  * Get a "random" integer.
@@ -80,7 +80,7 @@ void srand(unsigned int seed);
  *
  * @return A "random"-ish integer from 0 to UINT_MAX
  */
-unsigned int rand(void);
+unsigned int __cgc_rand(void);
 
 
 /**

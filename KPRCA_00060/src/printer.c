@@ -290,7 +290,7 @@ int cmd_send_queue_state(printer_t *printer)
             buf[18] = '\0';
             __printf("%s", buf);
             print_ws(20 - __strlen(buf));
-            sprintf(num, "%03d", i);
+            __cgc_sprintf(num, "%03d", i);
             __printf("%s", num);
             print_ws(12 - __strlen(num));
             __printf("%d\n", jobs[i].data_len);

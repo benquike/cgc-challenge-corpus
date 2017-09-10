@@ -22,7 +22,7 @@
  */
 #include "stdio_private.h"
 
-int fflush(__FILE *stream)
+int __cgc_fflush(__FILE *stream)
 {
     if (stream->idx == INVALID_IDX)
         return 0;
@@ -46,10 +46,10 @@ int fflush(__FILE *stream)
     }
 }
 
-void fbuffered(__FILE *stream, int enabled)
+void __cgc_fbuffered(__FILE *stream, int enabled)
 {
     if (stream->idx != INVALID_IDX)
-        fflush(stream);
+        __cgc_fflush(stream);
 
     if (enabled)
     {

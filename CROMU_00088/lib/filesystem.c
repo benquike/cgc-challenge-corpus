@@ -121,7 +121,7 @@ int retval;
 
 	// now setup the root directory
 
-	// calculate the max number of entries given the size of a block, minus the space for a __link to the next block
+	// calculate the __cgc_max number of entries given the size of a block, minus the space for a __link to the next block
 	rootDir->maxEntries = (blockSize - 8)/sizeof(directoryEntryType);
 
 	rootDir->numEntries = 0;
@@ -549,7 +549,7 @@ int retcode;
 
 		deallocate(catalogBlock, blockSize);
 
-		writeLength = minimum(blockSize - blockOffset, leftToWrite);
+		writeLength = __cgc_minimum(blockSize - blockOffset, leftToWrite);
 
 		if (readBlock(blockNumForWrite, &blockForWrite)!=0) {
 
@@ -711,7 +711,7 @@ int retcode;
 		remainingInBlock = blockSize - readOffset;
 		remainingInFile = fileCursors[fh].fileSize - readPos;
 
-		amountToRead = minimum( minimum(remainingInFile, remainingInBlock), leftToRead);
+		amountToRead = __cgc_minimum( __cgc_minimum(remainingInFile, remainingInBlock), leftToRead);
 
 		__memcpy(buffer+bytesRead, blockToRead+readOffset, amountToRead);
 
@@ -814,7 +814,7 @@ struct memoryFileInfo {
 	}
 
 
-	copySize = minimum(size, fileCursors[fh].fileSize - fileCursors[fh].readPos);
+	copySize = __cgc_minimum(size, fileCursors[fh].fileSize - fileCursors[fh].readPos);
 
 	// copy the memory into the buffer and return
 	__memcpy(buffer, (void *)memoryInfo->address+fileCursors[fh].readPos, copySize);
@@ -1218,7 +1218,7 @@ static findFileHandleType fileHandle;
 
 			if (currentFile->name[0] != 0 ) {
 
-				// nulls aren't necessariy stored in the directory if the filename has max length
+				// nulls aren't necessariy stored in the directory if the filename has __cgc_max length
 				// so make a copy that we can use with the wildcard search function
 				__strncpy(strcmpbuffer, currentFile->name, MAX_FILENAME_LEN);
 				strcmpbuffer[MAX_FILENAME_LEN] = 0;

@@ -35,6 +35,6 @@ char *__strchr(char *s, int c);
 char *__strtok(char *str, char *sep);
 int __strcmp(const char *s1, const char *s2);
 char *__strcat(char *restrict s1, const char *restrict s2);
-int memcmp( const void *s1, const void *s2, size_t n );
+int __cgc_memcmp( const void *s1, const void *s2, size_t n );
 
 #endif // __STRING_H__

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __libpov_free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -25,11 +25,11 @@
 
 #include <libcgc.h>
 
-/** The max value of an int */
+/** The __cgc_max value of an int */
 #define INT_MAX (2147483647)
 /** The min value of an int */
 #define INT_MIN (-2147483647 - 1)
-/** The max value of an unsigned int */
+/** The __cgc_max value of an unsigned int */
 #define UINT_MAX (4294967295)
 /** The min value of an unsigned int */
 #define UINT_MIN (0)

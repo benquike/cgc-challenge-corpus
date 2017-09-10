@@ -1,6 +1,6 @@
 #include <libpov.h>
 
-char* itoa(unsigned int i)
+char* __cgc_itoa(unsigned int i)
 {
   static char buf[32];
   char *p = buf + 31;
@@ -34,7 +34,7 @@ int main(void)
   transmit_all(STDOUT, &i, sizeof(unsigned int));
 
   /* Fill */
-  memset(payload, 0, sizeof(payload));
+  __libpov_memset(payload, 0, sizeof(payload));
   for (i = 0; i < 38; ++i)
   {
     random(&arg1, sizeof(int), NULL);

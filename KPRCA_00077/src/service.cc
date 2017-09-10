@@ -43,9 +43,9 @@
 
 static void WaitForInput(__FILE* Stream, char* Input, u32 Max)
 {
-  fflush(stdout);
+  __cgc_fflush(stdout);
   __memset(Input, Max, '\0');
-  if (freaduntil(Input, Max, '\n', Stream) <= 0)
+  if (__cgc_freaduntil(Input, Max, '\n', Stream) <= 0)
   {
     __exit(0);
   }
@@ -53,7 +53,7 @@ static void WaitForInput(__FILE* Stream, char* Input, u32 Max)
 
 static inline u8 CharToNum(char c)
 {
-  return digittoint(c);
+  return __cgc_digittoint(c);
 }
 
 static int CanBeDecimal(char* Token)
@@ -75,7 +75,7 @@ static int CanBeHex(char* Token)
   if (*Token == '-')
     Token++;
 
-  while (Token && *Token && (isxdigit((char)*Token) || __isspace((char)*Token)))
+  while (Token && *Token && (__cgc_isxdigit((char)*Token) || __isspace((char)*Token)))
       Token++;
 
   if (Token && *Token == '\0')
@@ -386,7 +386,7 @@ struct VC
     }
 
     fprintf(Out, "Bye bye\n");
-    fflush(Out);
+    __cgc_fflush(Out);
   }
 
   void ClearScreen(void)
@@ -501,13 +501,13 @@ struct VC
 
   void ErrorTooFewArgs(const char* Command)
   {
-    sprintf(_ErrorBuffer, "Error: Too few arguments for '%s' command\n", Command);
+    __cgc_sprintf(_ErrorBuffer, "Error: Too few arguments for '%s' command\n", Command);
     HasError = 1;
   }
 
   void ErrorInvalidInput(void)
   {
-    sprintf(_ErrorBuffer, "Error: Invalid input\n");
+    __cgc_sprintf(_ErrorBuffer, "Error: Invalid input\n");
     HasError = 1;
   }
 
@@ -1195,7 +1195,7 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
 {
     VC VentureCalc(stdin, stdout);
 
-    fbuffered(stdout, 1);
+    __cgc_fbuffered(stdout, 1);
     check_seed();
     VentureCalc.REPL();
     return 0;

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __libpov_free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -48,18 +48,18 @@ int main(void) {
       if (write_00000_len > 0) {
          transmit_all(1, write_00000, write_00000_len);
       }
-      free(write_00000);
+      __libpov_free(write_00000);
    } while (0);
    do {
       unsigned char *read_00000;
       unsigned int read_00000_len;
       unsigned int read_00000_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00000_len = 4;
-      read_00000 = (unsigned char*)malloc(read_00000_len);
+      read_00000 = (unsigned char*)__libpov_malloc(read_00000_len);
       int read_00000_res = length_read(0, read_00000, read_00000_len);
       if (read_00000_res) {} //silence unused variable warning
-      free(read_00000);
+      __libpov_free(read_00000);
       if (read_00000_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -75,18 +75,18 @@ int main(void) {
       if (write_00001_len > 0) {
          transmit_all(1, write_00001, write_00001_len);
       }
-      free(write_00001);
+      __libpov_free(write_00001);
    } while (0);
    do {
       unsigned char *read_00001;
       unsigned int read_00001_len;
       unsigned int read_00001_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00001_len = 4;
-      read_00001 = (unsigned char*)malloc(read_00001_len);
+      read_00001 = (unsigned char*)__libpov_malloc(read_00001_len);
       int read_00001_res = length_read(0, read_00001, read_00001_len);
       if (read_00001_res) {} //silence unused variable warning
-      free(read_00001);
+      __libpov_free(read_00001);
       if (read_00001_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -102,18 +102,18 @@ int main(void) {
       if (write_00002_len > 0) {
          transmit_all(1, write_00002, write_00002_len);
       }
-      free(write_00002);
+      __libpov_free(write_00002);
    } while (0);
    do {
       unsigned char *read_00002;
       unsigned int read_00002_len;
       unsigned int read_00002_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00002_len = 4;
-      read_00002 = (unsigned char*)malloc(read_00002_len);
+      read_00002 = (unsigned char*)__libpov_malloc(read_00002_len);
       int read_00002_res = length_read(0, read_00002, read_00002_len);
       if (read_00002_res) {} //silence unused variable warning
-      free(read_00002);
+      __libpov_free(read_00002);
       if (read_00002_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -129,18 +129,18 @@ int main(void) {
       if (write_00003_len > 0) {
          transmit_all(1, write_00003, write_00003_len);
       }
-      free(write_00003);
+      __libpov_free(write_00003);
    } while (0);
    do {
       unsigned char *read_00003;
       unsigned int read_00003_len;
       unsigned int read_00003_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00003_len = 4;
-      read_00003 = (unsigned char*)malloc(read_00003_len);
+      read_00003 = (unsigned char*)__libpov_malloc(read_00003_len);
       int read_00003_res = length_read(0, read_00003, read_00003_len);
       if (read_00003_res) {} //silence unused variable warning
-      free(read_00003);
+      __libpov_free(read_00003);
       if (read_00003_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -156,18 +156,18 @@ int main(void) {
       if (write_00004_len > 0) {
          transmit_all(1, write_00004, write_00004_len);
       }
-      free(write_00004);
+      __libpov_free(write_00004);
    } while (0);
    do {
       unsigned char *read_00004;
       unsigned int read_00004_len;
       unsigned int read_00004_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00004_len = 4;
-      read_00004 = (unsigned char*)malloc(read_00004_len);
+      read_00004 = (unsigned char*)__libpov_malloc(read_00004_len);
       int read_00004_res = length_read(0, read_00004, read_00004_len);
       if (read_00004_res) {} //silence unused variable warning
-      free(read_00004);
+      __libpov_free(read_00004);
       if (read_00004_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -187,18 +187,18 @@ int main(void) {
       if (write_00005_len > 0) {
          transmit_all(1, write_00005, write_00005_len);
       }
-      free(write_00005);
+      __libpov_free(write_00005);
    } while (0);
    do {
       unsigned char *read_00005;
       unsigned int read_00005_len;
       unsigned int read_00005_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00005_len = 4;
-      read_00005 = (unsigned char*)malloc(read_00005_len);
+      read_00005 = (unsigned char*)__libpov_malloc(read_00005_len);
       int read_00005_res = length_read(0, read_00005, read_00005_len);
       if (read_00005_res) {} //silence unused variable warning
-      free(read_00005);
+      __libpov_free(read_00005);
       if (read_00005_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -214,18 +214,18 @@ int main(void) {
       if (write_00006_len > 0) {
          transmit_all(1, write_00006, write_00006_len);
       }
-      free(write_00006);
+      __libpov_free(write_00006);
    } while (0);
    do {
       unsigned char *read_00006;
       unsigned int read_00006_len;
       unsigned int read_00006_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00006_len = 4;
-      read_00006 = (unsigned char*)malloc(read_00006_len);
+      read_00006 = (unsigned char*)__libpov_malloc(read_00006_len);
       int read_00006_res = length_read(0, read_00006, read_00006_len);
       if (read_00006_res) {} //silence unused variable warning
-      free(read_00006);
+      __libpov_free(read_00006);
       if (read_00006_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -241,18 +241,18 @@ int main(void) {
       if (write_00007_len > 0) {
          transmit_all(1, write_00007, write_00007_len);
       }
-      free(write_00007);
+      __libpov_free(write_00007);
    } while (0);
    do {
       unsigned char *read_00007;
       unsigned int read_00007_len;
       unsigned int read_00007_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00007_len = 4;
-      read_00007 = (unsigned char*)malloc(read_00007_len);
+      read_00007 = (unsigned char*)__libpov_malloc(read_00007_len);
       int read_00007_res = length_read(0, read_00007, read_00007_len);
       if (read_00007_res) {} //silence unused variable warning
-      free(read_00007);
+      __libpov_free(read_00007);
       if (read_00007_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -272,18 +272,18 @@ int main(void) {
       if (write_00008_len > 0) {
          transmit_all(1, write_00008, write_00008_len);
       }
-      free(write_00008);
+      __libpov_free(write_00008);
    } while (0);
    do {
       unsigned char *read_00008;
       unsigned int read_00008_len;
       unsigned int read_00008_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00008_len = 4;
-      read_00008 = (unsigned char*)malloc(read_00008_len);
+      read_00008 = (unsigned char*)__libpov_malloc(read_00008_len);
       int read_00008_res = length_read(0, read_00008, read_00008_len);
       if (read_00008_res) {} //silence unused variable warning
-      free(read_00008);
+      __libpov_free(read_00008);
       if (read_00008_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -299,18 +299,18 @@ int main(void) {
       if (write_00009_len > 0) {
          transmit_all(1, write_00009, write_00009_len);
       }
-      free(write_00009);
+      __libpov_free(write_00009);
    } while (0);
    do {
       unsigned char *read_00009;
       unsigned int read_00009_len;
       unsigned int read_00009_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00009_len = 4;
-      read_00009 = (unsigned char*)malloc(read_00009_len);
+      read_00009 = (unsigned char*)__libpov_malloc(read_00009_len);
       int read_00009_res = length_read(0, read_00009, read_00009_len);
       if (read_00009_res) {} //silence unused variable warning
-      free(read_00009);
+      __libpov_free(read_00009);
       if (read_00009_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -326,18 +326,18 @@ int main(void) {
       if (write_00010_len > 0) {
          transmit_all(1, write_00010, write_00010_len);
       }
-      free(write_00010);
+      __libpov_free(write_00010);
    } while (0);
    do {
       unsigned char *read_00010;
       unsigned int read_00010_len;
       unsigned int read_00010_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00010_len = 4;
-      read_00010 = (unsigned char*)malloc(read_00010_len);
+      read_00010 = (unsigned char*)__libpov_malloc(read_00010_len);
       int read_00010_res = length_read(0, read_00010, read_00010_len);
       if (read_00010_res) {} //silence unused variable warning
-      free(read_00010);
+      __libpov_free(read_00010);
       if (read_00010_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -353,18 +353,18 @@ int main(void) {
       if (write_00011_len > 0) {
          transmit_all(1, write_00011, write_00011_len);
       }
-      free(write_00011);
+      __libpov_free(write_00011);
    } while (0);
    do {
       unsigned char *read_00011;
       unsigned int read_00011_len;
       unsigned int read_00011_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00011_len = 4;
-      read_00011 = (unsigned char*)malloc(read_00011_len);
+      read_00011 = (unsigned char*)__libpov_malloc(read_00011_len);
       int read_00011_res = length_read(0, read_00011, read_00011_len);
       if (read_00011_res) {} //silence unused variable warning
-      free(read_00011);
+      __libpov_free(read_00011);
       if (read_00011_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -382,18 +382,18 @@ int main(void) {
       if (write_00012_len > 0) {
          transmit_all(1, write_00012, write_00012_len);
       }
-      free(write_00012);
+      __libpov_free(write_00012);
    } while (0);
    do {
       unsigned char *read_00012;
       unsigned int read_00012_len;
       unsigned int read_00012_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00012_len = 4;
-      read_00012 = (unsigned char*)malloc(read_00012_len);
+      read_00012 = (unsigned char*)__libpov_malloc(read_00012_len);
       int read_00012_res = length_read(0, read_00012, read_00012_len);
       if (read_00012_res) {} //silence unused variable warning
-      free(read_00012);
+      __libpov_free(read_00012);
       if (read_00012_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -412,18 +412,18 @@ int main(void) {
       if (write_00013_len > 0) {
          transmit_all(1, write_00013, write_00013_len);
       }
-      free(write_00013);
+      __libpov_free(write_00013);
    } while (0);
    do {
       unsigned char *read_00013;
       unsigned int read_00013_len;
       unsigned int read_00013_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00013_len = 4;
-      read_00013 = (unsigned char*)malloc(read_00013_len);
+      read_00013 = (unsigned char*)__libpov_malloc(read_00013_len);
       int read_00013_res = length_read(0, read_00013, read_00013_len);
       if (read_00013_res) {} //silence unused variable warning
-      free(read_00013);
+      __libpov_free(read_00013);
       if (read_00013_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -441,18 +441,18 @@ int main(void) {
       if (write_00014_len > 0) {
          transmit_all(1, write_00014, write_00014_len);
       }
-      free(write_00014);
+      __libpov_free(write_00014);
    } while (0);
    do {
       unsigned char *read_00014;
       unsigned int read_00014_len;
       unsigned int read_00014_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00014_len = 4;
-      read_00014 = (unsigned char*)malloc(read_00014_len);
+      read_00014 = (unsigned char*)__libpov_malloc(read_00014_len);
       int read_00014_res = length_read(0, read_00014, read_00014_len);
       if (read_00014_res) {} //silence unused variable warning
-      free(read_00014);
+      __libpov_free(read_00014);
       if (read_00014_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -471,18 +471,18 @@ int main(void) {
       if (write_00015_len > 0) {
          transmit_all(1, write_00015, write_00015_len);
       }
-      free(write_00015);
+      __libpov_free(write_00015);
    } while (0);
    do {
       unsigned char *read_00015;
       unsigned int read_00015_len;
       unsigned int read_00015_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00015_len = 4;
-      read_00015 = (unsigned char*)malloc(read_00015_len);
+      read_00015 = (unsigned char*)__libpov_malloc(read_00015_len);
       int read_00015_res = length_read(0, read_00015, read_00015_len);
       if (read_00015_res) {} //silence unused variable warning
-      free(read_00015);
+      __libpov_free(read_00015);
       if (read_00015_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -501,18 +501,18 @@ int main(void) {
       if (write_00016_len > 0) {
          transmit_all(1, write_00016, write_00016_len);
       }
-      free(write_00016);
+      __libpov_free(write_00016);
    } while (0);
    do {
       unsigned char *read_00016;
       unsigned int read_00016_len;
       unsigned int read_00016_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00016_len = 4;
-      read_00016 = (unsigned char*)malloc(read_00016_len);
+      read_00016 = (unsigned char*)__libpov_malloc(read_00016_len);
       int read_00016_res = length_read(0, read_00016, read_00016_len);
       if (read_00016_res) {} //silence unused variable warning
-      free(read_00016);
+      __libpov_free(read_00016);
       if (read_00016_ptr) {}  //silence unused variable warning if any
    } while (0);
    do {
@@ -531,18 +531,18 @@ int main(void) {
       if (write_00017_len > 0) {
          transmit_all(1, write_00017, write_00017_len);
       }
-      free(write_00017);
+      __libpov_free(write_00017);
    } while (0);
    do {
       unsigned char *read_00017;
       unsigned int read_00017_len;
       unsigned int read_00017_ptr = 0;
-      //**** length read
+      //**** length __cgc_read
       read_00017_len = 4;
-      read_00017 = (unsigned char*)malloc(read_00017_len);
+      read_00017 = (unsigned char*)__libpov_malloc(read_00017_len);
       int read_00017_res = length_read(0, read_00017, read_00017_len);
       if (read_00017_res) {} //silence unused variable warning
-      free(read_00017);
+      __libpov_free(read_00017);
       if (read_00017_ptr) {}  //silence unused variable warning if any
    } while (0);
 }

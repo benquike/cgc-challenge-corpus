@@ -41,7 +41,7 @@ THE SOFTWARE.
 #define FLOAT_NON_EXPONENT_MAX		10000000000.0
 #define DEFAULT_FLOAT_PRECISION		6
 
-// Wrapper functions for vprintf and vsprintf
+// Wrapper functions for __cgc_vprintf and __cgc_vsprintf
 typedef int (*tPrintfWrapperFP)( void *ctx, int c, size_t pos );
 
 int wrapper_output( void *ctx, tPrintfWrapperFP fpOut, size_t pos, const char *format, va_list args );
@@ -102,7 +102,7 @@ int WRAPPER_BUFFER_PUTC( void *ctx, int c, size_t pos )
 	return (pos+1);
 }
 
-int putchar( int c )
+int __cgc_putchar( int c )
 {
         size_t tx_bytes;
 
@@ -130,7 +130,7 @@ int __puts( const char *s )
 		total_sent += tx_bytes;
 	}
 
-	putchar( '\n' );
+	__cgc_putchar( '\n' );
 
 	return (0);
 }
@@ -197,7 +197,7 @@ int __printf( const char *format, ... )
 }
 
 #if 0
-int vprintf( const char *format, va_list args )
+int __cgc_vprintf( const char *format, va_list args )
 {
 	tPrintfWrapperFP wrapper_putc = &WRAPPER_PUTC;
 	void *ctx = NULL;
@@ -207,19 +207,19 @@ int vprintf( const char *format, va_list args )
 }
 #endif
 
-int sprintf( char *buf, const char *format, ... )
+int __cgc_sprintf( char *buf, const char *format, ... )
 {
 	va_list args;
 	va_start(args, format);
 
-	int return_val = vsprintf( buf, format, args );
+	int return_val = __cgc_vsprintf( buf, format, args );
 
 	va_end(args);
 
 	return (return_val);	
 }
 
-int vsprintf( char *buf, const char *format, va_list args )
+int __cgc_vsprintf( char *buf, const char *format, va_list args )
 {
 	tPrintfWrapperFP wrapper_outc = &WRAPPER_OUTC;
 	void *ctx = buf;
@@ -393,7 +393,7 @@ size_t printf_float_to_string( double val, uint8_t fraction_precision_digit_coun
 	// Calculate magnitude!
 	int16_t magnitude = log10( val );
 
-	// Calculate round position
+	// Calculate __cgc_round position
 	if ( flags & FLAG_FLOAT_EXPONENT )
 	{
 		double new_round_precision;
@@ -451,7 +451,7 @@ size_t printf_float_to_string( double val, uint8_t fraction_precision_digit_coun
 
 		if ( divider > 0.0 && !__isinf(divider) )
 		{
-			uint8_t digit = (uint8_t)floor( val / divider );
+			uint8_t digit = (uint8_t)__cgc_floor( val / divider );
 			val -= ((double)digit * divider);
 
 			if ( flags & FLAG_FLOAT_EXPONENT && is_fraction_digits == 0 )

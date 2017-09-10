@@ -37,7 +37,7 @@ static unsigned int hash_seed(const char *seed)
     return H;
 }
 
-void fxlat(__FILE *stream, const char *seed)
+void __cgc_fxlat(__FILE *stream, const char *seed)
 {
     unsigned int state, i;
     unsigned char *map, *map_inv;

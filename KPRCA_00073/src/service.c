@@ -52,7 +52,7 @@ static void ReportMatches(__FILE* Stream, list** MatchArray, size_t MatchArraySi
     __memcpy(ReportContents + ReportContentsIndex, Signature->Path, Signature->PathSize);
 
     ReportContentsIndex += Signature->PathSize;
-    ReportContentsIndex += sprintf(ReportContents + ReportContentsIndex, " - %s - %x\n",
+    ReportContentsIndex += __cgc_sprintf(ReportContents + ReportContentsIndex, " - %s - %x\n",
         SeverityString(Signature->Severity),
         BytesToUnsigned(Signature->Data, Signature->DataSize));
   }
@@ -64,8 +64,8 @@ static int ReadLine(__FILE* Stream, char* Buf, size_t Max)
 {
   __memset(Buf, 0, Max);
 
-  fflush(stdout);
-  ssize_t Read = freaduntil(Buf, Max, '\n', Stream);
+  __cgc_fflush(stdout);
+  ssize_t Read = __cgc_freaduntil(Buf, Max, '\n', Stream);
   if (Read < 0)
   {
     return -1;
@@ -80,7 +80,7 @@ static int ReadExactlyNBytes(__FILE* Stream, void* Buf, size_t RequestedBytes)
   size_t TotalReadBytes = 0;
   ssize_t ReadBytes;
 
-  fflush(stdout);
+  __cgc_fflush(stdout);
   ReadBytes = __fread(Buf + TotalReadBytes, RequestedBytes - TotalReadBytes, Stream);
   if (ReadBytes < 0)
   {
@@ -203,7 +203,7 @@ int __attribute__((fastcall)) main(int SecretPageI, char *Unused[]) {
   return 0;
 #endif
 
-  fbuffered(stdout, 1);
+  __cgc_fbuffered(stdout, 1);
 
   check_seed();
 
@@ -289,7 +289,7 @@ int __attribute__((fastcall)) main(int SecretPageI, char *Unused[]) {
   }
 
 done:
-  fflush(stdout);
+  __cgc_fflush(stdout);
 
   if (Signature)
   {

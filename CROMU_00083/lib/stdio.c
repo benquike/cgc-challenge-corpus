@@ -4,7 +4,7 @@ Copyright (c) 2016 Cromulence LLC
 
 Authors: Cromulence <cgc@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __cgc_free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -42,7 +42,7 @@ THE SOFTWARE.
 #define DEFAULT_FLOAT_PRECISION		6
 
 
-// Wrapper functions for vprintf and vsprintf
+// Wrapper functions for __cgc_vprintf and __cgc_vsprintf
 typedef int (*tPrintfWrapperFP)( void *ctx, int c, size_t pos );
 
 int wrapper_output( void *ctx, tPrintfWrapperFP fpOut, size_t pos, const char *format, va_list args );
@@ -97,7 +97,7 @@ int WRAPPER_BUFFER_PUTC( void *ctx, int c, size_t pos )
 	return (pos+1);
 }
 
-int putchar( int c )
+int __cgc_putchar( int c )
 {
         size_t tx_bytes;
 
@@ -107,13 +107,13 @@ int putchar( int c )
         return (c);
 }
 
-int puts( const char *s )
+int __cgc_puts( const char *s )
 {
 	size_t tx_bytes;
 	size_t s_len;
 	size_t total_sent = 0;
 
-	s_len = strlen(s);
+	s_len = __cgc_strlen(s);
 
 	while (total_sent != s_len) {
 		if ( transmit( STDOUT, s+total_sent, s_len-total_sent, &tx_bytes ) != 0 ) {
@@ -125,7 +125,7 @@ int puts( const char *s )
 		total_sent += tx_bytes;
 	}
 
-	putchar( '\n' );
+	__cgc_putchar( '\n' );
 
 	return (0);
 }
@@ -155,7 +155,7 @@ int vprintf_buffered( const char *format, va_list args )
 	return iReturn;
 }
 
-int printf( const char *format, ... )
+int __cgc_printf( const char *format, ... )
 {
 	va_list args;
 	va_start(args, format);
@@ -167,7 +167,7 @@ int printf( const char *format, ... )
 	return (return_val);	
 }
 
-int vprintf( const char *format, va_list args )
+int __cgc_vprintf( const char *format, va_list args )
 {
 	tPrintfWrapperFP wrapper_putc = &WRAPPER_PUTC;
 	void *ctx = NULL;
@@ -176,19 +176,19 @@ int vprintf( const char *format, va_list args )
 	return wrapper_output( ctx, wrapper_putc, pos, format, args );	
 }
 
-int sprintf( char *buf, const char *format, ... )
+int __cgc_sprintf( char *buf, const char *format, ... )
 {
 	va_list args;
 	va_start(args, format);
 
-	int return_val = vsprintf( buf, format, args );
+	int return_val = __cgc_vsprintf( buf, format, args );
 
 	va_end(args);
 
 	return (return_val);	
 }
 
-int vsprintf( char *buf, const char *format, va_list args )
+int __cgc_vsprintf( char *buf, const char *format, va_list args )
 {
 	tPrintfWrapperFP wrapper_outc = &WRAPPER_OUTC;
 	void *ctx = buf;
@@ -201,7 +201,7 @@ int vsprintf( char *buf, const char *format, va_list args )
 	return iReturnValue;
 }
 
-// NOTE This is reversed -- it will be printed in reverse by the printf helper!
+// NOTE This is reversed -- it will be printed in reverse by the __cgc_printf helper!
 size_t printf_int_to_string( uint32_t val, uint32_t base, char *str, int32_t flags )
 {
 	size_t pos = 0;
@@ -335,14 +335,14 @@ size_t printf_float_to_string( double val, uint8_t fraction_precision_digit_coun
 
 		return pos;
 	}
-	else if ( isnan( val ) )
+	else if ( __cgc_isnan( val ) )
 	{
 		str[pos++] = 'N';
 		str[pos++] = 'a';
 		str[pos++] = 'N';
 		return pos;
 	}
-	else if ( isinf( val ) )
+	else if ( __cgc_isinf( val ) )
 	{
 		str[pos++] = 'I';
 		str[pos++] = 'N';
@@ -362,7 +362,7 @@ size_t printf_float_to_string( double val, uint8_t fraction_precision_digit_coun
 	// Calculate magnitude!
 	int16_t magnitude = log10( val );
 
-	// Calculate round position
+	// Calculate __cgc_round position
 	if ( flags & FLAG_FLOAT_EXPONENT )
 	{
 		double new_round_precision;
@@ -418,9 +418,9 @@ size_t printf_float_to_string( double val, uint8_t fraction_precision_digit_coun
 	{
 		double divider = pow( 10.0, magnitude );
 
-		if ( divider > 0.0 && !isinf(divider) )
+		if ( divider > 0.0 && !__cgc_isinf(divider) )
 		{
-			uint8_t digit = (uint8_t)floor( val / divider );
+			uint8_t digit = (uint8_t)__cgc_floor( val / divider );
 			val -= ((double)digit * divider);
 
 			if ( flags & FLAG_FLOAT_EXPONENT && is_fraction_digits == 0 )
@@ -600,7 +600,7 @@ size_t printf_helper_string( void *ctx, tPrintfWrapperFP fpOut, size_t pos, cons
 		return (pos);
 	}
 
-	size_t max_printlen = strlen( outStr );
+	size_t max_printlen = __cgc_strlen( outStr );
 	size_t pad_length = 0;
 
 	if ( precision > 0 )
@@ -677,16 +677,16 @@ int wrapper_output( void *ctx, tPrintfWrapperFP fpOut, size_t pos, const char *f
 			}
 
 			// Check width
-			if ( isdigit( *format ) )
+			if ( __cgc_isdigit( *format ) )
 			{
 				if ( *format == '0' )
 					flags |= FLAG_ZERO_PAD;
 
 				const char *startpos = format;
-				while ( isdigit( *format ) )
+				while ( __cgc_isdigit( *format ) )
 					format++;
 
-				width = atoi( startpos );
+				width = __cgc_atoi( startpos );
 
 				if ( *format == '\0' )
 					break;
@@ -701,10 +701,10 @@ int wrapper_output( void *ctx, tPrintfWrapperFP fpOut, size_t pos, const char *f
 					break;
 
 				const char *startpos = format;
-				while ( isdigit( *format ) )
+				while ( __cgc_isdigit( *format ) )
 					format++;
 
-				precision = atoi( startpos );
+				precision = __cgc_atoi( startpos );
 
 				if ( *format == '\0' )
 					break;
@@ -799,7 +799,7 @@ int wrapper_output( void *ctx, tPrintfWrapperFP fpOut, size_t pos, const char *f
 	return (pos);
 }
 
-int write( int fd, void *buffer, size_t count )
+int __cgc_write( int fd, void *buffer, size_t count )
 {
 	size_t written;
     int total_written;

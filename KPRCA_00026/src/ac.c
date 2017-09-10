@@ -130,16 +130,16 @@ void ac_process(void *ud)
           mutex_lock(&ac_mutex);
 
           if (diff < 0)
-            // memmove before we shrink the buffer
-            memmove(&ac_buffer[end + diff], &ac_buffer[end], ac_idx - end);
+            // __cgc_memmove before we shrink the buffer
+            __cgc_memmove(&ac_buffer[end + diff], &ac_buffer[end], ac_idx - end);
           // adjust buffer size to new size plus null character
           newbuf = __realloc(ac_buffer, ac_idx + 1 + diff);
           if (newbuf != NULL)
           {
             ac_buffer = newbuf;
             if (diff > 0)
-              // memmove after we enlarge the buffer
-              memmove(&ac_buffer[end + diff], &ac_buffer[end], ac_idx - end);
+              // __cgc_memmove after we enlarge the buffer
+              __cgc_memmove(&ac_buffer[end + diff], &ac_buffer[end], ac_idx - end);
             __memcpy(&ac_buffer[start], word_list[j].correct, __strlen(word_list[j].correct));
             ac_idx += diff;
           }

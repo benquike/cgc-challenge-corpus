@@ -4,7 +4,7 @@ Copyright (c) 2015 Cromulence LLC
 
 Authors: Cromulence <cgc@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __libpov_free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -23,6 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
+#include <libpov.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <ctype.h>
@@ -30,7 +31,7 @@ THE SOFTWARE.
 #include <prng.h>
 
 
-int minimum(unsigned int a, unsigned int b) {
+int __cgc_minimum(unsigned int a, unsigned int b) {
 
 	if (a < b)
 		return a;
@@ -38,7 +39,7 @@ int minimum(unsigned int a, unsigned int b) {
 		return b;
 }
 
-int max(int a, int b) {
+int __cgc_max(int a, int b) {
 
 	if (a > b)
 		return a;
@@ -47,22 +48,22 @@ int max(int a, int b) {
 
 }
 
-int rand( void )
+int __cgc_rand( void )
 {
 	return (random_in_range( 0, RAND_MAX-1 ));
 }
 
-void srand( unsigned int seed )
+void __cgc_srand( unsigned int seed )
 {
 	seed_prng( seed );
 }
 
-int atoi( const char *pStr )
+int __cgc_atoi( const char *pStr )
 {
 	int value = 0;
 	int negative = 0;
 
-	while ( isspace( *pStr ) )
+	while ( __libpov_isspace( *pStr ) )
 		pStr++;
 
 	if ( *pStr == '\0' )
@@ -75,7 +76,7 @@ int atoi( const char *pStr )
 	}
 
 	// Read in string
-	while ( isdigit( *pStr ) )
+	while ( __libpov_isdigit( *pStr ) )
 		value = (value * 10) + (*pStr++ - '0');
 
 	if ( negative )
@@ -86,7 +87,7 @@ int atoi( const char *pStr )
 
 
 
-double atof( char *pStr )
+double __cgc_atof( char *pStr )
 {
 
 double tmpNumber;
@@ -140,7 +141,7 @@ int digit_value;
 
 }
 
-char *strcpy( char *pDest, const char *pSrc )
+char *__libpov_strcpy( char *pDest, const char *pSrc )
 {
 	char *pDestReturn = pDest;
 
@@ -152,7 +153,7 @@ char *strcpy( char *pDest, const char *pSrc )
 	return (pDestReturn);
 }
 
-char *strncpy( char *pDest, const char *pSrc, size_t maxlen )
+char *__cgc_strncpy( char *pDest, const char *pSrc, size_t maxlen )
 {
 	size_t n;
 
@@ -170,7 +171,7 @@ char *strncpy( char *pDest, const char *pSrc, size_t maxlen )
 	return (pDest);
 }
 
-void *memcpy( void *pDest, const void *pSource, size_t nbytes )
+void *__libpov_memcpy( void *pDest, const void *pSource, size_t nbytes )
 {
 	void *pDestReturn = pDest;
 

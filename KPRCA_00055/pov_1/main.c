@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Kaprica Security, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, __libpov_free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -54,17 +54,17 @@ int main()
     char *multiply= "5\n";
     char *gen_random= "10\n1\n1\n2\n";
     char *print_secret= "2\n";
-    char *exit= "11\n";
+    char *__cgc_exit= "11\n";
 
-    transmit_all(STDOUT, setup_m1, strlen(setup_m1));
-    transmit_all(STDOUT, setup_m2, strlen(setup_m2));
-    transmit_all(STDOUT, multiply, strlen(multiply));
-    transmit_all(STDOUT, gen_random, strlen(gen_random));
-    transmit_all(STDOUT, print_secret, strlen(print_secret));
-    transmit_all(STDOUT, exit, strlen(exit));
+    transmit_all(STDOUT, setup_m1, __libpov_strlen(setup_m1));
+    transmit_all(STDOUT, setup_m2, __libpov_strlen(setup_m2));
+    transmit_all(STDOUT, multiply, __libpov_strlen(multiply));
+    transmit_all(STDOUT, gen_random, __libpov_strlen(gen_random));
+    transmit_all(STDOUT, print_secret, __libpov_strlen(print_secret));
+    transmit_all(STDOUT, __cgc_exit, __libpov_strlen(__cgc_exit));
 
     unsigned char buf[64];
-    memset(buf, 0, 64);
+    __libpov_memset(buf, 0, 64);
 
     int i;
     for (i = 0; i < 2780; i++)
@@ -84,7 +84,7 @@ int main()
             break;
         }
     }
-    short first_half = strtol((char *)buf, NULL, 10);
+    short first_half = __libpov_strtol((char *)buf, NULL, 10);
 
     for (i = 0; i < 2; i++)
     {
@@ -103,7 +103,7 @@ int main()
             break;
         }
     }
-    short second_half = strtol((char *)buf, NULL, 10);
+    short second_half = __libpov_strtol((char *)buf, NULL, 10);
 
     transmit_all(3, (void *) &first_half, sizeof(short));
     transmit_all(3, (void *) &second_half, sizeof(short));

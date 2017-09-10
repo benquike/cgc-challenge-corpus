@@ -4,7 +4,7 @@ Copyright (c) 2015 Cromulence LLC
 
 Authors: Cromulence <cgc@cromulence.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, __cgc_free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -26,9 +26,9 @@ THE SOFTWARE.
 #include <math.h>
 #include <libcgc.h>
 
-double round( double val )
+double __cgc_round( double val )
 {
-	// Default -- round away from zero
+	// Default -- __cgc_round away from zero
 	if ( val < 0.0 )
 		return (double)rint( (val - 0.5) );
 	else if ( val > 0.0 )
@@ -37,7 +37,7 @@ double round( double val )
 		return val;
 }
 
-double floor( double val )
+double __cgc_floor( double val )
 {
 	if ( val < 0.0 )
 		return (double)rint( (val - 0.5) ) + 1.0;

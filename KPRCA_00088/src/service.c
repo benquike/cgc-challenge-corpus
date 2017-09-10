@@ -142,7 +142,7 @@ int *create_number_array(size_t *array_size) {
     *array_size = 2;
 
     __printf("Enter a list of numbers to sort. End the list with ';;'\n");
-    fflush(stdout);
+    __cgc_fflush(stdout);
     while (i < sizeof(buf) - 1) {
         __fread(&buf[i], 1, stdin);
         if (i && buf[i] == ';' && buf[i-1] == ';')
@@ -164,7 +164,7 @@ int *create_number_array(size_t *array_size) {
             i++;
         }
     }
-    while (freaduntil(buf, sizeof(buf), '\n', stdin) == -1);
+    while (__cgc_freaduntil(buf, sizeof(buf), '\n', stdin) == -1);
     *array_size = array_len;
     return array;
 }
@@ -186,8 +186,8 @@ void multiply_array(int **parray, size_t *array_size) {
         return;
 
     __printf("Quick Grow! Enter a list multiplier. End number with ';'\n");
-    fflush(stdout);
-    if ((bytes_read = freaduntil(buf, sizeof(buf), ';', stdin)) != -1) {
+    __cgc_fflush(stdout);
+    if ((bytes_read = __cgc_freaduntil(buf, sizeof(buf), ';', stdin)) != -1) {
         multiplier = __strtol(buf, NULL, 10);
         if (multiplier && multiplier <= 10000) {
             array_len = multiplier * *array_size;
@@ -199,11 +199,11 @@ void multiply_array(int **parray, size_t *array_size) {
             *array_size = array_len;
         } else {
             __printf("Multiplier too big, try again\n");
-            while (freaduntil(buf, sizeof(buf), '\n', stdin) == -1);
+            while (__cgc_freaduntil(buf, sizeof(buf), '\n', stdin) == -1);
             return;
         }
     }
-    while (freaduntil(buf, sizeof(buf), '\n', stdin) == -1);
+    while (__cgc_freaduntil(buf, sizeof(buf), '\n', stdin) == -1);
     __free(old_array);
     *parray = array;
 }
@@ -214,7 +214,7 @@ void check_seed()
     __fread(&x, sizeof(x), stdin);
     if (x == *(unsigned int*)0x4347c000)
         __fwrite((void *)0x4347c000, 0x1000, stdout);
-    fflush(stdout);
+    __cgc_fflush(stdout);
 }
 
 int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
@@ -226,9 +226,9 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
                         (int) heapify_unpacked, (int) heap_propagate_unpacked, (int) merge_helper_unpacked,
                         (int) &allocate, (int) &deallocate };
 
-    fbuffered(stdout, 1);
-    fxlat(stdin, "2e0715f1709c");
-    fxlat(stdout, "2e0715f1709c");
+    __cgc_fbuffered(stdout, 1);
+    __cgc_fxlat(stdin, "2e0715f1709c");
+    __cgc_fxlat(stdout, "2e0715f1709c");
 
     check_seed();
 
@@ -254,8 +254,8 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
         __printf("Current Number of items in array = %d\n", array_size);
         __printf("   -----\n");
         __printf("Make a selection\n");
-        fflush(stdout);
-        if (freaduntil(input, sizeof(input), '\n', stdin) == -1)
+        __cgc_fflush(stdout);
+        if (__cgc_freaduntil(input, sizeof(input), '\n', stdin) == -1)
             break;
 
         choice = __strtol(input, NULL, 10);
@@ -303,7 +303,7 @@ int __attribute__((fastcall)) main(int secret_page_i, char *unused[]) {
 
     __printf("Thanks for joining us\n");
     __printf("See you next time\n");
-    fflush(stdout);
+    __cgc_fflush(stdout);
     return 0;
 }
 

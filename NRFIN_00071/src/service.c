@@ -482,7 +482,7 @@ int go(void) {
     if (!conf.encrypt)
         seed = __calloc(8*sizeof(uint32_t));
 
-    srand(seed);
+    __cgc_srand(seed);
 
     //inform client of seed
     for (i = 0; i < 8; i+=2) {

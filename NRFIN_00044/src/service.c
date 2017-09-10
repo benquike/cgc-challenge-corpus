@@ -67,7 +67,7 @@ main(void)
 
         __printf("%s>%s ", cur_player == WHITE ? "\033[1;36m" : "\033[0;35m",
                 "\033[0m");
-        fflush(stdout);
+        __cgc_fflush(stdout);
 
         fread_until((unsigned char *)buf, '\n', sizeof(buf), stdin);
         if ((p = __strchr(buf, '\n')) != NULL)
