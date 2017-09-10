@@ -22,7 +22,7 @@
  */
 #include <string.h>
 
-void *memmove(void *dst, const void *src, size_t n)
+void *__cgc_memmove(void *dst, const void *src, size_t n)
 {
     unsigned char *udst = dst;
     const unsigned char *usrc = src;

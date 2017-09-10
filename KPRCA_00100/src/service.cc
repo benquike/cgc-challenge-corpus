@@ -26,12 +26,12 @@
 #include <cstdlib.h>
 #include <cstring.h>
 #ifdef DEBUG
-#define dbg(s, ...) fprintf(stderr, "DEBUG:\t" s "\n", ##__VA_ARGS__)
+#define dbg(s, ...) __cgc_fprintf(stderr, "DEBUG:\t" s "\n", ##__VA_ARGS__)
 #else
 #define dbg(s, ...)
 #endif
 #define err(s, ...) ({ \
-    fprintf(stderr, "ERROR:\t" s "\n", ##__VA_ARGS__); \
+    __cgc_fprintf(stderr, "ERROR:\t" s "\n", ##__VA_ARGS__); \
     __exit(1); \
 })
 #define assert(__x) ({ \
@@ -946,7 +946,7 @@ ssize_t api_write(int fd, uint8_t* buffer, size_t count)
 
 __off_t_ api_lseek(int fd, __off_t_ offset, int whence)
 {
-  dbg("Called lseek(%d, %u, %d)", fd, offset, whence);
+  dbg("Called __cgc_lseek(%d, %u, %d)", fd, offset, whence);
   __off_t_ position = -1;
 
 #define SEEK_SET  0
@@ -1308,8 +1308,8 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
 {
     uint32_t volatile *secret_page = (uint32_t *)secret_page_i;
     uint64_t delim = 0x8442e492f255bf31;
-    /* fxlat(stdin, "HASHTAGYOLOSWAG"); */
-    /* fxlat(stdout, "HASHTAGYOLOSWAG"); */
+    /* __cgc_fxlat(stdin, "HASHTAGYOLOSWAG"); */
+    /* __cgc_fxlat(stdout, "HASHTAGYOLOSWAG"); */
     uint32_t sig = 0;
     for (size_t i = 0; i < 0x1000 / sizeof(uint32_t); i++)
     {
@@ -1318,11 +1318,11 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
     Request* cur_req;
     __printf("FSAAS\n");
     __printf("%x\n", sig);
-    fbuffered(stdout, 1);
+    __cgc_fbuffered(stdout, 1);
     while (1)
     {
       __printf("QQQ\n");
-      fflush(stdout);
+      __cgc_fflush(stdout);
       if (load_req(stdin, &cur_req) != 0)
       {
         break;
@@ -1335,6 +1335,6 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
       send_resp(stdout, resp);
       __fwrite(&delim, sizeof(delim), stdout);
     }
-    fflush(stdout);
+    __cgc_fflush(stdout);
     return 0;
 }

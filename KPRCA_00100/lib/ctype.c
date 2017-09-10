@@ -53,7 +53,7 @@ static unsigned char __ctype[256] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-int isascii(int c)
+int __cgc_isascii(int c)
 {
     return __ctype[c & 0xff] & IS_ASCII;
 }
@@ -63,7 +63,7 @@ int __isdigit(int c)
     return __ctype[c & 0xff] & IS_DIGIT;
 }
 
-int isprint(int c)
+int __cgc_isprint(int c)
 {
     return __ctype[c & 0xff] & IS_PRINT;
 }
@@ -93,23 +93,23 @@ int __isspace(int c)
     return __ctype[c & 0xff] & IS_SPACE;
 }
 
-int ispunct(int c)
+int __cgc_ispunct(int c)
 {
     return __ctype[c & 0xff] & IS_PUNCT;
 }
 
-int iscntrl(int c)
+int __cgc_iscntrl(int c)
 {
     return __ctype[c & 0xff] & IS_CNTRL;
 }
 
-int isxdigit(int c)
+int __cgc_isxdigit(int c)
 {
     c = toupper(c);
     return __isdigit(c) || (c >= 'A' && c <= 'F');
 }
 
-int digittoint(int c)
+int __cgc_digittoint(int c)
 {
     c = toupper(c);
     if (__isdigit(c))

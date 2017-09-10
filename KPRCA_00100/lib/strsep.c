@@ -23,7 +23,7 @@
 #include "stdlib.h"
 #include "string.h"
 
-char * strsep(char **stringp, const char *delim)
+char * __cgc_strsep(char **stringp, const char *delim)
 {
     unsigned int i;
     char *buf = *stringp;

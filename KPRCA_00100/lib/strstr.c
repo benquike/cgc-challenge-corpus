@@ -22,7 +22,7 @@
  */
 #include "string.h"
 
-char *strstr(const char *haystack, const char *needle)
+char *__cgc_strstr(const char *haystack, const char *needle)
 {
     unsigned int i;
     for (i = 0; haystack[i] != 0; i++)

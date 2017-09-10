@@ -22,7 +22,7 @@
  */
 #include <string.h>
 
-void *memchr(const void *s, int c, size_t n)
+void *__cgc_memchr(const void *s, int c, size_t n)
 {
     const unsigned char *buf = s;
     size_t i;

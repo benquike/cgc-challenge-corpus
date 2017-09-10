@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *strndup(const char *s1, size_t n)
+char *__cgc_strndup(const char *s1, size_t n)
 {
   size_t len = __strlen(s1);
   if (len > n)

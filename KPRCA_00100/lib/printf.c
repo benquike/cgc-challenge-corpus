@@ -60,7 +60,7 @@ static void _convert_unsigned(char *buf, unsigned x, int base, int upper)
     }
 
     /* move to beginning of buf */
-    memmove(buf, tmp, 20 - (buf - tmp));
+    __cgc_memmove(buf, tmp, 20 - (buf - tmp));
 }
 
 static void _convert_signed(char *buf, int x, int base, int upper)
@@ -257,42 +257,42 @@ int __printf(const char *fmt, ...)
     va_list ap;
 
     va_start(ap, fmt);
-    ret = vprintf(fmt, ap);
+    ret = __cgc_vprintf(fmt, ap);
     va_end(ap);
 
     return ret;
 }
 
-int fprintf(__FILE *stream, const char *fmt, ...)
+int __cgc_fprintf(__FILE *stream, const char *fmt, ...)
 {
     int ret;
     va_list ap;
 
     va_start(ap, fmt);
-    ret = vfprintf(stream, fmt, ap);
+    ret = __cgc_vfprintf(stream, fmt, ap);
     va_end(ap);
 
     return ret;
 }
 
-int sprintf(char *str, const char *fmt, ...)
+int __cgc_sprintf(char *str, const char *fmt, ...)
 {
     int ret;
     va_list ap;
 
     va_start(ap, fmt);
-    ret = vsprintf(str, fmt, ap);
+    ret = __cgc_vsprintf(str, fmt, ap);
     va_end(ap);
 
     return ret;
 }
 
-int vprintf(const char *fmt, va_list ap)
+int __cgc_vprintf(const char *fmt, va_list ap)
 {
-    return vfprintf(stdout, fmt, ap);
+    return __cgc_vfprintf(stdout, fmt, ap);
 }
 
-int vfprintf(__FILE *stream, const char *fmt, va_list ap)
+int __cgc_vfprintf(__FILE *stream, const char *fmt, va_list ap)
 {
     int retval, buffered = 1;
     // switch to buffered mode temporarily
@@ -304,13 +304,13 @@ int vfprintf(__FILE *stream, const char *fmt, va_list ap)
     retval = _vsfprintf(fmt, ap, stream, NULL, INT_MAX);
     if (!buffered)
     {
-        fflush(stream);
+        __cgc_fflush(stream);
         stream->idx = -1;
     }
     return retval;
 }
 
-int vsprintf(char *str, const char *fmt, va_list ap)
+int __cgc_vsprintf(char *str, const char *fmt, va_list ap)
 {
     return _vsfprintf(fmt, ap, NULL, str, INT_MAX);
 }

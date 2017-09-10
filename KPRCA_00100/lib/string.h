@@ -26,25 +26,25 @@
 #include <stdlib.h>
 
 void *__memcpy(void *dst, const void *src, size_t n);
-void *memmove(void *dst, const void *src, size_t n);
-int memcmp(const void *s1, const void *s2, size_t n);
-void *memchr(const void *s, int c, size_t n);
+void *__cgc_memmove(void *dst, const void *src, size_t n);
+int __cgc_memcmp(const void *s1, const void *s2, size_t n);
+void *__cgc_memchr(const void *s, int c, size_t n);
 void *__memset(void *s, int c, size_t n);
 
 size_t __strlen(const char *s);
 char *__strcpy(char *dst, const char *src);
 char *__strncpy(char *dst, const char *src, size_t len);
 char *__strchr(const char *s, int c);
-char *strsep(char **stringp, const char *delim);
-char *strstr(const char *haystack, const char *needle);
-char *strcasestr(const char *haystack, const char *needle);
+char *__cgc_strsep(char **stringp, const char *delim);
+char *__cgc_strstr(const char *haystack, const char *needle);
+char *__cgc_strcasestr(const char *haystack, const char *needle);
 
 int __strcmp(const char *s1, const char *s2);
-int strncmp(const char *s1, const char *s2, size_t n);
-int strcasecmp(const char *s1, const char *s2);
-int strncasecmp(const char *s1, const char *s2, size_t n);
+int __cgc_strncmp(const char *s1, const char *s2, size_t n);
+int __cgc_strcasecmp(const char *s1, const char *s2);
+int __cgc_strncasecmp(const char *s1, const char *s2, size_t n);
 
 char *__strdup(const char *s1);
-char *strndup(const char *s1, size_t n);
+char *__cgc_strndup(const char *s1, size_t n);
 
 #endif
