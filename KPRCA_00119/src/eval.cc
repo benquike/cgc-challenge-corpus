@@ -23,7 +23,7 @@
 #include "eval.h"
 
 #include <cstdio.h>
-#define DBG(x) fprintf(stderr, x "\n");
+#define DBG(x) __cgc_fprintf(stderr, x "\n");
 
 Var::Var(VarType type)
 {
@@ -208,7 +208,7 @@ bool Evaluator::eval_expr(Scope& scope, Node *node, unique_ptr<Var>& outresult)
         }
         else
         {
-            fprintf(stderr, "Undefined procedure: %s\n", child->getLiteral());
+            __cgc_fprintf(stderr, "Undefined procedure: %s\n", child->getLiteral());
             return false;
         }
         break;

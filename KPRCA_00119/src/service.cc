@@ -96,7 +96,7 @@ proc main():
                 start = start + 1
             aset(numbers, read_uint32(), sum)
         elif op == 0xC4C5:
-            aset(numbers, read_uint32(), rand())
+            aset(numbers, read_uint32(), __cgc_rand())
         else:
             echo(encode_uint32(op))
 
@@ -110,7 +110,7 @@ static bool builtin_echo(void *arg, Evaluator &eval, const vector<unique_ptr<Var
         Var *var = args[i].get();
         if (var == nullptr || var->getType() != VarType::String)
         {
-            fprintf(stderr, "Error: bad type in echo\n");
+            __cgc_fprintf(stderr, "Error: bad type in echo\n");
             return false;
         }
 
@@ -196,16 +196,16 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
         eval.addExternal("echo", builtin_echo);
         eval.addExternal("ord", builtin_ord);
         eval.addExternal("flag", builtin_flag, secret_page);
-        eval.addExternal("rand", builtin_rand, secret_page);
+        eval.addExternal("__cgc_rand", builtin_rand, secret_page);
         eval.addExternal("__read", builtin_read);
         if (!eval.run())
         {
-            fprintf(stderr, "Eval error\n");
+            __cgc_fprintf(stderr, "Eval error\n");
         }
     }
     else
     {
-        fprintf(stderr, "Program error\n");
+        __cgc_fprintf(stderr, "Program error\n");
     }
 
     return 0;

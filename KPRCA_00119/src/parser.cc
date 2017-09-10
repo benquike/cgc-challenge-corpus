@@ -23,7 +23,7 @@
 #include <cstdlib.h>
 #include <cstring.h>
 
-#define DBG(x) fprintf(stderr, x "\n")
+#define DBG(x) __cgc_fprintf(stderr, x "\n")
 
 #include "parser.h"
 
@@ -451,8 +451,8 @@ void Node::deleteTree(Node *root)
 void Node::dump(unsigned int level)
 {
     for (unsigned int i = 0; i < level * 2; i++)
-        fprintf(stderr, " ");
-    fprintf(stderr, "%s - (%d) %s\n", typeToString(type), length, literal);
+        __cgc_fprintf(stderr, " ");
+    __cgc_fprintf(stderr, "%s - (%d) %s\n", typeToString(type), length, literal);
     if (child != nullptr)
         child->dump(level + 1);
     if (next != nullptr)
