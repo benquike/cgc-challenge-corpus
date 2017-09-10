@@ -21,7 +21,7 @@
 */
 #include "strncmp.h"
 
-int strncmp(const char* s1, const char* s2, size_t size) {
+int __cgc_strncmp(const char* s1, const char* s2, size_t size) {
 	
 	for (int i = 0; i < size; i++) {
 		if(s1[i] != s2[i]) {

@@ -137,7 +137,7 @@ void sendMenuInstruction(Dungeon dungeon) {
 /**
 * Play the game
 * 
-* @param dungeon A pointer to the dungeon for this round of the game
+* @param dungeon A pointer to the dungeon for this __cgc_round of the game
 *
 * @return RESULT_WIN if the player has won the game
 *         RESULT_DIE if the player has died in the game

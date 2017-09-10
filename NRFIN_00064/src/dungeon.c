@@ -706,7 +706,7 @@ int moveRight(Dungeon* dungeon, Object* object) {
 }
 
 /**
-* Check if the object is standing on a floor object, if not move player
+* Check if the object is standing on a __cgc_floor object, if not move player
 * 
 * @param dungeon A pointer to the dungeon and game info
 * @param object The object to check
@@ -894,7 +894,7 @@ int moveEnemies(Dungeon* dungeon, unsigned int moveNum) {
 * Attempt to jump JUMP_HEIGHT spaces up and return to starting position
 * NOTE: If there are not JUMP_HEIGHT spaces, player will stay at the highest
 *       point until JUMP_HEIGHT moves upward have been made. The player will
-*       then move down until the floor is reached.
+*       then move down until the __cgc_floor is reached.
 * 
 * @param dungeon A pointer to the dungeon
 * @param dungeon A pointer to the object to move
@@ -928,8 +928,8 @@ int jump(Dungeon* dungeon, Object* object) {
 * Attempt to jump JUMP_HEIGHT spaces up and to the left
 * NOTE: If there are not JUMP_HEIGHT spaces, player will stay at the highest
 *       point until JUMP_HEIGHT moves upward have been made. The player will
-*       then move down until the floor is reached. Player will move left a 
-*       space for each move up and down unless a wall or floor is hit.
+*       then move down until the __cgc_floor is reached. Player will move left a 
+*       space for each move up and down unless a wall or __cgc_floor is hit.
 * 
 * @param dungeon A pointer to the dungeon
 * @param dungeon A pointer to the object to move
@@ -967,8 +967,8 @@ int jumpLeft(Dungeon* dungeon, Object* object) {
 * Attempt to jump JUMP_HEIGHT spaces up and to the left
 * NOTE: If there are not JUMP_HEIGHT spaces, player will stay at the highest
 *       point until JUMP_HEIGHT moves upward have been made. The player will
-*       then move down until the floor is reached. Player will move left a 
-*       space for each move up and down unless a wall or floor is hit.
+*       then move down until the __cgc_floor is reached. Player will move left a 
+*       space for each move up and down unless a wall or __cgc_floor is hit.
 * 
 * @param dungeon A pointer to the dungeon
 * @param dungeon A pointer to the object to move
