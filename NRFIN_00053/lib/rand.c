@@ -23,7 +23,7 @@
 #include <errno.h>
 #include "rand.h"
 
-void rand(void *buf, unsigned int n) {
+void __cgc_rand(void *buf, unsigned int n) {
 	size_t count = 0;
 	size_t rand_bytes = 0;
 	while (n > count) {

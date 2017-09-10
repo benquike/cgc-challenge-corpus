@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __libpov_free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -98,11 +98,11 @@ unsigned char is_symbol(const unsigned char ch) {
 }
 
 
-int toupper(int c) {
+int __libpov_toupper(int c) {
     return is_lower(c) ? c - 'a' + 'A' : c;
 }
  
-int tolower(int c) {
+int __libpov_tolower(int c) {
     return is_upper(c) ? c - 'A' + 'a' : c;
 }
 
@@ -123,7 +123,7 @@ int fromdigit(char digit, unsigned int base) {
     if (base < 2 || base > 16)
         return ERRNO_CONV;
 
-    digit = tolower(digit);
+    digit = __libpov_tolower(digit);
     if (is_digit(digit))
         ret = digit - '0';
     else

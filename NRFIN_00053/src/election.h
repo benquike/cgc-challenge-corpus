@@ -50,7 +50,7 @@ struct e_conf {
 	unsigned int  next_voter_id;	// ID to assign to next new voter
 	unsigned int  next_candidate_id;// ID to assing to next new candidate
 	unsigned char num_winners;		// number of winners desired
-	unsigned char max_candidates;	// max number of candidates
+	unsigned char max_candidates;	// __cgc_max number of candidates
 	unsigned char write_in_ok;		// allow __write-in candidates?
 	unsigned char bogus;			// pad to 4 bytes, maybe use later?
 };

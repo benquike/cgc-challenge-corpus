@@ -61,7 +61,7 @@
 #define NEW_UID			"\tYour ID number is: "
 
 #define NUM_WINNERS_Q	"Enter number of election winners desired: "
-#define MAX_CANDIDATES_Q "Enter the max number of candidates allowed: "
+#define MAX_CANDIDATES_Q "Enter the __cgc_max number of candidates allowed: "
 #define WRITE_IN_OK_Q 	"Can voters __write-in new candidates? (Yy/Nn): "
 
 #define CHOOSE 			"Choose an option: "
@@ -387,7 +387,7 @@ static int create_election_mgr(void) {
 	e.manager->person.id = e.conf.e_mgr_id;
 	set_first_last_name(&(e.manager->person));
 	e.manager->validate = &validate_emgr;
-	rand(&(e.manager->auth_key), 4);
+	__cgc_rand(&(e.manager->auth_key), 4);
 
 	if (FALSE == e.manager->validate(e.manager)) {
 		return -1;
