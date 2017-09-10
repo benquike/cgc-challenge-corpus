@@ -43,7 +43,7 @@ void *__memcpy(void *destination, const void *source, size_t num);
  * @param num The number of bytes to move
  * @return The destination pointer
  */
-void *memmove(void *destination, const void *source, size_t num);
+void *__cgc_memmove(void *destination, const void *source, size_t num);
 
 /**
  * Sets num bytes in ptr to value.
@@ -140,7 +140,7 @@ int __strcmp(const char *str1, const char *str2);
  * @param num The number of bytes to compare
  * @return 0 if str1 == str2, <0 if str1 < str2, >0 if str1 > str2
  */
-int strncmp(const char *str1, const char *str2, size_t num);
+int __cgc_strncmp(const char *str1, const char *str2, size_t num);
 
 /**
  * Find the first instance of value in the first num bytes of ptr.
@@ -150,7 +150,7 @@ int strncmp(const char *str1, const char *str2, size_t num);
  * @param num The number of bytes to search
  * @return A pointer to the first instance of value in ptr, or NULL if not found
  */
-void *memchr(void *ptr, int value, size_t num);
+void *__cgc_memchr(void *ptr, int value, size_t num);
 
 /**
  * Find the first instance of character in str.
@@ -188,7 +188,7 @@ char *strrchr(char *str, int character);
  * @param str2 The substring to search for
  * @return A pointer to the first instance of str2 in str1, or NULL if not found
  */
-char *strstr(char *str1, const char *str2);
+char *__cgc_strstr(char *str1, const char *str2);
 
 /**
  * Return the number of characters in str1 before any of the characters in str2

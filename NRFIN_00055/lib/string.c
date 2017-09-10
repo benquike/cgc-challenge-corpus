@@ -33,7 +33,7 @@ __memcpy(void *destination, const void *source, size_t num)
 }
 
 void *
-memmove(void *destination, const void *source, size_t num)
+__cgc_memmove(void *destination, const void *source, size_t num)
 {
     unsigned char *destination_ = destination;
     const unsigned char *source_ = source;
@@ -133,7 +133,7 @@ __strcmp(const char *str1, const char *str2)
 }
 
 int
-strncmp(const char *str1, const char *str2, size_t num)
+__cgc_strncmp(const char *str1, const char *str2, size_t num)
 {
     for (; --num && *str1 && *str2 && *str1 == *str2; str1++, str2++)
         ;
@@ -141,7 +141,7 @@ strncmp(const char *str1, const char *str2, size_t num)
 }
 
 void *
-memchr(void *ptr, int value, size_t num)
+__cgc_memchr(void *ptr, int value, size_t num)
 {
     unsigned char *ptr_ = ptr;
     while (num--)
@@ -191,13 +191,13 @@ strrchr(char *str, int character)
 }
 
 char *
-strstr(char *str1, const char *str2)
+__cgc_strstr(char *str1, const char *str2)
 {
     size_t str2_len;
 
     str2_len = __strlen(str2);
     while (*str1)
-        if (strncmp(str1, str2, str2_len) == 0)
+        if (__cgc_strncmp(str1, str2, str2_len) == 0)
             return str1;
         else
             str1++;

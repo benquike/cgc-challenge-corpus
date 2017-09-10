@@ -271,7 +271,7 @@ fread_until(void *ptr, unsigned char delim, size_t size, __FILE *stream)
 
     while (ret < size - 1) {
         if (stream->buf && stream->bufsize > 0) {
-            if ((delim_ptr = memchr(&stream->buf[stream->bufpos], delim, stream->bufsize)))
+            if ((delim_ptr = __cgc_memchr(&stream->buf[stream->bufpos], delim, stream->bufsize)))
                 buffered = (unsigned char *)delim_ptr - &stream->buf[stream->bufpos] + 1;
             else
                 buffered = stream->bufsize;
@@ -363,7 +363,7 @@ __fwrite(const void *ptr, size_t size, __FILE *stream)
 }
 
 int
-fgetc(__FILE *stream)
+__cgc_fgetc(__FILE *stream)
 {
     char c;
     ssize_t __read;
@@ -377,7 +377,7 @@ fgetc(__FILE *stream)
 }
 
 int
-fputc(int character, __FILE *stream)
+__cgc_fputc(int character, __FILE *stream)
 {
     return __fwrite(&character, 1, stream);
 }
@@ -431,7 +431,7 @@ printf_core(const char *format, void (*printfn)(char c, void *data),
 
                 // Pad out with 8 zeros
                 if ((buflen = __strlen(buf)) < 2 * sizeof(unsigned int)) {
-                    memmove(buf + (2 * sizeof(unsigned int) - buflen), buf, buflen + 1);
+                    __cgc_memmove(buf + (2 * sizeof(unsigned int) - buflen), buf, buflen + 1);
                     __memset(buf, '0', 2 * sizeof(unsigned int) - buflen);
                 }
 
@@ -456,7 +456,7 @@ printf_core(const char *format, void (*printfn)(char c, void *data),
 static void
 file_printer(char c, void *data)
 {
-    fputc(c, data);
+    __cgc_fputc(c, data);
 
     if (c == '\n')
         __fflush(data);
@@ -482,7 +482,7 @@ __vfprintf(__FILE *stream, const char *format, va_list args)
 }
 
 int
-vprintf(const char *format, va_list args) 
+__cgc_vprintf(const char *format, va_list args) 
 {
     return __vfprintf(stdout, format, args);
 }
@@ -501,7 +501,7 @@ __vsprintf(char *s, const char *format, va_list args)
 }
 
 int
-fprintf(__FILE *stream, const char *format, ...)
+__cgc_fprintf(__FILE *stream, const char *format, ...)
 {
     int ret;
     va_list args;
@@ -517,7 +517,7 @@ __printf(const char *format, ...)
     int ret;
     va_list args;
     va_start(args, format);
-    ret = vprintf(format, args);
+    ret = __cgc_vprintf(format, args);
     va_end(args);
     return ret;
 }

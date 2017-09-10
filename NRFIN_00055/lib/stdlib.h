@@ -37,7 +37,7 @@
 #define ROUND_TO_PAGE(ptr) ((void *)((unsigned long)(ptr) & (PAGE_SIZE - 1)))
 
 /**
- * Return the max of a and b.
+ * Return the __cgc_max of a and b.
  *
  * @param a The first argument
  * @param b The second argument
@@ -71,7 +71,7 @@ typedef __builtin_va_list va_list;
  *
  * @param seed The value to seed the RNG with
  */
-void srand(unsigned int seed);
+void __cgc_srand(unsigned int seed);
 
 /**
  * Get a "random" integer.
@@ -80,7 +80,7 @@ void srand(unsigned int seed);
  *
  * @return A "random"-ish integer from 0 to UINT_MAX
  */
-unsigned int rand(void);
+unsigned int __cgc_rand(void);
 
 
 /**

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) Narf Industries <info@narfindustries.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, __libpov_free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -40,7 +40,7 @@ struct pool {
 int pool_init(struct pool *pool, size_t size);
 
 /**
- * Destroy a fixed-size pool allocator and free all chunks
+ * Destroy a fixed-size pool allocator and __libpov_free all chunks
  *
  * @param pool The pool to destroy
  */
@@ -58,14 +58,14 @@ void *pool_alloc(struct pool *pool);
  * Free a chunk back into a pool
  *
  * @param pool The pool to return the memory to
- * @param ptr The chunk to free
+ * @param ptr The chunk to __libpov_free
  */
 void pool_free(struct pool *pool, void *ptr);
 
 /**
  * Return all memory to a pool
  *
- * @param pool The pool to free
+ * @param pool The pool to __libpov_free
  */
 void pool_free_all(struct pool *pool);
 

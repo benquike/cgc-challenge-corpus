@@ -68,7 +68,7 @@ lookup_variable(struct namespace *ns, const char *name)
         if (var->type == VAR_EMPTY)
             return NULL;
 
-        if (strncmp(var->name, name, 4) == 0)
+        if (__cgc_strncmp(var->name, name, 4) == 0)
             return var;
     }
 
@@ -99,9 +99,9 @@ insert_variable(struct namespace *ns, const char *name, enum variable_type type)
         }
 
 #ifdef PATCHED_1
-        if (var->type != VAR_EMPTY && strncmp(var->name, name, 4) == 0) {
+        if (var->type != VAR_EMPTY && __cgc_strncmp(var->name, name, 4) == 0) {
 #else
-        if (var->type == type && strncmp(var->name, name, 4) == 0) {
+        if (var->type == type && __cgc_strncmp(var->name, name, 4) == 0) {
 #endif 
             last_var = var;
         }

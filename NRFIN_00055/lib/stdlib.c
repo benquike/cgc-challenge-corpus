@@ -27,13 +27,13 @@
 static unsigned long long rand_seed = 0xdeadbeefull;
 
 void
-srand(unsigned int seed)
+__cgc_srand(unsigned int seed)
 {
     rand_seed = seed;
 }
 
 unsigned int
-rand(void)
+__cgc_rand(void)
 {
     // Constants from Knuth
     rand_seed = 6364136223846793005 * rand_seed + 1442695040888963407;
