@@ -25,11 +25,11 @@
 
 #include <libcgc.h>
 
-/** The max value of an int */
+/** The __cgc_max value of an int */
 #define INT_MAX (2147483647)
 /** The min value of an int */
 #define INT_MIN (-2147483647 - 1)
-/** The max value of an unsigned int */
+/** The __cgc_max value of an unsigned int */
 #define UINT_MAX (4294967295)
 /** The min value of an unsigned int */
 #define UINT_MIN (0)

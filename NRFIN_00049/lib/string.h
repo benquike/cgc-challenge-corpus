@@ -140,7 +140,7 @@ int __strcmp(const char *str1, const char *str2);
  * @param num The number of bytes to compare
  * @return 0 if str1 == str2, <0 if str1 < str2, >0 if str1 > str2
  */
-int strncmp(const char *str1, const char *str2, size_t num);
+int __cgc_strncmp(const char *str1, const char *str2, size_t num);
 
 /**
  * Find the first instance of value in the first num bytes of ptr.

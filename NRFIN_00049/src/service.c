@@ -157,7 +157,7 @@ main(void)
             continue;
         }
 
-        if (strncmp(state.line, "onmatch ", sizeof("onmatch ") - 1) == 0) {
+        if (__cgc_strncmp(state.line, "onmatch ", sizeof("onmatch ") - 1) == 0) {
             p = state.line + sizeof("onmatch ") - 1;
 
             if (__strcmp(p, "default") == 0)

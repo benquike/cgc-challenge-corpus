@@ -88,7 +88,7 @@ dfa_parse_desc(struct dfa *dfa, char *line, onmatch_handler onmatch, void *data)
     char *dest_state_name;
     unsigned int dest_state;
 
-    if (strncmp(line, "state", sizeof("state") - 1) == 0) {
+    if (__cgc_strncmp(line, "state", sizeof("state") - 1) == 0) {
         dfa->current = (dfa->current == NULL ? &dfa->states[0] : dfa->current + 1);
         // Don't let our start state be an accept state
         if (__strcmp(line + sizeof("state ") - 1, "accept") == 0 && dfa->current != &dfa->states[0]) {
@@ -105,7 +105,7 @@ dfa_parse_desc(struct dfa *dfa, char *line, onmatch_handler onmatch, void *data)
         dfa->ready = 1;
         dfa->current = &dfa->states[0];
         return 1;
-    } else if (strncmp(line, "transition ", sizeof("transition ") - 1) == 0) {
+    } else if (__cgc_strncmp(line, "transition ", sizeof("transition ") - 1) == 0) {
         line += sizeof("transition") - 1;
         *line++ = '\0';
 
@@ -182,7 +182,7 @@ dfa_give_example(struct dfa *dfa, char *str, size_t len)
             goto out;
 
         c = '\0';
-        rnd = rand() % num_transitions;
+        rnd = __cgc_rand() % num_transitions;
 
         for (i = 0; i < 256; i++) {
             if ((unsigned char)dfa->current->transitions[i] != SENTINEL) {

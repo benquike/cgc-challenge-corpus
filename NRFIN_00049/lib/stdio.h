@@ -162,7 +162,7 @@ int fputc(int character, __FILE *stream);
  * @param arg The va_list to retrieve values from
  * @return The number of bytes written on success, else EXIT_FAILURE
  */
-int vprintf(const char *format, va_list arg);
+int __cgc_vprintf(const char *format, va_list arg);
 
 /**
  * Print a formatted string to a __FILE pointer, taking parameters from a va_list,
@@ -249,7 +249,7 @@ int __printf(const char *format, ...);
  * @param format The format string to use
  * @return The number of bytes written on success, else EXIT_FAILURE
  */
-int fprintf(__FILE *stream, const char *format, ...);
+int __cgc_fprintf(__FILE *stream, const char *format, ...);
 
 /**
  * Write a formatted string to a buffer.

@@ -133,7 +133,7 @@ __strcmp(const char *str1, const char *str2)
 }
 
 int
-strncmp(const char *str1, const char *str2, size_t num)
+__cgc_strncmp(const char *str1, const char *str2, size_t num)
 {
     for (; --num && *str1 && *str2 && *str1 == *str2; str1++, str2++)
         ;
@@ -197,7 +197,7 @@ strstr(char *str1, const char *str2)
 
     str2_len = __strlen(str2);
     while (*str1)
-        if (strncmp(str1, str2, str2_len) == 0)
+        if (__cgc_strncmp(str1, str2, str2_len) == 0)
             return str1;
         else
             str1++;

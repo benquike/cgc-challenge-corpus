@@ -482,7 +482,7 @@ __vfprintf(__FILE *stream, const char *format, va_list args)
 }
 
 int
-vprintf(const char *format, va_list args) 
+__cgc_vprintf(const char *format, va_list args) 
 {
     return __vfprintf(stdout, format, args);
 }
@@ -501,7 +501,7 @@ __vsprintf(char *s, const char *format, va_list args)
 }
 
 int
-fprintf(__FILE *stream, const char *format, ...)
+__cgc_fprintf(__FILE *stream, const char *format, ...)
 {
     int ret;
     va_list args;
@@ -517,7 +517,7 @@ __printf(const char *format, ...)
     int ret;
     va_list args;
     va_start(args, format);
-    ret = vprintf(format, args);
+    ret = __cgc_vprintf(format, args);
     va_end(args);
     return ret;
 }
