@@ -142,14 +142,14 @@ void init_player(human_t *player)
         __printf("Flair 3 = Collosus\n");
         __printf("Enter player information: [name,flair]\n");
 //#ifdef PATCHED_2
-//        if (freaduntil(buf, sizeof(player->name), ',', stdin) == -1)
+//        if (__cgc_freaduntil(buf, sizeof(player->name), ',', stdin) == -1)
 //#else
-//        if (freaduntil(buf, sizeof(buf), ',', stdin) == -1)
+//        if (__cgc_freaduntil(buf, sizeof(buf), ',', stdin) == -1)
 //#endif
-        if (freaduntil(buf, sizeof(buf), ',', stdin) == -1)
+        if (__cgc_freaduntil(buf, sizeof(buf), ',', stdin) == -1)
             continue;
         __strcpy(player->name, buf);
-        if (freaduntil(buf, sizeof(buf), '\n', stdin) == -1)
+        if (__cgc_freaduntil(buf, sizeof(buf), '\n', stdin) == -1)
             continue;
         flair_choice = __strtol(buf, NULL, 10);
         switch(flair_choice) {
@@ -191,7 +191,7 @@ int main()
             __printf("1. Register New Player\n");
             __printf("2. Exit\n");
             __printf("> ");
-            if (freaduntil(input, max_input, '\n', stdin) == -1) {
+            if (__cgc_freaduntil(input, max_input, '\n', stdin) == -1) {
                 continue;
             }
             choice = __strtol(input, NULL, 10);
@@ -218,7 +218,7 @@ int main()
         __printf("Shall we play a game?\n");
         __printf("Game # ");
 
-        if (freaduntil(input, max_input, '\n', stdin) == -1) {
+        if (__cgc_freaduntil(input, max_input, '\n', stdin) == -1) {
             __printf("Invalid Game\n");
             continue;
         }

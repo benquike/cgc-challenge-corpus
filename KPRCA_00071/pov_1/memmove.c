@@ -1,6 +1,6 @@
 #include <libpov.h>
 
-void *memmove(void *dst, const void *src, size_t n)
+void *__libpov_memmove(void *dst, const void *src, size_t n)
 {
     unsigned char *udst = dst;
     const unsigned char *usrc = src;

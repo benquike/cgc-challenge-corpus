@@ -57,8 +57,8 @@ static int get_random(unsigned int *upper_limit)
 #else
     while (upper > UPPER_RAND_MAX) {
 #endif
-        __printf("Enter max value (Default=%d): ", UPPER_RAND_MAX);
-        if (freaduntil(input, max_input, '\n', stdin) == -1)
+        __printf("Enter __cgc_max value (Default=%d): ", UPPER_RAND_MAX);
+        if (__cgc_freaduntil(input, max_input, '\n', stdin) == -1)
             continue;
         upper = __strtol(input, NULL, 10);
         upper = set_bits_high(upper);
@@ -67,8 +67,8 @@ static int get_random(unsigned int *upper_limit)
     if (upper == 0) {
         upper = UPPER_RAND_MAX;
     } else {
-        __printf("We've changed the max value to %d.\n", upper);
-        __printf("Keep in mind only the games using the default max value are scored.\n");
+        __printf("We've changed the __cgc_max value to %d.\n", upper);
+        __printf("Keep in mind only the games using the default __cgc_max value are scored.\n");
     }
 
     if (winner > upper)
@@ -90,7 +90,7 @@ int play_hi_lo()
     char *input = __malloc(max_input);
     while (guesses_left) {
         __printf("Guess the number [%d guesses left]: ", guesses_left);
-        if (freaduntil(input, max_input, '\n', stdin) == -1)
+        if (__cgc_freaduntil(input, max_input, '\n', stdin) == -1)
             continue;
         guess = __strtol(input, NULL, 10);
         if (guess < winning_number) {
@@ -108,7 +108,7 @@ int play_hi_lo()
         guesses_left--;
     }
 
-    __printf("Sorry, you lost. Try practicing with a lower max value.\n");
+    __printf("Sorry, you lost. Try practicing with a lower __cgc_max value.\n");
     //__printf("The number was: %d\n", winning_number);
     __free(input);
     return 0;

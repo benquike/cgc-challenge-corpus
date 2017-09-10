@@ -1,7 +1,7 @@
 #include <libpov.h>
 #include "stdio_private.h"
 
-ssize_t fwrite(const void *ptr, size_t size, FILE *stream)
+ssize_t __cgc_fwrite(const void *ptr, size_t size, __cgc_FILE *stream)
 {
     const char *buf = ptr;
     size_t idx = 0, tx;
@@ -17,24 +17,24 @@ unbuffered:
     {
         if (size >= sizeof(stream->buffer))
         {
-            fflush(stream);
+            __cgc_fflush(stream);
             goto unbuffered;
         }
 
         if (stream->length + size >= sizeof(stream->buffer))
         {
             tx = sizeof(stream->buffer) - stream->length;
-            memcpy(stream->buffer + stream->length, buf, tx);
+            __libpov_memcpy(stream->buffer + stream->length, buf, tx);
             stream->length += tx;
             idx += tx;
 
-            fflush(stream);
+            __cgc_fflush(stream);
         }
 
         if (idx < size)
         {
             tx = size - idx;
-            memcpy(stream->buffer + stream->length, buf + idx, tx);
+            __libpov_memcpy(stream->buffer + stream->length, buf + idx, tx);
             stream->length += tx;
             idx += tx;
         }

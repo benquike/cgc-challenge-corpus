@@ -7,7 +7,7 @@
 #define F_READ 1
 #define F_WRITE 2
 
-struct FILE {
+struct __cgc_FILE {
     int fd;
     int rw;
     int idx;

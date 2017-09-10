@@ -39,7 +39,7 @@ int play_rps()
 
     while (human_choice == BAD_CHOICE) {
         __printf("Choose [HAMMER, SHEET, SHEERS]: ");
-        if (freaduntil(input, max_input, '\n', stdin) == -1)
+        if (__cgc_freaduntil(input, max_input, '\n', stdin) == -1)
             continue;
         if (__strcmp(input, "HAMMER") == 0)
             human_choice = HAMMER;

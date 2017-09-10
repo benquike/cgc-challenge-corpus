@@ -38,7 +38,7 @@ static void _convert_unsigned(char *buf, unsigned x, int base, int upper)
     }
 
     /* move to beginning of buf */
-    memmove(buf, tmp, 20 - (buf - tmp));
+    __libpov_memmove(buf, tmp, 20 - (buf - tmp));
 }
 
 static void _convert_signed(char *buf, int x, int base, int upper)
@@ -52,7 +52,7 @@ static void _convert_signed(char *buf, int x, int base, int upper)
     _convert_unsigned(buf, x, base, upper);
 }
 
-static int _vsfprintf(const char *fmt, va_list ap, FILE *stream, char *buf, size_t buf_size)
+static int _vsfprintf(const char *fmt, va_list ap, __cgc_FILE *stream, char *buf, size_t buf_size)
 {
     char ch;
     unsigned int num_size, field_size;
@@ -67,7 +67,7 @@ static int _vsfprintf(const char *fmt, va_list ap, FILE *stream, char *buf, size
             break; \
         } \
         char __ch = _ch; \
-        if (stream) fwrite(&__ch, 1, stream); \
+        if (stream) __cgc_fwrite(&__ch, 1, stream); \
         if (buf) buf[count] = __ch; \
         count++; \
     } while (0)
@@ -81,8 +81,8 @@ static int _vsfprintf(const char *fmt, va_list ap, FILE *stream, char *buf, size
         } \
         size_t cnt = buf_size - count; \
         if (cnt > sz) cnt = sz; \
-        if (stream) fwrite(str, cnt, stream); \
-        if (buf) memcpy(buf + count, str, cnt); \
+        if (stream) __cgc_fwrite(str, cnt, stream); \
+        if (buf) __libpov_memcpy(buf + count, str, cnt); \
         if ((size_t)(count + sz) < (count)) _terminate(1); \
         count += sz; \
     } while (0)
@@ -124,7 +124,7 @@ static int _vsfprintf(const char *fmt, va_list ap, FILE *stream, char *buf, size
 
         /* field width */
         if (*fmt >= '0' && *fmt <= '9')
-            field_size = strtoul(fmt, (char **)&fmt, 10);
+            field_size = __libpov_strtoul(fmt, (char **)&fmt, 10);
 
         /* modifiers */
         switch ((ch = *fmt++))
@@ -189,7 +189,7 @@ static int _vsfprintf(const char *fmt, va_list ap, FILE *stream, char *buf, size
                 _convert_unsigned(numbuf, uintarg, ch == 'u' ? 10 : 16, ch == 'X');
             }
 
-            numbuflen = strlen(numbuf);
+            numbuflen = __libpov_strlen(numbuf);
             if (numbuflen < field_size)
             {
                 field_size -= numbuflen;
@@ -206,7 +206,7 @@ static int _vsfprintf(const char *fmt, va_list ap, FILE *stream, char *buf, size
             break;
         case 's':
             strarg = va_arg(ap, const char *);
-            OUTPUT_STRING(strarg, strlen(strarg));
+            OUTPUT_STRING(strarg, __libpov_strlen(strarg));
             break;
 #ifdef PRINTF_N_CHAR
         case PRINTF_N_CHAR:
@@ -229,53 +229,53 @@ done:
     return (int)count;
 }
 
-int printf(const char *fmt, ...)
+int __cgc_printf(const char *fmt, ...)
 {
     int ret;
     va_list ap;
 
     va_start(ap, fmt);
-    ret = vprintf(fmt, ap);
+    ret = __libpov_vprintf(fmt, ap);
     va_end(ap);
 
     return ret;
 }
 
-int fprintf(FILE *stream, const char *fmt, ...)
+int __libpov_fprintf(__cgc_FILE *stream, const char *fmt, ...)
 {
     int ret;
     va_list ap;
 
     va_start(ap, fmt);
-    ret = vfprintf(stream, fmt, ap);
+    ret = __libpov_vfprintf(stream, fmt, ap);
     va_end(ap);
 
     return ret;
 }
 
-int sprintf(char *str, const char *fmt, ...)
+int __libpov_sprintf(char *str, const char *fmt, ...)
 {
     int ret;
     va_list ap;
 
     va_start(ap, fmt);
-    ret = vsprintf(str, fmt, ap);
+    ret = __libpov_vsprintf(str, fmt, ap);
     va_end(ap);
 
     return ret;
 }
 
-int vprintf(const char *fmt, va_list ap)
+int __libpov_vprintf(const char *fmt, va_list ap)
 {
-    return vfprintf(stdout, fmt, ap);
+    return __libpov_vfprintf(stdout, fmt, ap);
 }
 
-int vfprintf(FILE *stream, const char *fmt, va_list ap)
+int __libpov_vfprintf(__cgc_FILE *stream, const char *fmt, va_list ap)
 {
     return _vsfprintf(fmt, ap, stream, NULL, INT_MAX);
 }
 
-int vsprintf(char *str, const char *fmt, va_list ap)
+int __libpov_vsprintf(char *str, const char *fmt, va_list ap)
 {
     return _vsfprintf(fmt, ap, NULL, str, INT_MAX);
 }

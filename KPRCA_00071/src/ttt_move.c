@@ -117,10 +117,10 @@ int player_move(board_t *board)
     int posy = 0;
     char *input = __malloc(max_input);
     __printf("Enter move [y,x]: ");
-    if (freaduntil(input, max_input, ',', stdin) == -1)
+    if (__cgc_freaduntil(input, max_input, ',', stdin) == -1)
         goto error;
     posy = __strtol(input, NULL, 10);
-    if (freaduntil(input, max_input, '\n', stdin) == -1)
+    if (__cgc_freaduntil(input, max_input, '\n', stdin) == -1)
         goto error;
     posx = __strtol(input, NULL, 10);
 

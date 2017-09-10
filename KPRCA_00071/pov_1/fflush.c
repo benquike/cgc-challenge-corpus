@@ -1,13 +1,13 @@
 #include "stdio_private.h"
 
-int fflush(FILE *stream)
+int __cgc_fflush(__cgc_FILE *stream)
 {
     if (stream->idx == INVALID_IDX)
         return 0;
 
     if (stream->rw == F_READ)
     {
-        /* drop the contents of the read buffer */
+        /* drop the contents of the __cgc_read buffer */
         stream->idx = stream->length = 0;
         return 0;
     }

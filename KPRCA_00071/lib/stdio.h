@@ -33,19 +33,19 @@ extern __FILE * const stdout;
 extern __FILE * const stderr;
 
 int __printf(const char *fmt, ...);
-int fprintf(__FILE *stream, const char *fmt, ...);
-int sprintf(char *str, const char *fmt, ...);
+int __cgc_fprintf(__FILE *stream, const char *fmt, ...);
+int __cgc_sprintf(char *str, const char *fmt, ...);
 
-int vprintf(const char *fmt, va_list ap);
-int vfprintf(__FILE *stream, const char *fmt, va_list ap);
-int vsprintf(char *str, const char *fmt, va_list ap);
+int __cgc_vprintf(const char *fmt, va_list ap);
+int __cgc_vfprintf(__FILE *stream, const char *fmt, va_list ap);
+int __cgc_vsprintf(char *str, const char *fmt, va_list ap);
 
 ssize_t __fread(void *ptr, size_t size, __FILE *stream);
-ssize_t freaduntil(char *str, size_t size, char term, __FILE *stream);
+ssize_t __cgc_freaduntil(char *str, size_t size, char term, __FILE *stream);
 ssize_t __fwrite(const void *ptr, size_t size, __FILE *stream);
-int fflush(__FILE *stream);
-void fbuffered(__FILE *stream, int enable);
-void fxlat(__FILE *stream, const char *seed);
+int __cgc_fflush(__FILE *stream);
+void __cgc_fbuffered(__FILE *stream, int enable);
+void __cgc_fxlat(__FILE *stream, const char *seed);
 __FILE *__fopen(int fd, int mode);
 
 #endif
