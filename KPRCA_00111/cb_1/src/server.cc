@@ -31,7 +31,7 @@
 #include "time.h"
 
 #ifdef DEBUG
-#define dbg(M, ...) fprintf(stderr, "SRV DEBUG: " M "\n", ##__VA_ARGS__);
+#define dbg(M, ...) __cgc_fprintf(stderr, "SRV DEBUG: " M "\n", ##__VA_ARGS__);
 #else
 #define dbg(M, ...)
 #endif
@@ -160,7 +160,7 @@ void handle_blub(client_state* c)
   if (c->n == 0)
   {
     char tmp[BLUB_MAX + 1];
-    fprintf(c->tx, "...: ");
+    __cgc_fprintf(c->tx, "...: ");
     if (!client_ready(c) || __freaduntil(tmp, BLUB_MAX, EOT_C, c->rx) < 0)
     {
       dbg("Failed to __read blub");
@@ -273,7 +273,7 @@ int run_server(server_state* state)
       }
 
       dbg("Registered %d as (%s)", c->n, username);
-      fprintf(c->tx, (char *)"Welcome to blubber, %s" EOT_S, username);
+      __cgc_fprintf(c->tx, (char *)"Welcome to blubber, %s" EOT_S, username);
       c->registered = true;
       c->blubber->set_username(username);
       state->num_alive++;
@@ -290,7 +290,7 @@ int run_server(server_state* state)
       if (state->finished && c->registered)
       {
         dbg("Killing %d", c->n);
-        fprintf(c->tx, QUIT_ID_S EOT_S);
+        __cgc_fprintf(c->tx, QUIT_ID_S EOT_S);
         c->registered = false;
         state->num_alive--;
         if (!state->num_alive)
@@ -302,7 +302,7 @@ int run_server(server_state* state)
       else
       {
         dbg("Prompting %d", c->n);
-        fprintf(c->tx, "(*) " EOT_S);
+        __cgc_fprintf(c->tx, "(*) " EOT_S);
         c->waiting = true;
       }
     }

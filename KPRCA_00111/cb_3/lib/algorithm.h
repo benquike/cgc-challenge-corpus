@@ -13,7 +13,7 @@ namespace std
     }
 
     template <typename T>
-    inline const T &max (const T &a, const T &b)
+    inline const T &__cgc_max (const T &a, const T &b)
     {
         if (a > b)
             return a;

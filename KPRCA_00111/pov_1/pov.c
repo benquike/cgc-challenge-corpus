@@ -17,7 +17,7 @@
 #define BLUB_MAX 140
 #define QUIT_ID 0xdeadbeef
 
-void sleep(uint32_t usec)
+void __cgc_sleep(uint32_t usec)
 {
   struct timeval t;
   t.tv_sec = usec / 1000000;
@@ -25,7 +25,7 @@ void sleep(uint32_t usec)
   fdwait(1, NULL, NULL, &t, NULL);
 }
 
-static void *memmove(void *dst, const void *src, size_t n)
+static void *__libpov_memmove(void *dst, const void *src, size_t n)
 {
     unsigned char *udst = dst;
     const unsigned char *usrc = src;
@@ -70,7 +70,7 @@ static void _convert_unsigned(char *buf, unsigned x, int base, int upper)
     }
 
     /* move to beginning of buf */
-    memmove(buf, tmp, 20 - (buf - tmp));
+    __libpov_memmove(buf, tmp, 20 - (buf - tmp));
 }
 
 static void _convert_signed(char *buf, int x, int base, int upper)
@@ -86,14 +86,14 @@ static void _convert_signed(char *buf, int x, int base, int upper)
 
 static void send_string(int fd, const char* s)
 {
-  transmit_all(fd, s, strlen(s));
+  transmit_all(fd, s, __libpov_strlen(s));
 }
 
-static void strcat(char* s1, const char* s2)
+static void __cgc_strcat(char* s1, const char* s2)
 {
   char* p = s1;
   while (*p != '\0') p++;
-  strcpy(p, s2);
+  __libpov_strcpy(p, s2);
 }
 
 int main(void)
@@ -141,16 +141,16 @@ int main(void)
   _convert_signed(buf, -idx, 10, 0);
 
   char tosend[1024];
-  strcat(tosend, "y");
-  strcat(tosend, EOT_S);
-  strcat(tosend, "charlie");
-  strcat(tosend, EOT_S);
-  strcat(tosend, buf);
-  strcat(tosend, EOT_S);
+  __cgc_strcat(tosend, "y");
+  __cgc_strcat(tosend, EOT_S);
+  __cgc_strcat(tosend, "charlie");
+  __cgc_strcat(tosend, EOT_S);
+  __cgc_strcat(tosend, buf);
+  __cgc_strcat(tosend, EOT_S);
   send_string(1, tosend);
   send_string(1, read_blubs);
-  const char* exit = "e" EOT_S;
-  send_string(1, exit);
+  const char* __cgc_exit = "e" EOT_S;
+  send_string(1, __cgc_exit);
 
 #ifndef TESTING
   length_read(0, (unsigned char*)buf, 336);

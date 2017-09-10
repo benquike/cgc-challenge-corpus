@@ -37,7 +37,7 @@
 #define str(s) #s
 
 #ifdef DEBUG
-#define dbg(M, ...) fprintf(stderr, "C" xstr(ID)" DEBUG: " M "\n", ##__VA_ARGS__);
+#define dbg(M, ...) __cgc_fprintf(stderr, "C" xstr(ID)" DEBUG: " M "\n", ##__VA_ARGS__);
 #else
 #define dbg(M, ...)
 #endif
@@ -66,7 +66,7 @@ int handle_read(__FILE* rx, __FILE* tx, vector* read_blubs)
   char username[USERNAME_MAX + 1];
   char content[BLUB_MAX + 1];
 
-  fprintf(tx, "r" EOT_S);
+  __cgc_fprintf(tx, "r" EOT_S);
 
   int to_read = 0;
   if (__fread(&to_read, sizeof(to_read), rx) != sizeof(to_read))
@@ -118,7 +118,7 @@ int handle_read(__FILE* rx, __FILE* tx, vector* read_blubs)
 
 int handle_blub(__FILE* rx, __FILE* tx)
 {
-  fprintf(tx, "b" EOT_S);
+  __cgc_fprintf(tx, "b" EOT_S);
   return 0;
 }
 
@@ -126,9 +126,9 @@ int handle_reblub(__FILE* rx, __FILE* tx, vector* read_blubs)
 {
   if (read_blubs->length() == 0)
   {
-    fprintf(tx, "y" EOT_S);
-    fprintf(tx, "%s" EOT_S, "asdf");
-    fprintf(tx, "%d" EOT_S, 0);
+    __cgc_fprintf(tx, "y" EOT_S);
+    __cgc_fprintf(tx, "%s" EOT_S, "asdf");
+    __cgc_fprintf(tx, "%d" EOT_S, 0);
     return 0;
   }
 
@@ -136,9 +136,9 @@ int handle_reblub(__FILE* rx, __FILE* tx, vector* read_blubs)
   blub* b = (blub*)read_blubs->get(pick);
   if (!b)
   {
-    fprintf(tx, "y" EOT_S);
-    fprintf(tx, "%s" EOT_S, "asdf");
-    fprintf(tx, "%d" EOT_S, 0);
+    __cgc_fprintf(tx, "y" EOT_S);
+    __cgc_fprintf(tx, "%s" EOT_S, "asdf");
+    __cgc_fprintf(tx, "%d" EOT_S, 0);
     return 0;
   }
 
@@ -149,9 +149,9 @@ int handle_reblub(__FILE* rx, __FILE* tx, vector* read_blubs)
       n++;
   }
 
-  fprintf(tx, "y" EOT_S);
-  fprintf(tx, "%s" EOT_S, b->username);
-  fprintf(tx, "%d" EOT_S, n);
+  __cgc_fprintf(tx, "y" EOT_S);
+  __cgc_fprintf(tx, "%s" EOT_S, b->username);
+  __cgc_fprintf(tx, "%d" EOT_S, n);
   return 0;
 }
 
@@ -173,7 +173,7 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
     __fbuffered(rx, 0);
 
     dbg("Starting...");
-    fprintf(tx, "client_%d" EOT_S, ID);
+    __cgc_fprintf(tx, "client_%d" EOT_S, ID);
     __freaduntil(buf, 5, EOT_C, rx);
     check_quit(buf);
     dbg("Registered...");
@@ -186,7 +186,7 @@ extern "C" int __attribute__((fastcall)) main(int secret_page_i, char *unused[])
       if (i != ID)
       {
         dbg("Subbing to %d", i);
-        fprintf(tx, "s" EOT_S "client_%d" EOT_S, i);
+        __cgc_fprintf(tx, "s" EOT_S "client_%d" EOT_S, i);
         __freaduntil(buf, 5, EOT_C, rx);
         check_quit(buf);
         dbg("Subbed to %d", i);
