@@ -30,18 +30,18 @@ unsigned int flag_idx=0;
 unsigned char random_buffer[1024];
 
 /**
- * Get a random number between min and max
+ * Get a random number between min and __cgc_max
  * @param  min Minimum of random number
- * @param  max Maximum of random number
+ * @param  __cgc_max Maximum of random number
  * @return     the random number 
  */
-int getRandomNumber(int min, int max) {
+int getRandomNumber(int min, int __cgc_max) {
 	int random_int;
 	unsigned char random_char;
 	int diff;
 	const char *flag = (const char*) FLAG_PAGE;
 
-	diff = max - min + 1;
+	diff = __cgc_max - min + 1;
 	random_char = flag[flag_idx++];
 	if(flag_idx == 200)
 		flag_idx = 0;
