@@ -93,7 +93,7 @@ int toupper(int c);
 
 int __vfprintf(__FILE * stream, const char *format, va_list ap);
 
-int fprintf(__FILE * stream, const char *format, ...);
+int __cgc_fprintf(__FILE * stream, const char *format, ...);
 
 struct _fd_printer {
    int fd;

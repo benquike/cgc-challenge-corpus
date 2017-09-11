@@ -52,13 +52,13 @@ int do_init(session_t **session) {
     uint32_t requested_session_id = 0;
 
     #ifdef DEBUG
-    fprintf(stderr, "[D] %s | ENTER\n", __func__);
+    __cgc_fprintf(stderr, "[D] %s | ENTER\n", __func__);
     #endif
 
     // Get session ID from CRS.
     if (SUCCESS != (ret = recv_bytes(STDIN, (char *)&rx_buf, sizeof(uint32_t)))) { 
         #ifdef DEBUG
-        fprintf(stderr, "[E] %s | during receive ()\n", __func__);
+        __cgc_fprintf(stderr, "[E] %s | during receive ()\n", __func__);
         #endif
 
         ret = ERRNO_RECV;
@@ -66,13 +66,13 @@ int do_init(session_t **session) {
     }
     requested_session_id = *(uint32_t*)&rx_buf;
     #ifdef DEBUG
-    fprintf(stderr, "[D] %s | requested_session_id = 0x%08x\n", __func__, requested_session_id);
+    __cgc_fprintf(stderr, "[D] %s | requested_session_id = 0x%08x\n", __func__, requested_session_id);
     #endif  
 
     // Check for MAGIC_EXIT
     if (MAGIC_EXIT == requested_session_id) {
         #ifdef DEBUG
-        fprintf(stderr, "[D] %s | got MAGIC_EXIT; _terminate(0)ing...\n", __func__);
+        __cgc_fprintf(stderr, "[D] %s | got MAGIC_EXIT; _terminate(0)ing...\n", __func__);
         #endif 
         _terminate(0);
     }
@@ -85,13 +85,13 @@ int do_init(session_t **session) {
 
         // Send error response.
         #ifdef DEBUG
-        fprintf(stderr, "[D] %s | bad session ID (0x%08x); rejecting\n", __func__, requested_session_id);
+        __cgc_fprintf(stderr, "[D] %s | bad session ID (0x%08x); rejecting\n", __func__, requested_session_id);
         #endif  
 
         tmp = MAGIC_ERR_BAD_ID;
         if (SUCCESS != (ret = send_bytes(STDOUT, (const char *)&tmp, sizeof(tmp)))) { 
             #ifdef DEBUG
-            fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
+            __cgc_fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
             #endif
             ret = ERRNO_TRANSMIT;
             goto bail;
@@ -111,7 +111,7 @@ int do_init(session_t **session) {
         // - they're requesting an existing session
 
         #ifdef DEBUG
-        fprintf(stderr, "[D] %s | session 0x%08x is requested\n", __func__, requested_session_id);
+        __cgc_fprintf(stderr, "[D] %s | session 0x%08x is requested\n", __func__, requested_session_id);
         #endif
         
         if (NULL == (*session = find_session(requested_session_id))) {
@@ -122,7 +122,7 @@ int do_init(session_t **session) {
 
             // Send error code & bail.
             #ifdef DEBUG
-            fprintf(stderr, 
+            __cgc_fprintf(stderr, 
                 "[D] %s | session 0x%08x doesn't exist; sending error...\n", 
                 __func__, requested_session_id);
             #endif 
@@ -130,7 +130,7 @@ int do_init(session_t **session) {
             tmp = MAGIC_ERR_SESSION_DOESNT_EXIST;
             if (SUCCESS != (ret = send_bytes(STDOUT, (const char *)&tmp, sizeof(tmp)))) { 
                 #ifdef DEBUG
-                fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
+                __cgc_fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
                 #endif
         
                 ret = ERRNO_TRANSMIT;
@@ -146,12 +146,12 @@ int do_init(session_t **session) {
 
         // Reflect the session ID.
         #ifdef DEBUG
-        fprintf(stderr, "[D] %s | session 0x%08x exists; reflecting ID\n", __func__, (*session)->id);
+        __cgc_fprintf(stderr, "[D] %s | session 0x%08x exists; reflecting ID\n", __func__, (*session)->id);
         #endif
 
         if (SUCCESS != (ret = send_bytes(STDOUT, (const char *)&(*session)->id, sizeof(uint32_t)))) { 
             #ifdef DEBUG
-            fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
+            __cgc_fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
             #endif
 
             ret = ERRNO_TRANSMIT;
@@ -167,7 +167,7 @@ int do_init(session_t **session) {
     // - they're requesting a new session
 
     #ifdef DEBUG
-    fprintf(stderr, "[D] %s | got MAGIC_NEW_SESSION; starting new session\n", __func__);
+    __cgc_fprintf(stderr, "[D] %s | got MAGIC_NEW_SESSION; starting new session\n", __func__);
     #endif
 
     if (SESSIONS_MAX <= sessions_num + 1) {
@@ -178,7 +178,7 @@ int do_init(session_t **session) {
 
         // Send error & bail.
         #ifdef DEBUG
-        fprintf(stderr, 
+        __cgc_fprintf(stderr, 
             "[D] %s | no space for a new session (%d <= %d); rejecting request\n", 
             __func__, SESSIONS_MAX, sessions_num+1);
         #endif 
@@ -186,7 +186,7 @@ int do_init(session_t **session) {
         tmp = MAGIC_ERR_NO_SPACE;
         if (SUCCESS != (ret = send_bytes(STDOUT, (const char *)&tmp, sizeof(uint32_t)))) { 
             #ifdef DEBUG
-            fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
+            __cgc_fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
             #endif
     
             ret = ERRNO_TRANSMIT;
@@ -202,14 +202,14 @@ int do_init(session_t **session) {
     // - there's room for more sessions
 
     #ifdef DEBUG
-    fprintf(stderr, 
+    __cgc_fprintf(stderr, 
         "[D] %s | NEW session requested; we have room (%d >= %d)\n", 
         __func__, SESSIONS_MAX, sessions_num+1);
     #endif
 
     if (NULL == (*session = find_session(requested_session_id))) {
         #ifdef DEBUG
-        fprintf(stderr, "[E] %s | unable to find empty session; SHOULDN'T HAPPEN; bailing...\n", __func__);
+        __cgc_fprintf(stderr, "[E] %s | unable to find empty session; SHOULDN'T HAPPEN; bailing...\n", __func__);
         #endif
         goto bail;
     }
@@ -220,7 +220,7 @@ int do_init(session_t **session) {
         rnd_bytes = 0;
         if (SUCCESS != random(&(*session)->id, 4, &rnd_bytes) || 4 != rnd_bytes) {
             #ifdef DEBUG
-            fprintf(stderr, "[E] %s | during random (); SHOULDN'T HAPPEN; bailing...\n", __func__);
+            __cgc_fprintf(stderr, "[E] %s | during random (); SHOULDN'T HAPPEN; bailing...\n", __func__);
             #endif
             goto bail;
         }
@@ -228,7 +228,7 @@ int do_init(session_t **session) {
         // If we end up with a blacklisted session ID, try again.
         if (MAGIC_NEW_SESSION == (*session)->id || (MAGIC_ERR_MIN <= (*session)->id && MAGIC_ERR_MAX >= (*session)->id)) {
             #ifdef DEBUG
-            fprintf(stderr, "[D] %s | generated a blacklisted ID; trying again (1/16 chance)\n", __func__);
+            __cgc_fprintf(stderr, "[D] %s | generated a blacklisted ID; trying again (1/16 chance)\n", __func__);
             #endif
             continue;
         } else { break; }
@@ -240,13 +240,13 @@ int do_init(session_t **session) {
     // - we've decided on an ID
 
     #ifdef DEBUG
-    fprintf(stderr, "[D] %s | NEW session ID chosen: 0x%08x\n", __func__, (*session)->id);
+    __cgc_fprintf(stderr, "[D] %s | NEW session ID chosen: 0x%08x\n", __func__, (*session)->id);
     #endif
 
     // Echo the new session ID back to the CRS.
     if (SUCCESS != (ret = send_bytes(STDOUT, (const char *)&(*session)->id, sizeof(uint32_t)))) {
         #ifdef DEBUG
-        fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
+        __cgc_fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
         #endif
 
         ret = ERRNO_TRANSMIT;
@@ -263,7 +263,7 @@ int do_init(session_t **session) {
     // CRS -> CB: 4B session ID | 2B session SZ 
     if (SUCCESS != (ret = recv_bytes(STDIN, (char *)&tmp, sizeof(uint32_t)))) { 
         #ifdef DEBUG
-        fprintf(stderr, "[E] %s | during receive ()\n", __func__);
+        __cgc_fprintf(stderr, "[E] %s | during receive ()\n", __func__);
         #endif
 
         ret = ERRNO_RECV;
@@ -273,7 +273,7 @@ int do_init(session_t **session) {
     // Does this session ID pertain to the expected session?
     if ((*session)->id != tmp) {
         #ifdef DEBUG
-        fprintf(stderr, 
+        __cgc_fprintf(stderr, 
             "[D] %s | session ID changed mid-exchange (should be: 0x%08x, is: 0x%08x); bailing...\n", 
             __func__, (*session)->id, tmp);
         #endif
@@ -281,7 +281,7 @@ int do_init(session_t **session) {
         tmp = MAGIC_ERR_HANDSHAKE_FAILURE;
         if (SUCCESS != (ret = send_bytes(STDOUT, (const char *)&tmp, sizeof(tmp)))) { 
             #ifdef DEBUG
-            fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
+            __cgc_fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
             #endif
             ret = ERRNO_TRANSMIT;
             goto bail;
@@ -301,7 +301,7 @@ int do_init(session_t **session) {
     // Now we need the session size.
     if (SUCCESS != (ret = recv_bytes(STDIN, (char *)&(*session)->sz, sizeof(uint16_t)))) { 
         #ifdef DEBUG
-        fprintf(stderr, "[E] %s | during receive ()\n", __func__);
+        __cgc_fprintf(stderr, "[E] %s | during receive ()\n", __func__);
         #endif
 
         ret = ERRNO_RECV;
@@ -311,7 +311,7 @@ int do_init(session_t **session) {
     // Reject any session size that isn't a multiple of OPERATION_SZ.
     if (0 != (*session)->sz % OPERATION_SZ) {
         #ifdef DEBUG
-        fprintf(stderr, "[D] %s | rejecting new session sz with a non-multiple of OPERATION_SZ\n", __func__);
+        __cgc_fprintf(stderr, "[D] %s | rejecting new session sz with a non-multiple of OPERATION_SZ\n", __func__);
         #endif
 
         *session = NULL;
@@ -322,7 +322,7 @@ int do_init(session_t **session) {
     // If the requested sized exceeds this, we complain and refuse.
     if (OPCODE_SZ_MAX < (*session)->sz) {
         #ifdef DEBUG
-        fprintf(stderr, 
+        __cgc_fprintf(stderr, 
             "[D] %s | session->sz is too large: 0x%04x (%d); sending error\n", 
             __func__, (*session)->sz, (*session)->sz);
         #endif
@@ -330,7 +330,7 @@ int do_init(session_t **session) {
         tmp = MAGIC_ERR_TOO_LARGE;
         if (SUCCESS != (ret = send_bytes(STDOUT, (const char *)&tmp, sizeof(uint32_t)))) { 
             #ifdef DEBUG
-            fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
+            __cgc_fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
             #endif
     
             ret = ERRNO_TRANSMIT;
@@ -354,14 +354,14 @@ int do_init(session_t **session) {
     sessions_num++;
 
     #ifdef DEBUG
-    fprintf(stderr, 
+    __cgc_fprintf(stderr, 
         "[D] %s | creation of session 0x%08x of size 0x%04x (%d), successful; finished with INIT state\n", 
         __func__, (*session)->id, (*session)->sz, (*session)->sz);
     #endif
 
 bail:
     #ifdef DEBUG
-    fprintf(stderr, "[D] %s | LEAVE\n", __func__);
+    __cgc_fprintf(stderr, "[D] %s | LEAVE\n", __func__);
     #endif
     return ret;
 }
@@ -372,34 +372,34 @@ int do_exec(session_t *session) {
     int ret = SUCCESS;
 
     #ifdef DEBUG
-    fprintf(stderr, "[D] %s | ENTER; session expected: 0x%08x\n", __func__, session->id);
+    __cgc_fprintf(stderr, "[D] %s | ENTER; session expected: 0x%08x\n", __func__, session->id);
     #endif
 
     // 0) __read & verify (if PATCHED) session ID
     tmp = 0;
     if (SUCCESS != (ret = recv_bytes(STDIN, (char *)&tmp, sizeof(uint32_t)))) { 
         #ifdef DEBUG
-        fprintf(stderr, "[E] %s | during receive ()\n", __func__);
+        __cgc_fprintf(stderr, "[E] %s | during receive ()\n", __func__);
         #endif
 
         ret = ERRNO_RECV;
         goto bail;
     }
     #ifdef DEBUG
-    fprintf(stderr, "[D] %s | session received: 0x%08x\n", __func__, tmp);
+    __cgc_fprintf(stderr, "[D] %s | session received: 0x%08x\n", __func__, tmp);
     #endif
 
     if (session->id != tmp) {
         #ifdef PATCHED_1
 
         #ifdef DEBUG
-        fprintf(stderr, "[D] %s | PATCHED: session ID changed mid-exchange; bailing...\n", __func__);
+        __cgc_fprintf(stderr, "[D] %s | PATCHED: session ID changed mid-exchange; bailing...\n", __func__);
         #endif
 
         tmp = MAGIC_ERR_HANDSHAKE_FAILURE;
         if (SUCCESS != (ret = send_bytes(STDOUT, (const char *)&tmp, sizeof(tmp)))) { 
             #ifdef DEBUG
-            fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
+            __cgc_fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
             #endif
             ret = ERRNO_TRANSMIT;
             goto bail;
@@ -413,7 +413,7 @@ int do_exec(session_t *session) {
         #else
         
         #ifdef DEBUG
-        fprintf(stderr, 
+        __cgc_fprintf(stderr, 
             "[D] %s | UNPATCHED: session ID changed mid-exchange; vuln being exercised...\n", 
             __func__);
         #endif
@@ -432,12 +432,12 @@ int do_exec(session_t *session) {
     session_t *session_we_use_for_sz = NULL;
     if (NULL == (session_we_use_for_sz = find_session(tmp))) {
         #ifdef DEBUG
-        fprintf(stderr, "[D] %s | unable to find session; bailing\n", __func__);
+        __cgc_fprintf(stderr, "[D] %s | unable to find session; bailing\n", __func__);
         #endif
         goto bail;
     }
     #ifdef DEBUG
-    fprintf(stderr, "[D] %s | found session @ 0x%08x\n", __func__, session);
+    __cgc_fprintf(stderr, "[D] %s | found session @ 0x%08x\n", __func__, session);
     #endif
 
     // 1) populate BASE_ADDR
@@ -448,7 +448,7 @@ int do_exec(session_t *session) {
             (0x00            << 24);
     if (0 == tmp) {
         #ifdef DEBUG
-        fprintf(stderr, 
+        __cgc_fprintf(stderr, 
             "[D] %s | NULL base_addr at session->buf; populating...\n", 
             __func__);
         #endif
@@ -462,20 +462,20 @@ int do_exec(session_t *session) {
             (session->buf[1] <<  8) |
             (session->buf[2] << 16) |
             (0x00            << 24);
-    fprintf(stderr, 
+    __cgc_fprintf(stderr, 
         "[D] %s | current base addr: 0x%08x\n", 
         __func__, tmp);
     #endif
 
     // 2) __read opcode buffer off the wire into the session's OPCODE buffer
     #ifdef DEBUG
-    fprintf(stderr,
+    __cgc_fprintf(stderr,
         "[D] %s | WARNING: about to copy 0x%04x (%d) bytes into session 0x%08x; session's sz: 0x%04x (%d)\n", 
         __func__, session_we_use_for_sz->sz, session_we_use_for_sz->sz, session->id, session->sz, session->sz);
     #endif
     if (SUCCESS != (ret = recv_bytes(STDIN, (char *)(session->buf + BASE_ADDR_SZ), session_we_use_for_sz->sz))) { 
         #ifdef DEBUG
-        fprintf(stderr, 
+        __cgc_fprintf(stderr, 
             "[E] %s | during receive (); session->sz: %d, got 0x%08x bytes\n", 
             __func__, session->sz, &session->buf + BASE_ADDR_SZ);
         #endif
@@ -484,25 +484,25 @@ int do_exec(session_t *session) {
         goto bail;
     }
     #ifdef DEBUG
-    fprintf(stderr, "[D] %s | successfully __read opcode buffer\n", __func__);
+    __cgc_fprintf(stderr, "[D] %s | successfully __read opcode buffer\n", __func__);
     #endif
 
     // 3) execute bytecode
     if (SUCCESS != (ret = bytecode_exec(session->buf, session->sz))) {
         #ifdef DEBUG
-        fprintf(stderr, "[E] %s | bytecode execution failed; propagating error\n", __func__);
+        __cgc_fprintf(stderr, "[E] %s | bytecode execution failed; propagating error\n", __func__);
         #endif
         goto bail;
     }
     #ifdef DEBUG
-    fprintf(stderr, "[D] %s | finished bytecode execution\n", __func__);
+    __cgc_fprintf(stderr, "[D] %s | finished bytecode execution\n", __func__);
     #endif
 
     // 4) return result (the entirely of the scratch space)
     // 4B session ID | scratch area (of length SCRATCH_SZ)
     if (SUCCESS != (ret = send_bytes(STDOUT, (const char *)(&session->id), 4))) { 
         #ifdef DEBUG
-        fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
+        __cgc_fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
         #endif
 
         ret = ERRNO_TRANSMIT;
@@ -513,7 +513,7 @@ int do_exec(session_t *session) {
     uint32_t scratch_base = (base_addr | ((uint32_t)session->buf & 0x000000FF)) + BASE_ADDR_SZ + session->sz;
     if (SUCCESS != (ret = send_bytes(STDOUT, (const char *)scratch_base, SCRATCH_SZ))) { 
         #ifdef DEBUG
-        fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
+        __cgc_fprintf(stderr, "[E] %s | during transmit ()\n", __func__);
         #endif
 
         ret = ERRNO_TRANSMIT;
@@ -523,9 +523,9 @@ int do_exec(session_t *session) {
 bail:
     #ifdef DEBUG
     if (NULL == session) {
-        fprintf(stderr, "[D] %s | LEAVE; session: NULL\n", __func__);
+        __cgc_fprintf(stderr, "[D] %s | LEAVE; session: NULL\n", __func__);
     } else {
-        fprintf(stderr, "[D] %s | LEAVE; session: 0x%08x\n", __func__, session->id);
+        __cgc_fprintf(stderr, "[D] %s | LEAVE; session: 0x%08x\n", __func__, session->id);
     }
     #endif
     return ret;
@@ -546,7 +546,7 @@ int main(void) {
     if (SUCCESS != (ret = allocate(SESSION_ALLOC_LEN, FALSE, (void **)&session_dat))) {
 
         #ifdef DEBUG
-        fprintf(stderr, "[E] %s | failed session_dat allocation; bailing...\n", __func__);
+        __cgc_fprintf(stderr, "[E] %s | failed session_dat allocation; bailing...\n", __func__);
         #endif
 
         goto bail;
@@ -564,13 +564,13 @@ int main(void) {
             case STATE_INIT:
 
                 #ifdef DEBUG
-                fprintf(stderr, "[D] %s | state = STATE_INIT\n", __func__);
+                __cgc_fprintf(stderr, "[D] %s | state = STATE_INIT\n", __func__);
                 #endif
 
                 session = NULL;
                 if (SUCCESS != (ret = do_init(&session))) {
                     #ifdef DEBUG
-                    fprintf(stderr, "[E] %s | non-SUCCESS from do_init; bailing\n", __func__);
+                    __cgc_fprintf(stderr, "[E] %s | non-SUCCESS from do_init; bailing\n", __func__);
                     #endif
                     goto bail;
                 }
@@ -582,12 +582,12 @@ int main(void) {
             case STATE_EXEC:
 
                 #ifdef DEBUG
-                fprintf(stderr, "[D] %s | state = STATE_EXEC\n", __func__);
+                __cgc_fprintf(stderr, "[D] %s | state = STATE_EXEC\n", __func__);
                 #endif
 
                 if (SUCCESS != (ret = do_exec(session))) {
                     #ifdef DEBUG
-                    fprintf(stderr, "[E] %s | non-SUCCESS from do_exec; bailing\n", __func__);
+                    __cgc_fprintf(stderr, "[E] %s | non-SUCCESS from do_exec; bailing\n", __func__);
                     #endif
                     goto bail;
                 }
@@ -597,7 +597,7 @@ int main(void) {
 
             default:
                 #ifdef DEBUG
-                fprintf(stderr, "[E] %s | state = INVALID (SHOULDN'T HAPPEN); bailing...\n", __func__);
+                __cgc_fprintf(stderr, "[E] %s | state = INVALID (SHOULDN'T HAPPEN); bailing...\n", __func__);
                 #endif
                 ret = ERRNO_INVALID_STATE;
                 goto bail;

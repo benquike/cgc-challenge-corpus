@@ -105,7 +105,7 @@ __memcpy(void *dst_, const void *src_, size_t n)
 }
 
 void *
-memmove(void *dst_, const void *src_, size_t n)
+__cgc_memmove(void *dst_, const void *src_, size_t n)
 {
     unsigned char *dst = dst_;
     const unsigned char *src = src_;
@@ -161,7 +161,7 @@ __strcmp(const char *a, const char *b)
 }
 
 int
-strncmp(const char *a, const char *b, size_t n)
+__cgc_strncmp(const char *a, const char *b, size_t n)
 {
     for (; --n && *a && *a == *b; a++, b++)
         ;
@@ -420,7 +420,7 @@ int __vfprintf(__FILE * stream, const char *format, va_list ap) {
    return vdprintf(stream->fd, format, ap);
 }
 
-int fprintf(__FILE * stream, const char *format, ...) {
+int __cgc_fprintf(__FILE * stream, const char *format, ...) {
    va_list va;
    va_start(va, format);
    return __vfprintf(stream, format, va);
@@ -873,7 +873,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      }
                   }
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                      if ((flags & FLAGS_ZERO) != 0 && prec_value < width_value) {
                         //widen precision if necessary to pad to width with '0'
@@ -982,7 +982,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      width_value = len;
                   }
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                      if ((flags & FLAGS_ZERO) != 0 && prec_value < width_value) {
                         //widen precision if necessary to pad to width with '0'
@@ -1051,7 +1051,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      width_value = len;
                   }
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                      if ((flags & FLAGS_ZERO) != 0 && prec_value < width_value) {
                         //widen precision if necessary to pad to width with '0'
@@ -1122,7 +1122,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      width_value = len;
                   }
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                      if ((flags & FLAGS_ZERO) != 0 && prec_value < width_value) {
                         //widen precision if necessary to pad to width with '0'
@@ -1237,7 +1237,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                      width_value = len;
                   }
                   if (prec_value == -1 || prec_value > len) {
-                     //by default max is entire string but no less than width
+                     //by default __cgc_max is entire string but no less than width
                      prec_value = len;
                   }
                   if (flags & FLAGS_LEFT) {
@@ -1271,7 +1271,7 @@ static void printf_core(unsigned int (*func)(char, void *, int), void *user, con
                   num_ptr = r_xtoa((unsigned int)args[field_arg], num_buf, 0);
                   len = num_ptr - num_buf + 1;
                   if (prec_value == -1) {
-                     //by default max is entire value
+                     //by default __cgc_max is entire value
                      prec_value = len;
                   }
                   else {

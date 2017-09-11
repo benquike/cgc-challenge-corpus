@@ -38,7 +38,7 @@ int send_bytes(int fd, const char *buf, unsigned int size) {
 
       if (SUCCESS != (ret = transmit(STDOUT, buf, bytes_left, &tx_bytes_local))) {
 #ifdef DEBUG
-         fprintf(stderr, "[E] transmit () call within transmit_all() failed\n");
+         __cgc_fprintf(stderr, "[E] transmit () call within transmit_all() failed\n");
 #endif
          goto bail;
       }

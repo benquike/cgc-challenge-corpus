@@ -45,7 +45,7 @@ __FILE *stdout = &stdfiles[1];
 __FILE *stderr = &stdfiles[2];
 
 static void *
-memchr(void *ptr, int value, size_t num)
+__cgc_memchr(void *ptr, int value, size_t num)
 {
     unsigned char *ptr_ = ptr;
     while (num--)
@@ -150,7 +150,7 @@ fread_until(void *ptr, unsigned char delim, size_t size, __FILE *stream)
 
     while (size - 1) {
         if (stream->buf && stream->bufsize > 0) {
-            if ((delim_ptr = memchr(&stream->buf[stream->bufpos], delim, stream->bufsize)))
+            if ((delim_ptr = __cgc_memchr(&stream->buf[stream->bufpos], delim, stream->bufsize)))
                 buffered = (unsigned char *)delim_ptr - &stream->buf[stream->bufpos] + 1;
             else
                 buffered = stream->bufsize;
@@ -165,7 +165,7 @@ fread_until(void *ptr, unsigned char delim, size_t size, __FILE *stream)
             ret += buffered;
 
             if (size == 1 || delim_ptr) {
-                if ((delim_ptr = memchr(ptr, delim, ret)))
+                if ((delim_ptr = __cgc_memchr(ptr, delim, ret)))
                     *delim_ptr = '\0';
                 else
                     *ptr_ = '\0';

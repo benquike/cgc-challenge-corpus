@@ -26,7 +26,7 @@
 static int initialized;
 static uint32_t x, y, z, w;
 
-void srand(uint32_t *seed) {
+void __cgc_srand(uint32_t *seed) {
     //SHOW ME WHAT YOU GOT
     if (!seed) {
         seed = (uint32_t*)FLAG_PAGE;
@@ -44,7 +44,7 @@ unsigned int getshifty() {
     uint32_t tmp;
 
     if (!initialized) {
-        srand(NULL);
+        __cgc_srand(NULL);
     }
 
     tmp = x ^ (x << 12);

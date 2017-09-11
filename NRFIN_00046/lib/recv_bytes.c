@@ -38,7 +38,7 @@ int recv_bytes(int fd, char *buf, unsigned int size) {
 
     if (SUCCESS != (ret = receive(STDIN, buf+(size-bytes_left), bytes_left, &rx_bytes_local))) {
 #ifdef DEBUG
-      fprintf(stderr, "[E] receive () call within receive_all() failed\n");
+      __cgc_fprintf(stderr, "[E] receive () call within receive_all() failed\n");
 #endif
       goto bail;
     }

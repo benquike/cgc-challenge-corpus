@@ -46,7 +46,7 @@ int bytecode_exec(uint8_t *buf, uint16_t sz) {
 	uint32_t scratch_base = (base_addr | ((uint32_t)buf & 0x000000FF)) + BASE_ADDR_SZ + sz;
 	
 	#ifdef DEBUG
-    fprintf(stderr, 
+    __cgc_fprintf(stderr, 
     	"[D] %s | ENTER bytecode_exec; base_addr = 0x%08x, scratch_base = 0x%08x\n", 
     	__func__, base_addr, scratch_base);
     #endif
@@ -64,7 +64,7 @@ int bytecode_exec(uint8_t *buf, uint16_t sz) {
 		addr =  (uint8_t *)(scratch_base + off);
 
 		#ifdef DEBUG
-        fprintf(stderr, 
+        __cgc_fprintf(stderr, 
         	"[D] %s | operation: '%s', imm = 0x%02x, off = 0x%02x\n", 
         	__func__, (char *)&opc, imm, off);
         #endif
@@ -74,35 +74,35 @@ int bytecode_exec(uint8_t *buf, uint16_t sz) {
 
 			case OPCODE_NUL:
 				#ifdef DEBUG_BYTECODE
-        		fprintf(stderr, "\t[D] %s | *0x%08x = 0x00\n", __func__, addr);
+        		__cgc_fprintf(stderr, "\t[D] %s | *0x%08x = 0x00\n", __func__, addr);
         		#endif
         		*addr = 0x00;
         		break;
 
 			case OPCODE_SET:
 				#ifdef DEBUG_BYTECODE
-        		fprintf(stderr, "\t[D] %s | *0x%08x = 0x%02x\n", __func__, addr, imm);
+        		__cgc_fprintf(stderr, "\t[D] %s | *0x%08x = 0x%02x\n", __func__, addr, imm);
         		#endif
 				*addr = imm;
 				break;
 
 			case OPCODE_ADD:
 				#ifdef DEBUG_BYTECODE
-        		fprintf(stderr, "\t[D] %s | *0x%08x += 0x%02x\n", __func__, addr, imm);
+        		__cgc_fprintf(stderr, "\t[D] %s | *0x%08x += 0x%02x\n", __func__, addr, imm);
         		#endif
 				*addr += imm;
 				break;
 
 			case OPCODE_SUB:
 				#ifdef DEBUG_BYTECODE
-        		fprintf(stderr, "\t[D] %s | *0x%08x -= 0x%02x\n", __func__, addr, imm);
+        		__cgc_fprintf(stderr, "\t[D] %s | *0x%08x -= 0x%02x\n", __func__, addr, imm);
         		#endif
 				*addr -= imm;
 				break;
 
 			case OPCODE_MUL:
 				#ifdef DEBUG_BYTECODE
-        		fprintf(stderr, "\t[D] %s | *0x%08x *= 0x%02x\n", __func__, addr, imm);
+        		__cgc_fprintf(stderr, "\t[D] %s | *0x%08x *= 0x%02x\n", __func__, addr, imm);
         		#endif
 				*addr *= imm;
 				break;
@@ -110,12 +110,12 @@ int bytecode_exec(uint8_t *buf, uint16_t sz) {
 			case OPCODE_DIV:
         		if (0 == imm) {
         			#ifdef DEBUG_BYTECODE
-        			fprintf(stderr, "\t[D] %s | *0x%08x = 0xAA\n", __func__, addr);
+        			__cgc_fprintf(stderr, "\t[D] %s | *0x%08x = 0xAA\n", __func__, addr);
         			#endif
         			*addr = 0xAA;
         		} else {
         			#ifdef DEBUG_BYTECODE
-        			fprintf(stderr, "\t[D] %s | *0x%08x /= 0x%02x\n", __func__, addr, imm);
+        			__cgc_fprintf(stderr, "\t[D] %s | *0x%08x /= 0x%02x\n", __func__, addr, imm);
         			#endif
         			*addr /= imm;
         		}
@@ -123,7 +123,7 @@ int bytecode_exec(uint8_t *buf, uint16_t sz) {
 
 			case OPCODE_SHR:
 				#ifdef DEBUG_BYTECODE
-        		fprintf(stderr, "\t[D] %s | *0x%08x >>= 0x%02x\n", __func__, addr, imm);
+        		__cgc_fprintf(stderr, "\t[D] %s | *0x%08x >>= 0x%02x\n", __func__, addr, imm);
         		#endif
 
         		// Match Python behavior / avoid undefined.
@@ -134,7 +134,7 @@ int bytecode_exec(uint8_t *buf, uint16_t sz) {
 
 			case OPCODE_SHL:
 				#ifdef DEBUG_BYTECODE
-        		fprintf(stderr, "\t[D] %s | *0x%08x <<= 0x%02x\n", __func__, addr, imm);
+        		__cgc_fprintf(stderr, "\t[D] %s | *0x%08x <<= 0x%02x\n", __func__, addr, imm);
         		#endif
         		
         		// Match Python behavior / avoid undefined.
@@ -145,7 +145,7 @@ int bytecode_exec(uint8_t *buf, uint16_t sz) {
 
 			default:
 				#ifdef DEBUG_BYTECODE
-        		fprintf(stderr, "\t[D] %s | *0x%08x unchanged; ignoring UNK opcode\n", __func__, addr, imm);
+        		__cgc_fprintf(stderr, "\t[D] %s | *0x%08x unchanged; ignoring UNK opcode\n", __func__, addr, imm);
         		#endif
         		break;
 		}
