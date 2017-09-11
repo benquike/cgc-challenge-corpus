@@ -71,8 +71,8 @@ LD			= $(CC)
 OBJCOPY			= objcopy
 LD_ELF                  = ld
 
-CGC_CFLAGS = -fno-builtin -I$(ROOT_DIR)/../libcgc -Iinclude -Ilib $(CFLAGS) -DCGC_BIN_COUNT=$(BIN_COUNT) -m32 -D_CGC_EMU -fsanitize=address
-POV_CFLAGS = -fno-builtin -I$(ROOT_DIR)/../libcgc -Iinclude -Ilib $(CFLAGS) -m32 -D_CGC_EMU -fsanitize=address
+CGC_CFLAGS = -fno-builtin -I$(ROOT_DIR)/../libcgc -I$(ROOT_DIR)/../libpov/include -Iinclude -Ilib $(CFLAGS) -DCGC_BIN_COUNT=$(BIN_COUNT) -m32 -D_CGC_EMU -fsanitize=address
+POV_CFLAGS = -fno-builtin -I$(ROOT_DIR)/../libcgc -I$(ROOT_DIR)/../libpov/include -Iinclude -Ilib $(CFLAGS) -m32 -D_CGC_EMU -fsanitize=address
 
 CXXFLAGS = -std=c++11
 
@@ -195,8 +195,11 @@ endif
 
 %.pov: %.povxml
 	pov-xml2c -x $< -o $(BUILD_DIR)/$@.c
+ifeq ("$(findstring,cgc,$(UNAME_R))","")
+	$(ROOT_DIR)/../replace_libpov.sh $(BUILD_DIR)/$@.c
+endif
 	$(CC) -c $(POV_CFLAGS) -o $(BUILD_DIR)/$@.o $(BUILD_DIR)/$@.c
-	$(LD) $(LDFLAGS) -o $@ $(BUILD_DIR)/$@.o $(LIBS) $(POV_LIBS)
+	$(LD) $(LDFLAGS) -o $@ $(BUILD_DIR)/$@.o $(POV_LIBS) $(LIBS)
 
 $(BUILD_DIR)/%.o: %.c
 	$(CC) -c $(POV_CFLAGS) -o $@ $^
@@ -204,7 +207,7 @@ $(BUILD_DIR)/%.o: %.c
 build_pov_objs: prep $(BUILD_POV_OBJS)
 
 $(POV_BINS): build_pov_objs
-	$(LD) $(LDFLAGS) -o $(POV_DIR)/$@.pov $(BUILD_DIR)/$@/*.o $(LIBS) $(POV_LIBS)
+	$(LD) $(LDFLAGS) -o $(POV_DIR)/$@.pov $(BUILD_DIR)/$@/*.o $(POV_LIBS) $(LIBS)
 
 pov: prep $(POV_XML_BINS) $(POV_BINS)
 
@@ -279,7 +282,11 @@ $(BUILD_DIR)/$(PARTIAL_DIR)/%.o: %.cc
 	$(CXX) -c $(PARTIAL_CFLAGS) $(CXXFLAGS) -o $@ $<
 
 # Patched rules
+ifneq ("$(findstring,cgc,$(UNAME_R))","")
 patched: prep $(PATCHED_PATH) $(PATCHED_SO)
+else
+patched: prep $(PATCHED_PATH)
+endif
 
 patched-so: prep $(PATCHED_SO)
 
@@ -364,9 +371,9 @@ endif
 else
 
 ifeq ($(strip $(BINS)),)
-build: prep release
+build: prep release patched build-partial pov
 else
-build: prep build-binaries
+build: prep build-binaries pov
 endif
 
 endif

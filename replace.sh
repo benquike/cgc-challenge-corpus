@@ -1,6 +1,6 @@
 #!/bin/bash
 
-words=(digittoint isascii ispunct iscntrl isxdigit freaduntil fflush fbuffered fxlat vfprintf vsprintf sprintf htobe32 htobe16 be32toh be16toh read sleep FILE mkdir rmdir exit fopen unlink link fread fwrite fclose write malloc calloc free isspace isdigit isnan isinf atof atoi islower isupper isalpha isalnum memcpy memcmp memeq vfdprintf fdprintf strcpy strncpy putc printf bzero memset strcmp strncat receive_until strcat strlen itoa puts strchr strtok strtol strtoul realloc strdup pause)
+words=(digittoint isascii ispunct iscntrl isxdigit freaduntil fflush fbuffered fxlat vfprintf vsprintf sprintf fprintf isprint htobe32 htobe16 be32toh be16toh read sleep FILE mkdir rmdir exit fopen unlink link fread fwrite fclose write malloc calloc free isspace isdigit isnan isinf atof atoi islower isupper isalpha isalnum memcpy memcmp memeq vfdprintf fdprintf strcpy strncpy putc printf bzero memset strcmp strncat receive_until strcat strlen itoa puts strchr strtok strtol strtoul realloc strdup pause getopt round floor vprintf minimum max rand srand putchar strncmp memmove memchr strsep strstr strcasestr strcasecmp strncasecmp strndup lseek fgetc fputc)
 
 for w in "${words[@]}"; do
     echo "replacing $w"
