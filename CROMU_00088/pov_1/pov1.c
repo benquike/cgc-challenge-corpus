@@ -100,7 +100,7 @@ unsigned int postID;
 
 	buffer[10] = 1;
 
-	buffer[12] = (char)138;
+	buffer[12] = (char) 138;
 
 	buffer[149] = 2;
 	buffer[150] = 1;

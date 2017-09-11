@@ -23,11 +23,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
-#include <libpov.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <ctype.h>
-
+#include <libpov.h>
 #include <prng.h>
 
 

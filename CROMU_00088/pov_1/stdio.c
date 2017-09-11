@@ -44,7 +44,17 @@ THE SOFTWARE.
 
 #define ENABLE_BUFFERED_PRINTF
 
-// Wrapper functions for __libpov_vprintf and __libpov_vsprintf
+extern int __cgc_atoi( const char *pStr );
+
+#ifndef __cgc_isnan
+#define __cgc_isnan( val )  __builtin_isnan( val )
+#endif
+
+#ifndef __cgc_isinf
+#define __cgc_isinf( val )  __builtin_isinf( val )
+#endif
+
+// Wrapper functions for __libpov_vprintf and __cgc_vsprintf
 typedef int (*tPrintfWrapperFP)( void *ctx, int c, size_t pos );
 
 int wrapper_output( void *ctx, tPrintfWrapperFP fpOut, size_t pos, const char *format, va_list args );
@@ -185,14 +195,14 @@ int __libpov_sprintf( char *buf, const char *format, ... )
 	va_list args;
 	va_start(args, format);
 
-	int return_val = __libpov_vsprintf( buf, format, args );
+	int return_val = __cgc_vsprintf( buf, format, args );
 
 	va_end(args);
 
 	return (return_val);	
 }
 
-int __libpov_vsprintf( char *buf, const char *format, va_list args )
+int __cgc_vsprintf( char *buf, const char *format, va_list args )
 {
 	tPrintfWrapperFP wrapper_outc = &WRAPPER_OUTC;
 	void *ctx = buf;

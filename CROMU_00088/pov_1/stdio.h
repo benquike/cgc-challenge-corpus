@@ -34,7 +34,7 @@ int __cgc_putchar( int c );
 int __cgc_printf( const char *format, ... );
 int __libpov_vprintf( const char *format, va_list args );
 int __libpov_sprintf( char *buf, const char *format, ... );
-int __libpov_vsprintf( char *buf, const char *format, va_list args );
+int __cgc_vsprintf( char *buf, const char *format, va_list args );
 int __cgc_puts( const char *s );
 int __cgc_write( int fd, void *buffer, size_t count );
 

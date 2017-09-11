@@ -33,6 +33,8 @@ THE SOFTWARE.
 #define M2	24
 #define M3	10
 
+extern void __cgc_bzero(void *s, size_t n);
+
 uint32_t state[R];
 uint32_t state_n;
 
