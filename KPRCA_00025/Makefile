@@ -1,6 +1,6 @@
 AUTHOR_ID  = KPRCA
 SERVICE_ID = 00025
-CFLAGS     = -Os -g -Werror -Wno-overlength-strings -Wno-packed -fms-extensions -Wno-microsoft
+CFLAGS     = -O0 -g -Werror -Wno-overlength-strings -Wno-packed -fms-extensions -Wno-microsoft
 override LDFLAGS = -nostdlib -static --sort-section=name 
 POLLS_TESTING_COUNT = 1000
 POLLS_TESTING_SEED = -399189653
