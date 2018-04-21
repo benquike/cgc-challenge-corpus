@@ -1,0 +1,7 @@
+digraph G {
+    finish [label="finish", shape=triangle];
+    start [label="start", shape=box];
+    go [label="go\ncontinue=0.90"];
+    start -> go;
+    go -> go;
+}

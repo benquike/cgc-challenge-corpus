@@ -1,0 +1,29 @@
+digraph code {
+	graph [bgcolor=azure fontsize=8 fontname="Courier" splines="ortho"];
+	node [fillcolor=gray style=filled shape=box];
+	edge [arrowhead="normal"];
+	"0x080480a0" -> "0x08048131" [color="#007f00"];
+	"0x080480a0" -> "0x080480ea" [color="#7f0000"];
+	"0x080480a0" [URL="main/0x080480a0", fillcolor="palegreen",color="black", fontname="Courier",label="| ;-- main:\l| ;-- section..text:\l| ;-- main:\l| 0x080480a0      push ebp\l| 0x080480a1      mov ebp, esp\l| 0x080480a3      sub esp, 0x48\l| 0x080480a6      mov dword [local_4h], 0\l| 0x080480ad      mov dword [local_8h], ecx\l| 0x080480b0      mov dword [local_ch], edx\l| 0x080480b3      mov ecx, esp\l| 0x080480b5      lea edx, [local_14h]\l| 0x080480b8      mov dword [ecx + 0xc], edx\l| 0x080480bb      lea edx, [local_10h]\l| 0x080480be      mov dword [ecx + 4], edx\l| 0x080480c1      mov dword [ecx + 8], 4\l| 0x080480c8      mov dword [ecx], 0\l| 0x080480ce      call sym.receive\l| 0x080480d3      mov ecx, dword [local_10h]\l| 0x080480d6      mov edx, ecx\l| 0x080480d8      sub edx, 3\l| 0x080480db      mov dword [local_1ch], eax\l| 0x080480de      mov dword [local_20h], ecx\l| 0x080480e1      mov dword [local_24h], edx\l| 0x080480e4      je 0x8048131\l"]
+	"0x080480ea" -> "0x080480ef" [color="#00007f"];
+	"0x080480ea" [URL="main/0x080480ea", fillcolor="palegreen",color="black", fontname="Courier",label="| 0x080480ea      jmp 0x80480ef\l"]
+	"0x080480ef" -> "0x08048125" [color="#007f00"];
+	"0x080480ef" -> "0x080480fe" [color="#7f0000"];
+	"0x080480ef" [URL="main/0x080480ef", fillcolor="palegreen",color="black", fontname="Courier",label="| 0x080480ef      mov eax, dword [local_20h]\l| 0x080480f2      sub eax, 2\l| 0x080480f5      mov dword [local_28h], eax\l| 0x080480f8      je 0x8048125\l"]
+	"0x080480fe" -> "0x08048103" [color="#00007f"];
+	"0x080480fe" [URL="main/0x080480fe", fillcolor="palegreen",color="black", fontname="Courier",label="| 0x080480fe      jmp 0x8048103\l"]
+	"0x08048103" -> "0x0804813d" [color="#007f00"];
+	"0x08048103" -> "0x08048114" [color="#7f0000"];
+	"0x08048103" [URL="main/0x08048103", fillcolor="palegreen",color="black", fontname="Courier",label="| 0x08048103      mov eax, dword [local_20h]\l| 0x08048106      sub eax, 0xdeadbeaf\l| 0x0804810b      mov dword [local_2ch], eax\l| 0x0804810e      jne 0x804813d\l"]
+	"0x08048114" -> "0x08048119" [color="#00007f"];
+	"0x08048114" [URL="main/0x08048114", fillcolor="palegreen",color="black", fontname="Courier",label="| 0x08048114      jmp 0x8048119\l"]
+	"0x08048119" -> "0x08048144" [color="#00007f"];
+	"0x08048119" [URL="main/0x08048119", fillcolor="palegreen",color="black", fontname="Courier",label="| 0x08048119      mov dword [local_18h], 0x4d2\l| 0x08048120      jmp 0x8048144\l"]
+	"0x08048125" -> "0x08048144" [color="#00007f"];
+	"0x08048125" [URL="main/0x08048125", fillcolor="palegreen",color="black", fontname="Courier",label="| 0x08048125      mov dword [local_18h], 0x929\l| 0x0804812c      jmp 0x8048144\l"]
+	"0x08048131" -> "0x08048144" [color="#00007f"];
+	"0x08048131" [URL="main/0x08048131", fillcolor="palegreen",color="black", fontname="Courier",label="| 0x08048131      mov dword [local_18h], 0xd80\l| 0x08048138      jmp 0x8048144\l"]
+	"0x0804813d" -> "0x08048144" [color="#00007f"];
+	"0x0804813d" [URL="main/0x0804813d", fillcolor="palegreen",color="black", fontname="Courier",label="| 0x0804813d      mov dword [local_18h], 0x21\l"]
+	"0x08048144" [URL="main/0x08048144", fillcolor="palegreen",color="black", fontname="Courier",label="| 0x08048144      mov eax, dword [local_18h]\l| 0x08048147      add eax, 1\l| 0x0804814c      mov dword [local_18h], eax\l| 0x0804814f      mov eax, dword [local_18h]\l| 0x08048152      add esp, 0x48\l| 0x08048155      pop ebp\l| ;-- eip:\l\\ 0x08048156      ret\l"]
+}
